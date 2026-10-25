@@ -1,0 +1,2203 @@
+{
+  "schemaVersion": 1,
+  "editorPicks": [
+    "impeccable",
+    "exploratory-data-analysis",
+    "markitdown"
+  ],
+  "entries": {
+    "floe-pdf": {
+      "overview": {
+        "zh-Hans": "在 Floe 的任务线里直接处理 PDF：阅读、批注、填写与导出都在设备端完成。受保护文档继续经过 App 既有的 PDFKit 闸门，不会另开一条绕过的渲染路径。",
+        "en": "Work with PDFs directly inside a Floe task: read, annotate, fill and export on the device. Protected documents keep using the app’s existing PDFKit gate instead of a parallel, unguarded renderer."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "给合同、报告加上批注并导出带标注的副本",
+          "en": "Annotate contracts or reports and export a marked-up copy"
+        },
+        {
+          "zh-Hans": "按章节定位长文档内容并整理要点",
+          "en": "Locate sections in long documents and collect key points"
+        },
+        {
+          "zh-Hans": "填写表单类 PDF 后另存，不覆盖原件",
+          "en": "Fill form PDFs and save a new copy without touching the original"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "把这份 40 页的采购合同按付款、交付、违约三类条款整理成风险清单，并标注对应页码。",
+            "en": "Turn this 40-page procurement contract into a risk list grouped by payment, delivery and default clauses, with page references."
+          },
+          "output": {
+            "zh-Hans": "一份按条款分类的风险清单，逐条标注页码与原文摘录，可导出为 PDF 附在合同旁。",
+            "en": "A clause-grouped risk list with page numbers and short quotes, exportable as a PDF beside the contract."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "在第三页签署处添加签名批注，然后导出新的 PDF 副本。",
+            "en": "Add a signature annotation at the signing line on page three, then export a new PDF copy."
+          },
+          "output": {
+            "zh-Hans": "带签名的副本 PDF；原文件保持不变。",
+            "en": "A signed copy PDF; the original file stays untouched."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/floe-pdf.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "floe-office": {
+      "overview": {
+        "zh-Hans": "在同一个工作空间里编辑 DOCX、XLSX 与 PPTX，包括定位形状、图片与可编辑图表。文档仍以原格式保存，适合继续交给他人协作。",
+        "en": "Edit DOCX, XLSX and PPTX in the same workspace, including positioned shapes, images and editable charts. Files stay in their original formats so collaborators can keep working."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "把季度数据整理成带图表的月报",
+          "en": "Turn quarterly numbers into a monthly report with charts"
+        },
+        {
+          "zh-Hans": "调整提案文档的样式、列表与页面结构",
+          "en": "Adjust styles, lists and page structure in a proposal"
+        },
+        {
+          "zh-Hans": "更新演示文稿的文字、图片与对象位置",
+          "en": "Update text, images and object placement in a deck"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "把这份销售数据表做成月报文档，包含一张趋势图和一个要点总结页。",
+            "en": "Build a monthly report document from this sales spreadsheet, with a trend chart and a key-points page."
+          },
+          "output": {
+            "zh-Hans": "一份可继续编辑的报告文档，图表保持可编辑格式。",
+            "en": "An editable report document whose chart remains an editable object."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "把这份提案的标题层级和间距统一，并检查表格是否跨页断裂。",
+            "en": "Normalize this proposal’s heading levels and spacing, and check whether tables break across pages."
+          },
+          "output": {
+            "zh-Hans": "调整后的文档与一份改动说明，便于你逐项确认。",
+            "en": "The adjusted document plus a change summary you can review item by item."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/floe-office.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "floe-network": {
+      "overview": {
+        "zh-Hans": "在设备本机完成网络诊断：真实 ICMP ping、traceroute、DNS 与接口检查，不需要先准备一台 SSH 主机。结果用于判断问题出在解析、路由还是对端。",
+        "en": "Run network diagnostics on the device itself: real ICMP ping, traceroute, DNS and interface inspection without an SSH host. Results separate resolution, routing and remote-server failures."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "排查某个站点无法访问的原因",
+          "en": "Diagnose why a specific site cannot be reached"
+        },
+        {
+          "zh-Hans": "对比 DNS 解析结果与本机接口配置",
+          "en": "Compare DNS resolution with local interface settings"
+        },
+        {
+          "zh-Hans": "记录一段可复查的连通性证据",
+          "en": "Capture connectivity evidence that can be reviewed later"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "依次做 DNS 解析、ping 和 traceroute，判断这个域名无法访问是解析问题还是链路问题。",
+            "en": "Run DNS resolution, ping and traceroute in order, and decide whether this domain fails at resolution or on the path."
+          },
+          "output": {
+            "zh-Hans": "一份分步诊断记录，指出失败发生的位置与下一步建议。",
+            "en": "A step-by-step diagnosis naming where the failure occurs and what to try next."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "检查当前网络接口、默认路由与 DNS 配置是否一致。",
+            "en": "Check whether the active interfaces, default route and DNS settings agree."
+          },
+          "output": {
+            "zh-Hans": "接口与解析配置对照表，标出可能冲突的条目。",
+            "en": "A comparison of interface and resolver settings with likely conflicts flagged."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/floe-network.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "floe-video": {
+      "overview": {
+        "zh-Hans": "检查、转码与重封装音视频文件，并如实报告设备支持的能力。模型增强类操作以已核验的本地资源为前提，不存在的能力不会假装可用。",
+        "en": "Inspect, transcode and remux audio and video while reporting device capabilities honestly. Model-backed enhancement stays gated on validated local assets; unsupported operations are not presented as available."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "把 MOV 等素材转成通用 H.264 MP4",
+          "en": "Convert source clips such as MOV to broadly playable H.264 MP4"
+        },
+        {
+          "zh-Hans": "检查编码参数并给出封装建议",
+          "en": "Inspect codec parameters and suggest a container"
+        },
+        {
+          "zh-Hans": "在不重编码的前提下重封装音轨",
+          "en": "Remux audio tracks without re-encoding"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "把这个 MOV 转成 H.264 MP4，保持原分辨率与帧率。",
+            "en": "Convert this MOV to H.264 MP4 while keeping the original resolution and frame rate."
+          },
+          "output": {
+            "zh-Hans": "转码后的 MP4 文件与一份实际参数报告。",
+            "en": "A transcoded MP4 plus a report of the parameters actually used."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "检查这个视频的编码参数，并说明为什么某些播放器无法打开。",
+            "en": "Inspect this video’s encoding parameters and explain why some players cannot open it."
+          },
+          "output": {
+            "zh-Hans": "编码参数摘要与可执行的封装或转码建议。",
+            "en": "A codec summary with an actionable remux or transcode suggestion."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/floe-video.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "doc-coauthoring": {
+      "overview": {
+        "zh-Hans": "把文档写作拆成可检查的多轮流程：先定结构，再逐节修订，最后记录审阅要点与版本变化。适合需要反复打磨的长文档，而不是一次成稿。",
+        "en": "Break document writing into reviewable passes: agree on structure, revise section by section, then record review notes and version changes. Suited to long documents that need several rounds."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "把零散材料整理成提案结构",
+          "en": "Turn scattered material into a proposal structure"
+        },
+        {
+          "zh-Hans": "逐节扩写并保留修改理由",
+          "en": "Expand section by section while keeping revision reasons"
+        },
+        {
+          "zh-Hans": "在交付前做一轮完整审阅",
+          "en": "Run a full review pass before delivery"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "先根据这些会议记录提出文档结构，确认后再逐节扩写。",
+            "en": "Propose a document structure from these meeting notes, then expand it section by section after I confirm."
+          },
+          "output": {
+            "zh-Hans": "一份结构提案；确认后得到逐节扩写的草稿。",
+            "en": "A structure proposal, followed by a section-by-section draft once confirmed."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "对这份文档做第二轮审阅，标出论证缺口并给出修订建议。",
+            "en": "Review this document for a second pass, flag argument gaps and propose revisions."
+          },
+          "output": {
+            "zh-Hans": "按段落编号的审阅清单与建议改写。",
+            "en": "A paragraph-numbered review list with suggested rewrites."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/doc-coauthoring.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "internal-comms": {
+      "overview": {
+        "zh-Hans": "面向内部的沟通写作：通知、状态更新、复盘与公告。模板负责结构，语气与受众适配负责让信息真正被读到。",
+        "en": "Internal communication writing: announcements, status updates, retrospectives and notices. Templates carry the structure; tone and audience adaptation make the message readable."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "写每周项目状态更新",
+          "en": "Write a weekly project status update"
+        },
+        {
+          "zh-Hans": "为一次事故准备复盘公告",
+          "en": "Prepare an incident retrospective announcement"
+        },
+        {
+          "zh-Hans": "把技术进展改写成跨团队可读的说明",
+          "en": "Rewrite technical progress for a cross-team audience"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "写一份本周项目状态更新，面向管理层，重点说明风险与需要的支持。",
+            "en": "Write this week’s project status update for leadership, emphasizing risks and the support needed."
+          },
+          "output": {
+            "zh-Hans": "一页状态更新，含进展、风险与明确请求。",
+            "en": "A one-page update with progress, risks and explicit asks."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "为这次线上事故写复盘公告，包含时间线、影响范围与改进项。",
+            "en": "Draft a retrospective notice for this incident with a timeline, impact and follow-ups."
+          },
+          "output": {
+            "zh-Hans": "一份事实与改进项分离的复盘公告草稿。",
+            "en": "A retrospective draft that separates facts from follow-up actions."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/internal-comms.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "writing-guidelines": {
+      "overview": {
+        "zh-Hans": "按固定规则校核技术写作：措辞、格式、可读性与一致性。规则以清单形式给出，便于在交付前逐条确认，而不是凭感觉判断好坏。",
+        "en": "Check technical writing against fixed rules for wording, formatting, readability and consistency. The rule list is explicit so each item can be confirmed before delivery."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "检查 README 与文档的格式一致性",
+          "en": "Check formatting consistency across READMEs and docs"
+        },
+        {
+          "zh-Hans": "清理被动语态与冗余表达",
+          "en": "Remove passive voice and redundant phrasing"
+        },
+        {
+          "zh-Hans": "统一术语与标题层级",
+          "en": "Unify terminology and heading levels"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "按团队规范检查这份 README 的措辞、格式与一致性，列出需要修改的条目。",
+            "en": "Check this README against our guidelines for wording, formatting and consistency, and list what needs changing."
+          },
+          "output": {
+            "zh-Hans": "逐条对照的修改清单，标注规则与位置。",
+            "en": "An itemized change list with the rule and location for each."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "改写这段说明，去掉被动语态和重复表达，保留原意。",
+            "en": "Rewrite this explanation without passive voice or repetition while keeping the meaning."
+          },
+          "output": {
+            "zh-Hans": "改写后的段落与一句改动理由。",
+            "en": "The rewritten paragraph with a one-line rationale."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/writing-guidelines.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "copywriting": {
+      "overview": {
+        "zh-Hans": "为站点与落地页产出可直接使用的文案：主张、标题、卖点与行动号召，并给出语气矩阵供选择。文案基于你提供的事实，不虚构数据与背书。",
+        "en": "Produce usable site and landing-page copy: value propositions, headlines, proof points and calls to action, plus a tone matrix to choose from. Copy stays grounded in the facts you supply."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "为产品落地页写主标题与卖点",
+          "en": "Write the headline and proof points for a product landing page"
+        },
+        {
+          "zh-Hans": "生成两版不同语气的文案做对比",
+          "en": "Draft two tone variants for comparison"
+        },
+        {
+          "zh-Hans": "为功能发布准备一句话说明",
+          "en": "Prepare a one-line description for a feature launch"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "为这个产品的落地页写主标题、三个卖点和两个行动号召按钮文案。",
+            "en": "Write a landing-page headline, three proof points and two call-to-action labels for this product."
+          },
+          "output": {
+            "zh-Hans": "一组可直接放入页面的文案与简短使用说明。",
+            "en": "A ready-to-place copy set with short usage notes."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "用克制和热情两种语气各写一段产品介绍。",
+            "en": "Write one product paragraph in a restrained tone and one in an enthusiastic tone."
+          },
+          "output": {
+            "zh-Hans": "两段对照文案与适用场景说明。",
+            "en": "Two contrasting paragraphs with guidance on when to use each."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/copywriting.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "copy-editing": {
+      "overview": {
+        "zh-Hans": "对已有文案做结构、语气与事实一致性的校订：指出问题、给出改写，并说明为什么改。适合发布前的最后一轮文字检查。",
+        "en": "Edit existing copy for structure, tone and factual consistency: identify issues, propose rewrites and explain the reasoning. Fits the final text pass before publishing."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "校订产品说明中的夸张表述",
+          "en": "Tone down overstated product claims"
+        },
+        {
+          "zh-Hans": "修正前后不一致的说法",
+          "en": "Fix statements that contradict each other"
+        },
+        {
+          "zh-Hans": "把生硬直译改成自然表达",
+          "en": "Turn stiff literal phrasing into natural copy"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "校订这份产品说明，标出与事实不符或无法验证的说法，并给出改写。",
+            "en": "Edit this product description, flag unverifiable claims and propose rewrites."
+          },
+          "output": {
+            "zh-Hans": "问题清单与逐条改写建议。",
+            "en": "An issue list with item-by-item rewrite suggestions."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "把这段介绍改写得自然一些，但不要增加新的事实。",
+            "en": "Make this introduction read naturally without adding new facts."
+          },
+          "output": {
+            "zh-Hans": "改写后的文本与改动点说明。",
+            "en": "The edited text plus a summary of the changes."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/copy-editing.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "content-production": {
+      "overview": {
+        "zh-Hans": "长文创作的全流程：选题、提纲、成稿与资源装配。每一步都保留可编辑的中间产物，方便你调整方向而不是推倒重来。",
+        "en": "The long-form pipeline: topic, outline, draft and bundled resources. Each stage keeps an editable intermediate artifact so direction can change without starting over."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "从选题到初稿完成一篇长文",
+          "en": "Take a topic through to a complete first draft"
+        },
+        {
+          "zh-Hans": "为长文补配图与引用清单",
+          "en": "Assemble images and citations for a long article"
+        },
+        {
+          "zh-Hans": "把系列主题拆成多篇的写作计划",
+          "en": "Split a broad subject into a multi-article plan"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "以“设备端 AI 工作空间”为题，先给我三个选题角度，再展开成提纲与初稿。",
+            "en": "For “on-device AI workspaces”, propose three angles, then expand one into an outline and a first draft."
+          },
+          "output": {
+            "zh-Hans": "选题对比、选定提纲与可直接编辑的初稿。",
+            "en": "An angle comparison, the chosen outline and an editable draft."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "为这篇长文列出配图需求和引用来源清单。",
+            "en": "List the illustration requirements and citation sources for this article."
+          },
+          "output": {
+            "zh-Hans": "按段落编号的资源清单，可直接交给下一环节。",
+            "en": "A paragraph-indexed resource list ready for the next stage."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/content-production.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "social-content": {
+      "overview": {
+        "zh-Hans": "生成社媒内容与发布排期建议，默认不代发。平台差异在文案长度、语气与标签上体现，发布动作始终由你确认后执行。",
+        "en": "Generate social content and scheduling suggestions; nothing is posted automatically. Platform differences show up in length, tone and tags, and publishing always waits for your confirmation."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "把一个版本发布拆成多条社媒内容",
+          "en": "Turn one release into several social posts"
+        },
+        {
+          "zh-Hans": "为不同平台改写同一主题",
+          "en": "Adapt one topic across platforms"
+        },
+        {
+          "zh-Hans": "准备一周的发布排期建议",
+          "en": "Prepare a week of scheduling suggestions"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "为这次版本发布写三条社媒文案，分别适配微博、X 和小红书。",
+            "en": "Write three social posts for this release, adapted to Weibo, X and Xiaohongshu."
+          },
+          "output": {
+            "zh-Hans": "三条平台化文案与建议发布时间。",
+            "en": "Three platform-tuned posts with suggested posting times."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "把这篇博客改写成一周的发布内容计划。",
+            "en": "Turn this blog post into a one-week content plan."
+          },
+          "output": {
+            "zh-Hans": "按日期排列的内容主题与要点，发布仍需你确认。",
+            "en": "A date-ordered topic plan; publishing still requires your confirmation."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/social-content.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "floe-email-drafting": {
+      "overview": {
+        "zh-Hans": "复用 App 既有的邮件服务，按你的语气起草邮件；发送仍然走原有的审批路径。起草与发送分离，避免误发。",
+        "en": "Draft email in your voice through the app’s existing mail service; sending stays on the original approval path. Drafting and sending stay separate to prevent accidents."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "用固定语气写延期说明或跟进邮件",
+          "en": "Write delay notices or follow-ups in a consistent voice"
+        },
+        {
+          "zh-Hans": "把长邮件压缩成简短版本",
+          "en": "Compress a long email into a shorter one"
+        },
+        {
+          "zh-Hans": "准备多封措辞一致的协作邮件",
+          "en": "Prepare several collaboration emails with consistent wording"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "用我平时的语气给合作方写一封项目延期说明，先给我确认。",
+            "en": "Draft a project delay note to our partner in my usual voice, for review before sending."
+          },
+          "output": {
+            "zh-Hans": "一封待确认的邮件草稿，发送需你批准。",
+            "en": "An email draft awaiting your review; sending needs your approval."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "把这封英文邮件改成更简短的跟进版本。",
+            "en": "Turn this English email into a shorter follow-up."
+          },
+          "output": {
+            "zh-Hans": "缩短后的草稿与保留的关键信息说明。",
+            "en": "A shortened draft with a note on the key details kept."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/floe-email-drafting.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "deep-research": {
+      "overview": {
+        "zh-Hans": "围绕一个问题做多轮检索、证据整合与结论报告，复用 Floe 现有的搜索与任务服务。结论附来源，无法确认的部分会明确标注。",
+        "en": "Run multi-pass research on a question, synthesize evidence and produce a conclusion report using Floe’s existing search and task services. Conclusions carry sources, and unresolved points stay marked."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "为技术选型做一轮证据调研",
+          "en": "Research a technical decision with evidence"
+        },
+        {
+          "zh-Hans": "对比多个方案并形成决策报告",
+          "en": "Compare options and produce a decision report"
+        },
+        {
+          "zh-Hans": "追踪一个话题的最新进展",
+          "en": "Track recent developments on a topic"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "调研设备端模型推理在 iPad 上的可行方案，给出结论、来源和未确认的问题。",
+            "en": "Research practical on-device model inference options on iPad, with conclusions, sources and open questions."
+          },
+          "output": {
+            "zh-Hans": "一份带来源的调研报告，明确区分已验证与待核实信息。",
+            "en": "A sourced research report separating verified facts from open items."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "对比三种开源方案的许可与维护状态，输出决策要点。",
+            "en": "Compare the licenses and maintenance status of three open-source options and summarize the decision points."
+          },
+          "output": {
+            "zh-Hans": "对比表与决策建议，附来源链接。",
+            "en": "A comparison table with a recommendation and source links."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/deep-research.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "deepread": {
+      "overview": {
+        "zh-Hans": "对长文档做分段精读、要点抽取与问答，接入 Floe 的文件与阅读流程。回答会指向具体章节，便于回看原文。",
+        "en": "Read long documents in passes, extract key points and answer questions through Floe’s file and reading flow. Answers point back to specific sections so you can verify them."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "精读白皮书并提炼论点与证据",
+          "en": "Close-read a white paper and extract claims and evidence"
+        },
+        {
+          "zh-Hans": "在长报告里定位具体数据",
+          "en": "Locate specific figures inside a long report"
+        },
+        {
+          "zh-Hans": "对比文档多个版本的差异",
+          "en": "Compare differences across document versions"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "精读这份 80 页白皮书，按章节提炼核心论点与支撑证据。",
+            "en": "Close-read this 80-page white paper and extract the core claims and supporting evidence per chapter."
+          },
+          "output": {
+            "zh-Hans": "按章节组织的论点—证据对照表，附页码。",
+            "en": "A chapter-by-chapter claim/evidence table with page references."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "找出这份论文中方法与结论之间论证较弱的环节。",
+            "en": "Find where this paper’s methodology weakly supports its conclusions."
+          },
+          "output": {
+            "zh-Hans": "需要重点核对的段落地标与理由。",
+            "en": "Flagged passages with reasons for closer checking."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/deepread.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "literature-review": {
+      "overview": {
+        "zh-Hans": "使用现有检索与模型配置完成检索、去重、证据表与来源核验，交付 Markdown 与 BibTeX。首版聚焦可核验的综述产物，不把图示导出当成综述成功的前提。",
+        "en": "Search, deduplicate, build evidence tables and verify sources with your existing search and model configuration, delivering Markdown and BibTeX. The first release targets verifiable review artifacts rather than decorating the output."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "围绕一个主题做首轮文献综述",
+          "en": "Run a first-pass literature review on a topic"
+        },
+        {
+          "zh-Hans": "整理去重后的证据表",
+          "en": "Assemble a deduplicated evidence table"
+        },
+        {
+          "zh-Hans": "为综述准备可核验的引用清单",
+          "en": "Prepare a verifiable citation list for a review"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "围绕“端侧模型推理”做一次文献综述，输出去重后的证据表与 BibTeX。",
+            "en": "Review the literature on on-device model inference, producing a deduplicated evidence table and BibTeX."
+          },
+          "output": {
+            "zh-Hans": "综述 Markdown、证据表与 BibTeX 文件。",
+            "en": "Review Markdown, an evidence table and a BibTeX file."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "检索近三年相关论文，按方法类别整理综述提纲。",
+            "en": "Find papers from the last three years and outline a review organized by method family."
+          },
+          "output": {
+            "zh-Hans": "按方法分类的提纲与候选文献清单。",
+            "en": "A method-organized outline with a candidate paper list."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/literature-review.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "citation-management": {
+      "overview": {
+        "zh-Hans": "检索、整理与校验引用元数据并产出 BibTeX。元数据来源需要核验，冲突的字段会被标出而不是静默合并。",
+        "en": "Fetch, organize and validate citation metadata with BibTeX output. Metadata sources are checked, and conflicting fields are flagged rather than silently merged."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "把参考文献整理成规范 BibTeX",
+          "en": "Convert references into clean BibTeX"
+        },
+        {
+          "zh-Hans": "核对 DOI 与作者信息",
+          "en": "Verify DOIs and author details"
+        },
+        {
+          "zh-Hans": "检查正文主张与引用是否匹配",
+          "en": "Check that claims match their citations"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "把这 12 条参考文献整理成 BibTeX，并核对 DOI 是否有效。",
+            "en": "Convert these 12 references into BibTeX and verify the DOIs."
+          },
+          "output": {
+            "zh-Hans": "BibTeX 文件与逐条核验备注。",
+            "en": "A BibTeX file with per-entry verification notes."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "检查这份综述的引用标注是否与正文主张一致。",
+            "en": "Check whether this review’s citations actually support the claims made."
+          },
+          "output": {
+            "zh-Hans": "不一致条目的清单与建议修改。",
+            "en": "A list of mismatches with suggested fixes."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/citation-management.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "scientific-critical-thinking": {
+      "overview": {
+        "zh-Hans": "提供评估研究证据与方法的批判性阅读框架与检查清单。重点是把“结论是否被数据支持”拆成可以逐条回答的问题。",
+        "en": "A critical-reading framework and checklists for evaluating research evidence and methods. It turns “does the data support this?” into questions that can be answered one at a time."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "评估样本与统计方法是否合适",
+          "en": "Assess whether sampling and statistics fit the claim"
+        },
+        {
+          "zh-Hans": "识别过度推断与因果误读",
+          "en": "Spot overreach and causal misreads"
+        },
+        {
+          "zh-Hans": "为期刊评审写结构化意见",
+          "en": "Write structured review comments for a journal"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "用批判性阅读清单评估这篇论文的样本代表性与统计方法。",
+            "en": "Evaluate this paper’s sample representativeness and statistical methods with a critical-reading checklist."
+          },
+          "output": {
+            "zh-Hans": "逐项评估结果与需要作者澄清的问题。",
+            "en": "Item-by-item findings plus questions for the authors."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "找出这段结论中超出数据支持范围的表述。",
+            "en": "Find statements in this conclusion that exceed what the data supports."
+          },
+          "output": {
+            "zh-Hans": "过度表述清单与更谨慎的替代表达。",
+            "en": "An overreach list with more careful alternative wording."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/scientific-critical-thinking.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "research-summarizer": {
+      "overview": {
+        "zh-Hans": "把研究材料压缩成带来源的摘要，适应现有检索服务返回的内容。每条摘要都能追溯到原文位置，避免无出处的概括。",
+        "en": "Condense research material into sourced summaries that fit what the existing search service returns. Each summary traces back to its source location instead of floating free."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "把长报告压缩成一页摘要",
+          "en": "Compress a long report into a one-page summary"
+        },
+        {
+          "zh-Hans": "为多篇论文写对比摘要",
+          "en": "Write comparative summaries of several papers"
+        },
+        {
+          "zh-Hans": "为会议准备材料要点",
+          "en": "Prepare talking points from source material"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "把这份研究报告压缩成一页摘要，每个要点标注来源章节。",
+            "en": "Compress this research report into a one-page summary with a source section for each point."
+          },
+          "output": {
+            "zh-Hans": "一页摘要与来源索引。",
+            "en": "A one-page summary with a source index."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "为这五篇论文各写三句摘要，并标注出处。",
+            "en": "Write three-sentence summaries of each of these five papers with citations."
+          },
+          "output": {
+            "zh-Hans": "五段带出处的摘要。",
+            "en": "Five sourced summary paragraphs."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/research-summarizer.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "exploratory-data-analysis": {
+      "overview": {
+        "zh-Hans": "检查 CSV、TSV、JSON 数据的结构，输出缺失值、字段类型与异常值概览，帮助判断数据能否直接使用。",
+        "en": "Inspect the structure of CSV, TSV and JSON data: missing values, field types and outliers, so you can tell whether sources are ready to combine."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "快速摸清一份陌生数据的结构",
+          "en": "Understand an unfamiliar dataset quickly"
+        },
+        {
+          "zh-Hans": "发现缺失值与异常值分布",
+          "en": "Find missing-value and outlier patterns"
+        },
+        {
+          "zh-Hans": "判断两份表能否直接合并",
+          "en": "Decide whether two tables can be joined directly"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "分析这份 CSV 的字段类型、缺失值与异常值，输出概览报告。",
+            "en": "Profile this CSV for field types, missing values and outliers, and produce an overview report."
+          },
+          "output": {
+            "zh-Hans": "一份数据概览报告，含字段统计与可疑值清单。",
+            "en": "A data overview report with per-field statistics and a suspicious-value list."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "对比这两份销售数据的字段差异，指出不能直接合并的列。",
+            "en": "Compare the fields of these two sales datasets and point out columns that would not join cleanly."
+          },
+          "output": {
+            "zh-Hans": "字段对照表与合并风险说明。",
+            "en": "A field comparison table with merge risks explained."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/exploratory-data-analysis.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "statistical-analysis": {
+      "overview": {
+        "zh-Hans": "完成描述统计、常用检验与回归分析，并保存假设检查与可复现脚本。首版不含贝叶斯建模等高级方法。",
+        "en": "Run descriptive statistics, common tests and regression, with assumption checks and reproducible scripts. Advanced methods such as Bayesian modeling are not included in the first version."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "对实验数据做描述统计与检验",
+          "en": "Run descriptive statistics and tests on experiment data"
+        },
+        {
+          "zh-Hans": "拟合回归并检查前提假设",
+          "en": "Fit a regression and check its assumptions"
+        },
+        {
+          "zh-Hans": "保留可复现的分析脚本",
+          "en": "Keep a reproducible analysis script"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "对这份实验数据做描述统计与 t 检验，并检查前提假设。",
+            "en": "Run descriptive statistics and a t-test on this experiment data, and check the assumptions."
+          },
+          "output": {
+            "zh-Hans": "统计结果、假设检查与可重跑脚本。",
+            "en": "Test results, assumption checks and a rerunnable script."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "拟合一个线性回归，输出系数、诊断图与解释。",
+            "en": "Fit a linear regression and output coefficients, diagnostic plots and interpretation."
+          },
+          "output": {
+            "zh-Hans": "回归摘要、诊断图与注意事项。",
+            "en": "A regression summary, diagnostics and caveats."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/statistical-analysis.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "scientific-visualization": {
+      "overview": {
+        "zh-Hans": "导出出版级 PNG、PDF 与 SVG 图表，核验中文标注、缺失值与误差表达；交互式 HTML 图表为可选产物。",
+        "en": "Export publication-ready PNG, PDF and SVG charts, with checks for Chinese labels, missing values and error bars. Interactive HTML charts are an optional extra."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "生成带误差线的分组柱状图",
+          "en": "Create grouped bar charts with error bars"
+        },
+        {
+          "zh-Hans": "输出中文标注的出版级图表",
+          "en": "Produce publication-ready charts with Chinese labels"
+        },
+        {
+          "zh-Hans": "显式表达缺失与不确定数据",
+          "en": "Show missing and uncertain data explicitly"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "把这份数据画成带误差线的分组柱状图，导出 PNG 和 PDF。",
+            "en": "Plot this data as grouped bars with error bars, exporting PNG and PDF."
+          },
+          "output": {
+            "zh-Hans": "两个格式的图表文件与绘图脚本。",
+            "en": "Chart files in both formats plus the plotting script."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "生成一张中文标注的折线图，缺测值要明确标出。",
+            "en": "Generate a line chart with Chinese labels that marks missing measurements explicitly."
+          },
+          "output": {
+            "zh-Hans": "带图例与缺失标记的图表文件。",
+            "en": "A chart file with a legend and missing-data markers."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/scientific-visualization.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "markitdown": {
+      "overview": {
+        "zh-Hans": "把 DOCX、XLSX、PPTX、HTML、CSV 与可提取的 PDF 转成 Markdown，保留标题层级与表格结构；扫描件使用 App 内置 OCR，受保护 PDF 走 App 内置的审阅通道，不新增付费服务。",
+        "en": "Convert DOCX, XLSX, PPTX, HTML, CSV and extractable PDFs to Markdown while keeping heading levels and tables. Scans use the app’s built-in OCR and protected PDFs use its built-in review path, with no new paid services."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "把办公文档批量转成 Markdown",
+          "en": "Convert office documents to Markdown in batches"
+        },
+        {
+          "zh-Hans": "保留标题层级与表格结构",
+          "en": "Preserve heading levels and table structure"
+        },
+        {
+          "zh-Hans": "为知识库准备可检索文本",
+          "en": "Prepare searchable text for a knowledge base"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "把这份 DOCX 和这组表格转换成 Markdown，保留标题层级。",
+            "en": "Convert this DOCX and these tables to Markdown while keeping heading levels."
+          },
+          "output": {
+            "zh-Hans": "一个或多个 Markdown 文件与转换说明。",
+            "en": "One or more Markdown files with a conversion note."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "把这个 HTML 页面转成 Markdown，并说明哪些元素被丢弃。",
+            "en": "Convert this HTML page to Markdown and list which elements were dropped."
+          },
+          "output": {
+            "zh-Hans": "Markdown 文本与丢弃元素清单。",
+            "en": "Markdown text plus a list of dropped elements."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/markitdown.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "sympy": {
+      "overview": {
+        "zh-Hans": "符号数学求解与推演：方程、积分、化简与验证。以真实 Linux 依赖与样例验证，结果显示每一步推导而不是只给结论。",
+        "en": "Symbolic mathematics: equations, integrals, simplification and verification. Validated against real Linux dependencies and examples, with derivations shown rather than only final answers."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "求解微分方程并化简结果",
+          "en": "Solve differential equations and simplify results"
+        },
+        {
+          "zh-Hans": "推导积分并反向验证",
+          "en": "Derive integrals and verify them backwards"
+        },
+        {
+          "zh-Hans": "检查代数推导中的错误",
+          "en": "Check algebraic derivations for mistakes"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "解这个微分方程并化简结果，保留推导步骤。",
+            "en": "Solve this differential equation, simplify the result and keep the derivation steps."
+          },
+          "output": {
+            "zh-Hans": "推导过程与最终表达式。",
+            "en": "The derivation and the final expression."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "推导这个积分，并验证结果对 x 的导数等于被积函数。",
+            "en": "Derive this integral and verify that its derivative with respect to x equals the integrand."
+          },
+          "output": {
+            "zh-Hans": "积分结果与验证步骤。",
+            "en": "The integral result and the verification steps."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/sympy.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "impeccable": {
+      "overview": {
+        "zh-Hans": "面向网页界面设计审计与修改闭环：先建立上下文，再在受控页面快照上做规则扫描，完成再设计与复查。",
+        "en": "A design audit and rework loop for web interfaces: establish context, run rule scans over controlled page snapshots, then redesign and recheck."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "审查落地页的视觉层级与可访问性",
+          "en": "Audit a landing page’s hierarchy and accessibility"
+        },
+        {
+          "zh-Hans": "按设计规范重做首屏并复查",
+          "en": "Rework a hero against a design spec, then recheck"
+        },
+        {
+          "zh-Hans": "把检查结果整理成可执行的修改清单",
+          "en": "Turn findings into an actionable fix list"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "审查这个落地页的视觉层级、间距与可访问性，给出按优先级排序的修改清单。",
+            "en": "Audit this landing page for visual hierarchy, spacing and accessibility, then produce a priority-ordered fix list."
+          },
+          "output": {
+            "zh-Hans": "基于受控页面快照的检查结果与分级修改建议；未覆盖的检查项会明确列出。",
+            "en": "Findings from controlled page snapshots with ranked fixes; checks that were not covered are listed explicitly."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "按这份设计规范重做首屏，然后复查改动前后的差异。",
+            "en": "Rework the hero against this design spec, then review the before/after differences."
+          },
+          "output": {
+            "zh-Hans": "再设计后的页面与复检清单；无法自动验证的部分会说明原因。",
+            "en": "The redesigned page plus a recheck list; anything not automatically verifiable is explained."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/impeccable.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "algorithmic-art": {
+      "overview": {
+        "zh-Hans": "用可复现的种子生成算法艺术，并导出 Floe 可预览的 HTML。宿主专属的品牌与展示方式会被替换，离线声明必须实测通过后才写入结果。",
+        "en": "Generate algorithmic art from reproducible seeds and export HTML that Floe can preview. Host-specific branding is replaced, and offline claims are only made after measurement."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "用固定种子生成可复现的画面",
+          "en": "Produce reproducible visuals from fixed seeds"
+        },
+        {
+          "zh-Hans": "导出可交互的参数页面",
+          "en": "Export an interactive parameter page"
+        },
+        {
+          "zh-Hans": "为视觉实验准备系列变体",
+          "en": "Prepare a series of visual variants"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "用固定种子生成一组生成艺术作品，参数可在页面上调整。",
+            "en": "Generate a set of algorithmic artworks from a fixed seed with adjustable page parameters."
+          },
+          "output": {
+            "zh-Hans": "可在 Floe 预览的 HTML 与参数说明。",
+            "en": "HTML previewable in Floe with parameter documentation."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "把这个生成艺术草图导出为 HTML，并注明是否需要网络。",
+            "en": "Export this generative-art sketch as HTML and state whether it needs a network."
+          },
+          "output": {
+            "zh-Hans": "HTML 文件与依赖声明（离线可用性以实测为准）。",
+            "en": "An HTML file with a dependency statement (offline availability as measured)."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/algorithmic-art.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "canvas-design": {
+      "overview": {
+        "zh-Hans": "使用已验证的脚本与服务生成中文海报或版面，输出并重新打开 PNG 与 PDF，核验字体归属、尺寸与可读性。不使用 Notes 或 Canvas 的编辑状态。",
+        "en": "Produce Chinese posters and layouts with validated scripts and services, exporting and reopening PNG and PDF while checking font provenance, sizing and legibility. Notes and Canvas editing state stay untouched."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "制作中文活动海报",
+          "en": "Create a Chinese event poster"
+        },
+        {
+          "zh-Hans": "把文案排成多栏版面",
+          "en": "Lay copy out in columns"
+        },
+        {
+          "zh-Hans": "核验导出文件的字体与边距",
+          "en": "Verify fonts and margins in exported files"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "做一张中文活动海报，A3 尺寸，导出 PNG 与 PDF。",
+            "en": "Create a Chinese event poster at A3 size and export both PNG and PDF."
+          },
+          "output": {
+            "zh-Hans": "两个格式的海报文件与字体使用说明。",
+            "en": "Poster files in both formats with a note on fonts used."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "把这份文案排成两栏版面，检查字号与边距是否合理。",
+            "en": "Lay this copy out in two columns and check type size and margins."
+          },
+          "output": {
+            "zh-Hans": "排版结果与可读性检查记录。",
+            "en": "The layout output with a legibility check record."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/canvas-design.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "theme-factory": {
+      "overview": {
+        "zh-Hans": "生成并成套管理主题与配色：字体、色板与模板素材按可复用方式装配。产出是能落地的令牌与示例，而不只是几张配色图。",
+        "en": "Generate and manage theme kits: fonts, color boards and template assets assembled for reuse. Outputs are deployable tokens and examples, not just palette images."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "为产品生成深浅两套主题",
+          "en": "Generate light and dark themes for a product"
+        },
+        {
+          "zh-Hans": "扩展品牌色为语义色令牌",
+          "en": "Extend brand colors into semantic tokens"
+        },
+        {
+          "zh-Hans": "统一字体配对与字号阶梯",
+          "en": "Unify font pairing and type scale"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "为这套产品生成深色与浅色主题的色板、字体配对和组件示例。",
+            "en": "Generate color boards, font pairings and component examples for dark and light themes of this product."
+          },
+          "output": {
+            "zh-Hans": "两套主题令牌与组件预览。",
+            "en": "Two token sets with component previews."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "把现有品牌色扩展成完整的语义色令牌。",
+            "en": "Extend the existing brand color into a complete semantic token set."
+          },
+          "output": {
+            "zh-Hans": "语义令牌表与对比度检查说明。",
+            "en": "A semantic token table with contrast notes."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/theme-factory.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "ui-design-system": {
+      "overview": {
+        "zh-Hans": "把组件、令牌与规范沉淀成可维护的 UI 设计系统工作流。脚本与交付格式已经适配 Floe，输出可以直接交给实现方。",
+        "en": "Turn components, tokens and specs into a maintainable design-system workflow. Scripts and deliverable formats are adapted to Floe so output can go straight to implementation."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "整理按钮、输入框与卡片规范",
+          "en": "Document button, input and card specs"
+        },
+        {
+          "zh-Hans": "统一间距与圆角令牌",
+          "en": "Unify spacing and radius tokens"
+        },
+        {
+          "zh-Hans": "评审现有界面的组件一致性",
+          "en": "Review component consistency in an existing UI"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "为这个应用整理按钮、输入框与卡片的组件规范。",
+            "en": "Document component specs for buttons, inputs and cards in this app."
+          },
+          "output": {
+            "zh-Hans": "组件规范文档与令牌清单。",
+            "en": "A component spec document with a token list."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "审查现有界面的间距与圆角是否统一，输出令牌表。",
+            "en": "Check whether spacing and radii are consistent across this UI and output a token table."
+          },
+          "output": {
+            "zh-Hans": "不一致项清单与建议令牌。",
+            "en": "An inconsistency list with suggested tokens."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/ui-design-system.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "ux-researcher-designer": {
+      "overview": {
+        "zh-Hans": "用户研究、可用性洞察与设计决策记录的内容与脚本适配。重点是把观察整理成可追溯的问题与决策，而不是泛泛的“用户喜欢”。",
+        "en": "User research, usability findings and design-decision records with adapted content and scripts. Observations become traceable issues and decisions rather than vague “users like it” notes."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "设计访谈提纲并整理洞察",
+          "en": "Draft interview guides and synthesize findings"
+        },
+        {
+          "zh-Hans": "把可用性测试记录分级",
+          "en": "Grade usability-test observations"
+        },
+        {
+          "zh-Hans": "记录设计决策与依据",
+          "en": "Record design decisions and their rationale"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "为这个新功能设计 6 个访谈问题，并给出洞察整理模板。",
+            "en": "Design six interview questions for this new feature and provide a synthesis template."
+          },
+          "output": {
+            "zh-Hans": "访谈提纲与结构化洞察模板。",
+            "en": "An interview guide and a structured synthesis template."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "把这份可用性测试记录整理成问题分级与设计建议。",
+            "en": "Turn these usability-test notes into graded issues and design recommendations."
+          },
+          "output": {
+            "zh-Hans": "按严重程度分级的问题清单。",
+            "en": "A severity-graded issue list."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/ux-researcher-designer.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "react-best-practices": {
+      "overview": {
+        "zh-Hans": "React 编写规则与示例的 Floe 适配版，覆盖性能、组件结构与常见误区。规则来自固定版本并附示例，避免只给抽象建议。",
+        "en": "A Floe-adapted set of React rules and examples covering performance, structure and common pitfalls. Rules come from pinned versions and ship with examples instead of abstract advice."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "审查组件树的性能问题",
+          "en": "Audit a component tree for performance issues"
+        },
+        {
+          "zh-Hans": "重构重复渲染的列表组件",
+          "en": "Refactor a list that re-renders excessively"
+        },
+        {
+          "zh-Hans": "统一项目内的 React 写法",
+          "en": "Standardize React patterns across a project"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "审查这个 React 组件树的性能问题，并给出重构建议。",
+            "en": "Audit this React component tree for performance problems and suggest refactors."
+          },
+          "output": {
+            "zh-Hans": "问题定位与按影响排序的修改建议。",
+            "en": "Located issues with fixes ranked by impact."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "按最佳实践重写这个列表组件，避免不必要的重渲染。",
+            "en": "Rewrite this list component following best practices to avoid unnecessary re-renders."
+          },
+          "output": {
+            "zh-Hans": "改写后的组件与行为不变说明。",
+            "en": "The rewritten component with a note that behavior is unchanged."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/react-best-practices.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "composition-patterns": {
+      "overview": {
+        "zh-Hans": "React 组件组合模式的规则与样例：把大组件拆成可组合、可测试的结构。示例强调接口边界，而不是追求抽象的层数。",
+        "en": "React composition-pattern rules and samples: split large components into composable, testable structures. Examples emphasize clear interfaces over abstract layering."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "拆分职责过多的巨型组件",
+          "en": "Split an oversized component"
+        },
+        {
+          "zh-Hans": "让表单校验逻辑可复用",
+          "en": "Make form validation logic reusable"
+        },
+        {
+          "zh-Hans": "统一组合式组件的 API",
+          "en": "Unify composition-component APIs"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "把这个巨型组件拆成可组合的子组件，保持行为不变。",
+            "en": "Split this large component into composable children without changing behavior."
+          },
+          "output": {
+            "zh-Hans": "拆分后的组件结构与迁移说明。",
+            "en": "The new component structure with migration notes."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "用组合模式重写这个表单，让校验逻辑可以复用。",
+            "en": "Rewrite this form using composition so validation can be reused."
+          },
+          "output": {
+            "zh-Hans": "重写后的表单与可复用校验模块。",
+            "en": "The rewritten form plus a reusable validation module."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/composition-patterns.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "web-design-guidelines": {
+      "overview": {
+        "zh-Hans": "网页设计规范清单的 Floe 适配版，规则依赖已固定并经过审核。适合在设计与实现之间做一次结构化对照检查。",
+        "en": "A Floe-adapted checklist of web design guidelines with pinned, reviewed rule dependencies. Useful as a structured comparison between design and implementation."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "检查排版、对比度与交互状态",
+          "en": "Check typography, contrast and interaction states"
+        },
+        {
+          "zh-Hans": "输出逐条对照的检查清单",
+          "en": "Produce an item-by-item checklist result"
+        },
+        {
+          "zh-Hans": "在交付前做一次设计规范复核",
+          "en": "Run a guideline pass before delivery"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "按网页设计规范检查这个页面的排版、对比度与交互状态。",
+            "en": "Check this page’s typography, contrast and interaction states against the web design guidelines."
+          },
+          "output": {
+            "zh-Hans": "逐条检查结果与修改建议。",
+            "en": "Item-by-item results with suggested fixes."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "为这个页面输出一份可执行的规范检查清单。",
+            "en": "Produce an actionable guideline checklist for this page."
+          },
+          "output": {
+            "zh-Hans": "带优先级的检查清单。",
+            "en": "A prioritized checklist."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/web-design-guidelines.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "webapp-testing": {
+      "overview": {
+        "zh-Hans": "使用 Floe 受控浏览器执行可重放的导航、观察、点击、输入、等待、断言与截图步骤，验证一个真实交互的 Web 应用。本地服务由现有 supervisor 管理，不依赖 Playwright。",
+        "en": "Validate a real interactive web app through Floe’s controlled browser with replayable navigate, observe, click, type, wait, assert and screenshot steps. Local services stay under the existing supervisor; Playwright is not required."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "验证一条完整的用户操作路径",
+          "en": "Verify a complete user flow"
+        },
+        {
+          "zh-Hans": "重放交互步骤并断言结果",
+          "en": "Replay interaction steps and assert outcomes"
+        },
+        {
+          "zh-Hans": "为一次改动保留可复查的测试记录",
+          "en": "Keep a reviewable test record for a change"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "用 Floe 浏览器验证登录、新建任务、保存的完整流程，并记录每一步。",
+            "en": "Use the Floe browser to verify login, task creation and save end to end, recording each step."
+          },
+          "output": {
+            "zh-Hans": "可重放的步骤记录、断言结果与关键截图。",
+            "en": "A replayable step log, assertion results and key screenshots."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "重放这组交互步骤，断言结果并保存关键截图。",
+            "en": "Replay this interaction sequence, assert the results and save key screenshots."
+          },
+          "output": {
+            "zh-Hans": "重放记录与通过/失败结论。",
+            "en": "A replay log with pass/fail conclusions."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/webapp-testing.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "a11y-audit": {
+      "overview": {
+        "zh-Hans": "复用受控浏览器与代码检查完成可访问性审计，按 WCAG 条款输出问题与修复清单。发现的问题会区分自动可判定与需要人工判断的部分。",
+        "en": "Run accessibility audits with the controlled browser and code checks, reporting issues and fixes against WCAG clauses. Findings separate automatically decidable items from those needing human judgment."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "检查键盘焦点与标签完整性",
+          "en": "Check keyboard focus and labelling completeness"
+        },
+        {
+          "zh-Hans": "按 WCAG 条款列出问题",
+          "en": "List issues by WCAG clause"
+        },
+        {
+          "zh-Hans": "为修复排定优先级",
+          "en": "Prioritize accessibility fixes"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "对这个页面做可访问性审计，按 WCAG 条款列出问题。",
+            "en": "Audit this page for accessibility and list issues by WCAG clause."
+          },
+          "output": {
+            "zh-Hans": "分条款的问题清单与修复建议。",
+            "en": "A clause-grouped issue list with fixes."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "检查键盘焦点顺序与表单标签是否完整。",
+            "en": "Check the keyboard focus order and whether form labels are complete."
+          },
+          "output": {
+            "zh-Hans": "焦点与标签检查记录。",
+            "en": "A focus and labelling check record."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/a11y-audit.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "systematic-debugging": {
+      "overview": {
+        "zh-Hans": "按“复现—假设—最小验证”的流程调试，适配 Floe 的任务、日志与执行工具。每一步都要求可观察的结果，避免凭直觉改动。",
+        "en": "Debug with a reproduce/hypothesize/minimal-test loop adapted to Floe tasks, logs and execution tools. Each step demands an observable result instead of intuition-driven edits."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "定位启动或运行失败的原因",
+          "en": "Locate the cause of a startup or runtime failure"
+        },
+        {
+          "zh-Hans": "对比日志与最近改动",
+          "en": "Compare logs with recent changes"
+        },
+        {
+          "zh-Hans": "设计最小复现实验",
+          "en": "Design a minimal reproduction"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "按复现、假设、最小验证的流程定位这个启动失败。",
+            "en": "Locate this startup failure using reproduce, hypothesize, minimal-test steps."
+          },
+          "output": {
+            "zh-Hans": "每一步的观察结果与结论，附最小复现步骤。",
+            "en": "Observed results per step with a minimal reproduction."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "对比日志与最近改动，给出最可能的三个原因和验证步骤。",
+            "en": "Compare the logs with recent changes and give the three most likely causes with verification steps."
+          },
+          "output": {
+            "zh-Hans": "按可能性排序的原因与验证计划。",
+            "en": "Ranked causes with a verification plan."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/systematic-debugging.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "test-driven-development": {
+      "overview": {
+        "zh-Hans": "在项目内真实测试命令约束下的测试驱动开发流程：先写出失败的测试，再实现、再确认全量通过。示例与命令取自项目本身。",
+        "en": "Test-driven development bound to the project’s real test commands: write the failing test first, implement, then confirm the full run. Examples and commands come from the project itself."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "为边界问题补写回归测试",
+          "en": "Add a regression test for an edge case"
+        },
+        {
+          "zh-Hans": "先写测试再实现小功能",
+          "en": "Write the test before a small feature"
+        },
+        {
+          "zh-Hans": "确认改动没有破坏既有测试",
+          "en": "Confirm a change did not break existing tests"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "先写一个失败的测试复现这个边界问题，再实现修复。",
+            "en": "Write a failing test that reproduces this edge case, then implement the fix."
+          },
+          "output": {
+            "zh-Hans": "先失败后通过的测试记录与修复代码。",
+            "en": "A fail-then-pass test record with the fix."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "为这个函数补齐测试，并运行项目现有测试命令确认。",
+            "en": "Add tests for this function and run the project’s existing test command to confirm."
+          },
+          "output": {
+            "zh-Hans": "新增测试与真实运行结果。",
+            "en": "The new tests and the actual run results."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/test-driven-development.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "requesting-code-review": {
+      "overview": {
+        "zh-Hans": "复用现有任务与审阅机制发起与处理代码评审：说明改动意图、风险点与验证方式，并把意见整理成可执行项。",
+        "en": "Initiate and process code reviews through the existing task and review mechanisms: state intent, risks and verification, and turn comments into actionable items."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "为一次改动发起结构化评审",
+          "en": "Start a structured review for a change"
+        },
+        {
+          "zh-Hans": "区分阻塞项与建议项",
+          "en": "Separate blocking comments from suggestions"
+        },
+        {
+          "zh-Hans": "整理评审结论与后续动作",
+          "en": "Summarize review outcomes and follow-ups"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "为这次改动发起代码评审，列出风险点与验证方式。",
+            "en": "Start a code review for this change, listing risks and how to verify them."
+          },
+          "output": {
+            "zh-Hans": "一份评审请求说明与风险清单。",
+            "en": "A review request with a risk list."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "整理这份 diff 的评审意见，区分阻塞项与建议项。",
+            "en": "Organize the review comments on this diff into blocking items and suggestions."
+          },
+          "output": {
+            "zh-Hans": "分类后的处理清单。",
+            "en": "A categorized action list."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/requesting-code-review.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "product-manager-toolkit": {
+      "overview": {
+        "zh-Hans": "产品经理常用模板与脚本：需求分析、路线图与决策记录。模板约束输出结构，脚本负责重复整理工作。",
+        "en": "Product-manager templates and scripts for requirements analysis, roadmaps and decision records. Templates constrain the structure while scripts handle repetitive assembly."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "把想法整理成一页需求说明",
+          "en": "Turn a rough idea into a one-page requirement"
+        },
+        {
+          "zh-Hans": "制定季度路线图草案",
+          "en": "Draft a quarterly roadmap"
+        },
+        {
+          "zh-Hans": "记录关键决策与取舍",
+          "en": "Record key decisions and trade-offs"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "把这个想法整理成一页需求说明与验收标准。",
+            "en": "Turn this idea into a one-page requirement with acceptance criteria."
+          },
+          "output": {
+            "zh-Hans": "需求说明与可检查的验收标准。",
+            "en": "A requirement page with checkable acceptance criteria."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "为下个季度做一份带优先级的路线图草案。",
+            "en": "Draft a prioritized roadmap for next quarter."
+          },
+          "output": {
+            "zh-Hans": "按优先级排列的路线图草案与假设说明。",
+            "en": "A prioritized roadmap draft with stated assumptions."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/product-manager-toolkit.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "product-discovery": {
+      "overview": {
+        "zh-Hans": "产品探索的证据流程：提出机会假设、设计验证实验、归档结论。重点在于区分“我们以为”和“我们验证过”。",
+        "en": "A discovery evidence flow: state opportunity hypotheses, design validation experiments and archive conclusions. The point is separating what we assume from what we tested."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "为产品假设设计验证实验",
+          "en": "Design experiments for a product hypothesis"
+        },
+        {
+          "zh-Hans": "整理访谈为机会点",
+          "en": "Turn interviews into opportunity areas"
+        },
+        {
+          "zh-Hans": "归档探索结论与证据",
+          "en": "Archive discovery conclusions and evidence"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "为这个假设设计三个可验证的实验，并说明判定标准。",
+            "en": "Design three testable experiments for this hypothesis and define success criteria."
+          },
+          "output": {
+            "zh-Hans": "实验设计、判定标准与成本估计。",
+            "en": "Experiment designs, success criteria and cost estimates."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "把这些用户访谈整理成机会点与验证结论。",
+            "en": "Synthesize these user interviews into opportunity areas and validated findings."
+          },
+          "output": {
+            "zh-Hans": "机会点清单与支撑证据。",
+            "en": "An opportunity list with supporting evidence."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/product-discovery.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "code-to-prd": {
+      "overview": {
+        "zh-Hans": "读取现有项目并生成需求说明：从代码结构推断功能边界、依赖与风险，并明确标注不确定处。适合接手项目或补历史文档。",
+        "en": "Read an existing project and generate a PRD: infer capability boundaries, dependencies and risks from the code, and mark uncertainties. Useful for taking over a project or backfilling documentation."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "为旧模块补一份需求说明",
+          "en": "Backfill a requirement document for an old module"
+        },
+        {
+          "zh-Hans": "梳理功能边界与依赖",
+          "en": "Map capability boundaries and dependencies"
+        },
+        {
+          "zh-Hans": "评估改动的影响面",
+          "en": "Assess the impact surface of a change"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "阅读这个项目并生成需求说明，标注不确定处。",
+            "en": "Read this project and produce a PRD, marking where you are uncertain."
+          },
+          "output": {
+            "zh-Hans": "需求说明文档与待确认问题清单。",
+            "en": "A PRD with a list of open questions."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "把这个功能模块的现状整理成 PRD 与影响面分析。",
+            "en": "Document this module’s current state as a PRD with an impact analysis."
+          },
+          "output": {
+            "zh-Hans": "模块说明、依赖关系与影响面评估。",
+            "en": "A module description, dependency map and impact assessment."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/code-to-prd.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "meetings": {
+      "overview": {
+        "zh-Hans": "从已授权的文本或转写生成会议纪要、行动项与跟进清单。纪要区分讨论、决定与待办，行动项必须带负责人与期限才算完整。",
+        "en": "Produce minutes, action items and follow-ups from authorized text or transcripts. Minutes separate discussion, decisions and todos, and an action item is only complete with an owner and due date."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "把会议转写整理成纪要",
+          "en": "Turn a transcript into minutes"
+        },
+        {
+          "zh-Hans": "提取行动项与负责人",
+          "en": "Extract action items and owners"
+        },
+        {
+          "zh-Hans": "为下次会议准备跟进清单",
+          "en": "Prepare a follow-up list for the next meeting"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "把这段会议转写整理成纪要、行动项与负责人。",
+            "en": "Turn this transcript into minutes, action items and owners."
+          },
+          "output": {
+            "zh-Hans": "结构化纪要与行动项表。",
+            "en": "Structured minutes with an action-item table."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "从这份讨论记录里提取待跟进事项并按优先级排序。",
+            "en": "Extract follow-ups from these discussion notes and rank them by priority."
+          },
+          "output": {
+            "zh-Hans": "按优先级排列的待办清单。",
+            "en": "A prioritized todo list."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/meetings.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "floe-file-organizer": {
+      "overview": {
+        "zh-Hans": "整理工作区文件，先给出变更预览，再以可恢复方式提交。没有撤销计划的移动与删除不会发生，重名与冲突会先被指出。",
+        "en": "Organize workspace files with a change preview before a recoverable commit. Moves and deletions never happen without an undo plan, and name conflicts are surfaced first."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "按类型与日期整理下载目录",
+          "en": "Sort a downloads folder by type and date"
+        },
+        {
+          "zh-Hans": "找出重复文件并生成整理方案",
+          "en": "Find duplicates and propose a cleanup plan"
+        },
+        {
+          "zh-Hans": "在提交前确认变更清单",
+          "en": "Confirm the change list before committing"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "整理下载目录，按类型与日期分组，先给我预览。",
+            "en": "Organize the downloads folder by type and date, and show me a preview first."
+          },
+          "output": {
+            "zh-Hans": "变更预览与可恢复的提交方案。",
+            "en": "A change preview with a recoverable commit plan."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "找出重复文件并生成可恢复的整理方案。",
+            "en": "Find duplicate files and produce a recoverable cleanup plan."
+          },
+          "output": {
+            "zh-Hans": "重复文件清单与带撤销计划的方案。",
+            "en": "A duplicate list with an undo plan."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/floe-file-organizer.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    },
+    "floe-invoice-organizer": {
+      "overview": {
+        "zh-Hans": "复用 App 的 OCR 与表格服务提取、归类并归档票据，提交可恢复。识别不确定的字段会被标出，而不是猜一个数字填进去。",
+        "en": "Extract, classify and archive invoices through the app’s OCR and table services with recoverable commits. Uncertain fields are flagged rather than guessed."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "从票据图片提取金额与日期",
+          "en": "Extract amounts and dates from invoice images"
+        },
+        {
+          "zh-Hans": "按月份归类并归档",
+          "en": "Group by month and archive"
+        },
+        {
+          "zh-Hans": "核对识别结果再提交",
+          "en": "Verify extracted values before committing"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "从这批票据图片里提取金额、日期与商户，整理成表格。",
+            "en": "Extract amount, date and merchant from these invoice images into a table."
+          },
+          "output": {
+            "zh-Hans": "票据明细表与识别不确定项标注。",
+            "en": "An invoice table with uncertain extractions marked."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "按月份归类这些发票，并生成可恢复的归档方案。",
+            "en": "Group these invoices by month and produce a recoverable archive plan."
+          },
+          "output": {
+            "zh-Hans": "按月归档方案与变更预览。",
+            "en": "A month-based archive plan with a change preview."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/floe-invoice-organizer.svg",
+        "kind": "illustration",
+        "credit": {
+          "en": "Floe original illustration; not an App screenshot.",
+          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+        }
+      },
+      "gallery": []
+    }
+  }
+}

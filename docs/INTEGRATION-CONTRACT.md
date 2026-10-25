@@ -15,7 +15,7 @@ The signed feed carries `sourceCommit`: the audited source revision X used to bu
 
 ## GitHub-only App delivery
 
-The App obtains catalog metadata, signatures, review records, skill archives and managed runtime artifacts directly from the trusted GitHub repository at the operation's immutable publication Y. The website is an independent static showcase, populated from GitHub at website build time. It is never an App API, package proxy, download CDN, telemetry collector or fallback source. If GitHub is unavailable, retain the existing verified local cache and show the applicable offline state; never silently route App requests through the website.
+The App obtains catalog metadata, signatures, review records, skill archives and managed runtime artifacts directly from the trusted GitHub repository at the operation's immutable publication Y. The website is an independent browser client of the same GitHub data, with a pre-rendered cache for its first screen and SEO. Editorial, references and media are authored only in this Hub under `showcase/`; the browser can refresh them from the same pinned Y without rebuilding the website. See [the presentation contract](../showcase/CONTRACT.md). The website is never an App API, package proxy, download CDN, telemetry collector or fallback source. If GitHub is unavailable, retain the existing verified local cache and show the applicable offline state; never silently route App requests through the website.
 
 ## Trust, review and runtime
 

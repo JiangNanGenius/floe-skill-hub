@@ -4,7 +4,7 @@ Curated, source-pinned agent skills adapted for Floe Agent. This repository owns
 
 The first release targets 43 skills. Entries remain candidates until license, package and functional qualification pass; an entry or a successful build is not proof of execution.
 
-The App reads the signed catalog and downloads skill/runtime artifacts directly from GitHub. The official website is a static showcase and does not serve App store requests or proxy downloads.
+The App reads the signed catalog and downloads skill/runtime artifacts directly from GitHub. The official website is a browser client of the same Hub data with a pre-rendered cache. Shared editorial, references and media live under [showcase/](showcase/CONTRACT.md); the website does not serve App store requests or proxy downloads.
 
 See [the implementation plan](docs/IMPLEMENTATION_PLAN.zh-CN.md) and [integration contract](docs/INTEGRATION-CONTRACT.md). Per-package upstream licenses and notices remain authoritative. Floe-authored repository tooling follows MPL-2.0 unless a file states otherwise; this does not relicense third-party skills, fonts or assets.
 
