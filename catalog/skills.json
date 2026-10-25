@@ -310,7 +310,14 @@
         ],
         "pythonPackagesPlan": [],
         "scriptRuntime": "none",
-        "tools": []
+        "tools": [
+          "media.capabilities",
+          "video.inspect",
+          "video.transcode",
+          "video.remux",
+          "audio.inspect",
+          "audio.convert"
+        ]
       },
       "source": "F",
       "status": {
@@ -348,8 +355,8 @@
         "zh-Hans": "文档协作"
       },
       "notes": {
-        "en": "This skill directory carries no LICENSE file while sibling skills do; the repository itself publishes no root license. Treat as unlicensed at source until Anthropic grants distribution rights for this item.",
-        "zh-Hans": "同仓库其他技能目录附带 LICENSE，而该目录没有；仓库根也无许可。在 Anthropic 授予该项分发权前按无许可处理。"
+        "en": "Floe original guide. Replaces the original candidate with independently authored content; upstream text is not distributed. Candidate identity and provenance remain in the package.",
+        "zh-Hans": "Floe 原创指南，以独立编写的内容替代原候选，不分发其上游文本。包内保留候选来源与处理记录。"
       },
       "planNumber": 5,
       "plannedRuntime": {
@@ -370,36 +377,23 @@
         "scriptRuntime": "none",
         "tools": []
       },
-      "source": "A",
+      "source": "F",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "in-progress",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
         "reviewed": false,
-        "sourcePinned": true
+        "sourcePinned": false
       },
       "tags": [
         "writing",
         "collaboration",
         "documents"
       ],
-      "upstream": {
-        "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
-        "licenseEvidencePath": null,
-        "licenseNote": {
-          "en": "This skill directory carries no LICENSE file while sibling skills do; the repository itself publishes no root license. Treat as unlicensed at source until Anthropic grants distribution rights for this item.",
-          "zh-Hans": "同仓库其他技能目录附带 LICENSE，而该目录没有；仓库根也无许可。在 Anthropic 授予该项分发权前按无许可处理。"
-        },
-        "licenseStatus": "blocked-no-upstream-license",
-        "path": "skills/doc-coauthoring",
-        "repository": "https://github.com/anthropics/skills",
-        "repositoryLicense": "none detected",
-        "retrievedAt": "2026-10-26",
-        "skillManifestPath": "skills/doc-coauthoring/SKILL.md"
-      },
+      "upstream": null,
       "versionTarget": "1.0.0"
     },
     {
@@ -489,8 +483,8 @@
         "zh-Hans": "技术写作检查"
       },
       "notes": {
-        "en": "The repository has no license file at the pinned commit (GitHub reports no detected license); content must not be copied into a package until written distribution permission is obtained or an equivalent licensed source replaces it.",
-        "zh-Hans": "固定提交上仓库无任何许可文件（GitHub 未检出许可）；在取得书面分发许可或换成有许可的等价来源前，不得把内容复制进包。"
+        "en": "Floe original guide. Replaces the original candidate with independently authored content; upstream text is not distributed. Candidate identity and provenance remain in the package.",
+        "zh-Hans": "Floe 原创指南，以独立编写的内容替代原候选，不分发其上游文本。包内保留候选来源与处理记录。"
       },
       "planNumber": 7,
       "plannedRuntime": {
@@ -510,16 +504,16 @@
         "scriptRuntime": "none",
         "tools": []
       },
-      "source": "V",
+      "source": "F",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "in-progress",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
         "reviewed": false,
-        "sourcePinned": true
+        "sourcePinned": false
       },
       "tags": [
         "writing",
@@ -527,20 +521,7 @@
         "guidelines",
         "review"
       ],
-      "upstream": {
-        "commit": "063bee94c3f4df8453406c830b0a7df0f2860278",
-        "licenseEvidencePath": null,
-        "licenseNote": {
-          "en": "The repository has no license file at the pinned commit (GitHub reports no detected license); content must not be copied into a package until written distribution permission is obtained or an equivalent licensed source replaces it.",
-          "zh-Hans": "固定提交上仓库无任何许可文件（GitHub 未检出许可）；在取得书面分发许可或换成有许可的等价来源前，不得把内容复制进包。"
-        },
-        "licenseStatus": "blocked-no-upstream-license",
-        "path": "skills/writing-guidelines",
-        "repository": "https://github.com/vercel-labs/agent-skills",
-        "repositoryLicense": "none detected",
-        "retrievedAt": "2026-10-26",
-        "skillManifestPath": "skills/writing-guidelines/SKILL.md"
-      },
+      "upstream": null,
       "versionTarget": "1.0.0"
     },
     {
@@ -1120,6 +1101,7 @@
       "plannedRuntime": {
         "capabilities": [
           "execution.remote",
+          "network",
           "workspace.read",
           "workspace.write"
         ],
@@ -1132,7 +1114,13 @@
           "ios",
           "android"
         ],
-        "pythonPackagesPlan": [],
+        "pythonPackagesPlan": [
+          "certifi==2026.10.23",
+          "charset-normalizer==3.5.2",
+          "idna==3.20",
+          "requests==2.34.2",
+          "urllib3==2.8.0"
+        ],
         "scriptRuntime": "remote",
         "tools": [
           "exec.shell"
@@ -1644,7 +1632,10 @@
           "ios",
           "android"
         ],
-        "pythonPackagesPlan": [],
+        "pythonPackagesPlan": [
+          "sympy==1.14.0",
+          "mpmath==1.3.0"
+        ],
         "scriptRuntime": "remote",
         "tools": [
           "exec.shell"
@@ -2142,8 +2133,8 @@
         "zh-Hans": "React 最佳实践"
       },
       "notes": {
-        "en": "The repository has no license file at the pinned commit (GitHub reports no detected license); content must not be copied into a package until written distribution permission is obtained or an equivalent licensed source replaces it.",
-        "zh-Hans": "固定提交上仓库无任何许可文件（GitHub 未检出许可）；在取得书面分发许可或换成有许可的等价来源前，不得把内容复制进包。"
+        "en": "Floe original guide. Replaces the original candidate with independently authored content; upstream text is not distributed. Candidate identity and provenance remain in the package.",
+        "zh-Hans": "Floe 原创指南，以独立编写的内容替代原候选，不分发其上游文本。包内保留候选来源与处理记录。"
       },
       "planNumber": 30,
       "plannedRuntime": {
@@ -2163,16 +2154,16 @@
         "scriptRuntime": "none",
         "tools": []
       },
-      "source": "V",
+      "source": "F",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "in-progress",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
         "reviewed": false,
-        "sourcePinned": true
+        "sourcePinned": false
       },
       "tags": [
         "react",
@@ -2180,20 +2171,7 @@
         "rules",
         "examples"
       ],
-      "upstream": {
-        "commit": "063bee94c3f4df8453406c830b0a7df0f2860278",
-        "licenseEvidencePath": null,
-        "licenseNote": {
-          "en": "The repository has no license file at the pinned commit (GitHub reports no detected license); content must not be copied into a package until written distribution permission is obtained or an equivalent licensed source replaces it.",
-          "zh-Hans": "固定提交上仓库无任何许可文件（GitHub 未检出许可）；在取得书面分发许可或换成有许可的等价来源前，不得把内容复制进包。"
-        },
-        "licenseStatus": "blocked-no-upstream-license",
-        "path": "skills/react-best-practices",
-        "repository": "https://github.com/vercel-labs/agent-skills",
-        "repositoryLicense": "none detected",
-        "retrievedAt": "2026-10-26",
-        "skillManifestPath": "skills/react-best-practices/SKILL.md"
-      },
+      "upstream": null,
       "versionTarget": "1.0.0"
     },
     {
@@ -2212,8 +2190,8 @@
         "zh-Hans": "React 组件组合"
       },
       "notes": {
-        "en": "The repository has no license file at the pinned commit (GitHub reports no detected license); content must not be copied into a package until written distribution permission is obtained or an equivalent licensed source replaces it.",
-        "zh-Hans": "固定提交上仓库无任何许可文件（GitHub 未检出许可）；在取得书面分发许可或换成有许可的等价来源前，不得把内容复制进包。"
+        "en": "Floe original guide. Replaces the original candidate with independently authored content; upstream text is not distributed. Candidate identity and provenance remain in the package.",
+        "zh-Hans": "Floe 原创指南，以独立编写的内容替代原候选，不分发其上游文本。包内保留候选来源与处理记录。"
       },
       "planNumber": 31,
       "plannedRuntime": {
@@ -2233,16 +2211,16 @@
         "scriptRuntime": "none",
         "tools": []
       },
-      "source": "V",
+      "source": "F",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "in-progress",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
         "reviewed": false,
-        "sourcePinned": true
+        "sourcePinned": false
       },
       "tags": [
         "react",
@@ -2250,20 +2228,7 @@
         "patterns",
         "frontend"
       ],
-      "upstream": {
-        "commit": "063bee94c3f4df8453406c830b0a7df0f2860278",
-        "licenseEvidencePath": null,
-        "licenseNote": {
-          "en": "The repository has no license file at the pinned commit (GitHub reports no detected license); content must not be copied into a package until written distribution permission is obtained or an equivalent licensed source replaces it.",
-          "zh-Hans": "固定提交上仓库无任何许可文件（GitHub 未检出许可）；在取得书面分发许可或换成有许可的等价来源前，不得把内容复制进包。"
-        },
-        "licenseStatus": "blocked-no-upstream-license",
-        "path": "skills/composition-patterns",
-        "repository": "https://github.com/vercel-labs/agent-skills",
-        "repositoryLicense": "none detected",
-        "retrievedAt": "2026-10-26",
-        "skillManifestPath": "skills/composition-patterns/SKILL.md"
-      },
+      "upstream": null,
       "versionTarget": "1.0.0"
     },
     {
@@ -2282,8 +2247,8 @@
         "zh-Hans": "网页设计规范"
       },
       "notes": {
-        "en": "The repository has no license file at the pinned commit (GitHub reports no detected license); content must not be copied into a package until written distribution permission is obtained or an equivalent licensed source replaces it.",
-        "zh-Hans": "固定提交上仓库无任何许可文件（GitHub 未检出许可）；在取得书面分发许可或换成有许可的等价来源前，不得把内容复制进包。"
+        "en": "Floe original guide. Replaces the original candidate with independently authored content; upstream text is not distributed. Candidate identity and provenance remain in the package.",
+        "zh-Hans": "Floe 原创指南，以独立编写的内容替代原候选，不分发其上游文本。包内保留候选来源与处理记录。"
       },
       "planNumber": 32,
       "plannedRuntime": {
@@ -2303,16 +2268,16 @@
         "scriptRuntime": "none",
         "tools": []
       },
-      "source": "V",
+      "source": "F",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "in-progress",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
         "reviewed": false,
-        "sourcePinned": true
+        "sourcePinned": false
       },
       "tags": [
         "web",
@@ -2320,20 +2285,7 @@
         "guidelines",
         "checklist"
       ],
-      "upstream": {
-        "commit": "063bee94c3f4df8453406c830b0a7df0f2860278",
-        "licenseEvidencePath": null,
-        "licenseNote": {
-          "en": "The repository has no license file at the pinned commit (GitHub reports no detected license); content must not be copied into a package until written distribution permission is obtained or an equivalent licensed source replaces it.",
-          "zh-Hans": "固定提交上仓库无任何许可文件（GitHub 未检出许可）；在取得书面分发许可或换成有许可的等价来源前，不得把内容复制进包。"
-        },
-        "licenseStatus": "blocked-no-upstream-license",
-        "path": "skills/web-design-guidelines",
-        "repository": "https://github.com/vercel-labs/agent-skills",
-        "repositoryLicense": "none detected",
-        "retrievedAt": "2026-10-26",
-        "skillManifestPath": "skills/web-design-guidelines/SKILL.md"
-      },
+      "upstream": null,
       "versionTarget": "1.0.0"
     },
     {

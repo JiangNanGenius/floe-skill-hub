@@ -1,0 +1,1 @@
+{"capabilities":[],"id":"floe-video","platforms":["ios"],"pythonPackages":[],"schemaVersion":1,"scriptRuntime":"none","tools":["media.capabilities","video.inspect","video.transcode","video.remux","audio.inspect","audio.convert"],"version":"1.0.2"}

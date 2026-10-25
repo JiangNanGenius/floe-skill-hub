@@ -1,0 +1,1 @@
+{"capabilities":["workspace.read","browser.observe"],"id":"a11y-audit","platforms":["ios"],"pythonPackages":[],"schemaVersion":1,"scriptRuntime":"none","tools":[],"version":"1.0.0"}

@@ -15,7 +15,7 @@ REGISTRY = json.loads((REPO / "catalog" / "skills.json").read_bytes())
 EXPECTED_DEEP = {"literature-review", "exploratory-data-analysis", "statistical-analysis",
                  "scientific-visualization", "markitdown", "impeccable",
                  "algorithmic-art", "canvas-design", "webapp-testing"}
-EXPECTED_BLOCKED = {"doc-coauthoring", "writing-guidelines", "react-best-practices",
+EXPECTED_ORIGINAL_REPLACEMENTS = {"doc-coauthoring", "writing-guidelines", "react-best-practices",
                     "composition-patterns", "web-design-guidelines"}
 EXPECTED_FIRST_PARTY_PENDING = {"floe-email-drafting", "floe-file-organizer",
                                 "floe-invoice-organizer"}
@@ -66,15 +66,20 @@ class TestRegistry(unittest.TestCase):
         self.assertEqual(self.entries["impeccable"]["upstream"]["path"],
                          "plugin/skills/impeccable")
 
-    def test_license_blockers_recorded_bilingually(self):
-        blocked = {e["id"] for e in REGISTRY["skills"]
-                   if e["upstream"] and e["upstream"]["licenseStatus"]
-                   == "blocked-no-upstream-license"}
-        self.assertEqual(blocked, EXPECTED_BLOCKED)
-        for e in REGISTRY["skills"]:
-            if e["id"] in blocked:
-                self.assertTrue(e["notes"]["en"].strip() and e["notes"]["zh-Hans"].strip())
-                self.assertFalse(e["status"]["licenseChecked"])
+    def test_unlicensed_candidates_use_documented_first_party_replacements(self):
+        for sid in EXPECTED_ORIGINAL_REPLACEMENTS:
+            e = self.entries[sid]
+            self.assertEqual(e["source"], "F")
+            self.assertIsNone(e["upstream"])
+            self.assertIsNone(e["firstParty"])
+            self.assertFalse(e["status"]["sourcePinned"])
+            self.assertTrue(e["status"]["licenseChecked"])
+            self.assertTrue(e["notes"]["en"].strip() and e["notes"]["zh-Hans"].strip())
+            source = REPO / "sources" / sid
+            provenance = (source / "references/PROVENANCE.md").read_text()
+            self.assertIn("Original candidate identity", provenance)
+            self.assertIn("No upstream bytes", provenance)
+            self.assertTrue((source / "references/licenses/FLOE-OWNED-NOTICE.md").is_file())
 
     def test_verified_status_requires_evidence_path(self):
         for e in REGISTRY["skills"]:
