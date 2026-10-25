@@ -114,8 +114,10 @@ static musl image.
 | Launcher verification | 25/25 checks, including real riscv64 execution through the launcher |
 
 The riscv64 runs are **Docker/qemu user-mode emulation on kernel 6.8.0-117-generic**,
-not the Floe guest (Debian 13 riscv64 on TinyEMU with a 4.15 kernel, 256 MB
-default RAM, no JIT). Emulated timing is not a guest latency prediction.
+not the Floe guest (Debian 13 riscv64 on TinyEMU). Main reports kernel 6.18.56
+on 2026-10-26; earlier 4.15/256 MB descriptions were unverified planning
+assumptions. Emulated timing is not a guest latency prediction. Guest timing,
+memory and App integration still require Main's actual qualification results.
 
 ## 4. Verification commands
 

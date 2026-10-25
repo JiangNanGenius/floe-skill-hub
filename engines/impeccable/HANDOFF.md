@@ -195,7 +195,7 @@ each blocks a clean verdict, so an empty finding list is `inconclusive` with
 | No TLS/crypto in the dependency graph | **verified** (build fails otherwise) | `BUILD-RECEIPT.json → dependencyAudit` |
 | Reproducible rebuild | **verified**, byte-identical from a cold cache | `evidence/reproducibility.json` |
 | Execution on riscv64 | **verified under Docker/qemu user-mode emulation**, `uname` = Linux riscv64, kernel 6.8.0-117-generic: 74/74 checks, 12/12 upstream goldens byte-identical, launcher 25/25 incl. a real scan returning Needs | `evidence/verify-riscv64-docker.json`, `evidence/verify-launcher.json`, `contract/expected/riscv64/MANIFEST.json` |
-| Execution in the **Floe Linux guest** (Debian 13 riscv64, TinyEMU, kernel 4.15, 256 MB default RAM, no JIT) | **NOT verified — pending, Main-owned** | needs the dedicated non-shared qualification path; this lane must not boot or mutate the occupied guest |
+| Execution in the **Floe Linux guest** (Debian 13 riscv64, TinyEMU; Main reports kernel 6.18.56 on 2026-10-26) | **NOT verified — pending, Main-owned** | earlier 4.15/256 MB descriptions were planning assumptions; use actual guest readback and measurements for qualification; this lane must not boot or mutate the occupied guest |
 | Guest latency/memory headroom for large captures | **NOT measured** | emulated timing (~110–130 ms for an 18 KB snapshot) is not a TinyEMU prediction |
 | Native WebKit capture parity (computed styles, `checkVisibility`, pseudo-elements, keyframes, font metrics) | **NOT verified** | no real producer yet; `coverage.style-parity` + `unknownStyleProps` is the built-in diagnostic to watch |
 | App integration (`profile: design`, file bridge, task-owned staging, permissions) | **NOT verified** | A2/Main own it |

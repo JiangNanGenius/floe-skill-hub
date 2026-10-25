@@ -50,14 +50,16 @@ build fails if `ring`, `rustls`, `aws-lc-rs`, `rustls-native-certs` or
 | host-tested | built for the host and the adapter suite passes | done: 38 tests |
 | artifact-built | a real riscv64 static ELF exists with digest and provenance | done |
 | riscv64-executed | the artifact ran on riscv64 and passed the behaviour matrix | done **under Docker/qemu user-mode emulation**, kernel 6.8.0-117-generic |
-| guest-qualified | the artifact ran in the actual Floe Linux guest (Debian 13 riscv64 on TinyEMU/4.15) | **pending** — needs the dedicated qualification path, owned by Main |
+| guest-qualified | the artifact ran in the actual Floe Linux guest (Debian 13 riscv64 on TinyEMU; Main currently observes kernel 6.18.56) | **pending** — needs the dedicated qualification path, owned by Main |
 | app-accepted | the native capture/file bridge plus a real page-scan round trip in the App | **pending** — A2 owns the producer, Main owns App acceptance |
 | published | in a signed catalog release | not authorized here |
 
 Emulated execution proves the binary is a working static riscv64 ELF and that the
 contract behaves as specified on riscv64. It does **not** prove the TinyEMU guest
-path: the guest kernel is 4.15, the interpreter has no JIT, and default guest RAM
-is 256 MB, so latency and memory headroom are unmeasured.
+path: latency and memory headroom must be measured in the actual App-owned guest.
+Main reported kernel 6.18.56 on 2026-10-26; the earlier 4.15/256 MB references in
+build-time records are planning assumptions, not current guest observations or
+qualification evidence. Immutable build records and artifact hashes are retained.
 
 ## Reproduce
 
