@@ -371,7 +371,7 @@ jobs:
   open-update-pr:
     name: Open the review-only update PR
     needs: [pin, build-and-verify]
-    if: needs.pin.outputs.changed == 'true' && (inputs.open_pr == 'true' || github.event_name == 'schedule')
+    if: needs.pin.outputs.changed == 'true' && vars.FLOE_IMPECCABLE_UPDATE_PRS == 'enabled' && (inputs.open_pr == 'true' || github.event_name == 'schedule')
     runs-on: ubuntu-24.04
     permissions:
       contents: write

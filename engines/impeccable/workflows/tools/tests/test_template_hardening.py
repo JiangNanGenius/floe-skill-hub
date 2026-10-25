@@ -748,11 +748,15 @@ class TestRootReviewCopySync(unittest.TestCase):
         self.assertEqual(template[template.index("name:"):],
                          root[root.index("name:"):])
 
-    def test_root_copy_marks_itself_not_active(self):
+    def test_root_copy_keeps_pr_creation_disabled_until_owner_approval(self):
         root = ROOT_REVIEW_YML.read_text(encoding="utf-8")
         head = root[:root.index("name:")]
-        self.assertIn("REVIEW COPY", head)
-        self.assertIn("NOT active", head)
+        self.assertIn("Draft PR creation is DISABLED", head)
+        self.assertIn("FLOE_IMPECCABLE_UPDATE_PRS=enabled", head)
+        pr_job = root[root.index("  open-update-pr:"):]
+        self.assertIn("vars.FLOE_IMPECCABLE_UPDATE_PRS == 'enabled'", pr_job)
+        build_job = root[root.index("  build-and-verify:"):root.index("  open-update-pr:")]
+        self.assertNotIn("vars.FLOE_IMPECCABLE_UPDATE_PRS", build_job)
 
 
 CANDIDATE_IDENTITY = {

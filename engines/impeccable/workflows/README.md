@@ -108,6 +108,10 @@ GitHub's repository setting combines permission to create and approve PRs.
 See [GitHub's settings documentation](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests).
 Do not change it implicitly or claim draft-PR automation works while it is
 disabled. Keep the repository default token permissions at `read`.
+Draft PR creation also requires the repository variable
+`FLOE_IMPECCABLE_UPDATE_PRS=enabled`; absent or any other value skips the PR
+job while checks and candidate builds remain available. Set this variable
+only after explicit owner approval of the combined permission switch.
 
 1. Confirm the runner has the pinned toolchain available: Rust `1.98.1` with the
    `riscv64gc-unknown-linux-musl` target, and zig `0.17.0` from PyPI (both are
