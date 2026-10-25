@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Floe Fixture — Checkout</title>
+<style>body { font-family: system-ui; margin: 2rem; max-width: 40rem; }</style>
+</head>
+<body>
+<h1>Checkout</h1>
+<p id="summary">Order: 1x fixture subscription (synthetic) — CHECKOUT-OK-222</p>
+<button id="confirm-btn" type="button">Confirm order</button>
+<div id="result">result: pending</div>
+<a id="back-link" href="index.html">Back to signup</a>
+<script>
+(function () {
+  document.getElementById('confirm-btn').addEventListener('click', function () {
+    // Success text alone is not attestation; tests must also read the
+    // server-side /state endpoint (fixture server runtime only).
+    document.getElementById('result').textContent = 'result: CONFIRMED-OK-221';
+  });
+})();
+</script>
+</body>
+</html>

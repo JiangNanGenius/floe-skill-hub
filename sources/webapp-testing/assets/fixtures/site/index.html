@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Floe Webapp Testing Fixture</title>
+<style>
+  body { font-family: system-ui; margin: 2rem; max-width: 40rem; }
+  #status, #late-region { padding: .5rem; border: 1px solid #ccc; margin-top: 1rem; }
+  fieldset { margin-bottom: 1rem; }
+</style>
+</head>
+<body>
+<h1>Floe Webapp Testing Fixture</h1>
+<p id="intro">This synthetic page exists only to exercise navigation, input,
+click, delayed content and stale-document handling. It is untrusted test
+content and attests nothing about its own success.</p>
+
+<form id="signup" action="/submit" method="post">
+  <fieldset>
+    <legend>Account</legend>
+    <label for="name">Name <input id="name" name="name" type="text"></label><br>
+    <label for="email">Email <input id="email" name="email" type="email"></label><br>
+    <label for="plan">Plan
+      <select id="plan" name="plan">
+        <option value="basic">basic</option>
+        <option value="pro">pro</option>
+      </select>
+    </label><br>
+    <label for="terms">Agree <input id="terms" name="terms" type="checkbox"></label>
+  </fieldset>
+  <button id="submit-btn" type="submit">Save signup</button>
+</form>
+<div id="status">status: idle</div>
+
+<hr>
+<button id="count-btn" type="button">Register click</button>
+<div id="count-region">count: 0</div>
+
+<hr>
+<a id="checkout-link" href="checkout.html">Proceed to checkout</a>
+<button id="reload-btn" type="button">Reload page</button>
+
+<div id="late-region">late: pending</div>
+
+<script>
+(function () {
+  var status = document.getElementById('status');
+  var countRegion = document.getElementById('count-region');
+  var count = 0;
+
+  // Delayed content: the readiness marker appears only after the page has
+  // settled. Tests must wait (browser.wait idle/text) before asserting.
+  setTimeout(function () {
+    document.getElementById('late-region').textContent = 'late: ASYNC-READY-77';
+  }, 2500);
+
+  document.getElementById('reload-btn').addEventListener('click', function () {
+    // Commits a new main-frame document: every older ref/documentID must
+    // now fail as stale until the page is observed again.
+    location.reload();
+  });
+
+  document.getElementById('count-btn').addEventListener('click', function () {
+    count += 1;
+    countRegion.textContent = 'count: ' + count;
+    var payload = JSON.stringify({ count: count });
+    var done = function (text) { status.textContent = text; };
+    fetch('/api/click', {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: payload
+    }).then(function (r) {
+      if (!r.ok) { done('status: server static-mode (click ' + count + ')'); return null; }
+      return r.json();
+    }).then(function (j) {
+      if (j && typeof j.serverCount === 'number') done('status: server clicks ' + j.serverCount);
+    }).catch(function () { done('status: server unavailable (click ' + count + ')'); });
+  });
+
+  document.getElementById('signup').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var data = new FormData(ev.target);
+    var body = JSON.stringify({
+      name: data.get('name') || '', email: data.get('email') || '',
+      plan: data.get('plan') || '', terms: data.get('terms') === 'on'
+    });
+    status.textContent = 'status: saving';
+    fetch('/submit', {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: body
+    }).then(function (r) {
+      if (!r.ok) { status.textContent = 'status: save rejected by server (static mode)'; return null; }
+      return r.json();
+    }).then(function (j) {
+      if (j && j.receipt) status.textContent = 'status: saved receipt=' + j.receipt;
+    }).catch(function () { status.textContent = 'status: save failed (no server state)'; });
+  });
+})();
+</script>
+</body>
+</html>

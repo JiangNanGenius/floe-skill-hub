@@ -2304,8 +2304,8 @@
         "zh-Hans": "Web 应用测试"
       },
       "notes": {
-        "en": "Deep adaptation: the upstream flow hard-codes Playwright and Chromium; it must move onto Floe's browser tools with the existing supervisor-managed local service.",
-        "zh-Hans": "深度适配：上游流程固定 Playwright 与 Chromium；须改用 Floe 浏览器工具，本地服务由现有 supervisor 管理。"
+        "en": "Uses Floe browser tools and supervised task services; no Playwright or Chromium installation. Source and reference fixtures are ready; actual guest and App browser qualification remain pending.",
+        "zh-Hans": "改用 Floe 浏览器工具与受管理的任务服务，无需安装 Playwright 或 Chromium。源码与参考测试已备好，仍待实际任务环境和 App 浏览器验收。"
       },
       "planNumber": 33,
       "plannedRuntime": {
@@ -2333,7 +2333,7 @@
       },
       "source": "A",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "in-progress",
         "executionVerified": false,
         "licenseChecked": true,
         "packaged": false,
@@ -2353,8 +2353,8 @@
         "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
         "licenseEvidencePath": "skills/webapp-testing/LICENSE.txt",
         "licenseNote": {
-          "en": "Per-skill LICENSE.txt is Apache-2.0 at the pinned commit; fonts, images and template assets still need the per-item audit before packaging.",
-          "zh-Hans": "固定提交上单项 LICENSE.txt 为 Apache-2.0；字体、图片与模板素材仍需逐项核验后才能打包。"
+          "en": "Apache-2.0 per-skill LICENSE.txt kept byte-identical under references/licenses/; per-asset audit closed 2026-10-26: the pinned subtree contains only text/code (no fonts, images or binary template assets).",
+          "zh-Hans": "单项 Apache-2.0 LICENSE.txt 已按字节保存于 references/licenses/；2026-10-26 完成素材核验：固定提交子树仅含文本与代码（无字体、图片或二进制模板素材）。"
         },
         "licenseStatus": "verified",
         "path": "skills/webapp-testing",

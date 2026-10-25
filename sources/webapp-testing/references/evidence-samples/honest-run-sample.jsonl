@@ -1,0 +1,14 @@
+{"case": "nav-index", "detail": "navigate+wait load ok; observe returned document", "evidence": {"document_id": "doc-a1b2c3d4e5"}, "status": "PASS"}
+{"case": "wait-async-ready", "detail": "text wait resolved after delayed render", "evidence": {"marker": "ASYNC-READY-77"}, "status": "PASS"}
+{"case": "observe-form-fields", "detail": "refs for name email plan terms submit", "evidence": {"document_id": "doc-a1b2c3d4e5", "refs_found": "5"}, "status": "PASS"}
+{"case": "input-signup-fields", "detail": "type name/email values shown", "evidence": {"document_id": "doc-a1b2c3d4e5"}, "status": "PASS"}
+{"case": "click-submit", "detail": "status saved receipt shown", "evidence": {"document_id": "doc-a1b2c3d4e5"}, "status": "PASS"}
+{"case": "attest-submit-state", "detail": "state receipt equals page receipt", "evidence": {"receipt": "526effe574a7"}, "status": "PASS"}
+{"case": "click-counter", "detail": "count region incremented", "evidence": {"document_id": "doc-a1b2c3d4e5"}, "status": "PASS"}
+{"case": "attest-counter-state", "detail": "serverCount matches clicks", "evidence": {"server_count": "3"}, "status": "PASS"}
+{"case": "screenshot-evidence", "detail": "artifact retained", "evidence": {"screenshot_path": "artifacts/browser/shot-1.png", "screenshot_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}, "status": "PASS"}
+{"case": "navigate-checkout", "detail": "checkout marker after commit", "evidence": {"marker": "CHECKOUT-OK-222"}, "status": "PASS"}
+{"case": "click-confirm", "detail": "confirm marker after click", "evidence": {"marker": "CONFIRMED-OK-221"}, "status": "PASS"}
+{"case": "stale-after-reload", "detail": "stale error then fresh observe", "evidence": {"recovery_observed": "true", "stale_observed": "true"}, "status": "PASS"}
+{"case": "late-result-slow", "detail": "slow answer after 2s", "evidence": {"marker": "SLOW-DONE-45"}, "status": "PASS"}
+{"case": "absent-marker-fails", "detail": "browser.wait text MARKER-NEVER-RENDERED timed out", "evidence": {"error": "timeout"}, "status": "TIMEOUT"}
