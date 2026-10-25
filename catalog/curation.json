@@ -1,0 +1,921 @@
+{
+  "schemaVersion": 1,
+  "assessmentDate": "2026-10-26",
+  "assessmentTimezone": "Australia/Sydney",
+  "scope": "Editorial planning, not user ratings, certification, permission grants or release qualification. Per-skill adoption is unknown; repository stars are contextual signals only.",
+  "weights": {
+    "usefulness": 25,
+    "floeFit": 25,
+    "contentAndExamples": 20,
+    "maintenance": 15,
+    "perSkillAdoption": 10,
+    "complementarity": 5
+  },
+  "sourceBasis": "Inspected pinned source, adaptation audits and developer/reference evidence. Required App/guest checks remain separate. Floe fit stays below full credit until applicable checks pass. Newly authored optional Floe guides have limited maintenance history.",
+  "repositorySignals": "docs/CURATION-REPOSITORY-SIGNALS.json",
+  "items": [
+    {
+      "id": "floe-pdf",
+      "name": {
+        "en": "Floe PDF",
+        "zh-Hans": "Floe PDF"
+      },
+      "source": "F",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 25,
+        "floeFit": 23,
+        "contentAndExamples": 18,
+        "maintenance": 12,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 83,
+      "rationale": "High-frequency PDF work; reuses the protected native document path.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "floe-office",
+      "name": {
+        "en": "Floe Office",
+        "zh-Hans": "Floe Office"
+      },
+      "source": "F",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 25,
+        "floeFit": 23,
+        "contentAndExamples": 18,
+        "maintenance": 12,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 83,
+      "rationale": "Editable documents, tables and slides provide the delivery path for other skills.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "floe-network",
+      "name": {
+        "en": "Floe Network",
+        "zh-Hans": "Floe Network"
+      },
+      "source": "F",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 19,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 12,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 75,
+      "rationale": "Connectivity and DNS diagnosis is distinct from research retrieval.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "floe-video",
+      "name": {
+        "en": "Floe Video",
+        "zh-Hans": "Floe Video"
+      },
+      "source": "F",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 21,
+        "floeFit": 22,
+        "contentAndExamples": 17,
+        "maintenance": 12,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 76,
+      "rationale": "Makes existing media tools useful without promising absent codecs.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "doc-coauthoring",
+      "name": {
+        "en": "Doc Co-authoring",
+        "zh-Hans": "文档协作"
+      },
+      "source": "F",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 24,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 8,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 77,
+      "rationale": "Outline and section feedback; original Floe replacement, no unlicensed text copied.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "internal-comms",
+      "name": {
+        "en": "Internal Comms",
+        "zh-Hans": "内部沟通"
+      },
+      "source": "A",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 20,
+        "floeFit": 23,
+        "contentAndExamples": 18,
+        "maintenance": 12,
+        "perSkillAdoption": null,
+        "complementarity": 3
+      },
+      "provisionalTotalOutOf90": 76,
+      "rationale": "Audience-specific updates and retrospectives rather than marketing copy.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "writing-guidelines",
+      "name": {
+        "en": "Writing Guidelines",
+        "zh-Hans": "技术写作检查"
+      },
+      "source": "F",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 22,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 8,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 74,
+      "rationale": "Technical clarity and consistency through an original licensed rule set.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "copywriting",
+      "name": {
+        "en": "Copywriting",
+        "zh-Hans": "网站文案"
+      },
+      "source": "R",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 22,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 80,
+      "rationale": "Product-page structure and persuasive copy complement editing existing drafts.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "copy-editing",
+      "name": {
+        "en": "Copy Editing",
+        "zh-Hans": "文案校订"
+      },
+      "source": "R",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 23,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 81,
+      "rationale": "Improves existing drafts while preserving the author's purpose.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "content-production",
+      "name": {
+        "en": "Content Production",
+        "zh-Hans": "长文创作"
+      },
+      "source": "R",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 21,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 3
+      },
+      "provisionalTotalOutOf90": 78,
+      "rationale": "Topic-to-long-form workflow is distinct from landing-page copy and editing.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "social-content",
+      "name": {
+        "en": "Social Content",
+        "zh-Hans": "社媒内容"
+      },
+      "source": "R",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 19,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 3
+      },
+      "provisionalTotalOutOf90": 76,
+      "rationale": "Platform content and schedules; drafting never authorizes public posting.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "floe-email-drafting",
+      "name": {
+        "en": "Floe Email Drafting",
+        "zh-Hans": "Floe 邮件起草"
+      },
+      "source": "F",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 23,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 8,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 75,
+      "rationale": "Uses the app's mail services; sending remains separately task-authorized.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "deep-research",
+      "name": {
+        "en": "Deep Research",
+        "zh-Hans": "深度研究"
+      },
+      "source": "R",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 24,
+        "floeFit": 22,
+        "contentAndExamples": 18,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 83,
+      "rationale": "Question-driven retrieval and traceable evidence beyond a standalone summary.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "deepread",
+      "name": {
+        "en": "Deep Read",
+        "zh-Hans": "深度阅读"
+      },
+      "source": "R",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 22,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 80,
+      "rationale": "Close reading of supplied long material, distinct from multi-source discovery.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "literature-review",
+      "name": {
+        "en": "Literature Review",
+        "zh-Hans": "文献综述"
+      },
+      "source": "K",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 24,
+        "floeFit": 20,
+        "contentAndExamples": 19,
+        "maintenance": 13,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 81,
+      "rationale": "Screening and PRISMA discipline with offline DOI taxonomy; no paid CLI.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "citation-management",
+      "name": {
+        "en": "Citation Management",
+        "zh-Hans": "引用管理"
+      },
+      "source": "K",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 22,
+        "floeFit": 19,
+        "contentAndExamples": 18,
+        "maintenance": 13,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 76,
+      "rationale": "BibTeX and metadata checks; live APIs and guest dependencies still need acceptance.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "scientific-critical-thinking",
+      "name": {
+        "en": "Scientific Critical Thinking",
+        "zh-Hans": "证据与批判性阅读"
+      },
+      "source": "K",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 23,
+        "floeFit": 23,
+        "contentAndExamples": 18,
+        "maintenance": 13,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 82,
+      "rationale": "Checks methods, bias and evidence strength instead of equating retrieval with reliability.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "research-summarizer",
+      "name": {
+        "en": "Research Summarizer",
+        "zh-Hans": "研究摘要"
+      },
+      "source": "R",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 21,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 3
+      },
+      "provisionalTotalOutOf90": 78,
+      "rationale": "Short sourced synthesis from existing materials, distinct from a full review.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "exploratory-data-analysis",
+      "name": {
+        "en": "EDA",
+        "zh-Hans": "数据探索"
+      },
+      "source": "K",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 24,
+        "floeFit": 17,
+        "contentAndExamples": 19,
+        "maintenance": 13,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 78,
+      "rationale": "Bounded standard-library core plus independent pandas consistency checks.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "statistical-analysis",
+      "name": {
+        "en": "Statistical Analysis",
+        "zh-Hans": "统计分析"
+      },
+      "source": "K",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 23,
+        "floeFit": 15,
+        "contentAndExamples": 19,
+        "maintenance": 13,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 75,
+      "rationale": "Prespecified methods and numeric goldens; real SciPy guest qualification is pending.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "scientific-visualization",
+      "name": {
+        "en": "Scientific Visualization",
+        "zh-Hans": "数据可视化"
+      },
+      "source": "K",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 24,
+        "floeFit": 15,
+        "contentAndExamples": 19,
+        "maintenance": 13,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 76,
+      "rationale": "Checks coordinates, gaps, units and actual files; guest fonts and native dependencies remain pending.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "markitdown",
+      "name": {
+        "en": "MarkItDown",
+        "zh-Hans": "格式转 Markdown"
+      },
+      "source": "K",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 24,
+        "floeFit": 19,
+        "contentAndExamples": 19,
+        "maintenance": 13,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 80,
+      "rationale": "Native services plus bounded original extractors; does not bundle Microsoft MarkItDown.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "sympy",
+      "name": {
+        "en": "SymPy",
+        "zh-Hans": "符号数学"
+      },
+      "source": "K",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 22,
+        "floeFit": 19,
+        "contentAndExamples": 18,
+        "maintenance": 13,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 77,
+      "rationale": "Exact roots and residuals are checkable; false-success verifier fixed, guest proof pending.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "impeccable",
+      "name": {
+        "en": "Impeccable",
+        "zh-Hans": "Impeccable"
+      },
+      "source": "I",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 25,
+        "floeFit": 18,
+        "contentAndExamples": 19,
+        "maintenance": 15,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 82,
+      "rationale": "Actual design engine and controlled facts; missing measurements cannot imply a clean scan.",
+      "sourceRevision": null,
+      "releaseQualified": false
+    },
+    {
+      "id": "algorithmic-art",
+      "name": {
+        "en": "Algorithmic Art",
+        "zh-Hans": "生成艺术"
+      },
+      "source": "A",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 19,
+        "floeFit": 21,
+        "contentAndExamples": 19,
+        "maintenance": 12,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 75,
+      "rationale": "Deterministic seeds with Python/JS parity and no CDN; previews are not full-size exports.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "canvas-design",
+      "name": {
+        "en": "Canvas Design",
+        "zh-Hans": "平面视觉设计"
+      },
+      "source": "A",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 23,
+        "floeFit": 21,
+        "contentAndExamples": 19,
+        "maintenance": 12,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 80,
+      "rationale": "Poster layout with corrected real font advances and complete font notices.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "theme-factory",
+      "name": {
+        "en": "Theme Factory",
+        "zh-Hans": "主题与配色"
+      },
+      "source": "A",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 20,
+        "floeFit": 23,
+        "contentAndExamples": 18,
+        "maintenance": 12,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 77,
+      "rationale": "Consistent themes across outputs; actual PDF-embedded fonts and licenses were checked.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "ui-design-system",
+      "name": {
+        "en": "UI Design System",
+        "zh-Hans": "UI 设计系统"
+      },
+      "source": "R",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 22,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 80,
+      "rationale": "Reusable tokens and component rules support sustained product work.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "ux-researcher-designer",
+      "name": {
+        "en": "UX Researcher-Designer",
+        "zh-Hans": "用户体验研究"
+      },
+      "source": "R",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 22,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 80,
+      "rationale": "Research and usability evidence inform design decisions beyond visual generation.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "react-best-practices",
+      "name": {
+        "en": "React Best Practices",
+        "zh-Hans": "React 最佳实践"
+      },
+      "source": "F",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 22,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 8,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 74,
+      "rationale": "Original component, data and performance rules replace an unlicensed candidate.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "composition-patterns",
+      "name": {
+        "en": "Composition Patterns",
+        "zh-Hans": "React 组件组合"
+      },
+      "source": "F",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 20,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 8,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 72,
+      "rationale": "Original component composition guidance complements performance rules.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "web-design-guidelines",
+      "name": {
+        "en": "Web Design Guidelines",
+        "zh-Hans": "网页设计规范"
+      },
+      "source": "F",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 22,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 8,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 74,
+      "rationale": "Fixed original local checks instead of loading unreviewed remote rules.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "webapp-testing",
+      "name": {
+        "en": "Webapp Testing",
+        "zh-Hans": "Web 应用测试"
+      },
+      "source": "A",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 24,
+        "floeFit": 20,
+        "contentAndExamples": 19,
+        "maintenance": 12,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 80,
+      "rationale": "Real interactions and result files through Floe browser/jobs; no Chromium package.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "a11y-audit",
+      "name": {
+        "en": "A11y Audit",
+        "zh-Hans": "可访问性检查"
+      },
+      "source": "R",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 23,
+        "floeFit": 22,
+        "contentAndExamples": 18,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 82,
+      "rationale": "Keyboard, semantics and contrast checks remain distinct from aesthetic judgment.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "systematic-debugging",
+      "name": {
+        "en": "Systematic Debugging",
+        "zh-Hans": "系统化调试"
+      },
+      "source": "S",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 24,
+        "floeFit": 23,
+        "contentAndExamples": 18,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 84,
+      "rationale": "Reproduction and root-cause evidence; unreliable poller is reference-only.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "test-driven-development",
+      "name": {
+        "en": "TDD",
+        "zh-Hans": "测试驱动开发"
+      },
+      "source": "S",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 22,
+        "floeFit": 23,
+        "contentAndExamples": 18,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 81,
+      "rationale": "Behavior tests must run the project's real commands, not pass a template.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "requesting-code-review",
+      "name": {
+        "en": "Requesting Code Review",
+        "zh-Hans": "代码评审"
+      },
+      "source": "S",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 23,
+        "floeFit": 23,
+        "contentAndExamples": 18,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 82,
+      "rationale": "Reviews actual changes, risk and evidence through the existing review path.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "product-manager-toolkit",
+      "name": {
+        "en": "Product Manager Toolkit",
+        "zh-Hans": "产品经理工具箱"
+      },
+      "source": "R",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 20,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 3
+      },
+      "provisionalTotalOutOf90": 77,
+      "rationale": "Requirements, prioritization and roadmap templates for general product work.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "product-discovery",
+      "name": {
+        "en": "Product Discovery",
+        "zh-Hans": "产品探索"
+      },
+      "source": "R",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 20,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 78,
+      "rationale": "Opportunity hypotheses and experiments complement specifications and planning.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "code-to-prd",
+      "name": {
+        "en": "Code to PRD",
+        "zh-Hans": "代码转需求说明"
+      },
+      "source": "R",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 21,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 79,
+      "rationale": "Derives specifications from actual code and distinguishes facts from inference.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "meetings",
+      "name": {
+        "en": "Meetings",
+        "zh-Hans": "会议纪要"
+      },
+      "source": "R",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 24,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 83,
+      "rationale": "Minutes and actions from authorized text; no implied recording or notification access.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "floe-file-organizer",
+      "name": {
+        "en": "Floe File Organizer",
+        "zh-Hans": "Floe 文件整理"
+      },
+      "source": "F",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 24,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 8,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 77,
+      "rationale": "Original workflow with previews and recoverable changes under existing file permissions.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    },
+    {
+      "id": "floe-invoice-organizer",
+      "name": {
+        "en": "Floe Invoice Organizer",
+        "zh-Hans": "Floe 票据整理"
+      },
+      "source": "F",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 23,
+        "floeFit": 23,
+        "contentAndExamples": 17,
+        "maintenance": 8,
+        "perSkillAdoption": null,
+        "complementarity": 5
+      },
+      "provisionalTotalOutOf90": 76,
+      "rationale": "Existing OCR and spreadsheet services preserve source and correction traceability.",
+      "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
+      "releaseQualified": false
+    }
+  ]
+}

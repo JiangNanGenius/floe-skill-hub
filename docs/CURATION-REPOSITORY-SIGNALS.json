@@ -1,0 +1,72 @@
+{
+  "observedAtUTC": "2026-10-25 21:16:20 UTC",
+  "scope": "Repository-level context only; not per-skill quality, adoption, distribution permission or runtime qualification.",
+  "repositories": [
+    {
+      "repository": "anthropics/skills",
+      "sourceURL": "https://api.github.com/repos/anthropics/skills",
+      "stars": 183740,
+      "forks": 21749,
+      "archived": false,
+      "disabled": false,
+      "pushedAt": "2026-10-09T18:45:52Z",
+      "defaultBranch": "main",
+      "repositoryLicense": null
+    },
+    {
+      "repository": "vercel-labs/agent-skills",
+      "sourceURL": "https://api.github.com/repos/vercel-labs/agent-skills",
+      "stars": 33002,
+      "forks": 2886,
+      "archived": false,
+      "disabled": false,
+      "pushedAt": "2026-10-14T17:58:45Z",
+      "defaultBranch": "main",
+      "repositoryLicense": null
+    },
+    {
+      "repository": "alirezarezvani/claude-skills",
+      "sourceURL": "https://api.github.com/repos/alirezarezvani/claude-skills",
+      "stars": 28716,
+      "forks": 3983,
+      "archived": false,
+      "disabled": false,
+      "pushedAt": "2026-10-23T11:30:28Z",
+      "defaultBranch": "main",
+      "repositoryLicense": "MIT"
+    },
+    {
+      "repository": "K-Dense-AI/scientific-agent-skills",
+      "sourceURL": "https://api.github.com/repos/K-Dense-AI/scientific-agent-skills",
+      "stars": 54571,
+      "forks": 4808,
+      "archived": false,
+      "disabled": false,
+      "pushedAt": "2026-10-19T09:33:57Z",
+      "defaultBranch": "main",
+      "repositoryLicense": "MIT"
+    },
+    {
+      "repository": "obra/superpowers",
+      "sourceURL": "https://api.github.com/repos/obra/superpowers",
+      "stars": 305004,
+      "forks": 27167,
+      "archived": false,
+      "disabled": false,
+      "pushedAt": "2026-10-23T03:48:57Z",
+      "defaultBranch": "main",
+      "repositoryLicense": "MIT"
+    },
+    {
+      "repository": "pbakaus/impeccable",
+      "sourceURL": "https://api.github.com/repos/pbakaus/impeccable",
+      "stars": 87544,
+      "forks": 5231,
+      "archived": false,
+      "disabled": false,
+      "pushedAt": "2026-10-25T18:04:24Z",
+      "defaultBranch": "main",
+      "repositoryLicense": "Apache-2.0"
+    }
+  ]
+}
