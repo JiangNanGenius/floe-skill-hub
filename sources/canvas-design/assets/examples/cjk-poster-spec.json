@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "title": "静默几何 — 中文海报示例",
+  "lang": "zh-Hans",
+  "canvas": {"width": {"unit": "px", "value": 1080}, "height": {"unit": "px", "value": 1350}, "dpi": 300, "background": "#0e1a26"},
+  "elements": [
+    {"type": "rect", "x": 60, "y": 90, "w": 960, "h": 8, "fill": "#d97757"},
+    {"type": "text", "content": "静默几何", "family": "Big Shoulders", "style": "Bold", "size": 150, "x": 60, "y": 320, "anchor": "start", "fill": "#f6f3ec"},
+    {"type": "text", "content": "SILENT GEOMETRY", "family": "Outfit", "style": "Bold", "size": 42, "x": 60, "y": 400, "fill": "#8fb8d8"},
+    {"type": "circle", "cx": 780, "cy": 700, "r": 200, "fill": "#1c3f5a"},
+    {"type": "text", "content": "结构即语言，色彩即信息。", "family": "Red Hat Mono", "style": "Regular", "size": 30, "x": 60, "y": 1000, "fill": "#f6f3ec"},
+    {"type": "text", "content": "Floe · canvas-design · 平面视觉设计 · 2026", "family": "Outfit", "style": "Regular", "size": 22, "x": 60, "y": 1280, "fill": "#9aa7b2"}
+  ]
+}

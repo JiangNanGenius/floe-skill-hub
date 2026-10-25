@@ -1,0 +1,50 @@
+{
+  "handle_response": {
+    "responseCode": 1,
+    "handle": "10.99999/floe-synthetic-0001",
+    "values": [
+      {
+        "index": 0,
+        "type": "URL",
+        "data": {
+          "format": "string",
+          "value": "https://example.org/synthetic"
+        }
+      }
+    ]
+  },
+  "crossref_works": {
+    "message": {
+      "DOI": "10.99999/FLOE-SYNTHETIC-0001",
+      "type": "journal-article",
+      "title": [
+        "Synthetic CRISPR screening study"
+      ],
+      "author": [
+        {
+          "family": "Zhang",
+          "given": "W."
+        },
+        {
+          "family": "Li",
+          "given": "H."
+        }
+      ],
+      "container-title": [
+        "Journal of Synthetic Examples"
+      ],
+      "volume": "12",
+      "issue": "3",
+      "page": "45-67",
+      "published-print": {
+        "date-parts": [
+          [
+            2024,
+            5,
+            1
+          ]
+        ]
+      }
+    }
+  }
+}

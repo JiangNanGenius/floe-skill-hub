@@ -1020,13 +1020,14 @@
         "zh-Hans": "文献综述"
       },
       "notes": {
-        "en": "Deep adaptation: drop upstream extra CLIs, fixed model/image APIs and PDF export deps; PDF reuses the app's supported export path.",
-        "zh-Hans": "深度适配：去除上游附加 CLI、固定模型/图像 API 与 PDF 导出依赖；PDF 复用 App 已支持导出路径。"
+        "en": "Native search/fetch and offline-first DOI processing replace paid upstream CLIs; optional online verification declares network access. Registration and metadata availability remain distinct. Actual guest and App qualification is pending.",
+        "zh-Hans": "原生检索、抓取与离线优先 DOI 处理替代上游付费 CLI；可选在线核验已声明网络权限。注册状态与元数据可用性分别记录，仍待实际客体与 App 验收。"
       },
       "planNumber": 15,
       "plannedRuntime": {
         "capabilities": [
           "execution.remote",
+          "network",
           "workspace.read",
           "workspace.write"
         ],
@@ -1047,9 +1048,9 @@
       },
       "source": "K",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -1066,10 +1067,10 @@
         "commit": "593377bb048752abb0152deab9fbb1083a6087df",
         "licenseEvidencePath": "LICENSE.md",
         "licenseNote": {
-          "en": "Root LICENSE.md is MIT; references/scripts and any embedded data or model assets need the per-file audit.",
-          "zh-Hans": "根 LICENSE.md 为 MIT；references/scripts 及内嵌数据或模型素材需逐文件核验。"
+          "en": "MIT at the pinned upstream revision; full license and per-file adaptation/asset audit are preserved in references/licenses/. Floe additions and synthetic fixtures are identified separately.",
+          "zh-Hans": "固定上游提交采用 MIT；完整许可与逐文件适配、素材核验记录保存在 references/licenses/，Floe 新增内容及合成样本另有标注。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "skills/literature-review",
         "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
         "repositoryLicense": "MIT (root LICENSE.md)",
@@ -1316,8 +1317,8 @@
         "zh-Hans": "数据探索"
       },
       "notes": {
-        "en": "Deep adaptation: no wholesale scientific stack install by default; the optional pandas path is a separate dependency layer.",
-        "zh-Hans": "深度适配：默认不装完整科学栈；可选 pandas 路径为独立依赖层。"
+        "en": "Source adaptation and host golden checks are complete for the explicitly declared dependency layer; unsupported upstream paths are documented. Actual RISC-V guest qualification is pending.",
+        "zh-Hans": "已完成所声明依赖层的源码适配与主机参考值检查，未支持的上游路径已注明，仍待实际 RISC-V 客体验收。"
       },
       "planNumber": 19,
       "plannedRuntime": {
@@ -1335,7 +1336,10 @@
           "ios",
           "android"
         ],
-        "pythonPackagesPlan": [],
+        "pythonPackagesPlan": [
+          "numpy==2.2.4",
+          "pandas==2.2.3"
+        ],
         "scriptRuntime": "remote",
         "tools": [
           "exec.shell"
@@ -1343,9 +1347,9 @@
       },
       "source": "K",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -1362,10 +1366,10 @@
         "commit": "593377bb048752abb0152deab9fbb1083a6087df",
         "licenseEvidencePath": "LICENSE.md",
         "licenseNote": {
-          "en": "Root LICENSE.md is MIT; references/scripts and any embedded data or model assets need the per-file audit.",
-          "zh-Hans": "根 LICENSE.md 为 MIT；references/scripts 及内嵌数据或模型素材需逐文件核验。"
+          "en": "MIT at the pinned upstream revision; full license and per-file adaptation/asset audit are preserved in references/licenses/. Floe additions and synthetic fixtures are identified separately.",
+          "zh-Hans": "固定上游提交采用 MIT；完整许可与逐文件适配、素材核验记录保存在 references/licenses/，Floe 新增内容及合成样本另有标注。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "skills/exploratory-data-analysis",
         "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
         "repositoryLicense": "MIT (root LICENSE.md)",
@@ -1390,8 +1394,8 @@
         "zh-Hans": "统计分析"
       },
       "notes": {
-        "en": "Advanced Bayesian/PyMC support is NOT a first-release promise; the real boundary goes in the detail page.",
-        "zh-Hans": "高级贝叶斯/PyMC 不属于首版承诺；实际支持边界写入详情。"
+        "en": "Source adaptation and host golden checks are complete for the explicitly declared dependency layer; unsupported upstream paths are documented. Actual RISC-V guest qualification is pending.",
+        "zh-Hans": "已完成所声明依赖层的源码适配与主机参考值检查，未支持的上游路径已注明，仍待实际 RISC-V 客体验收。"
       },
       "planNumber": 20,
       "plannedRuntime": {
@@ -1409,7 +1413,12 @@
           "ios",
           "android"
         ],
-        "pythonPackagesPlan": [],
+        "pythonPackagesPlan": [
+          "numpy==2.2.4",
+          "scipy==1.15.3",
+          "pandas==2.2.3",
+          "statsmodels==0.14.4"
+        ],
         "scriptRuntime": "remote",
         "tools": [
           "exec.shell"
@@ -1417,9 +1426,9 @@
       },
       "source": "K",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -1436,10 +1445,10 @@
         "commit": "593377bb048752abb0152deab9fbb1083a6087df",
         "licenseEvidencePath": "LICENSE.md",
         "licenseNote": {
-          "en": "Root LICENSE.md is MIT; references/scripts and any embedded data or model assets need the per-file audit.",
-          "zh-Hans": "根 LICENSE.md 为 MIT；references/scripts 及内嵌数据或模型素材需逐文件核验。"
+          "en": "MIT at the pinned upstream revision; full license and per-file adaptation/asset audit are preserved in references/licenses/. Floe additions and synthetic fixtures are identified separately.",
+          "zh-Hans": "固定上游提交采用 MIT；完整许可与逐文件适配、素材核验记录保存在 references/licenses/，Floe 新增内容及合成样本另有标注。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "skills/statistical-analysis",
         "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
         "repositoryLicense": "MIT (root LICENSE.md)",
@@ -1464,8 +1473,8 @@
         "zh-Hans": "数据可视化"
       },
       "notes": {
-        "en": "Kaleido/Chromium must not become a default dependency.",
-        "zh-Hans": "Kaleido/Chromium 不得作为默认依赖。"
+        "en": "Source adaptation and host golden checks are complete for the explicitly declared dependency layer; unsupported upstream paths are documented. Actual RISC-V guest qualification is pending.",
+        "zh-Hans": "已完成所声明依赖层的源码适配与主机参考值检查，未支持的上游路径已注明，仍待实际 RISC-V 客体验收。"
       },
       "planNumber": 21,
       "plannedRuntime": {
@@ -1483,7 +1492,12 @@
           "ios",
           "android"
         ],
-        "pythonPackagesPlan": [],
+        "pythonPackagesPlan": [
+          "matplotlib==3.10.1",
+          "numpy==2.2.4",
+          "pillow==11.1.0",
+          "pypdf==5.4.0"
+        ],
         "scriptRuntime": "remote",
         "tools": [
           "exec.shell"
@@ -1491,9 +1505,9 @@
       },
       "source": "K",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -1510,10 +1524,10 @@
         "commit": "593377bb048752abb0152deab9fbb1083a6087df",
         "licenseEvidencePath": "LICENSE.md",
         "licenseNote": {
-          "en": "Root LICENSE.md is MIT; references/scripts and any embedded data or model assets need the per-file audit.",
-          "zh-Hans": "根 LICENSE.md 为 MIT；references/scripts 及内嵌数据或模型素材需逐文件核验。"
+          "en": "MIT at the pinned upstream revision; full license and per-file adaptation/asset audit are preserved in references/licenses/. Floe additions and synthetic fixtures are identified separately.",
+          "zh-Hans": "固定上游提交采用 MIT；完整许可与逐文件适配、素材核验记录保存在 references/licenses/，Floe 新增内容及合成样本另有标注。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "skills/scientific-visualization",
         "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
         "repositoryLicense": "MIT (root LICENSE.md)",
@@ -1538,8 +1552,8 @@
         "zh-Hans": "格式转 Markdown"
       },
       "notes": {
-        "en": "The [all] install brings heavy optional converters, OCR and external services; bypassing document protection or paid services is prohibited.",
-        "zh-Hans": "[all] 安装带入大量可选转换器、OCR 与外部服务；禁止绕过文档保护或引入付费服务。"
+        "en": "Native document services plus Floe guest extractors; Microsoft MarkItDown is not bundled. Scans and protected PDFs use the existing OCR/unlock flows. Actual guest and App qualification is pending.",
+        "zh-Hans": "复用原生文档服务与 Floe 客体提取脚本，不包含 Microsoft MarkItDown。扫描件及受保护 PDF 沿用 OCR、解锁流程，仍待实际客体与 App 验收。"
       },
       "planNumber": 22,
       "plannedRuntime": {
@@ -1557,7 +1571,10 @@
           "ios",
           "android"
         ],
-        "pythonPackagesPlan": [],
+        "pythonPackagesPlan": [
+          "openpyxl==3.1.5",
+          "pdfminer.six==20221105"
+        ],
         "scriptRuntime": "remote",
         "tools": [
           "exec.shell"
@@ -1565,9 +1582,9 @@
       },
       "source": "K",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -1585,10 +1602,10 @@
         "commit": "593377bb048752abb0152deab9fbb1083a6087df",
         "licenseEvidencePath": "LICENSE.md",
         "licenseNote": {
-          "en": "Root LICENSE.md is MIT; references/scripts and any embedded data or model assets need the per-file audit.",
-          "zh-Hans": "根 LICENSE.md 为 MIT；references/scripts 及内嵌数据或模型素材需逐文件核验。"
+          "en": "MIT at the pinned upstream revision; full license and per-file adaptation/asset audit are preserved in references/licenses/. Floe additions and synthetic fixtures are identified separately.",
+          "zh-Hans": "固定上游提交采用 MIT；完整许可与逐文件适配、素材核验记录保存在 references/licenses/，Floe 新增内容及合成样本另有标注。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "skills/markitdown",
         "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
         "repositoryLicense": "MIT (root LICENSE.md)",
@@ -1768,16 +1785,15 @@
         "zh-Hans": "生成艺术"
       },
       "notes": {
-        "en": "Deep adaptation: upstream binds Anthropic template branding and CDN resources; replacement of both plus verified offline behavior is required before packaging.",
-        "zh-Hans": "深度适配：上游强绑定 Anthropic 模板品牌与 CDN 资源；替换后并实测离线行为才可打包。"
+        "en": "Deterministic generators and reference-browser previews checked; raster export and actual task guest/App qualification remain pending. Preview screenshots never stand in for full-resolution output.",
+        "zh-Hans": "已检查确定性生成器与参考浏览器预览；完整像素导出及实际任务客体、App 验收仍待完成，预览截图不冒充原始分辨率产物。"
       },
       "planNumber": 25,
       "plannedRuntime": {
         "capabilities": [
           "execution.remote",
           "workspace.read",
-          "workspace.write",
-          "javascript.local"
+          "workspace.write"
         ],
         "execution": {
           "arch": "riscv64",
@@ -1796,7 +1812,7 @@
       },
       "source": "A",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
         "packaged": false,
@@ -1816,8 +1832,8 @@
         "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
         "licenseEvidencePath": "skills/algorithmic-art/LICENSE.txt",
         "licenseNote": {
-          "en": "Per-skill LICENSE.txt is Apache-2.0 at the pinned commit; fonts, images and template assets still need the per-item audit before packaging.",
-          "zh-Hans": "固定提交上单项 LICENSE.txt 为 Apache-2.0；字体、图片与模板素材仍需逐项核验后才能打包。"
+          "en": "Pinned per-skill Apache-2.0 license preserved; Floe renderer code is separately identified as MPL-2.0. Bundled font faces, where present, retain their full SIL OFL notices and exact hashes.",
+          "zh-Hans": "固定单项 Apache-2.0 许可已保留，Floe 渲染代码单独标注 MPL-2.0；内置字体如有则保留完整 SIL OFL 声明与精确哈希。"
         },
         "licenseStatus": "verified",
         "path": "skills/algorithmic-art",
@@ -1844,8 +1860,8 @@
         "zh-Hans": "平面视觉设计"
       },
       "notes": {
-        "en": "Deep adaptation: font/asset licensing, draw dependencies and export preview must all be resolved; Notes/Canvas editing state is never shared.",
-        "zh-Hans": "深度适配：字体与素材许可、绘制依赖、导出与预览均需落实；不共用 Notes/Canvas 编辑状态。"
+        "en": "Deterministic generators and reference-browser previews checked; raster export and actual task guest/App qualification remain pending. Preview screenshots never stand in for full-resolution output.",
+        "zh-Hans": "已检查确定性生成器与参考浏览器预览；完整像素导出及实际任务客体、App 验收仍待完成，预览截图不冒充原始分辨率产物。"
       },
       "planNumber": 26,
       "plannedRuntime": {
@@ -1871,7 +1887,7 @@
       },
       "source": "A",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
         "packaged": false,
@@ -1891,8 +1907,8 @@
         "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
         "licenseEvidencePath": "skills/canvas-design/LICENSE.txt",
         "licenseNote": {
-          "en": "Per-skill LICENSE.txt is Apache-2.0 at the pinned commit; fonts, images and template assets still need the per-item audit before packaging.",
-          "zh-Hans": "固定提交上单项 LICENSE.txt 为 Apache-2.0；字体、图片与模板素材仍需逐项核验后才能打包。"
+          "en": "Pinned per-skill Apache-2.0 license preserved; Floe renderer code is separately identified as MPL-2.0. Bundled font faces, where present, retain their full SIL OFL notices and exact hashes.",
+          "zh-Hans": "固定单项 Apache-2.0 许可已保留，Floe 渲染代码单独标注 MPL-2.0；内置字体如有则保留完整 SIL OFL 声明与精确哈希。"
         },
         "licenseStatus": "verified",
         "path": "skills/canvas-design",

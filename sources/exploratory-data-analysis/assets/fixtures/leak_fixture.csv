@@ -1,0 +1,7 @@
+subject_id,group,split,measurement,obs_time
+p1,a,train,5.0,2026-01-01
+p2,b,train,6.0,2026-01-02
+p1,a,test,5.5,2026-01-03
+p3,a,train,,2026-01-04
+p4,b,test,7.0,2026-01-05
+p2,b,test,6.5,2026-01-06

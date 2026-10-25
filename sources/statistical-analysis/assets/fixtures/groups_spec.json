@@ -1,0 +1,12 @@
+{
+  "alpha": 0.05,
+  "analyses": [
+    {"type": "descriptives", "label": "score-descriptives", "column": "score", "units": "points"},
+    {"type": "welch_ttest", "label": "welch-A-B", "group_column": "group", "value_column": "score", "group_a": "A", "group_b": "B"},
+    {"type": "paired_ttest", "label": "paired-pre-post", "column_a": "treatment_post", "column_b": "treatment_pre"},
+    {"type": "one_way_anova", "label": "anova-groups", "group_column": "group", "value_column": "score", "posthoc": "tukey_hsd"},
+    {"type": "mann_whitney", "label": "mwu-A-B", "group_column": "group", "value_column": "score", "group_a": "A", "group_b": "B"},
+    {"type": "kruskal_wallis", "label": "kruskal-groups", "group_column": "group", "value_column": "score"},
+    {"type": "wilcoxon", "label": "wilcoxon-pre-post", "column_a": "treatment_post", "column_b": "treatment_pre"}
+  ]
+}

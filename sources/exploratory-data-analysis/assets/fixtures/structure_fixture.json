@@ -1,0 +1,7 @@
+{
+  "records": [
+    {"id": "r1", "value": 1.5, "tags": ["a"]},
+    {"id": "r2", "value": 2.5, "tags": []}
+  ],
+  "meta": {"n": 2, "synthetic": true}
+}

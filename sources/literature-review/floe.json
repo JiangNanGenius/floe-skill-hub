@@ -1,0 +1,1 @@
+{"capabilities":["execution.remote","network","workspace.read","workspace.write"],"id":"literature-review","platforms":["ios"],"pythonPackages":[],"schemaVersion":1,"scriptRuntime":"remote","tools":["exec.shell"],"version":"1.0.0"}

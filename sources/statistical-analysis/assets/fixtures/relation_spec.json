@@ -1,0 +1,13 @@
+{
+  "alpha": 0.05,
+  "analyses": [
+    {"type": "pearson", "label": "pearson-x-y", "x": "x", "y": "y"},
+    {"type": "spearman", "label": "spearman-x-y", "x": "x", "y": "y"},
+    {"type": "chi2_independence", "label": "chi2-condition-response", "row_column": "condition", "column_column": "response", "correction": false},
+    {"type": "chi2_independence", "label": "chi2-yates", "row_column": "condition", "column_column": "response", "correction": true},
+    {"type": "fisher_exact_2x2", "label": "fisher-2x2", "row_column": "condition", "column_column": "response"},
+    {"type": "ols", "label": "ols-y-x-z", "y": "y", "predictors": ["x", "z"], "hc3": true},
+    {"type": "power_ttest", "label": "power-n", "effect_size_d": 0.5, "alpha": 0.05, "power": 0.8, "solve_for": "n"},
+    {"type": "power_ttest", "label": "power-sensitivity", "n_per_group": 50, "alpha": 0.05, "power": 0.8, "solve_for": "effect_size"}
+  ]
+}

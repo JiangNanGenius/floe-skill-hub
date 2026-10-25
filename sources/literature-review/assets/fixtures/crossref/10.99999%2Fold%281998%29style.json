@@ -1,0 +1,31 @@
+{
+  "handle_response": {
+    "responseCode": 1,
+    "handle": "10.99999/old(1998)style"
+  },
+  "crossref_works": {
+    "message": {
+      "DOI": "10.99999/old(1998)style",
+      "type": "journal-article",
+      "title": [
+        "Synthetic legacy-suffix record"
+      ],
+      "author": [
+        {
+          "family": "Par\u00e9ntesis",
+          "given": "P."
+        }
+      ],
+      "container-title": [
+        "Synthetic Legacy"
+      ],
+      "issued": {
+        "date-parts": [
+          [
+            1998
+          ]
+        ]
+      }
+    }
+  }
+}

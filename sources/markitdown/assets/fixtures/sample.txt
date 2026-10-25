@@ -1,0 +1,2 @@
+Floe synthetic plain text fixture.
+Second line 中文.

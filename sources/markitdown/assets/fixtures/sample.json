@@ -1,0 +1,11 @@
+{
+  "title": "Floe synthetic JSON",
+  "values": [
+    1,
+    2.5,
+    3
+  ],
+  "meta": {
+    "synthetic": true
+  }
+}

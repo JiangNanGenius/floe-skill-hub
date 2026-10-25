@@ -1,0 +1,14 @@
+[
+  {"title": "Synthetic CRISPR screening study", "authors": "Zhang, W.; Li, H.", "first_author": "Zhang", "year": "2024", "source": "PubMed", "doi": "10.99999/floe-synthetic-0001", "citations": 12, "journal": "Journal of Synthetic Examples", "type": "article", "abstract": "SYNTHETIC fixture record for verifier goldens; describes no real study."},
+  {"title": "Synthetic single-cell atlas", "authors": "Okafor, A.", "first_author": "Okafor", "year": "2023", "source": "arXiv", "doi": "10.99999/floe-synthetic-0002", "citations": 5, "type": "preprint"},
+  {"title": "Duplicate title no DOI", "authors": "Ross, P.", "first_author": "Ross", "year": "2022", "source": "web", "citations": null},
+  {"title": "Synthetic proteomics benchmark", "authors": "Kim, S.; Alvarez, D.", "first_author": "Kim", "year": "2025", "source": "Crossref", "doi": "10.99999/floe-synthetic-0003", "citations": 0},
+  {"title": "Missing year record", "authors": "Novak, I.", "first_author": "Novak", "source": "web", "doi": "10.99999/floe-synthetic-0004", "citations": 3},
+  {"title": "Missing author record", "year": "2021", "source": "web", "doi": "10.99999/floe-synthetic-0005", "citations": 8},
+  {"title": "Synthetic CRISPR screening study", "authors": "Zhang, W.; Li, H.", "first_author": "Zhang", "year": "2024", "source": "Crossref", "doi": "https://doi.org/10.99999/FLOE-SYNTHETIC-0001", "citations": 12},
+  {"title": "Synthetic gene therapy review", "authors": "Patel, R.", "first_author": "Patel", "year": "2020", "source": "PubMed", "doi": "10.99999/floe-synthetic-0006", "citations": 40, "volume": "7", "pages": "100-115", "journal": "Synthetic Reviews"},
+  {"title": "duplicate title no doi", "authors": "Ross, P.", "first_author": "Ross", "year": "2022", "source": "web", "citations": null},
+  {"title": "Synthetic imaging methods", "authors": "Chen, L.", "first_author": "Chen", "year": "2026", "source": "arXiv", "doi": "10.99999/floe-synthetic-0007", "citations": 1},
+  {"title": "Synthetic clinical outcomes", "authors": "Müller, K.; Gómez, T.", "first_author": "Müller", "year": "2019", "source": "PubMed", "doi": "10.99999/floe-synthetic-0008", "citations": 23, "journal": "Synthetic Clinical"},
+  {"title": "Synthetic preprint statistics", "authors": "Ivanov, D.", "first_author": "Ivanov", "year": "2024", "source": "arXiv", "url": "https://example.org/synthetic", "citations": 2}
+]

@@ -1,0 +1,9 @@
+sample_id,group,value,count,note
+s1,a,10,1,ok
+s2,a,12,2,ok
+s3,b,NA,3,missing value
+s4,b,18,4,ok
+s5,a,14,5,ok
+s6,b,100,6,outlier candidate
+s7,a,16,7,ok
+s8,b,20,8,ok
