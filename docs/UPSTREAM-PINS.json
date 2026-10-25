@@ -1,0 +1,11 @@
+{
+  "reviewBaselineDate": "2026-10-26",
+  "repositories": {
+    "pbakaus/impeccable": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
+    "anthropics/skills": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+    "vercel-labs/agent-skills": "063bee94c3f4df8453406c830b0a7df0f2860278",
+    "alirezarezvani/claude-skills": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+    "K-Dense-AI/scientific-agent-skills": "593377bb048752abb0152deab9fbb1083a6087df",
+    "obra/superpowers": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b"
+  }
+}
