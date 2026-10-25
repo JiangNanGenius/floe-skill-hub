@@ -121,9 +121,9 @@
       },
       "source": "F",
       "status": {
-        "adaptation": "in-progress",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -185,9 +185,9 @@
       },
       "source": "F",
       "status": {
-        "adaptation": "in-progress",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -250,9 +250,9 @@
       },
       "source": "F",
       "status": {
-        "adaptation": "in-progress",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -321,9 +321,9 @@
       },
       "source": "F",
       "status": {
-        "adaptation": "in-progress",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -379,14 +379,14 @@
       },
       "source": "F",
       "status": {
-        "adaptation": "in-progress",
+        "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
         "reviewed": false,
-        "sourcePinned": false
+        "sourcePinned": true
       },
       "tags": [
         "writing",
@@ -436,7 +436,7 @@
       },
       "source": "A",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
         "packaged": false,
@@ -455,8 +455,8 @@
         "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
         "licenseEvidencePath": "skills/internal-comms/LICENSE.txt",
         "licenseNote": {
-          "en": "Per-skill LICENSE.txt is Apache-2.0 at the pinned commit; fonts, images and template assets still need the per-item audit before packaging.",
-          "zh-Hans": "固定提交上单项 LICENSE.txt 为 Apache-2.0；字体、图片与模板素材仍需逐项核验后才能打包。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
         "licenseStatus": "verified",
         "path": "skills/internal-comms",
@@ -506,14 +506,14 @@
       },
       "source": "F",
       "status": {
-        "adaptation": "in-progress",
+        "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
         "reviewed": false,
-        "sourcePinned": false
+        "sourcePinned": true
       },
       "tags": [
         "writing",
@@ -564,9 +564,9 @@
       },
       "source": "R",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -583,10 +583,10 @@
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
         "licenseEvidencePath": "LICENSE",
         "licenseNote": {
-          "en": "Covered by the root MIT LICENSE at the pinned commit.",
-          "zh-Hans": "固定提交上由根 MIT LICENSE 覆盖。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "marketing-skill/skills/copywriting",
         "repository": "https://github.com/alirezarezvani/claude-skills",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -635,9 +635,9 @@
       },
       "source": "R",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -654,10 +654,10 @@
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
         "licenseEvidencePath": "LICENSE",
         "licenseNote": {
-          "en": "Covered by the root MIT LICENSE at the pinned commit.",
-          "zh-Hans": "固定提交上由根 MIT LICENSE 覆盖。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "marketing-skill/skills/copy-editing",
         "repository": "https://github.com/alirezarezvani/claude-skills",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -706,9 +706,9 @@
       },
       "source": "R",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -725,10 +725,10 @@
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
         "licenseEvidencePath": "LICENSE",
         "licenseNote": {
-          "en": "Covered by the root MIT LICENSE at the pinned commit.",
-          "zh-Hans": "固定提交上由根 MIT LICENSE 覆盖。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "marketing-skill/skills/content-production",
         "repository": "https://github.com/alirezarezvani/claude-skills",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -777,9 +777,9 @@
       },
       "source": "R",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -795,10 +795,10 @@
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
         "licenseEvidencePath": "LICENSE",
         "licenseNote": {
-          "en": "Covered by the root MIT LICENSE at the pinned commit.",
-          "zh-Hans": "固定提交上由根 MIT LICENSE 覆盖。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "marketing-skill/skills/social-content",
         "repository": "https://github.com/alirezarezvani/claude-skills",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -844,14 +844,14 @@
       },
       "source": "F",
       "status": {
-        "adaptation": "awaiting-implementation",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
         "reviewed": false,
-        "sourcePinned": false
+        "sourcePinned": true
       },
       "tags": [
         "email",
@@ -902,9 +902,9 @@
       },
       "source": "R",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -921,10 +921,10 @@
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
         "licenseEvidencePath": "LICENSE",
         "licenseNote": {
-          "en": "Covered by the root MIT LICENSE at the pinned commit.",
-          "zh-Hans": "固定提交上由根 MIT LICENSE 覆盖。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "research/deep-research/skills/deep-research",
         "repository": "https://github.com/alirezarezvani/claude-skills",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -973,9 +973,9 @@
       },
       "source": "R",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -992,10 +992,10 @@
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
         "licenseEvidencePath": "LICENSE",
         "licenseNote": {
-          "en": "Covered by the root MIT LICENSE at the pinned commit.",
-          "zh-Hans": "固定提交上由根 MIT LICENSE 覆盖。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "research/deepread",
         "repository": "https://github.com/alirezarezvani/claude-skills",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -1129,9 +1129,9 @@
       },
       "source": "K",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -1148,10 +1148,10 @@
         "commit": "593377bb048752abb0152deab9fbb1083a6087df",
         "licenseEvidencePath": "LICENSE.md",
         "licenseNote": {
-          "en": "Root LICENSE.md is MIT; references/scripts and any embedded data or model assets need the per-file audit.",
-          "zh-Hans": "根 LICENSE.md 为 MIT；references/scripts 及内嵌数据或模型素材需逐文件核验。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "skills/citation-management",
         "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
         "repositoryLicense": "MIT (root LICENSE.md)",
@@ -1199,9 +1199,9 @@
       },
       "source": "K",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -1218,10 +1218,10 @@
         "commit": "593377bb048752abb0152deab9fbb1083a6087df",
         "licenseEvidencePath": "LICENSE.md",
         "licenseNote": {
-          "en": "Root LICENSE.md is MIT; references/scripts and any embedded data or model assets need the per-file audit.",
-          "zh-Hans": "根 LICENSE.md 为 MIT；references/scripts 及内嵌数据或模型素材需逐文件核验。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "skills/scientific-critical-thinking",
         "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
         "repositoryLicense": "MIT (root LICENSE.md)",
@@ -1271,9 +1271,9 @@
       },
       "source": "R",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -1289,10 +1289,10 @@
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
         "licenseEvidencePath": "LICENSE",
         "licenseNote": {
-          "en": "Covered by the root MIT LICENSE at the pinned commit.",
-          "zh-Hans": "固定提交上由根 MIT LICENSE 覆盖。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "product-team/research-summarizer/skills/research-summarizer",
         "repository": "https://github.com/alirezarezvani/claude-skills",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -1660,9 +1660,9 @@
       },
       "source": "K",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -1679,10 +1679,10 @@
         "commit": "593377bb048752abb0152deab9fbb1083a6087df",
         "licenseEvidencePath": "LICENSE.md",
         "licenseNote": {
-          "en": "Root LICENSE.md is MIT; references/scripts and any embedded data or model assets need the per-file audit.",
-          "zh-Hans": "根 LICENSE.md 为 MIT；references/scripts 及内嵌数据或模型素材需逐文件核验。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "skills/sympy",
         "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
         "repositoryLicense": "MIT (root LICENSE.md)",
@@ -1959,7 +1959,7 @@
       },
       "source": "A",
       "status": {
-        "adaptation": "in-progress",
+        "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
         "packaged": false,
@@ -2031,9 +2031,9 @@
       },
       "source": "R",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -2050,10 +2050,10 @@
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
         "licenseEvidencePath": "LICENSE",
         "licenseNote": {
-          "en": "Covered by the root MIT LICENSE at the pinned commit.",
-          "zh-Hans": "固定提交上由根 MIT LICENSE 覆盖。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "product-team/skills/ui-design-system",
         "repository": "https://github.com/alirezarezvani/claude-skills",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -2102,9 +2102,9 @@
       },
       "source": "R",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -2121,10 +2121,10 @@
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
         "licenseEvidencePath": "LICENSE",
         "licenseNote": {
-          "en": "Covered by the root MIT LICENSE at the pinned commit.",
-          "zh-Hans": "固定提交上由根 MIT LICENSE 覆盖。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "product-team/skills/ux-researcher-designer",
         "repository": "https://github.com/alirezarezvani/claude-skills",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -2172,14 +2172,14 @@
       },
       "source": "F",
       "status": {
-        "adaptation": "in-progress",
+        "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
         "reviewed": false,
-        "sourcePinned": false
+        "sourcePinned": true
       },
       "tags": [
         "react",
@@ -2229,14 +2229,14 @@
       },
       "source": "F",
       "status": {
-        "adaptation": "in-progress",
+        "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
         "reviewed": false,
-        "sourcePinned": false
+        "sourcePinned": true
       },
       "tags": [
         "react",
@@ -2286,14 +2286,14 @@
       },
       "source": "F",
       "status": {
-        "adaptation": "in-progress",
+        "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
         "reviewed": false,
-        "sourcePinned": false
+        "sourcePinned": true
       },
       "tags": [
         "web",
@@ -2421,9 +2421,9 @@
       },
       "source": "R",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -2440,10 +2440,10 @@
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
         "licenseEvidencePath": "LICENSE",
         "licenseNote": {
-          "en": "Covered by the root MIT LICENSE at the pinned commit.",
-          "zh-Hans": "固定提交上由根 MIT LICENSE 覆盖。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "engineering-team/a11y-audit/skills/a11y-audit",
         "repository": "https://github.com/alirezarezvani/claude-skills",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -2491,9 +2491,9 @@
       },
       "source": "S",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -2509,7 +2509,11 @@
       "upstream": {
         "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
         "licenseEvidencePath": "LICENSE",
-        "licenseStatus": "pending-per-item-audit",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
         "path": "skills/systematic-debugging",
         "repository": "https://github.com/obra/superpowers",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -2557,9 +2561,9 @@
       },
       "source": "S",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -2575,7 +2579,11 @@
       "upstream": {
         "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
         "licenseEvidencePath": "LICENSE",
-        "licenseStatus": "pending-per-item-audit",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
         "path": "skills/test-driven-development",
         "repository": "https://github.com/obra/superpowers",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -2623,9 +2631,9 @@
       },
       "source": "S",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -2640,7 +2648,11 @@
       "upstream": {
         "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
         "licenseEvidencePath": "LICENSE",
-        "licenseStatus": "pending-per-item-audit",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
         "path": "skills/requesting-code-review",
         "repository": "https://github.com/obra/superpowers",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -2689,9 +2701,9 @@
       },
       "source": "R",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -2708,10 +2720,10 @@
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
         "licenseEvidencePath": "LICENSE",
         "licenseNote": {
-          "en": "Covered by the root MIT LICENSE at the pinned commit.",
-          "zh-Hans": "固定提交上由根 MIT LICENSE 覆盖。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "product-team/skills/product-manager-toolkit",
         "repository": "https://github.com/alirezarezvani/claude-skills",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -2760,9 +2772,9 @@
       },
       "source": "R",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -2779,10 +2791,10 @@
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
         "licenseEvidencePath": "LICENSE",
         "licenseNote": {
-          "en": "Covered by the root MIT LICENSE at the pinned commit.",
-          "zh-Hans": "固定提交上由根 MIT LICENSE 覆盖。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "product-team/skills/product-discovery",
         "repository": "https://github.com/alirezarezvani/claude-skills",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -2831,9 +2843,9 @@
       },
       "source": "R",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -2850,10 +2862,10 @@
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
         "licenseEvidencePath": "LICENSE",
         "licenseNote": {
-          "en": "Covered by the root MIT LICENSE at the pinned commit.",
-          "zh-Hans": "固定提交上由根 MIT LICENSE 覆盖。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "product-team/code-to-prd/skills/code-to-prd",
         "repository": "https://github.com/alirezarezvani/claude-skills",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -2902,9 +2914,9 @@
       },
       "source": "R",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
@@ -2921,10 +2933,10 @@
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
         "licenseEvidencePath": "LICENSE",
         "licenseNote": {
-          "en": "Covered by the root MIT LICENSE at the pinned commit.",
-          "zh-Hans": "固定提交上由根 MIT LICENSE 覆盖。"
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "productivity/meetings/skills/meetings",
         "repository": "https://github.com/alirezarezvani/claude-skills",
         "repositoryLicense": "MIT (root LICENSE)",
@@ -2974,14 +2986,14 @@
       },
       "source": "F",
       "status": {
-        "adaptation": "awaiting-implementation",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
         "reviewed": false,
-        "sourcePinned": false
+        "sourcePinned": true
       },
       "tags": [
         "files",
@@ -3032,14 +3044,14 @@
       },
       "source": "F",
       "status": {
-        "adaptation": "awaiting-implementation",
+        "adaptation": "frozen",
         "executionVerified": false,
-        "licenseChecked": false,
+        "licenseChecked": true,
         "packaged": false,
         "published": false,
         "qualified": false,
         "reviewed": false,
-        "sourcePinned": false
+        "sourcePinned": true
       },
       "tags": [
         "invoice",
