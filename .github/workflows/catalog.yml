@@ -1,0 +1,74 @@
+name: catalog
+# Deterministic content gates only. This workflow never holds signing keys,
+# never publishes feeds, packages or releases, and never deploys anything.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "catalog/**"
+      - "schema/**"
+      - "scripts/**"
+      - "sources/**"
+      - "tests/**"
+      - "docs/CATALOG-CONTRACT.md"
+      - "docs/LEGACY-COMPATIBILITY.md"
+      - "docs/UPSTREAM-PINS.json"
+      - ".github/workflows/catalog.yml"
+  pull_request:
+    paths:
+      - "catalog/**"
+      - "schema/**"
+      - "scripts/**"
+      - "sources/**"
+      - "tests/**"
+      - "docs/CATALOG-CONTRACT.md"
+      - "docs/LEGACY-COMPATIBILITY.md"
+      - "docs/UPSTREAM-PINS.json"
+      - ".github/workflows/catalog.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: catalog-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  catalog-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # Action refs are pinned to immutable upstream commit SHAs (verified via
+      # the public repos' tag->commit mapping), not mutable version tags:
+      #   actions/checkout   v4.4.0  -> 11d5960a326750d5838078e36cf38b85af677262
+      #   actions/setup-python v5.6.0 -> a26af69be951a213d495a4c3e4e4022e16d87065
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.11"
+      - name: Install the pinned signing library (verification only)
+        run: python3 -m pip install --disable-pip-version-check cryptography==46.0.6
+      - name: Schema documents match the validator
+        run: python3 scripts/gen_schemas.py --check
+      - name: Fixture sample rebuilds byte-identically and verifies
+        run: python3 scripts/make_fixture.py --check
+      - name: Candidate feeds rebuild deterministically (unsigned, scratch output)
+        run: python3 scripts/build_catalog.py --mode preview --source-commit "${{ github.sha }}" --out-root .build/catalog
+      - name: Staged sources pass the package gates (read-only)
+        run: python3 scripts/build_packages.py --check
+      - name: Full integrity gate (pins, published feeds standalone if any, secrets)
+        run: python3 scripts/check_catalog.py
+      - name: Behaviour tests
+        run: python3 -m unittest discover -s tests/catalog -t tests/catalog -v
+      - name: Release mode must still refuse with zero qualified entries
+        run: |
+          # the CI checkout IS the frozen fetch of github.sha, so --source-snapshot .
+          # is the honest audited-source binding for this refusal probe
+          if python3 scripts/build_catalog.py --mode release --source-commit "${{ github.sha }}" --source-snapshot . >/dev/null 2>&1; then
+            echo "release mode must fail closed until the coordinator qualifies content" >&2
+            exit 1
+          fi
+      - name: Clean up regenerable build output
+        if: always()
+        run: rm -rf .build

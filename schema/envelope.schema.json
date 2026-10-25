@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/JiangNanGenius/floe-skill-hub/schema/envelope.schema.json",
+  "title": "Signature envelope (catalog.sig / catalog.sig-shaped *.sig / .review.json.sig)",
+  "description": "Unchanged from the legacy skill-hub: exactly keyID plus base64 64-byte Ed25519 signature over the exact payload bytes. Production keyID is 'official-2026-09' (pinned in the app trust root; the private key is never in this repository). 'fixture-only-2026-10' is a deterministic public-seed test identity that can never be a trust root.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "keyID",
+    "signature"
+  ],
+  "properties": {
+    "keyID": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "signature": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]{86}=="
+    }
+  }
+}

@@ -1,0 +1,539 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/JiangNanGenius/floe-skill-hub/schema/registry.schema.json",
+  "title": "Floe Skill Hub candidate registry (catalog/skills.json) — schemaVersion 1",
+  "description": "Repository source of truth for the 43 first-release candidates. Unsigned source metadata, pretty JSON; only the derived channel feeds are canonical and signed. A candidate registry never grants install, review or publication.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "registry",
+    "publisher",
+    "hub",
+    "categories",
+    "notes",
+    "skills"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "registry": {
+      "const": "candidate"
+    },
+    "publisher": {
+      "const": "JiangNanGenius"
+    },
+    "hub": {
+      "type": "object",
+      "required": [
+        "repository",
+        "channelRoots"
+      ]
+    },
+    "categories": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "enum": [
+              "office-documents",
+              "writing-communication",
+              "web-development",
+              "research-data",
+              "design-creation",
+              "product-requirements",
+              "productivity-organization"
+            ]
+          },
+          "name": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "en",
+              "zh-Hans"
+            ],
+            "properties": {
+              "en": {
+                "type": "string"
+              },
+              "zh-Hans": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "en",
+        "zh-Hans"
+      ],
+      "properties": {
+        "en": {
+          "type": "string"
+        },
+        "zh-Hans": {
+          "type": "string"
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "minItems": 43,
+      "maxItems": 43,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "planNumber",
+          "kind",
+          "source",
+          "name",
+          "description",
+          "category",
+          "tags",
+          "deepAdaptation",
+          "upstream",
+          "firstParty",
+          "plannedRuntime",
+          "versionTarget",
+          "minimumAppVersion",
+          "status",
+          "notes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+            "maxLength": 64
+          },
+          "planNumber": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 43
+          },
+          "kind": {
+            "enum": [
+              "builtin",
+              "optional"
+            ]
+          },
+          "source": {
+            "enum": [
+              "F",
+              "A",
+              "V",
+              "R",
+              "K",
+              "S",
+              "I"
+            ]
+          },
+          "name": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "en",
+              "zh-Hans"
+            ],
+            "properties": {
+              "en": {
+                "type": "string"
+              },
+              "zh-Hans": {
+                "type": "string"
+              }
+            }
+          },
+          "description": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "en",
+              "zh-Hans"
+            ],
+            "properties": {
+              "en": {
+                "type": "string"
+              },
+              "zh-Hans": {
+                "type": "string"
+              }
+            }
+          },
+          "category": {
+            "enum": [
+              "office-documents",
+              "writing-communication",
+              "web-development",
+              "research-data",
+              "design-creation",
+              "product-requirements",
+              "productivity-organization"
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 12,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9.-]*$"
+            }
+          },
+          "deepAdaptation": {
+            "type": "boolean"
+          },
+          "upstream": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "repository",
+                  "commit",
+                  "path",
+                  "skillManifestPath",
+                  "retrievedAt",
+                  "licenseStatus",
+                  "licenseEvidencePath",
+                  "repositoryLicense",
+                  "licenseNote"
+                ],
+                "properties": {
+                  "repository": {
+                    "type": "string",
+                    "pattern": "^https://github\\.com/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$"
+                  },
+                  "commit": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{40}$"
+                  },
+                  "path": {
+                    "type": "string",
+                    "pattern": "^[^/][^.]*$"
+                  },
+                  "skillManifestPath": {
+                    "type": "string"
+                  },
+                  "retrievedAt": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$"
+                  },
+                  "licenseStatus": {
+                    "enum": [
+                      "verified",
+                      "pending-per-item-audit",
+                      "blocked-no-upstream-license"
+                    ]
+                  },
+                  "licenseEvidencePath": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "repositoryLicense": {
+                    "type": "string"
+                  },
+                  "licenseNote": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "en",
+                      "zh-Hans"
+                    ],
+                    "properties": {
+                      "en": {
+                        "type": "string"
+                      },
+                      "zh-Hans": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "description": "A pin is the review baseline, not a blanket license: verified still requires the per-file audit at packaging; blocked entries can never package."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "firstParty": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "repository",
+                  "commit",
+                  "path",
+                  "skillManifestPath",
+                  "retrievedAt",
+                  "licenseStatus",
+                  "licenseEvidencePath",
+                  "releasedVersion",
+                  "stagedSourceVersion"
+                ],
+                "properties": {
+                  "repository": {
+                    "type": "string"
+                  },
+                  "commit": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{40}$"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "skillManifestPath": {
+                    "type": "string"
+                  },
+                  "retrievedAt": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$"
+                  },
+                  "licenseStatus": {
+                    "const": "floe-owned"
+                  },
+                  "licenseEvidencePath": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "releasedVersion": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "stagedSourceVersion": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "description": "First-party pin; released and staged versions are recorded separately (e.g. floe-office released 1.3.0, staged 1.5.0 — never conflated)."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "plannedRuntime": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "scriptRuntime",
+              "capabilities",
+              "tools",
+              "installPlatforms",
+              "pythonPackagesPlan",
+              "execution"
+            ],
+            "properties": {
+              "scriptRuntime": {
+                "enum": [
+                  "none",
+                  "javascriptcore",
+                  "python.local",
+                  "remote"
+                ]
+              },
+              "capabilities": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "workspace.read",
+                    "workspace.write",
+                    "workspace.delete",
+                    "network",
+                    "browser.observe",
+                    "browser.interact",
+                    "credentials",
+                    "javascript.local",
+                    "python.local",
+                    "execution.remote"
+                  ]
+                }
+              },
+              "tools": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)+$"
+                }
+              },
+              "installPlatforms": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "ios",
+                    "android"
+                  ]
+                },
+                "description": "store channels only (ios|android); the manifest floe.json platforms remain the native enum"
+              },
+              "pythonPackagesPlan": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "execution": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "os",
+                  "arch",
+                  "evidence"
+                ],
+                "properties": {
+                  "os": {
+                    "enum": [
+                      "linux",
+                      "macos",
+                      "ios",
+                      null
+                    ]
+                  },
+                  "arch": {
+                    "enum": [
+                      "riscv64",
+                      "x86_64",
+                      "aarch64",
+                      "n/a",
+                      null
+                    ]
+                  },
+                  "evidence": {
+                    "enum": [
+                      "unproven",
+                      "guest-verified"
+                    ]
+                  }
+                },
+                "description": "Execution OS/architecture, separate from store/install channels. unproven is the only value a candidate may carry."
+              }
+            }
+          },
+          "versionTarget": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "minimumAppVersion": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sourcePinned",
+              "licenseChecked",
+              "adaptation",
+              "packaged",
+              "reviewed",
+              "qualified",
+              "published",
+              "executionVerified"
+            ],
+            "properties": {
+              "sourcePinned": {
+                "type": "boolean"
+              },
+              "licenseChecked": {
+                "type": "boolean"
+              },
+              "adaptation": {
+                "enum": [
+                  "awaiting-implementation",
+                  "planned",
+                  "in-progress",
+                  "frozen"
+                ]
+              },
+              "packaged": {
+                "type": "boolean"
+              },
+              "reviewed": {
+                "type": "boolean"
+              },
+              "qualified": {
+                "type": "boolean"
+              },
+              "published": {
+                "type": "boolean"
+              },
+              "executionVerified": {
+                "type": "boolean"
+              }
+            },
+            "description": "Distinct lifecycle states. reviewed=>licenseChecked; qualified=>reviewed+packaged; published=>qualified; executionVerified=>frozen adaptation. No state may be inferred from a build."
+          },
+          "notes": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "en",
+              "zh-Hans"
+            ],
+            "properties": {
+              "en": {
+                "type": "string"
+              },
+              "zh-Hans": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
