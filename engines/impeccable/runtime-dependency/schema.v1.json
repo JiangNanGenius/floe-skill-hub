@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Floe managed Impeccable runtime artifact descriptor v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "componentID",
+    "componentVersion",
+    "minimumAppVersion",
+    "target",
+    "artifact",
+    "captureContract"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "componentID": {
+      "const": "impeccable-engine"
+    },
+    "componentVersion": {
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\+floe\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+    },
+    "minimumAppVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "os",
+        "arch",
+        "triple",
+        "format"
+      ],
+      "properties": {
+        "os": {
+          "const": "linux"
+        },
+        "arch": {
+          "const": "riscv64"
+        },
+        "triple": {
+          "const": "riscv64gc-unknown-linux-musl"
+        },
+        "format": {
+          "const": "elf64-little-riscv-exec-static"
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "size",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "maxLength": 256,
+          "pattern": "^engines/impeccable/dist/impeccable-[0-9]+\\.[0-9]+\\.[0-9]+\\+floe\\.[0-9]+\\.[0-9]+\\.[0-9]+/riscv64gc-unknown-linux-musl/floe-impeccable$"
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16777216
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "captureContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "sha256"
+      ],
+      "properties": {
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2147483647
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

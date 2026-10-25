@@ -13,6 +13,10 @@ Status: implementation input, not a published catalog. Changes require coordinat
 
 The signed feed carries `sourceCommit`: the audited source revision X used to build its content. The client separately resolves `publicationCommit` Y, the immutable repository revision containing the feed, signatures, reviews and archives, and retrieves every artifact at Y for the whole operation. X is signed provenance and is not required to equal Y. Never require a feed to contain the hash of the Git commit that contains itself, and never re-resolve a mutable branch separately for each artifact. Search/install receipts keep these two identities distinct.
 
+## GitHub-only App delivery
+
+The App obtains catalog metadata, signatures, review records, skill archives and managed runtime artifacts directly from the trusted GitHub repository at the operation's immutable publication Y. The website is an independent static showcase, populated from GitHub at website build time. It is never an App API, package proxy, download CDN, telemetry collector or fallback source. If GitHub is unavailable, retain the existing verified local cache and show the applicable offline state; never silently route App requests through the website.
+
 ## Trust, review and runtime
 
 Retain the existing signed-feed envelope and Ed25519 trust model. Package hashes are authenticated through the signed catalog. Do not generate a production trust root or read signing secrets in a worker. An ephemeral test signature must be explicitly labeled fixture-only and must never be installed as a production trust root.
