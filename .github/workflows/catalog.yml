@@ -8,7 +8,9 @@ on:
       - "catalog/**"
       - "schema/**"
       - "scripts/**"
+      - "showcase/**"
       - "sources/**"
+      - "engines/impeccable/**"
       - "tests/**"
       - "docs/CATALOG-CONTRACT.md"
       - "docs/LEGACY-COMPATIBILITY.md"
@@ -19,7 +21,9 @@ on:
       - "catalog/**"
       - "schema/**"
       - "scripts/**"
+      - "showcase/**"
       - "sources/**"
+      - "engines/impeccable/**"
       - "tests/**"
       - "docs/CATALOG-CONTRACT.md"
       - "docs/LEGACY-COMPATIBILITY.md"
@@ -57,6 +61,8 @@ jobs:
         run: python3 scripts/build_catalog.py --mode preview --source-commit "${{ github.sha }}" --out-root .build/catalog
       - name: Staged sources pass the package gates (read-only)
         run: python3 scripts/build_packages.py --check
+      - name: Showcase content gates (read-only editorial, media, links audit)
+        run: python3 showcase/scripts/validate_showcase.py
       - name: Full integrity gate (pins, published feeds standalone if any, secrets)
         run: python3 scripts/check_catalog.py
       - name: Behaviour tests

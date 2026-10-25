@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://floe.skillhub.dev/showcase/skills.schema.json",
+  "title": "Floe Skill Hub showcase skills.json (frozen v1)",
+  "description": "Editorial presentation records for the website client. Never overrides signed catalog facts. See showcase/CONTRACT.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "editorPicks", "entries"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "editorPicks": {
+      "type": "array",
+      "maxItems": 12,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/skillId"}
+    },
+    "entries": {
+      "type": "object",
+      "propertyNames": {"$ref": "#/$defs/skillId"},
+      "additionalProperties": {"$ref": "#/$defs/editorial"}
+    }
+  },
+  "$defs": {
+    "skillId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Existing catalog registry id grammar; ids join catalog/skills.json (43 records)."
+    },
+    "bilingual": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["en", "zh-Hans"],
+      "properties": {
+        "en": {"type": "string", "minLength": 1, "maxLength": 4000},
+        "zh-Hans": {"type": "string", "minLength": 1, "maxLength": 4000}
+      }
+    },
+    "mediaRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "kind", "credit"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Strict relative file under showcase/media/ (repo-relative). No URL, traversal, backslash, control characters or symlinks."
+        },
+        "kind": {"enum": ["illustration", "example-output", "app-screenshot"]},
+        "credit": {"$ref": "#/$defs/bilingual"},
+        "alt": {"$ref": "#/$defs/bilingual"},
+        "caption": {"$ref": "#/$defs/bilingual"}
+      }
+    },
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prompt", "output"],
+      "properties": {
+        "prompt": {"$ref": "#/$defs/bilingual"},
+        "output": {"$ref": "#/$defs/bilingual"}
+      }
+    },
+    "editorial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["overview", "useCases", "examples", "cover", "gallery"],
+      "properties": {
+        "overview": {"$ref": "#/$defs/bilingual"},
+        "useCases": {"type": "array", "maxItems": 12, "items": {"$ref": "#/$defs/bilingual"}},
+        "examples": {"type": "array", "maxItems": 12, "items": {"$ref": "#/$defs/example"}},
+        "cover": {"anyOf": [{"$ref": "#/$defs/mediaRef"}, {"type": "null"}]},
+        "gallery": {"type": "array", "maxItems": 12, "items": {"$ref": "#/$defs/mediaRef"}}
+      }
+    }
+  }
+}

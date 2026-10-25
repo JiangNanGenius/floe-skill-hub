@@ -1,4 +1,1635 @@
 {
-  "schemaVersion": 1,
-  "entries": {}
+ "schemaVersion": 1,
+ "entries": {
+  "a11y-audit": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "senior-frontend",
+       "zh-Hans": "senior-frontend"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/engineering-team/skills/senior-frontend"
+     },
+     "evidence": [
+      {
+       "file": "sources/a11y-audit/SKILL.md",
+       "sha256": "40cd4aa96bc33c8daf77d1c7650c15e99fa073b8c87ba002fa3398464771a864",
+       "lineStart": 137,
+       "lineEnd": 146
+      }
+     ],
+     "notes": {
+      "en": "Upstream sibling recorded at the reviewed pinned commit under a distinct-from boundary note; not curated by this Hub. Reference-only; no automatic install.",
+      "zh-Hans": "上游同族条目（位于已评审的固定提交），以“区别于”边界说明引用；本 Hub 未精选。仅为参考；不自动安装。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "code-reviewer",
+       "zh-Hans": "code-reviewer"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/engineering-team/skills/code-reviewer"
+     },
+     "evidence": [
+      {
+       "file": "sources/a11y-audit/SKILL.md",
+       "sha256": "40cd4aa96bc33c8daf77d1c7650c15e99fa073b8c87ba002fa3398464771a864",
+       "lineStart": 137,
+       "lineEnd": 146
+      }
+     ],
+     "notes": {
+      "en": "Upstream sibling recorded at the reviewed pinned commit under a distinct-from boundary note; not curated by this Hub. Reference-only; no automatic install.",
+      "zh-Hans": "上游同族条目（位于已评审的固定提交），以“区别于”边界说明引用；本 Hub 未精选。仅为参考；不自动安装。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "senior-qa",
+       "zh-Hans": "senior-qa"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/engineering-team/skills/senior-qa"
+     },
+     "evidence": [
+      {
+       "file": "sources/a11y-audit/SKILL.md",
+       "sha256": "40cd4aa96bc33c8daf77d1c7650c15e99fa073b8c87ba002fa3398464771a864",
+       "lineStart": 137,
+       "lineEnd": 146
+      }
+     ],
+     "notes": {
+      "en": "Upstream sibling recorded at the reviewed pinned commit under a distinct-from boundary note; not curated by this Hub. Reference-only; no automatic install.",
+      "zh-Hans": "上游同族条目（位于已评审的固定提交），以“区别于”边界说明引用；本 Hub 未精选。仅为参考；不自动安装。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "playwright-pro",
+       "zh-Hans": "playwright-pro"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/engineering-team/playwright-pro"
+     },
+     "evidence": [
+      {
+       "file": "sources/a11y-audit/SKILL.md",
+       "sha256": "40cd4aa96bc33c8daf77d1c7650c15e99fa073b8c87ba002fa3398464771a864",
+       "lineStart": 137,
+       "lineEnd": 146
+      }
+     ],
+     "notes": {
+      "en": "Upstream sibling recorded at the reviewed pinned commit under a distinct-from boundary note; not curated by this Hub. Reference-only; no automatic install.",
+      "zh-Hans": "上游同族条目（位于已评审的固定提交），以“区别于”边界说明引用；本 Hub 未精选。仅为参考；不自动安装。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "epic-design",
+       "zh-Hans": "epic-design"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/engineering-team/skills/epic-design"
+     },
+     "evidence": [
+      {
+       "file": "sources/a11y-audit/SKILL.md",
+       "sha256": "40cd4aa96bc33c8daf77d1c7650c15e99fa073b8c87ba002fa3398464771a864",
+       "lineStart": 137,
+       "lineEnd": 146
+      }
+     ],
+     "notes": {
+      "en": "Upstream sibling recorded at the reviewed pinned commit under a distinct-from boundary note; not curated by this Hub. Reference-only; no automatic install.",
+      "zh-Hans": "上游同族条目（位于已评审的固定提交），以“区别于”边界说明引用；本 Hub 未精选。仅为参考；不自动安装。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "tdd-guide",
+       "zh-Hans": "tdd-guide"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/engineering-team/skills/tdd-guide"
+     },
+     "evidence": [
+      {
+       "file": "sources/a11y-audit/SKILL.md",
+       "sha256": "40cd4aa96bc33c8daf77d1c7650c15e99fa073b8c87ba002fa3398464771a864",
+       "lineStart": 137,
+       "lineEnd": 146
+      }
+     ],
+     "notes": {
+      "en": "Upstream sibling recorded at the reviewed pinned commit under a distinct-from boundary note; not curated by this Hub. Reference-only; no automatic install.",
+      "zh-Hans": "上游同族条目（位于已评审的固定提交），以“区别于”边界说明引用；本 Hub 未精选。仅为参考；不自动安装。"
+     }
+    }
+   ]
+  },
+  "citation-management": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "optional",
+     "target": {
+      "kind": "hub",
+      "id": "literature-review"
+     },
+     "evidence": [
+      {
+       "file": "sources/citation-management/SKILL.md",
+       "sha256": "2bda5baeb9c94055890e07a7865a20986efe6b6e3bc9404caef209a5a44b8a05",
+       "lineStart": 20,
+       "lineEnd": 24
+      },
+      {
+       "file": "sources/citation-management/SKILL.md",
+       "sha256": "2bda5baeb9c94055890e07a7865a20986efe6b6e3bc9404caef209a5a44b8a05",
+       "lineStart": 206,
+       "lineEnd": 228
+      },
+      {
+       "file": "sources/citation-management/references/core_workflow.md",
+       "sha256": "19e8b52c43f5822163c79904236016616dc4515d21a01d29073d968c9251af8d",
+       "lineStart": 512,
+       "lineEnd": 526
+      }
+     ],
+     "notes": {
+      "en": "Documented combined research workflow; both skills operate standalone and the pairing applies only when literature-review is installed.",
+      "zh-Hans": "文档中描述的联合研究工作流；两个技能均可独立使用，仅在已安装 literature-review 时配对。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "scientific-writing",
+       "zh-Hans": "scientific-writing"
+      },
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills/tree/593377bb048752abb0152deab9fbb1083a6087df/skills/scientific-writing"
+     },
+     "evidence": [
+      {
+       "file": "sources/citation-management/SKILL.md",
+       "sha256": "2bda5baeb9c94055890e07a7865a20986efe6b6e3bc9404caef209a5a44b8a05",
+       "lineStart": 221,
+       "lineEnd": 227
+      }
+     ],
+     "notes": {
+      "en": "Upstream K-Dense scientific skill at the reviewed pinned commit; not curated by this Hub. Reference-only; no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 K-Dense 科学技能（位于已评审的固定提交）；本 Hub 未精选。仅为参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "venue-templates",
+       "zh-Hans": "venue-templates"
+      },
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills/tree/593377bb048752abb0152deab9fbb1083a6087df/skills/venue-templates"
+     },
+     "evidence": [
+      {
+       "file": "sources/citation-management/SKILL.md",
+       "sha256": "2bda5baeb9c94055890e07a7865a20986efe6b6e3bc9404caef209a5a44b8a05",
+       "lineStart": 229,
+       "lineEnd": 235
+      }
+     ],
+     "notes": {
+      "en": "Upstream K-Dense scientific skill at the reviewed pinned commit; not curated by this Hub. Reference-only; no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 K-Dense 科学技能（位于已评审的固定提交）；本 Hub 未精选。仅为参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "optional",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "pyzotero",
+       "zh-Hans": "pyzotero"
+      },
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills/tree/593377bb048752abb0152deab9fbb1083a6087df/skills/pyzotero"
+     },
+     "evidence": [
+      {
+       "file": "sources/citation-management/references/core_workflow.md",
+       "sha256": "19e8b52c43f5822163c79904236016616dc4515d21a01d29073d968c9251af8d",
+       "lineStart": 535,
+       "lineEnd": 548
+      }
+     ],
+     "notes": {
+      "en": "Upstream K-Dense scientific skill at the reviewed pinned commit; not curated by this Hub. Reference-only; no automatic download, installation or permission inheritance. Conditional Zotero-library workflow only for users who already keep references in Zotero; the shipped text notes the handoff is illustrative.",
+      "zh-Hans": "上游 K-Dense 科学技能（位于已评审的固定提交）；本 Hub 未精选。仅为参考：不自动下载、安装或继承权限。 仅面向已在 Zotero 中管理文献的用户的有条件工作流；随附文本已注明该交接仅为示例。"
+     }
+    }
+   ]
+  },
+  "content-production": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "copywriting"
+     },
+     "evidence": [
+      {
+       "file": "sources/content-production/SKILL.md",
+       "sha256": "f4a633642157eec0fb138f3c0bb2c2e0409a422b28406acdfdd852ae8d0011f9",
+       "lineStart": 248,
+       "lineEnd": 254
+      }
+     ],
+     "notes": {
+      "en": "Landing-page/CTA routing guidance between curated companions.",
+      "zh-Hans": "已精选同族技能之间的落地页/CTA 路由指引。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "content-strategy",
+       "zh-Hans": "content-strategy"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/content-strategy"
+     },
+     "evidence": [
+      {
+       "file": "sources/content-production/SKILL.md",
+       "sha256": "f4a633642157eec0fb138f3c0bb2c2e0409a422b28406acdfdd852ae8d0011f9",
+       "lineStart": 248,
+       "lineEnd": 254
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "content-humanizer",
+       "zh-Hans": "content-humanizer"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/content-humanizer"
+     },
+     "evidence": [
+      {
+       "file": "sources/content-production/SKILL.md",
+       "sha256": "f4a633642157eec0fb138f3c0bb2c2e0409a422b28406acdfdd852ae8d0011f9",
+       "lineStart": 248,
+       "lineEnd": 254
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "aeo",
+       "zh-Hans": "aeo"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/aeo"
+     },
+     "evidence": [
+      {
+       "file": "sources/content-production/SKILL.md",
+       "sha256": "f4a633642157eec0fb138f3c0bb2c2e0409a422b28406acdfdd852ae8d0011f9",
+       "lineStart": 248,
+       "lineEnd": 254
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "seo-audit",
+       "zh-Hans": "seo-audit"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/seo-audit"
+     },
+     "evidence": [
+      {
+       "file": "sources/content-production/SKILL.md",
+       "sha256": "f4a633642157eec0fb138f3c0bb2c2e0409a422b28406acdfdd852ae8d0011f9",
+       "lineStart": 248,
+       "lineEnd": 254
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    }
+   ]
+  },
+  "copy-editing": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "copywriting"
+     },
+     "evidence": [
+      {
+       "file": "sources/copy-editing/SKILL.md",
+       "sha256": "f205712cab38b15b846c98426d997e129ebe5887665b0f2e18b5073951e51082",
+       "lineStart": 443,
+       "lineEnd": 449
+      },
+      {
+       "file": "sources/copy-editing/SKILL.md",
+       "sha256": "f205712cab38b15b846c98426d997e129ebe5887665b0f2e18b5073951e51082",
+       "lineStart": 491,
+       "lineEnd": 498
+      }
+     ]
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "social-content"
+     },
+     "evidence": [
+      {
+       "file": "sources/copy-editing/SKILL.md",
+       "sha256": "f205712cab38b15b846c98426d997e129ebe5887665b0f2e18b5073951e51082",
+       "lineStart": 491,
+       "lineEnd": 498
+      }
+     ]
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "page-cro",
+       "zh-Hans": "page-cro"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/page-cro"
+     },
+     "evidence": [
+      {
+       "file": "sources/copy-editing/SKILL.md",
+       "sha256": "f205712cab38b15b846c98426d997e129ebe5887665b0f2e18b5073951e51082",
+       "lineStart": 443,
+       "lineEnd": 449
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "marketing-context",
+       "zh-Hans": "marketing-context"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/marketing-context"
+     },
+     "evidence": [
+      {
+       "file": "sources/copy-editing/SKILL.md",
+       "sha256": "f205712cab38b15b846c98426d997e129ebe5887665b0f2e18b5073951e51082",
+       "lineStart": 491,
+       "lineEnd": 498
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "content-strategy",
+       "zh-Hans": "content-strategy"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/content-strategy"
+     },
+     "evidence": [
+      {
+       "file": "sources/copy-editing/SKILL.md",
+       "sha256": "f205712cab38b15b846c98426d997e129ebe5887665b0f2e18b5073951e51082",
+       "lineStart": 491,
+       "lineEnd": 498
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "marketing-ideas",
+       "zh-Hans": "marketing-ideas"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/marketing-ideas"
+     },
+     "evidence": [
+      {
+       "file": "sources/copy-editing/SKILL.md",
+       "sha256": "f205712cab38b15b846c98426d997e129ebe5887665b0f2e18b5073951e51082",
+       "lineStart": 491,
+       "lineEnd": 498
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "content-humanizer",
+       "zh-Hans": "content-humanizer"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/content-humanizer"
+     },
+     "evidence": [
+      {
+       "file": "sources/copy-editing/SKILL.md",
+       "sha256": "f205712cab38b15b846c98426d997e129ebe5887665b0f2e18b5073951e51082",
+       "lineStart": 491,
+       "lineEnd": 498
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "ab-test-setup",
+       "zh-Hans": "ab-test-setup"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/ab-test-setup"
+     },
+     "evidence": [
+      {
+       "file": "sources/copy-editing/SKILL.md",
+       "sha256": "f205712cab38b15b846c98426d997e129ebe5887665b0f2e18b5073951e51082",
+       "lineStart": 491,
+       "lineEnd": 498
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    }
+   ]
+  },
+  "copywriting": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "copy-editing"
+     },
+     "evidence": [
+      {
+       "file": "sources/copywriting/SKILL.md",
+       "sha256": "eee59d8b47fccba1e00689090582a78bf05b53b61db2ab63d5dd511eaade3648",
+       "lineStart": 83,
+       "lineEnd": 87
+      },
+      {
+       "file": "sources/copywriting/SKILL.md",
+       "sha256": "eee59d8b47fccba1e00689090582a78bf05b53b61db2ab63d5dd511eaade3648",
+       "lineStart": 292,
+       "lineEnd": 301
+      },
+      {
+       "file": "sources/copywriting/references/natural-transitions.md",
+       "sha256": "7de888fa7e6f5e0822dcdeffc339c301ea89917b6bfdfed38d227a14f14cd9f5",
+       "lineStart": 250,
+       "lineEnd": 252
+      }
+     ]
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "social-content"
+     },
+     "evidence": [
+      {
+       "file": "sources/copywriting/SKILL.md",
+       "sha256": "eee59d8b47fccba1e00689090582a78bf05b53b61db2ab63d5dd511eaade3648",
+       "lineStart": 292,
+       "lineEnd": 301
+      }
+     ]
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "marketing-context",
+       "zh-Hans": "marketing-context"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/marketing-context"
+     },
+     "evidence": [
+      {
+       "file": "sources/copywriting/SKILL.md",
+       "sha256": "eee59d8b47fccba1e00689090582a78bf05b53b61db2ab63d5dd511eaade3648",
+       "lineStart": 292,
+       "lineEnd": 301
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "content-strategy",
+       "zh-Hans": "content-strategy"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/content-strategy"
+     },
+     "evidence": [
+      {
+       "file": "sources/copywriting/SKILL.md",
+       "sha256": "eee59d8b47fccba1e00689090582a78bf05b53b61db2ab63d5dd511eaade3648",
+       "lineStart": 292,
+       "lineEnd": 301
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "marketing-ideas",
+       "zh-Hans": "marketing-ideas"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/marketing-ideas"
+     },
+     "evidence": [
+      {
+       "file": "sources/copywriting/SKILL.md",
+       "sha256": "eee59d8b47fccba1e00689090582a78bf05b53b61db2ab63d5dd511eaade3648",
+       "lineStart": 292,
+       "lineEnd": 301
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "content-humanizer",
+       "zh-Hans": "content-humanizer"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/content-humanizer"
+     },
+     "evidence": [
+      {
+       "file": "sources/copywriting/SKILL.md",
+       "sha256": "eee59d8b47fccba1e00689090582a78bf05b53b61db2ab63d5dd511eaade3648",
+       "lineStart": 292,
+       "lineEnd": 301
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "ab-test-setup",
+       "zh-Hans": "ab-test-setup"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/ab-test-setup"
+     },
+     "evidence": [
+      {
+       "file": "sources/copywriting/SKILL.md",
+       "sha256": "eee59d8b47fccba1e00689090582a78bf05b53b61db2ab63d5dd511eaade3648",
+       "lineStart": 292,
+       "lineEnd": 301
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "email-sequence",
+       "zh-Hans": "email-sequence"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/email-sequence"
+     },
+     "evidence": [
+      {
+       "file": "sources/copywriting/SKILL.md",
+       "sha256": "eee59d8b47fccba1e00689090582a78bf05b53b61db2ab63d5dd511eaade3648",
+       "lineStart": 292,
+       "lineEnd": 301
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    }
+   ]
+  },
+  "deepread": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "deep-research"
+     },
+     "evidence": [
+      {
+       "file": "sources/deepread/SKILL.md",
+       "sha256": "28785d572d2d621cfe5d3d66e624dd1db030bf5fd207c0159b5322b84d5f2a95",
+       "lineStart": 25,
+       "lineEnd": 29
+      },
+      {
+       "file": "sources/deepread/SKILL.md",
+       "sha256": "28785d572d2d621cfe5d3d66e624dd1db030bf5fd207c0159b5322b84d5f2a95",
+       "lineStart": 159,
+       "lineEnd": 163
+      }
+     ],
+     "notes": {
+      "en": "Boundary routing: deepread starts from supplied reading material; web discovery belongs to deep-research.",
+      "zh-Hans": "边界路由：deepread 从给定材料开始；网络检索归 deep-research。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "research-summarizer"
+     },
+     "evidence": [
+      {
+       "file": "sources/deepread/SKILL.md",
+       "sha256": "28785d572d2d621cfe5d3d66e624dd1db030bf5fd207c0159b5322b84d5f2a95",
+       "lineStart": 25,
+       "lineEnd": 29
+      },
+      {
+       "file": "sources/deepread/SKILL.md",
+       "sha256": "28785d572d2d621cfe5d3d66e624dd1db030bf5fd207c0159b5322b84d5f2a95",
+       "lineStart": 159,
+       "lineEnd": 163
+      }
+     ]
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "research/notebooklm",
+       "zh-Hans": "research/notebooklm"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/research/notebooklm"
+     },
+     "evidence": [
+      {
+       "file": "sources/deepread/SKILL.md",
+       "sha256": "28785d572d2d621cfe5d3d66e624dd1db030bf5fd207c0159b5322b84d5f2a95",
+       "lineStart": 159,
+       "lineEnd": 163
+      }
+     ],
+     "notes": {
+      "en": "Upstream sibling recorded at the reviewed pinned commit under a distinct-from boundary note; not curated by this Hub. Reference-only; no automatic install.",
+      "zh-Hans": "上游同族条目（位于已评审的固定提交），以“区别于”边界说明引用；本 Hub 未精选。仅为参考；不自动安装。"
+     }
+    }
+   ]
+  },
+  "exploratory-data-analysis": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "optional",
+     "target": {
+      "kind": "hub",
+      "id": "markitdown"
+     },
+     "evidence": [
+      {
+       "file": "sources/exploratory-data-analysis/SKILL.md",
+       "sha256": "cc497de5163122c4673e97955c5c626750e4bbab94875c6bfbbe9a3498b40384",
+       "lineStart": 36,
+       "lineEnd": 40
+      }
+     ],
+     "notes": {
+      "en": "Excel conversion routes through markitdown or native document tools; markitdown is one of two documented routes, not a prerequisite.",
+      "zh-Hans": "Excel 转换可走 markitdown 或原生文档工具；markitdown 是两条已记录路径之一，并非前置依赖。"
+     }
+    }
+   ]
+  },
+  "literature-review": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "citation-management"
+     },
+     "evidence": [
+      {
+       "file": "sources/literature-review/SKILL.md",
+       "sha256": "e4b00da02014b74a8920ae5137d6b45087ea9e55d8f5f7ad5be34e010d5e2575",
+       "lineStart": 81,
+       "lineEnd": 88
+      }
+     ]
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "scientific-critical-thinking"
+     },
+     "evidence": [
+      {
+       "file": "sources/literature-review/SKILL.md",
+       "sha256": "e4b00da02014b74a8920ae5137d6b45087ea9e55d8f5f7ad5be34e010d5e2575",
+       "lineStart": 81,
+       "lineEnd": 88
+      }
+     ]
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "deep-research"
+     },
+     "evidence": [
+      {
+       "file": "sources/literature-review/SKILL.md",
+       "sha256": "e4b00da02014b74a8920ae5137d6b45087ea9e55d8f5f7ad5be34e010d5e2575",
+       "lineStart": 81,
+       "lineEnd": 88
+      }
+     ]
+    },
+    {
+     "relation": "optional",
+     "target": {
+      "kind": "hub",
+      "id": "scientific-visualization"
+     },
+     "evidence": [
+      {
+       "file": "sources/literature-review/SKILL.md",
+       "sha256": "e4b00da02014b74a8920ae5137d6b45087ea9e55d8f5f7ad5be34e010d5e2575",
+       "lineStart": 63,
+       "lineEnd": 67
+      },
+      {
+       "file": "sources/literature-review/SKILL.md",
+       "sha256": "e4b00da02014b74a8920ae5137d6b45087ea9e55d8f5f7ad5be34e010d5e2575",
+       "lineStart": 81,
+       "lineEnd": 88
+      },
+      {
+       "file": "sources/literature-review/references/ADAPTATION-NOTES.md",
+       "sha256": "cb8e8504b606bbeaed724771dccb81b001b190bd7ca29ad698cdef2ae5652d0d",
+       "lineStart": 28,
+       "lineEnd": 31
+      }
+     ],
+     "notes": {
+      "en": "Deterministic PRISMA/evidence plots only when the scientific-visualization layer is provisioned; the review succeeds without figures.",
+      "zh-Hans": "仅在 scientific-visualization 层已配置时提供确定性 PRISMA/证据图；没有图也不影响综述完成。"
+     }
+    },
+    {
+     "relation": "optional",
+     "target": {
+      "kind": "hub",
+      "id": "markitdown"
+     },
+     "evidence": [
+      {
+       "file": "sources/literature-review/SKILL.md",
+       "sha256": "e4b00da02014b74a8920ae5137d6b45087ea9e55d8f5f7ad5be34e010d5e2575",
+       "lineStart": 81,
+       "lineEnd": 88
+      }
+     ],
+     "notes": {
+      "en": "PDF-to-Markdown convenience conversion with native routes preferred first.",
+      "zh-Hans": "PDF 转 Markdown 的便捷转换，优先使用原生路径。"
+     }
+    }
+   ]
+  },
+  "markitdown": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "floe-pdf"
+     },
+     "evidence": [
+      {
+       "file": "sources/markitdown/references/format-routing.md",
+       "sha256": "77c4c8fa91e4ef2e96f29c0cb9f8cdc43c7460970e80640c963b42fa2149be8a",
+       "lineStart": 1,
+       "lineEnd": 8
+      }
+     ],
+     "notes": {
+      "en": "Concerns the native document.pdf.* tool contracts that floe-pdf wraps; the guest defers to that native authority instead of duplicating it.",
+      "zh-Hans": "涉及 floe-pdf 所封装的原生 document.pdf.* 工具约定；guest 侧让位给该原生权威，不做重复实现。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "floe-office"
+     },
+     "evidence": [
+      {
+       "file": "sources/markitdown/references/format-routing.md",
+       "sha256": "77c4c8fa91e4ef2e96f29c0cb9f8cdc43c7460970e80640c963b42fa2149be8a",
+       "lineStart": 1,
+       "lineEnd": 8
+      }
+     ],
+     "notes": {
+      "en": "Concerns the native document.convert Office-tool contract that floe-office wraps.",
+      "zh-Hans": "涉及 floe-office 所封装的原生 document.convert Office 工具约定。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "literature-review"
+     },
+     "evidence": [
+      {
+       "file": "sources/markitdown/references/format-routing.md",
+       "sha256": "77c4c8fa91e4ef2e96f29c0cb9f8cdc43c7460970e80640c963b42fa2149be8a",
+       "lineStart": 34,
+       "lineEnd": 38
+      },
+      {
+       "file": "sources/markitdown/references/ADAPTATION-NOTES.md",
+       "sha256": "1ecf3bb0421137856a5be8a858e783689d109da089fff6f31f4559af51fe0a4e",
+       "lineStart": 64,
+       "lineEnd": 67
+      }
+     ]
+    }
+   ]
+  },
+  "meetings": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "internal-comms"
+     },
+     "evidence": [
+      {
+       "file": "sources/meetings/SKILL.md",
+       "sha256": "663d75d43c459f2c4855193fa4a6967e228585c075436fe27ad32d0f73685737",
+       "lineStart": 74,
+       "lineEnd": 81
+      }
+     ],
+     "notes": {
+      "en": "Distinct-from boundary: meetings never designs an org comms program; the curated internal-comms skill owns that scope.",
+      "zh-Hans": "“区别于”边界：meetings 从不设计组织沟通方案；该范围由已精选的 internal-comms 技能负责。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "project-management",
+       "zh-Hans": "project-management"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/project-management"
+     },
+     "evidence": [
+      {
+       "file": "sources/meetings/SKILL.md",
+       "sha256": "663d75d43c459f2c4855193fa4a6967e228585c075436fe27ad32d0f73685737",
+       "lineStart": 74,
+       "lineEnd": 81
+      }
+     ],
+     "notes": {
+      "en": "Upstream sibling recorded at the reviewed pinned commit under a distinct-from boundary note; not curated by this Hub. Reference-only; no automatic install.",
+      "zh-Hans": "上游同族条目（位于已评审的固定提交），以“区别于”边界说明引用；本 Hub 未精选。仅为参考；不自动安装。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "productivity/capture",
+       "zh-Hans": "productivity/capture"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/productivity/capture"
+     },
+     "evidence": [
+      {
+       "file": "sources/meetings/SKILL.md",
+       "sha256": "663d75d43c459f2c4855193fa4a6967e228585c075436fe27ad32d0f73685737",
+       "lineStart": 74,
+       "lineEnd": 81
+      }
+     ],
+     "notes": {
+      "en": "Upstream sibling recorded at the reviewed pinned commit under a distinct-from boundary note; not curated by this Hub. Reference-only; no automatic install.",
+      "zh-Hans": "上游同族条目（位于已评审的固定提交），以“区别于”边界说明引用；本 Hub 未精选。仅为参考；不自动安装。"
+     }
+    }
+   ]
+  },
+  "react-best-practices": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "test-driven-development"
+     },
+     "evidence": [
+      {
+       "file": "sources/react-best-practices/references/review-checklist.md",
+       "sha256": "815d14516be6afa12bdae638272d9fb8fa852c5e44cb2eb3bb2e07939c6160b4",
+       "lineStart": 23,
+       "lineEnd": 26
+      }
+     ],
+     "notes": {
+      "en": "Review-checklist pointer to the curated hub TDD guide for failing-first discipline.",
+      "zh-Hans": "评审清单指向已精选的 Hub TDD 指南，用于 failing-first 纪律。"
+     }
+    }
+   ]
+  },
+  "research-summarizer": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "optional",
+     "target": {
+      "kind": "hub",
+      "id": "citation-management"
+     },
+     "evidence": [
+      {
+       "file": "sources/research-summarizer/SKILL.md",
+       "sha256": "75e43b031a9287bef26aaa00cfc46b55b34384072fef818e2d1478d4accac593",
+       "lineStart": 8,
+       "lineEnd": 11
+      }
+     ],
+     "notes": {
+      "en": "Metadata lookups align with the curated companion only when it is present.",
+      "zh-Hans": "仅在该精选同族技能存在时，元数据查询与之对齐。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "content-production"
+     },
+     "evidence": [
+      {
+       "file": "sources/research-summarizer/SKILL.md",
+       "sha256": "75e43b031a9287bef26aaa00cfc46b55b34384072fef818e2d1478d4accac593",
+       "lineStart": 215,
+       "lineEnd": 220
+      }
+     ]
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "product-discovery"
+     },
+     "evidence": [
+      {
+       "file": "sources/research-summarizer/SKILL.md",
+       "sha256": "75e43b031a9287bef26aaa00cfc46b55b34384072fef818e2d1478d4accac593",
+       "lineStart": 215,
+       "lineEnd": 220
+      }
+     ]
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "Competitive teardown",
+       "zh-Hans": "Competitive teardown"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/product-team/skills/competitive-teardown"
+     },
+     "evidence": [
+      {
+       "file": "sources/research-summarizer/SKILL.md",
+       "sha256": "75e43b031a9287bef26aaa00cfc46b55b34384072fef818e2d1478d4accac593",
+       "lineStart": 215,
+       "lineEnd": 220
+      }
+     ],
+     "notes": {
+      "en": "Upstream product-team sibling at the reviewed pinned commit under a neutralized capability name; not curated by this Hub. Reference-only.",
+      "zh-Hans": "上游 product-team 同族条目（位于已评审的固定提交），随附文本以中性能力名称引用；本 Hub 未精选。仅为参考。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "research/litreview",
+       "zh-Hans": "research/litreview"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/research/litreview"
+     },
+     "evidence": [
+      {
+       "file": "sources/research-summarizer/SKILL.md",
+       "sha256": "75e43b031a9287bef26aaa00cfc46b55b34384072fef818e2d1478d4accac593",
+       "lineStart": 25,
+       "lineEnd": 32
+      }
+     ],
+     "notes": {
+      "en": "Upstream sibling recorded at the reviewed pinned commit under a distinct-from boundary note; not curated by this Hub. Reference-only; no automatic install.",
+      "zh-Hans": "上游同族条目（位于已评审的固定提交），以“区别于”边界说明引用；本 Hub 未精选。仅为参考；不自动安装。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "research/dossier",
+       "zh-Hans": "research/dossier"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/research/dossier"
+     },
+     "evidence": [
+      {
+       "file": "sources/research-summarizer/SKILL.md",
+       "sha256": "75e43b031a9287bef26aaa00cfc46b55b34384072fef818e2d1478d4accac593",
+       "lineStart": 25,
+       "lineEnd": 32
+      }
+     ],
+     "notes": {
+      "en": "Upstream sibling recorded at the reviewed pinned commit under a distinct-from boundary note; not curated by this Hub. Reference-only; no automatic install.",
+      "zh-Hans": "上游同族条目（位于已评审的固定提交），以“区别于”边界说明引用；本 Hub 未精选。仅为参考；不自动安装。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "research/notebooklm",
+       "zh-Hans": "research/notebooklm"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/research/notebooklm"
+     },
+     "evidence": [
+      {
+       "file": "sources/research-summarizer/SKILL.md",
+       "sha256": "75e43b031a9287bef26aaa00cfc46b55b34384072fef818e2d1478d4accac593",
+       "lineStart": 25,
+       "lineEnd": 32
+      }
+     ],
+     "notes": {
+      "en": "Upstream sibling recorded at the reviewed pinned commit under a distinct-from boundary note; not curated by this Hub. Reference-only; no automatic install.",
+      "zh-Hans": "上游同族条目（位于已评审的固定提交），以“区别于”边界说明引用；本 Hub 未精选。仅为参考；不自动安装。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "research/research",
+       "zh-Hans": "research/research"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/research/research"
+     },
+     "evidence": [
+      {
+       "file": "sources/research-summarizer/SKILL.md",
+       "sha256": "75e43b031a9287bef26aaa00cfc46b55b34384072fef818e2d1478d4accac593",
+       "lineStart": 25,
+       "lineEnd": 32
+      }
+     ],
+     "notes": {
+      "en": "Upstream sibling recorded at the reviewed pinned commit under a distinct-from boundary note; not curated by this Hub. Reference-only; no automatic install.",
+      "zh-Hans": "上游同族条目（位于已评审的固定提交），以“区别于”边界说明引用；本 Hub 未精选。仅为参考；不自动安装。"
+     }
+    }
+   ]
+  },
+  "social-content": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "copywriting"
+     },
+     "evidence": [
+      {
+       "file": "sources/social-content/SKILL.md",
+       "sha256": "82af78c7424e01577ba0cf05cfb7bb8b7ce8631e2ff6c78d30cf4072393cb098",
+       "lineStart": 315,
+       "lineEnd": 324
+      }
+     ]
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "copy-editing"
+     },
+     "evidence": [
+      {
+       "file": "sources/social-content/SKILL.md",
+       "sha256": "82af78c7424e01577ba0cf05cfb7bb8b7ce8631e2ff6c78d30cf4072393cb098",
+       "lineStart": 315,
+       "lineEnd": 324
+      }
+     ]
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "content-production"
+     },
+     "evidence": [
+      {
+       "file": "sources/social-content/SKILL.md",
+       "sha256": "82af78c7424e01577ba0cf05cfb7bb8b7ce8631e2ff6c78d30cf4072393cb098",
+       "lineStart": 315,
+       "lineEnd": 324
+      }
+     ]
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "marketing-context",
+       "zh-Hans": "marketing-context"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/marketing-context"
+     },
+     "evidence": [
+      {
+       "file": "sources/social-content/SKILL.md",
+       "sha256": "82af78c7424e01577ba0cf05cfb7bb8b7ce8631e2ff6c78d30cf4072393cb098",
+       "lineStart": 315,
+       "lineEnd": 324
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "content-strategy",
+       "zh-Hans": "content-strategy"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/content-strategy"
+     },
+     "evidence": [
+      {
+       "file": "sources/social-content/SKILL.md",
+       "sha256": "82af78c7424e01577ba0cf05cfb7bb8b7ce8631e2ff6c78d30cf4072393cb098",
+       "lineStart": 315,
+       "lineEnd": 324
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "marketing-ideas",
+       "zh-Hans": "marketing-ideas"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/marketing-ideas"
+     },
+     "evidence": [
+      {
+       "file": "sources/social-content/SKILL.md",
+       "sha256": "82af78c7424e01577ba0cf05cfb7bb8b7ce8631e2ff6c78d30cf4072393cb098",
+       "lineStart": 315,
+       "lineEnd": 324
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "content-humanizer",
+       "zh-Hans": "content-humanizer"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/content-humanizer"
+     },
+     "evidence": [
+      {
+       "file": "sources/social-content/SKILL.md",
+       "sha256": "82af78c7424e01577ba0cf05cfb7bb8b7ce8631e2ff6c78d30cf4072393cb098",
+       "lineStart": 315,
+       "lineEnd": 324
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "external-skill",
+      "label": {
+       "en": "launch-strategy",
+       "zh-Hans": "launch-strategy"
+      },
+      "url": "https://github.com/alirezarezvani/claude-skills/tree/6d2f02ea077eead1bee5411a31bcc6db5a11a70c/alirezarezvani_claude_skills/marketing-skill/skills/launch-strategy"
+     },
+     "evidence": [
+      {
+       "file": "sources/social-content/SKILL.md",
+       "sha256": "82af78c7424e01577ba0cf05cfb7bb8b7ce8631e2ff6c78d30cf4072393cb098",
+       "lineStart": 315,
+       "lineEnd": 324
+      }
+     ],
+     "notes": {
+      "en": "Upstream marketing-skill sibling recorded at the reviewed pinned commit; not curated by this Hub. Reference-only routing guidance: no automatic download, installation or permission inheritance.",
+      "zh-Hans": "上游 marketing 技能同族条目（位于已评审的固定提交）；本 Hub 未精选。仅为路由参考：不自动下载、安装或继承权限。"
+     }
+    }
+   ]
+  },
+  "statistical-analysis": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "exploratory-data-analysis"
+     },
+     "evidence": [
+      {
+       "file": "sources/statistical-analysis/SKILL.md",
+       "sha256": "e64ad0cd3d701db35dca4e89b87f21f2f8c4c8eb7b4473a816924dce4b34524a",
+       "lineStart": 33,
+       "lineEnd": 36
+      }
+     ]
+    },
+    {
+     "relation": "optional",
+     "target": {
+      "kind": "hub",
+      "id": "scientific-visualization"
+     },
+     "evidence": [
+      {
+       "file": "sources/statistical-analysis/SKILL.md",
+       "sha256": "e64ad0cd3d701db35dca4e89b87f21f2f8c4c8eb7b4473a816924dce4b34524a",
+       "lineStart": 73,
+       "lineEnd": 76
+      },
+      {
+       "file": "sources/statistical-analysis/references/ADAPTATION-NOTES.md",
+       "sha256": "30f4a1172adf6ff61ac87a543d33750ff074505307155785802aa1c50d191e88",
+       "lineStart": 23,
+       "lineEnd": 26
+      }
+     ],
+     "notes": {
+      "en": "Optional diagnostic plots are written only when the environment provides matplotlib (declared by the scientific-visualization layer); numeric results never require it and requests are refused with an explicit message otherwise.",
+      "zh-Hans": "仅当环境提供 matplotlib（由 scientific-visualization 层声明）时才输出可选诊断图；数值结果从不依赖它，否则请求会以明确消息拒绝。"
+     }
+    }
+   ]
+  },
+  "ux-researcher-designer": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "ui-design-system"
+     },
+     "evidence": [
+      {
+       "file": "sources/ux-researcher-designer/SKILL.md",
+       "sha256": "354ab5ff1667b6ef5161d9610b99764ba76baeb68a662dc519d140451d0293a9",
+       "lineStart": 417,
+       "lineEnd": 420
+      }
+     ]
+    },
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "product-manager-toolkit"
+     },
+     "evidence": [
+      {
+       "file": "sources/ux-researcher-designer/SKILL.md",
+       "sha256": "354ab5ff1667b6ef5161d9610b99764ba76baeb68a662dc519d140451d0293a9",
+       "lineStart": 417,
+       "lineEnd": 420
+      }
+     ]
+    }
+   ]
+  },
+  "web-design-guidelines": {
+   "auditStatus": "audited",
+   "links": [
+    {
+     "relation": "references",
+     "target": {
+      "kind": "hub",
+      "id": "a11y-audit"
+     },
+     "evidence": [
+      {
+       "file": "sources/web-design-guidelines/SKILL.md",
+       "sha256": "d70911ddf9758f6bd8ca447cb858ccbe1d99a0ad8a4b8af38e8fbdcd688d45c1",
+       "lineStart": 33,
+       "lineEnd": 39
+      }
+     ],
+     "notes": {
+      "en": "Regression-baseline parity and the deeper WCAG remediation catalog live in the curated a11y-audit entry.",
+      "zh-Hans": "回归基线对齐以及更深的 WCAG 修复目录位于已精选的 a11y-audit 条目。"
+     }
+    }
+   ]
+  },
+  "algorithmic-art": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "canvas-design": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "code-to-prd": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "composition-patterns": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "deep-research": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "doc-coauthoring": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "floe-email-drafting": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "floe-file-organizer": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "floe-invoice-organizer": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "floe-network": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "floe-office": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "floe-pdf": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "floe-video": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "internal-comms": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "product-discovery": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "product-manager-toolkit": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "requesting-code-review": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "scientific-critical-thinking": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "scientific-visualization": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "sympy": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "systematic-debugging": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "test-driven-development": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "theme-factory": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "ui-design-system": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "webapp-testing": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "writing-guidelines": {
+   "auditStatus": "audited",
+   "links": []
+  },
+  "impeccable": {
+   "auditStatus": "audited",
+   "links": []
+  }
+ }
 }
