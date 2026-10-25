@@ -34,6 +34,15 @@ SIGN_ENV = "FLOE_TEST_EPHEMERAL_SIGNING_KEY"  # test-local name; value is epheme
 SOURCE_X = "1111111111111111111111111111111111111111"
 QUALIFIED_VERSION = "1.3.1"  # Isolated test identity, independent of live candidates.
 
+# Canonical public trust root, deliberately hardcoded so the regression is
+# identical in a standalone Hub clone (CI) and in the full App workspace,
+# without reading any outer checkout. This mirrors the published
+# skill-hub/public-key.json of the Floe main checkout and the Hub's own
+# committed public-key.json; changing the real root requires an audited
+# rotation commit touching BOTH this constant and public-key.json together.
+CANONICAL_ROOT_KEY_ID = "official-2026-09"
+CANONICAL_ROOT_PUBLIC_B64 = "qOMhhkiyMpw1tWRgbuNH79PjlL6nynbFGqBxeNX2Hco="
+
 
 def ephemeral_key():
     Ed25519PrivateKey, _, serialization, _ = hubcore._load_ed25519()
@@ -328,10 +337,30 @@ def hashlib_bytes(data):
 
 class TestConfiguredPublicTrust(unittest.TestCase):
     def test_load_trust_matches_canonical_public_root(self):
+        # The expected identity/key is this test's own immutable baseline,
+        # never a value discovered at runtime, so a clean CI checkout cannot
+        # silently accept whatever key file happens to be present.
+        self.assertEqual(CANONICAL_ROOT_KEY_ID, hubcore.PRODUCTION_KEY_ID)
+        self.assertNotEqual(CANONICAL_ROOT_KEY_ID, hubcore.FIXTURE_KEY_ID)
+        self.assertNotEqual(CANONICAL_ROOT_PUBLIC_B64,
+                            hubcore.fixture_public_b64())
+        canonical_raw = base64.b64decode(CANONICAL_ROOT_PUBLIC_B64,
+                                         validate=True)
+        self.assertEqual(len(canonical_raw), 32)  # raw Ed25519 material
+        self.assertEqual(
+            base64.b64encode(canonical_raw).decode(),
+            CANONICAL_ROOT_PUBLIC_B64)  # canonical strict base64 form
+
+        # The committed Hub trust file must carry exactly the canonical
+        # identity/key in the documented two-field shape.
+        doc = json.loads((REPO / "public-key.json").read_bytes())
+        self.assertEqual(doc, {"keyID": CANONICAL_ROOT_KEY_ID,
+                               "publicKey": CANONICAL_ROOT_PUBLIC_B64})
+
+        # And the production trust load must resolve to that single root.
         trust = build_catalog.load_trust(REPO)
-        legacy = json.loads((REPO.parents[2] / "skill-hub" /
-                             "public-key.json").read_bytes())
-        self.assertEqual(trust, {legacy["keyID"]: legacy["publicKey"]})
+        self.assertEqual(trust, {CANONICAL_ROOT_KEY_ID:
+                                 CANONICAL_ROOT_PUBLIC_B64})
         self.assertEqual(list(trust), [hubcore.PRODUCTION_KEY_ID])
 
     def test_load_trust_rejects_fixture_identity(self):
