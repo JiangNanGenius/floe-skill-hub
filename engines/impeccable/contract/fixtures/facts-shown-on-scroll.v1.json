@@ -1,0 +1,16 @@
+{
+  "_note": "Answers scroll probes (element ids from needs.scrollProbes). Unanswered probes are reported as unanswered, never as clean.",
+  "taskId": "task-fixture-0001",
+  "sessionId": "session-fixture-0001",
+  "tabId": "tab-fixture-0001",
+  "captureId": "cap-fixture-needs-0001",
+  "documentId": "doc-fixture-0001",
+  "documentGeneration": 1,
+  "hits": [],
+  "shownOnScroll": [
+    {
+      "el": 5,
+      "shown": true
+    }
+  ]
+}

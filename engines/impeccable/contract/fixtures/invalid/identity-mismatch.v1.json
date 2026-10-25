@@ -1,0 +1,34 @@
+{
+  "taskId": "task-fixture-0001",
+  "sessionId": "session-fixture-0001",
+  "tabId": "tab-fixture-0001",
+  "documentId": "doc-fixture-0001",
+  "captureId": "cap-fixture-positive-0001",
+  "documentGeneration": 1,
+  "url": "https://fixture.local/",
+  "hostname": "other.example",
+  "viewport": {
+    "width": 390.0,
+    "height": 844.0
+  },
+  "scroll": {
+    "x": 0.0,
+    "y": 0.0
+  },
+  "capturedAtMs": 0,
+  "producerTrust": "native-fixed-script",
+  "producer": {
+    "name": "FloeWebkitDesignCapture",
+    "version": "0.0.0-fixture",
+    "engine": "WebKit",
+    "scriptDigest": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "redaction": {
+    "policy": "floe.impeccable.redaction.v1",
+    "applied": true,
+    "passwordInputs": 0,
+    "formValues": 0,
+    "credentialAttributes": [],
+    "textRuns": 0
+  }
+}

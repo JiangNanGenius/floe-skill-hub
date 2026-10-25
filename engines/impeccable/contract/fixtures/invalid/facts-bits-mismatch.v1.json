@@ -1,0 +1,18 @@
+{
+  "taskId": "task-fixture-0001",
+  "sessionId": "session-fixture-0001",
+  "tabId": "tab-fixture-0001",
+  "captureId": "cap-fixture-needs-0001",
+  "documentId": "doc-fixture-0001",
+  "documentGeneration": 1,
+  "hits": [
+    {
+      "x": 100.0,
+      "y": 100.0,
+      "xBits": 1,
+      "yBits": 1,
+      "top": 0,
+      "stack": []
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "_note": "Shape example only. The points are decided by the rules, so a real facts file must echo the exact needs points (and their bits) the engine asked for on the same binding. tools/fill_facts_from_needs.py turns an observed needs document into a valid facts file.",
+  "taskId": "task-fixture-0001",
+  "sessionId": "session-fixture-0001",
+  "tabId": "tab-fixture-0001",
+  "captureId": "cap-fixture-needs-0001",
+  "documentId": "doc-fixture-0001",
+  "documentGeneration": 1,
+  "hits": [],
+  "shownOnScroll": []
+}

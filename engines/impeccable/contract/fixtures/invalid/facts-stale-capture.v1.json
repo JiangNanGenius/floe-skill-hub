@@ -1,0 +1,9 @@
+{
+  "taskId": "task-fixture-0001",
+  "sessionId": "session-fixture-0001",
+  "tabId": "tab-fixture-0001",
+  "captureId": "cap-superseded-0000",
+  "documentId": "doc-fixture-0001",
+  "documentGeneration": 0,
+  "hits": []
+}
