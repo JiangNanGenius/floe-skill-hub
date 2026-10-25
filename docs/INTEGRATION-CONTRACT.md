@@ -11,6 +11,8 @@ Status: implementation input, not a published catalog. Changes require coordinat
 - Candidate metadata lives in `catalog/skills.json`; deterministic packaging, validation and signing live in `scripts/`; package sources live in `sources/{id}/`.
 - `engines/impeccable/` owns build recipe, patches, license/provenance and separately packaged riscv64 engine. It owns `sources/impeccable/` too. No other lane writes these paths.
 
+The signed feed carries `sourceCommit`: the audited source revision X used to build its content. The client separately resolves `publicationCommit` Y, the immutable repository revision containing the feed, signatures, reviews and archives, and retrieves every artifact at Y for the whole operation. X is signed provenance and is not required to equal Y. Never require a feed to contain the hash of the Git commit that contains itself, and never re-resolve a mutable branch separately for each artifact. Search/install receipts keep these two identities distinct.
+
 ## Trust, review and runtime
 
 Retain the existing signed-feed envelope and Ed25519 trust model. Package hashes are authenticated through the signed catalog. Do not generate a production trust root or read signing secrets in a worker. An ephemeral test signature must be explicitly labeled fixture-only and must never be installed as a production trust root.
@@ -27,6 +29,6 @@ Impeccable H3 must promptly publish a versioned snapshot/facts JSON fixture, CLI
 
 ## Publication and status
 
-Candidate packages can be built and checked locally without claiming publication. A release catalog includes only qualified entries and approved signed review records; the public preview index can describe pending candidates but never offer an unqualified install action. Website and App reference one immutable Hub commit/catalog digest.
+Candidate packages can be built and checked locally without claiming publication. A release catalog includes only qualified entries and approved signed review records; the public preview index can describe pending candidates but never offer an unqualified install action. Website and App reference the same immutable publication commit and catalog digest, with the audited source commit recorded separately. The read-only publication gate requires both channel feed/signature pairs and verifies their exact bytes with the configured public trust; an absent signature never passes as unpublished once production files exist.
 
 Only the coordinator commits/pushes public Hub content after reviewing file scope and privacy. No worker publishes an App release, alters signing keys, deploys production website, switches DNS, or dispatches unrelated CI. Source/code readiness, host tests, riscv64 guest execution, App acceptance and live publication remain separate evidence.
