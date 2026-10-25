@@ -4,6 +4,18 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { createMcpExpressApp } from '@modelcontextprotocol/sdk/server/express.js';
 import * as z from 'zod/v4';
+import { registerTaskTools } from './tools.js';
+
+export type AdditionalToolRegistrar = (server: McpServer) => void;
+
+export interface McpServiceOptions {
+  /**
+   * Additive qualification hook for an isolated real HTTP fixture. Task-owned
+   * production tools belong in `src/tools.ts`; this hook never replaces the
+   * fixed service_status registration and is optional for existing callers.
+   */
+  additionalTools?: AdditionalToolRegistrar;
+}
 
 export interface ServiceConfiguration {
   host: '127.0.0.1' | 'localhost' | '::1' | '0.0.0.0';
@@ -29,7 +41,7 @@ export function readConfiguration(env: NodeJS.ProcessEnv): ServiceConfiguration 
   return { host: host as ServiceConfiguration['host'], port, allowedHosts };
 }
 
-export function createMcpService() {
+export function createMcpService(options: McpServiceOptions = {}) {
   const server = new McpServer({ name: 'floe-mcp-service', version: '0.1.0' });
   server.registerTool('service_status', {
     title: 'Service status',
@@ -46,10 +58,12 @@ export function createMcpService() {
     const result = { status: 'ready' as const, service: 'floe-mcp-service', ...(label === undefined ? {} : { label }) };
     return { content: [{ type: 'text' as const, text: JSON.stringify(result) }], structuredContent: result };
   });
+  registerTaskTools(server);
+  options.additionalTools?.(server);
   return server;
 }
 
-export function createServiceApp(configuration: ServiceConfiguration) {
+export function createServiceApp(configuration: ServiceConfiguration, options: McpServiceOptions = {}) {
   const app = createMcpExpressApp({ host: configuration.host, allowedHosts: configuration.allowedHosts });
   const active = new Set<() => Promise<void>>();
   let closing = false;
@@ -62,7 +76,7 @@ export function createServiceApp(configuration: ServiceConfiguration) {
     }
     // A stateless transport belongs to one HTTP request. A shared transport
     // would mix concurrent callers or retain an expired response stream.
-    const server = createMcpService();
+    const server = createMcpService(options);
     const transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: undefined,
       enableJsonResponse: true
@@ -109,10 +123,13 @@ export function createServiceApp(configuration: ServiceConfiguration) {
   };
 }
 
-export async function startService(configuration: ServiceConfiguration): Promise<{
+export async function startService(
+  configuration: ServiceConfiguration,
+  options: McpServiceOptions = {}
+): Promise<{
   listener: Server; endpoint: string; stop: () => Promise<void>;
 }> {
-  const service = createServiceApp(configuration);
+  const service = createServiceApp(configuration, options);
   const listener = await new Promise<Server>((resolve, reject) => {
     const candidate = service.app.listen(configuration.port, configuration.host, () => resolve(candidate));
     candidate.once('error', reject);

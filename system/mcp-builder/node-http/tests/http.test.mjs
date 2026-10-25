@@ -5,17 +5,57 @@ import { spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
-import { startService, readConfiguration } from '../dist/server.js';
+import * as z from 'zod/v4';
+import { createMcpService, startService, readConfiguration } from '../dist/server.js';
+import { assertQualifiedDiscovery, qualifyToolDiscovery } from './discovery.mjs';
 
 const headers = {
   'Content-Type': 'application/json',
   Accept: 'application/json, text/event-stream'
 };
 
-async function withService(t) {
-  const service = await startService({ host: '127.0.0.1', port: 0, allowedHosts: ['127.0.0.1', 'localhost'] });
+const PROBE_TOOL = 'template_read_only_probe_7f3c';
+
+async function withService(t, options = {}) {
+  const service = await startService(
+    { host: '127.0.0.1', port: 0, allowedHosts: ['127.0.0.1', 'localhost'] },
+    options
+  );
   t.after(() => service.stop());
   return service;
+}
+
+function registerReadOnlyProbe(server) {
+  server.registerTool(PROBE_TOOL, {
+    title: 'Template read-only probe',
+    description: 'Deterministic read-only fixture for template qualification. Does not access files, accounts or external services.',
+    inputSchema: { value: z.string().max(40).optional() },
+    outputSchema: { echo: z.string(), readOnly: z.literal(true) },
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false
+    }
+  }, async ({ value }) => {
+    const result = { echo: value ?? 'template', readOnly: true };
+    return { content: [{ type: 'text', text: JSON.stringify(result) }], structuredContent: result };
+  });
+}
+
+async function initializeAndList(endpoint, firstId) {
+  const init = await rpc(endpoint, firstId, 'initialize', {
+    protocolVersion: '2025-03-26', capabilities: {}, clientInfo: { name: 'floe-template-test', version: '1.0.0' }
+  });
+  const version = init.result.protocolVersion;
+  const initialized = await fetch(endpoint, {
+    method: 'POST', headers: { ...headers, 'MCP-Protocol-Version': version },
+    body: JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' }),
+    signal: AbortSignal.timeout(5000)
+  });
+  assert.equal(initialized.status, 202);
+  const list = await rpc(endpoint, firstId + 1, 'tools/list', {}, version);
+  return { version, tools: list.result.tools };
 }
 
 async function rpc(endpoint, id, method, params = {}, protocolVersion) {
@@ -44,12 +84,123 @@ test('initialize, discover and call a real read-only tool over HTTP', async t =>
   });
   assert.equal(initialized.status, 202);
   const list = await rpc(endpoint, 2, 'tools/list', {}, version);
-  assert.equal(list.result.tools.length, 1);
-  assert.equal(list.result.tools[0].name, 'service_status');
-  assert.equal(list.result.tools[0].annotations.readOnlyHint, true);
-  assert.equal(list.result.tools[0].inputSchema.type, 'object');
+  assertQualifiedDiscovery(list.result.tools);
   const call = await rpc(endpoint, 3, 'tools/call', { name: 'service_status', arguments: { label: 'verified' } }, version);
   assert.deepEqual(call.result.structuredContent, { status: 'ready', service: 'floe-mcp-service', label: 'verified' });
+  const withoutLabel = await rpc(endpoint, 4, 'tools/call', { name: 'service_status', arguments: {} }, version);
+  assert.deepEqual(withoutLabel.result.structuredContent, { status: 'ready', service: 'floe-mcp-service' });
+  assert.equal('label' in withoutLabel.result.structuredContent, false);
+});
+
+test('a legitimate additional read-only tool passes real HTTP discovery and the fixed status contract', async t => {
+  const { endpoint } = await withService(t, { additionalTools: registerReadOnlyProbe });
+  const { version, tools } = await initializeAndList(endpoint, 40);
+  assertQualifiedDiscovery(tools, 'extra-tool discovery');
+  assert.deepEqual(qualifyToolDiscovery([...tools].reverse()), [], 'service_status must be found by name, not position');
+
+  const probe = tools.find(tool => tool.name === PROBE_TOOL);
+  assert.ok(probe, 'the additional read-only tool must be discovered');
+  assert.equal(probe.inputSchema.type, 'object');
+  for (const [key, expected] of Object.entries({
+    readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false
+  })) {
+    assert.equal(probe.annotations[key], expected, `probe annotation ${key}`);
+  }
+
+  const status = await rpc(endpoint, 43, 'tools/call', {
+    name: 'service_status', arguments: { label: 'extension-verified' }
+  }, version);
+  assert.deepEqual(status.result.structuredContent, {
+    status: 'ready', service: 'floe-mcp-service', label: 'extension-verified'
+  });
+  const probeCall = await rpc(endpoint, 44, 'tools/call', {
+    name: PROBE_TOOL, arguments: { value: 'extension-ok' }
+  }, version);
+  assert.deepEqual(probeCall.result.structuredContent, { echo: 'extension-ok', readOnly: true });
+});
+
+test('qualification rejects missing or malformed service_status and duplicate or invalid names', async t => {
+  const { endpoint } = await withService(t);
+  const { tools } = await initializeAndList(endpoint, 50);
+  assert.deepEqual(qualifyToolDiscovery(tools), []);
+  const status = tools.find(tool => tool.name === 'service_status');
+  assert.ok(status, 'the baseline status tool must exist for this regression');
+
+  const clone = () => structuredClone(tools);
+  const cases = [];
+  cases.push([
+    'missing service_status',
+    tools.filter(tool => tool.name !== 'service_status'),
+    /service_status is required/
+  ]);
+  cases.push([
+    'duplicate service_status',
+    [...clone(), structuredClone(status)],
+    /duplicates an earlier tool name/
+  ]);
+  cases.push([
+    'empty tool name',
+    [...clone(), { ...structuredClone(status), name: '' }],
+    /non-empty string/
+  ]);
+  cases.push([
+    'whitespace tool name',
+    [...clone(), { ...structuredClone(status), name: '   ' }],
+    /non-empty string/
+  ]);
+  cases.push([
+    'duplicate business tool name',
+    [...clone(), { name: 'business_echo', inputSchema: { type: 'object' } },
+      { name: 'business_echo', inputSchema: { type: 'object' } }],
+    /duplicates an earlier tool name/
+  ]);
+
+  const badInput = clone();
+  badInput.find(tool => tool.name === 'service_status').inputSchema.properties.label.maxLength = 81;
+  cases.push(['label maxLength', badInput, /maxLength must be 80/]);
+
+  const requiredLabel = clone();
+  requiredLabel.find(tool => tool.name === 'service_status').inputSchema.required = ['label'];
+  cases.push(['required label', requiredLabel, /must stay optional/]);
+
+  const badOutputLiteral = clone();
+  delete badOutputLiteral.find(tool => tool.name === 'service_status').outputSchema.properties.status.const;
+  cases.push(['status literal', badOutputLiteral, /literal "ready"/]);
+
+  const missingRequired = clone();
+  missingRequired.find(tool => tool.name === 'service_status').outputSchema.required = ['service'];
+  cases.push(['required status field', missingRequired, /required must include status/]);
+
+  const requiredOutputLabel = clone();
+  requiredOutputLabel.find(tool => tool.name === 'service_status').outputSchema.required = ['status', 'service', 'label'];
+  cases.push(['required output label', requiredOutputLabel, /label must stay optional/]);
+
+  for (const [key, value] of Object.entries({
+    readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true
+  })) {
+    const badAnnotation = clone();
+    badAnnotation.find(tool => tool.name === 'service_status').annotations[key] = value;
+    cases.push([`annotation ${key}`, badAnnotation, new RegExp(`annotations\\.${key}`)]);
+  }
+
+  for (const [label, candidate, expected] of cases) {
+    const issues = qualifyToolDiscovery(candidate);
+    assert.ok(
+      issues.some(issue => expected.test(issue)),
+      `${label} did not fail discovery qualification: ${issues.join('; ') || 'no issues'}`
+    );
+  }
+});
+
+test('duplicate status registration is refused before discovery', () => {
+  assert.throws(() => createMcpService({
+    additionalTools: server => {
+      server.registerTool('service_status', {
+        description: 'must not replace the fixed status tool',
+        inputSchema: {}
+      }, async () => ({ content: [] }));
+    }
+  }), /Tool service_status is already registered/);
 });
 
 test('invalid tool input is rejected instead of invoking a permissive handler', async t => {
@@ -156,7 +307,7 @@ test('actual command entry reports its listener and exits cleanly on SIGTERM', {
   });
   assert.equal(ready.endpoint, `http://127.0.0.1:${port}/mcp`);
   const list = await rpc(ready.endpoint, 31, 'tools/list');
-  assert.equal(list.result.tools[0].name, 'service_status');
+  assertQualifiedDiscovery(list.result.tools, 'CLI discovery');
   child.kill('SIGTERM');
   const [code, signal] = await exited;
   assert.equal(code, 0);
