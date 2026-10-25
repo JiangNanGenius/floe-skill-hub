@@ -79,7 +79,7 @@ async function waitFor<T>(
 }
 ```
 
-See `condition-based-waiting-example.ts` in this directory for complete implementation with domain-specific helpers (`waitForEvent`, `waitForEventCount`, `waitForEventMatch`) from actual debugging session.
+See `condition-based-waiting-example.ts` in this directory for the upstream project-specific pattern (`waitForEvent`, `waitForEventCount`, `waitForEventMatch`). Its `ThreadManager`/`LaceEvent` imports belong to that upstream project and are not a standalone Floe dependency. Adapt the waiting pattern to the current project rather than importing the file unchanged.
 
 ## Common Mistakes
 

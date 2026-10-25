@@ -95,7 +95,7 @@
       },
       "id": "floe-pdf",
       "kind": "builtin",
-      "minimumAppVersion": "1.5.3",
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Floe PDF",
         "zh-Hans": "Floe PDF"
@@ -159,7 +159,7 @@
       },
       "id": "floe-office",
       "kind": "builtin",
-      "minimumAppVersion": "1.7.0",
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Floe Office",
         "zh-Hans": "Floe Office"
@@ -224,7 +224,7 @@
       },
       "id": "floe-network",
       "kind": "builtin",
-      "minimumAppVersion": "1.4.98",
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Floe Network",
         "zh-Hans": "Floe Network"
@@ -288,7 +288,7 @@
       },
       "id": "floe-video",
       "kind": "builtin",
-      "minimumAppVersion": "1.7.0",
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Floe Video",
         "zh-Hans": "Floe Video"
@@ -349,7 +349,7 @@
       "firstParty": null,
       "id": "doc-coauthoring",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Doc Co-authoring",
         "zh-Hans": "文档协作"
@@ -406,7 +406,7 @@
       "firstParty": null,
       "id": "internal-comms",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Internal Comms",
         "zh-Hans": "内部沟通"
@@ -477,7 +477,7 @@
       "firstParty": null,
       "id": "writing-guidelines",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Writing Guidelines",
         "zh-Hans": "技术写作检查"
@@ -534,7 +534,7 @@
       "firstParty": null,
       "id": "copywriting",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Copywriting",
         "zh-Hans": "网站文案"
@@ -605,7 +605,7 @@
       "firstParty": null,
       "id": "copy-editing",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Copy Editing",
         "zh-Hans": "文案校订"
@@ -676,7 +676,7 @@
       "firstParty": null,
       "id": "content-production",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Content Production",
         "zh-Hans": "长文创作"
@@ -747,7 +747,7 @@
       "firstParty": null,
       "id": "social-content",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Social Content",
         "zh-Hans": "社媒内容"
@@ -817,7 +817,7 @@
       "firstParty": null,
       "id": "floe-email-drafting",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Floe Email Drafting",
         "zh-Hans": "Floe 邮件起草"
@@ -871,7 +871,7 @@
       "firstParty": null,
       "id": "deep-research",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Deep Research",
         "zh-Hans": "深度研究"
@@ -943,7 +943,7 @@
       "firstParty": null,
       "id": "deepread",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Deep Read",
         "zh-Hans": "深度阅读"
@@ -1014,7 +1014,7 @@
       "firstParty": null,
       "id": "literature-review",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Literature Review",
         "zh-Hans": "文献综述"
@@ -1088,7 +1088,7 @@
       "firstParty": null,
       "id": "citation-management",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Citation Management",
         "zh-Hans": "引用管理"
@@ -1169,7 +1169,7 @@
       "firstParty": null,
       "id": "scientific-critical-thinking",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Scientific Critical Thinking",
         "zh-Hans": "证据与批判性阅读"
@@ -1239,7 +1239,7 @@
       "firstParty": null,
       "id": "research-summarizer",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Research Summarizer",
         "zh-Hans": "研究摘要"
@@ -1310,7 +1310,7 @@
       "firstParty": null,
       "id": "exploratory-data-analysis",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "EDA",
         "zh-Hans": "数据探索"
@@ -1384,7 +1384,7 @@
       "firstParty": null,
       "id": "statistical-analysis",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Statistical Analysis",
         "zh-Hans": "统计分析"
@@ -1458,7 +1458,7 @@
       "firstParty": null,
       "id": "scientific-visualization",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Scientific Visualization",
         "zh-Hans": "数据可视化"
@@ -1532,7 +1532,7 @@
       "firstParty": null,
       "id": "markitdown",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "MarkItDown",
         "zh-Hans": "格式转 Markdown"
@@ -1607,7 +1607,7 @@
       "firstParty": null,
       "id": "sympy",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "SymPy",
         "zh-Hans": "符号数学"
@@ -1684,7 +1684,7 @@
       "firstParty": null,
       "id": "impeccable",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Impeccable",
         "zh-Hans": "Impeccable"
@@ -1762,7 +1762,7 @@
       "firstParty": null,
       "id": "algorithmic-art",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Algorithmic Art",
         "zh-Hans": "生成艺术"
@@ -1838,7 +1838,7 @@
       "firstParty": null,
       "id": "canvas-design",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Canvas Design",
         "zh-Hans": "平面视觉设计"
@@ -1913,7 +1913,7 @@
       "firstParty": null,
       "id": "theme-factory",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Theme Factory",
         "zh-Hans": "主题与配色"
@@ -1943,7 +1943,7 @@
       },
       "source": "A",
       "status": {
-        "adaptation": "planned",
+        "adaptation": "in-progress",
         "executionVerified": false,
         "licenseChecked": true,
         "packaged": false,
@@ -1963,8 +1963,8 @@
         "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
         "licenseEvidencePath": "skills/theme-factory/LICENSE.txt",
         "licenseNote": {
-          "en": "Per-skill LICENSE.txt is Apache-2.0 at the pinned commit; fonts, images and template assets still need the per-item audit before packaging.",
-          "zh-Hans": "固定提交上单项 LICENSE.txt 为 Apache-2.0；字体、图片与模板素材仍需逐项核验后才能打包。"
+          "en": "Per-skill Apache-2.0 license retained; the unchanged PDF showcase contains six embedded DejaVu/GNU FreeFont subsets with their original notices and font-embedding exception supplied. No standalone font files are distributed.",
+          "zh-Hans": "保留单项 Apache-2.0 许可；原 PDF 样例含六个 DejaVu／GNU FreeFont 字体子集，已附原有声明及字体嵌入例外。不分发独立字体文件。"
         },
         "licenseStatus": "verified",
         "path": "skills/theme-factory",
@@ -1985,7 +1985,7 @@
       "firstParty": null,
       "id": "ui-design-system",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "UI Design System",
         "zh-Hans": "UI 设计系统"
@@ -2056,7 +2056,7 @@
       "firstParty": null,
       "id": "ux-researcher-designer",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "UX Researcher-Designer",
         "zh-Hans": "用户体验研究"
@@ -2127,7 +2127,7 @@
       "firstParty": null,
       "id": "react-best-practices",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "React Best Practices",
         "zh-Hans": "React 最佳实践"
@@ -2184,7 +2184,7 @@
       "firstParty": null,
       "id": "composition-patterns",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Composition Patterns",
         "zh-Hans": "React 组件组合"
@@ -2241,7 +2241,7 @@
       "firstParty": null,
       "id": "web-design-guidelines",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Web Design Guidelines",
         "zh-Hans": "网页设计规范"
@@ -2298,7 +2298,7 @@
       "firstParty": null,
       "id": "webapp-testing",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Webapp Testing",
         "zh-Hans": "Web 应用测试"
@@ -2375,7 +2375,7 @@
       "firstParty": null,
       "id": "a11y-audit",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "A11y Audit",
         "zh-Hans": "可访问性检查"
@@ -2446,7 +2446,7 @@
       "firstParty": null,
       "id": "systematic-debugging",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Systematic Debugging",
         "zh-Hans": "系统化调试"
@@ -2512,7 +2512,7 @@
       "firstParty": null,
       "id": "test-driven-development",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "TDD",
         "zh-Hans": "测试驱动开发"
@@ -2578,7 +2578,7 @@
       "firstParty": null,
       "id": "requesting-code-review",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Requesting Code Review",
         "zh-Hans": "代码评审"
@@ -2643,7 +2643,7 @@
       "firstParty": null,
       "id": "product-manager-toolkit",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Product Manager Toolkit",
         "zh-Hans": "产品经理工具箱"
@@ -2714,7 +2714,7 @@
       "firstParty": null,
       "id": "product-discovery",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Product Discovery",
         "zh-Hans": "产品探索"
@@ -2785,7 +2785,7 @@
       "firstParty": null,
       "id": "code-to-prd",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Code to PRD",
         "zh-Hans": "代码转需求说明"
@@ -2856,7 +2856,7 @@
       "firstParty": null,
       "id": "meetings",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Meetings",
         "zh-Hans": "会议纪要"
@@ -2927,7 +2927,7 @@
       "firstParty": null,
       "id": "floe-file-organizer",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Floe File Organizer",
         "zh-Hans": "Floe 文件整理"
@@ -2986,7 +2986,7 @@
       "firstParty": null,
       "id": "floe-invoice-organizer",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.59",
       "name": {
         "en": "Floe Invoice Organizer",
         "zh-Hans": "Floe 票据整理"
