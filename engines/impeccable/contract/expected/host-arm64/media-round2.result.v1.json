@@ -1,0 +1,325 @@
+{
+  "contract": "floe.impeccable.snapshot",
+  "contractVersion": 1,
+  "status": "complete",
+  "verdict": "findings",
+  "engine": {
+    "binary": "floe-impeccable",
+    "upstreamProject": "pbakaus/impeccable",
+    "upstreamEngineVersion": "0.1.17",
+    "upstreamCommit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
+    "upstreamTree": "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72",
+    "pinAuthority": "floe-skill-hub docs/UPSTREAM-PINS.json (reviewBaselineDate 2026-10-26)",
+    "floeAdapterVersion": "1.0.0",
+    "engineId": "impeccable-0.1.17+floe.1.0.0",
+    "targetTriple": "aarch64-apple-darwin",
+    "abi": "static ELF, no dynamic loader dependency",
+    "adapterCrateVersion": "1.0.0",
+    "contractTargetTriple": "riscv64gc-unknown-linux-musl",
+    "runtimeExecution": "host-comparison-build"
+  },
+  "identity": {
+    "taskId": "task-fixture-0001",
+    "sessionId": "session-fixture-0001",
+    "tabId": "tab-fixture-0001",
+    "documentId": "doc-cap-test-media-0001",
+    "captureId": "cap-test-media-0001",
+    "documentGeneration": 1,
+    "url": "https://fixture.local/",
+    "hostname": "fixture.local",
+    "viewport": {
+      "width": 1280.0,
+      "height": 800.0
+    },
+    "scroll": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "capturedAtMs": 0,
+    "producerTrust": "native-fixed-script",
+    "producer": {
+      "name": "FloeWebkitDesignCapture",
+      "version": "0.0.0-fixture",
+      "engine": "WebKit",
+      "scriptDigest": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "redaction": {
+      "policy": "floe.impeccable.redaction.v1",
+      "applied": true,
+      "passwordInputs": 0,
+      "formValues": 0,
+      "credentialAttributes": [],
+      "textRuns": 0
+    },
+    "fenced": false
+  },
+  "identityCheck": {
+    "state": "verified",
+    "mismatches": [],
+    "syntheticProducerDigest": true,
+    "redactionPolicy": "floe.impeccable.redaction.v1",
+    "producerTrust": "native-fixed-script"
+  },
+  "budget": {
+    "snapshotBytes": 13761,
+    "elements": 0,
+    "rounds": 2,
+    "maxRounds": 4,
+    "hitTestsAsked": 186,
+    "hitTestsAnswered": 186,
+    "maxHitTestsPerRound": 4096,
+    "maxHitTestsTotal": 16384,
+    "maxSnapshotBytes": 50331648,
+    "timeoutMs": 120000,
+    "elapsedMs": 0,
+    "exceeded": []
+  },
+  "coverage": {
+    "passes": [
+      {
+        "id": "core-rule-pass",
+        "title": "Snapshot rule pass (impeccable-core over SnapshotDom)",
+        "state": "covered",
+        "requiredForCleanVerdict": true,
+        "implemented": true,
+        "detail": {
+          "rounds": 1
+        }
+      },
+      {
+        "id": "hit-test-fixpoint",
+        "title": "elementFromPoint/elementsFromPoint answers for rule-decided points",
+        "state": "covered",
+        "requiredForCleanVerdict": true,
+        "implemented": true,
+        "detail": {
+          "asked": 186,
+          "answered": 186
+        }
+      },
+      {
+        "id": "style-parity",
+        "title": "Computed-style property parity (unknown_style_props)",
+        "state": "complete",
+        "requiredForCleanVerdict": true,
+        "implemented": true,
+        "detail": {
+          "columns": 138
+        }
+      },
+      {
+        "id": "scroll-probes",
+        "title": "shown_when_scrolled_to answers (content hidden at rest)",
+        "state": "not-asked",
+        "requiredForCleanVerdict": true,
+        "implemented": true,
+        "detail": {
+          "asked": 0
+        }
+      },
+      {
+        "id": "static-html-source-scan",
+        "title": "Static markup/source scan (impeccable-html + impeccable-detect)",
+        "state": "not-run",
+        "requiredForCleanVerdict": false,
+        "implemented": true,
+        "detail": {
+          "note": "separate verb (detect); a snapshot scan never claims it ran"
+        }
+      },
+      {
+        "id": "pixel-contrast",
+        "title": "Pixel-sampled contrast and routed low-contrast verdicts",
+        "state": "uncovered",
+        "requiredForCleanVerdict": true,
+        "implemented": false,
+        "reason": "Needs loadImage/readPixel or the PNG two-shot diff of the upstream URL engine; the v1 native capture has no pixel source.",
+        "detail": {
+          "reason": "Needs loadImage/readPixel or the PNG two-shot diff of the upstream URL engine; the v1 native capture has no pixel source.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "screenshot-diff",
+        "title": "Two-shot screenshot hiding/diff evidence",
+        "state": "uncovered",
+        "requiredForCleanVerdict": false,
+        "implemented": false,
+        "reason": "URL-engine evidence pass; not part of the snapshot contract.",
+        "detail": {
+          "reason": "URL-engine evidence pass; not part of the snapshot contract.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "reveal-sweep",
+        "title": "Pre-capture scroll/reveal sweep and overlay settling",
+        "state": "uncovered",
+        "requiredForCleanVerdict": true,
+        "implemented": false,
+        "reason": "Content revealed only by scrolling is not measured; reveal-on-scroll findings cannot be produced or excluded.",
+        "detail": {
+          "reason": "Content revealed only by scrolling is not measured; reveal-on-scroll findings cannot be produced or excluded.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "content-hidden-at-rest-measure",
+        "title": "Hidden-text measurement with scroll probes (URL engine step)",
+        "state": "uncovered",
+        "requiredForCleanVerdict": true,
+        "implemented": false,
+        "reason": "The URL engine's hidden-text step is not ported; scroll-probe needs are surfaced but never answered by Floe v1.",
+        "detail": {
+          "reason": "The URL engine's hidden-text step is not ported; scroll-probe needs are surfaced but never answered by Floe v1.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "consent-overlay-hiding",
+        "title": "Consent banner / page overlay hiding before capture",
+        "state": "uncovered",
+        "requiredForCleanVerdict": false,
+        "implemented": false,
+        "reason": "Requires live page mutation; Floe keeps the page untouched.",
+        "detail": {
+          "reason": "Requires live page mutation; Floe keeps the page untouched.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "script-errors",
+        "title": "Console/script error capture",
+        "state": "uncovered",
+        "requiredForCleanVerdict": true,
+        "implemented": false,
+        "reason": "Needs a console channel; not part of the fixed measurement contract.",
+        "detail": {
+          "reason": "Needs a console channel; not part of the fixed measurement contract.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "cross-origin-iframe",
+        "title": "Cross-origin frame content",
+        "state": "uncovered",
+        "requiredForCleanVerdict": true,
+        "implemented": false,
+        "reason": "SnapshotDom carries no frame content and WebKit isolation forbids cross-origin reads.",
+        "detail": {
+          "reason": "SnapshotDom carries no frame content and WebKit isolation forbids cross-origin reads.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "same-origin-iframe",
+        "title": "Same-origin frame content",
+        "state": "uncovered",
+        "requiredForCleanVerdict": true,
+        "implemented": false,
+        "reason": "The upstream capture producer never traverses iframes; rules inside frames are lost, not passed.",
+        "detail": {
+          "reason": "The upstream capture producer never traverses iframes; rules inside frames are lost, not passed.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "media-intrinsics",
+        "title": "Image/video natural size and load state",
+        "state": "covered",
+        "requiredForCleanVerdict": false,
+        "implemented": true,
+        "detail": {
+          "mediaElements": 1
+        }
+      },
+      {
+        "id": "animations",
+        "title": "Running animation/transition properties",
+        "state": "covered",
+        "requiredForCleanVerdict": false,
+        "implemented": true
+      },
+      {
+        "id": "shadow-trees",
+        "title": "Open shadow tree flat walk",
+        "state": "covered",
+        "requiredForCleanVerdict": false,
+        "implemented": true
+      },
+      {
+        "id": "text-lines",
+        "title": "Per-line rendered text rects",
+        "state": "covered",
+        "requiredForCleanVerdict": true,
+        "implemented": true
+      },
+      {
+        "id": "keyframes-and-linked-css",
+        "title": "@keyframes rules and readable linked stylesheet corpus",
+        "state": "covered",
+        "requiredForCleanVerdict": false,
+        "implemented": true,
+        "detail": {
+          "keyframesRecorded": true,
+          "linkedCssRecorded": true
+        }
+      }
+    ],
+    "uncoveredRequired": [
+      "pixel-contrast",
+      "reveal-sweep",
+      "content-hidden-at-rest-measure",
+      "script-errors",
+      "cross-origin-iframe",
+      "same-origin-iframe"
+    ],
+    "unknownStyleProps": [],
+    "cleanCapable": false
+  },
+  "needs": null,
+  "findings": {
+    "groups": [
+      {
+        "el": 6,
+        "findings": [
+          {
+            "type": "tiny-text",
+            "detail": "9px body text"
+          }
+        ]
+      }
+    ],
+    "pageLevel": [],
+    "counts": {
+      "total": 1,
+      "grouped": 1,
+      "pageLevel": 0,
+      "elements": 1,
+      "byRule": {
+        "tiny-text": 1
+      }
+    }
+  },
+  "diagnostics": {
+    "strictSchema": true,
+    "allowMissingIdentity": false,
+    "round": 2,
+    "factsFiles": [
+      {
+        "source": "facts-media-round2.v1.json",
+        "supplied": 186,
+        "answered": 186,
+        "unanswerable": 0,
+        "scrollAnswers": 0
+      }
+    ],
+    "unanswerablePoints": [],
+    "unanswerablePending": 0,
+    "unknownStyleProps": [],
+    "upstreamCommit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
+    "engineVersion": "0.1.17",
+    "note": "a missing measurement is reported, never presented as a clean scan"
+  },
+  "error": null
+}

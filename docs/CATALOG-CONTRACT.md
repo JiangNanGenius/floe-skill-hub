@@ -253,3 +253,53 @@ Y, and pins Y externally; then `check_catalog.py` verifies the published
 bytes standalone at Y. `--check` remains a candidate-tree convenience only:
 it compares a fresh build against committed outputs and must not be used to
 re-derive a published feed from moved candidate state.
+
+## 9. Managed raw runtime artifact binding (Impeccable engine)
+
+The managed Impeccable RISC-V engine is a raw runtime artifact **outside**
+every Skill ZIP: `engines/impeccable/dist/impeccable-{componentVersion}/
+{triple}/floe-impeccable` in the same Hub repository. Its binding data is the
+frozen descriptor `engines/impeccable/runtime-dependency/descriptor.v1.json`
+(frozen 2026-10-26; schema in the adjacent `schema.v1.json`). The canonical
+Impeccable Skill package embeds byte-identical
+`references/engine-dependency.json` — data only, never a source of
+permissions, and the ordinary Skill limits (2 MiB/file, 8 MiB/package, no
+native payloads inside the ZIP) are unchanged.
+
+`scripts/runtime_dependency.py` is the strict known-component validator
+shared by three gates:
+
+| Gate | Behaviour |
+| --- | --- |
+| `build_packages.py` (source/package production) | a staged package embedding `references/engine-dependency.json` must be byte-identical to the frozen tree descriptor and reference an existing, exact-size, exact-hash, safe static-ELF artifact in the SAME tree; otherwise the build fails closed. |
+| `build_catalog.py --mode release` | the descriptor and the raw artifact are validated ONLY from the frozen `--source-snapshot` of the audited X, and the output is standalone for runtime binding: BOTH the exact validated descriptor bytes (staged at `engines/impeccable/runtime-dependency/descriptor.v1.json`) and the validated raw artifact bytes (staged at the descriptor-relative path) are written into the publication output (Y) — a fresh output root therefore binds the runtime package without any manual descriptor copy, a stale or tampered mutable-HEAD descriptor can never leak into Y, and only those two files are staged, never a recursive engine copy. |
+| `check_catalog.py` (standalone publication gate) | for every published package embedding the descriptor, the published frozen descriptor at Y must match it byte-identically and the referenced artifact must exist at Y with exact size, SHA-256 and safe static-ELF shape — for BOTH channels, reading only the published bytes at Y, never the mutable candidate HEAD. |
+
+Descriptor policy (fail closed): exactly the 7 keys
+`schemaVersion/componentID/componentVersion/minimumAppVersion/target/artifact/
+captureContract` with exact subkey shapes; `schemaVersion` is exactly the
+integer `1` (`true`, `false` and `1.0` are rejected even though Python
+compares them equal to 1); raw descriptor bytes must be the canonical UTF-8
+encoding itself — re-encoding the parsed value with the hub's canonical
+`encoded()` must equal the raw bytes — so UTF-16/BOM sniffing, trailing or
+surrounding whitespace, key-order drift, pretty-printing and duplicate keys
+silently resolved last-wins are all rejected; the frozen 563-byte canonical
+descriptor is the passing shape. `componentID ==
+"impeccable-engine"` (known allowlist); `componentVersion` strict
+`X.Y.Z+floe.X.Y.Z`; strict `minimumAppVersion`; the fixed linux/riscv64/
+`riscv64gc-unknown-linux-musl`/`elf64-little-riscv-exec-static` target;
+artifact size 1..16 MiB (native hard cap for this known component only);
+strict lowercase SHA-256; `captureContract` version 1 with a strict hash;
+artifact path exactly
+`engines/impeccable/dist/impeccable-{componentVersion}/{target.triple}/floe-impeccable`
+— no URL/repository/command/approval/environment fields (unknown keys are
+rejected), no traversal/absolute/backslash/NUL/empty/dot segments, no symlinks
+at the artifact path or any ancestor.
+
+Artifact policy (fail closed): bounded read, exact size+SHA-256, ELF64
+little-endian RISC-V `EXEC` static only (no `PT_INTERP`, bounded
+program-header table with in-file offsets). The binary is never executed on
+the host and no producer code is invoked. Descriptor bytes are authenticated
+indirectly: they sit inside the signed Skill ZIP, so the signed catalog →
+archive `sha256`/`contentDigest` → review chain binds them; a descriptor
+tamper breaks that digest chain before the runtime gate is reached.

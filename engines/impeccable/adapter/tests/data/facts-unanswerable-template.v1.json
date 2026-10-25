@@ -1,0 +1,22 @@
+{
+  "_note": "shape only: the tests fill x/y/xBits/yBits from an observed Needs",
+  "taskId": "task-fixture-0001",
+  "sessionId": "session-fixture-0001",
+  "tabId": "tab-fixture-0001",
+  "documentId": "doc-fixture-0001",
+  "captureId": "cap-fixture-positive-0001",
+  "documentGeneration": 1,
+  "hits": [
+    {
+      "x": 0.0,
+      "y": 0.0,
+      "xBits": 0,
+      "yBits": 0,
+      "top": 0,
+      "stack": [],
+      "unanswerable": true,
+      "reason": "template"
+    }
+  ],
+  "shownOnScroll": []
+}

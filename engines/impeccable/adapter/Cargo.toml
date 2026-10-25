@@ -1,0 +1,33 @@
+[package]
+name = "floe-impeccable"
+# The Floe adapter version. The upstream engine version it is built against is
+# carried in the embedded contract (`engine.upstreamEngineVersion`) and printed
+# by `--version` as `<engine>+floe.<adapter>`.
+version = "1.0.0"
+edition = "2021"
+license = "MPL-2.0"
+publish = false
+description = "Floe adapter over the pinned pbakaus/impeccable rule engine: file-based snapshot scan with an explicit Needs/facts fixpoint and a coverage receipt, plus the offline static source and HTML scan verbs."
+
+# This crate is copied into the pinned upstream workspace as
+# `crates/floe-impeccable` by engines/impeccable/build/build_engine.py, so the
+# path dependencies below are relative to that tree. Building it standalone
+# requires the same layout; the build script is the supported entry point.
+[dependencies]
+impeccable-common = { path = "../common", features = ["seed"] }
+impeccable-core = { path = "../core" }
+impeccable-detect = { path = "../detect" }
+impeccable-html = { path = "../html" }
+impeccable-context = { path = "../context" }
+serde = { workspace = true }
+serde_json = { workspace = true, features = ["float_roundtrip", "preserve_order"] }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[dev-dependencies]
+serde_json = { workspace = true, features = ["float_roundtrip", "preserve_order"] }
+
+# The cancellation test delivers a real SIGTERM to a real child process.
+[target.'cfg(unix)'.dev-dependencies]
+libc = "0.2"

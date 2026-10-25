@@ -1,0 +1,981 @@
+{
+  "acceptedReferences": [
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/adapt.md",
+      "floeSha256": "9f44db5613e345195fbfc2692513747124b74cb992e452f5aa6003c4f2ffa186",
+      "invocationsRewritten": {
+        "backticked": 1
+      },
+      "placeholdersResolved": {
+        "command_prefix": 1
+      },
+      "refusedVerbsMentioned": [
+        "check",
+        "live"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/adapt.md",
+      "upstreamSha256": "004b339416187222206adee5ff08ef1fa9bc346d4ceba2932f770d640449ec6d"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/adapt.native.md",
+      "floeSha256": "18ed12445a0f89db1fc13ee295022efd3d431b8ebaa2b0592795ae56d777b52c",
+      "invocationsRewritten": {
+        "backticked": 1
+      },
+      "placeholdersResolved": {
+        "command_prefix": 1
+      },
+      "refusedVerbsMentioned": [],
+      "textCorrections": [],
+      "upstream": "skill/reference/adapt.native.md",
+      "upstreamSha256": "f7f0ba948cbce75cdbb86836c4479b86cffbfaf6afe4a5a7c8f129807070a68d"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/android.md",
+      "floeSha256": "f41d9136d1b491323791475be3bff5bf1bd7a3363b714cb132f4e6246f838a47",
+      "invocationsRewritten": {},
+      "placeholdersResolved": {},
+      "refusedVerbsMentioned": [
+        "install"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/android.md",
+      "upstreamSha256": "609d56133cbeff9e0f673d98a8a56044367cbdd82027d39c5d764c560e5cb00e"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/animate.md",
+      "floeSha256": "f00f46ce5874eac180c98707f84ee9686fa4168d724a88628c1db1a9484d8b87",
+      "invocationsRewritten": {
+        "backticked": 1
+      },
+      "placeholdersResolved": {
+        "command_prefix": 1
+      },
+      "refusedVerbsMentioned": [],
+      "textCorrections": [],
+      "upstream": "skill/reference/animate.md",
+      "upstreamSha256": "59f38d50c799aa47ecd7288c69dce0245d8c3e3e2368b29499d583996b5030b3"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/audit.md",
+      "floeSha256": "49bc1e121a0d7030b525407d960d3181466fe0b357675868b82d907efaf66339",
+      "invocationsRewritten": {
+        "backticked": 2,
+        "launcher": 1
+      },
+      "placeholdersResolved": {
+        "available_commands": 2,
+        "command_prefix": 4,
+        "scripts_path": 1
+      },
+      "refusedVerbsMentioned": [
+        "update",
+        "check"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/audit.md",
+      "upstreamSha256": "6f2850794a8e74fd07ab9410104f99e3f20dee5490d5e82c98880852203341d0"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/audit.native.md",
+      "floeSha256": "30c7f0b8d1131810e44ff0a8ea4fe2f4adfd730ac49a55a88abe4b7c8ac39229",
+      "invocationsRewritten": {
+        "backticked": 3
+      },
+      "placeholdersResolved": {
+        "available_commands": 2,
+        "command_prefix": 4
+      },
+      "refusedVerbsMentioned": [],
+      "textCorrections": [],
+      "upstream": "skill/reference/audit.native.md",
+      "upstreamSha256": "152f2523b4961f84ebd0cc7ea6fbf4e4300e9e1d26e82bd2bb5b6eb2d95bd9d8"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/bolder.md",
+      "floeSha256": "2968fb022407e1a2b5c92fabee451bd2b179f686756165fbecedee9c2a6b00a2",
+      "invocationsRewritten": {
+        "backticked": 1
+      },
+      "placeholdersResolved": {
+        "ask_instruction": 1,
+        "command_prefix": 1
+      },
+      "refusedVerbsMentioned": [],
+      "textCorrections": [],
+      "upstream": "skill/reference/bolder.md",
+      "upstreamSha256": "a4e4d986f74ef5f3c8218dfcfd5b04fe103b47182cf1e16aeb979e5703d5cd87"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/clarify.md",
+      "floeSha256": "30a81130776b4bf793d435f7007712b2c417b50614b537c02f5702a1b6c7544f",
+      "invocationsRewritten": {
+        "backticked": 1
+      },
+      "placeholdersResolved": {
+        "command_prefix": 1
+      },
+      "refusedVerbsMentioned": [],
+      "textCorrections": [],
+      "upstream": "skill/reference/clarify.md",
+      "upstreamSha256": "4738e125835bd6c166aec2622977c9bc59bada52aaeb186585ed38b3900860b5"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/colorize.md",
+      "floeSha256": "853dd4963706a39eea21658e888918281d2e70fb101348409e9396f2c59a8336",
+      "invocationsRewritten": {
+        "backticked": 1
+      },
+      "placeholdersResolved": {
+        "command_prefix": 1
+      },
+      "refusedVerbsMentioned": [
+        "live"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/colorize.md",
+      "upstreamSha256": "dcc0c3ebb76bd22c543f45d73c283e3890e5b8a44eb5053ca2f7fdd425635c32"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/craft-floor.md",
+      "floeSha256": "7e287f17fa1591dda55df3abb0fe86ef8d7b81aff5e518218ae9213fb73ac640",
+      "invocationsRewritten": {},
+      "placeholdersResolved": {},
+      "refusedVerbsMentioned": [
+        "check",
+        "hook"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/craft-floor.md",
+      "upstreamSha256": "086e731940b72db13d9693b575db377a7b102729a56da5c79a21461635695c87"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/craft.md",
+      "floeSha256": "80358a6a4129f7d142e1aec9b1811798a93a1386ef0c5f99051f6291738bd324",
+      "invocationsRewritten": {},
+      "placeholdersResolved": {},
+      "refusedVerbsMentioned": [],
+      "textCorrections": [],
+      "upstream": "skill/reference/craft.md",
+      "upstreamSha256": "9205e222bc6565b37fb504ceec93233c2d2a456802b69d16e6b1c44723907c4c"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/critique.md",
+      "floeSha256": "9be64b66fdf2ec06ccdf0cd6280e0a6fed291086c36f3dccce5915992eada1d3",
+      "invocationsRewritten": {
+        "backticked": 10,
+        "launcher": 7
+      },
+      "placeholdersResolved": {
+        "ask_instruction": 1,
+        "available_commands": 2,
+        "command_prefix": 6,
+        "config_file": 2,
+        "scripts_path": 7
+      },
+      "refusedVerbsMentioned": [
+        "critique-storage",
+        "live-server",
+        "link",
+        "live"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/critique.md",
+      "upstreamSha256": "f2ece6380e378ab644d0508adf10e213eb2d6e241e3d7339727fb8e61cd2d39b"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/delight.md",
+      "floeSha256": "b953fc6b9d8797b26b75fab62d54284ff61dc0d1fa87d9b29b3bbe61f492d282",
+      "invocationsRewritten": {
+        "backticked": 1
+      },
+      "placeholdersResolved": {
+        "command_prefix": 1
+      },
+      "refusedVerbsMentioned": [],
+      "textCorrections": [],
+      "upstream": "skill/reference/delight.md",
+      "upstreamSha256": "8f157ae861c578d54b2710ea200a6ba2253bd36ab68b6b4c4b880875bd0a415b"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/distill.md",
+      "floeSha256": "d8b41599d690b3f458209b6b9e70a97d5ae23d7a5f49ecb2ffe336d2d02e3add",
+      "invocationsRewritten": {
+        "backticked": 1
+      },
+      "placeholdersResolved": {
+        "ask_instruction": 1,
+        "command_prefix": 1
+      },
+      "refusedVerbsMentioned": [],
+      "textCorrections": [],
+      "upstream": "skill/reference/distill.md",
+      "upstreamSha256": "54be6eca781b8e2d0f7e850277b330cade905ee4df4d9986519aac27538af724"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/document.md",
+      "floeSha256": "c49788edad7b003e3934660ac002a5ab9a45093bd02ccb9070f790b44692d19f",
+      "invocationsRewritten": {},
+      "placeholdersResolved": {
+        "ask_instruction": 1
+      },
+      "refusedVerbsMentioned": [
+        "live"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/document.md",
+      "upstreamSha256": "f3d7d23d24affdc29fe38f3bcd9770f1304a959a7d49bffe8faaa2a4c2eb6647"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/extract.md",
+      "floeSha256": "2d58244a2796f0ca545e27b15dd2bc115ae1d2b2cad87920a71732ae4d16b3bd",
+      "invocationsRewritten": {},
+      "placeholdersResolved": {
+        "ask_instruction": 1
+      },
+      "refusedVerbsMentioned": [],
+      "textCorrections": [],
+      "upstream": "skill/reference/extract.md",
+      "upstreamSha256": "f6233909448bf18885e8cbad61e2c4713c3352d002875a891abda2672b4f0e00"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/generate.md",
+      "floeSha256": "310e80a1aaacb55761801f19ac7610e267662a02170404627d253e3c2c635171",
+      "invocationsRewritten": {
+        "backticked": 1,
+        "launcher": 6
+      },
+      "placeholdersResolved": {
+        "ask_instruction": 1,
+        "scripts_path": 6
+      },
+      "refusedVerbsMentioned": [
+        "live-generate",
+        "live-server",
+        "hook",
+        "live"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/generate.md",
+      "upstreamSha256": "4cc61a1b1a55ce3fec79ca03017c437a0c8cd4e4875706e31b5ebbecd3b75ad0"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/harden.md",
+      "floeSha256": "af3b133a3dbb6625b191a757f56cec3867d4fa75da6ac4a6cf076752ca98b2dc",
+      "invocationsRewritten": {
+        "backticked": 1
+      },
+      "placeholdersResolved": {
+        "command_prefix": 1
+      },
+      "refusedVerbsMentioned": [
+        "live"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/harden.md",
+      "upstreamSha256": "fb00cb42a9cb17d717aefabc418bd4dcb1be540d95d8498d8e3bd4e3e0b2a0a3"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/init.md",
+      "floeSha256": "aa3f663a3693e360190dcf5f71b5c1517893f07feb116c92432234513d47ae1c",
+      "invocationsRewritten": {
+        "backticked": 5
+      },
+      "placeholdersResolved": {
+        "ask_instruction": 1
+      },
+      "refusedVerbsMentioned": [
+        "update",
+        "live"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/init.md",
+      "upstreamSha256": "72a41672b391085738ded0ab3cf8235866dab15fc931f9e2b43c914c3ece915f"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/ios.md",
+      "floeSha256": "f73e44a906615595a97116554e5311531fe483025e8436b388fb2144a81985cf",
+      "invocationsRewritten": {},
+      "placeholdersResolved": {},
+      "refusedVerbsMentioned": [
+        "check"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/ios.md",
+      "upstreamSha256": "43e958203ba86ab1527afcfa63df50a47c8b9448dadf4f6e338a9b8be8538648"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/layout.md",
+      "floeSha256": "c61d710c89d96e0add67e9d0369329c3fe8a24b432595688b446f610fe0d3ca9",
+      "invocationsRewritten": {
+        "backticked": 1,
+        "launcher": 1
+      },
+      "placeholdersResolved": {
+        "command_prefix": 1,
+        "scripts_path": 1
+      },
+      "refusedVerbsMentioned": [
+        "live"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/layout.md",
+      "upstreamSha256": "14ba132b6168bf0a7498f8c3fbbb41b73ff704da5dc3688fd842807446e54a05"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/mode-operate.md",
+      "floeSha256": "40895eb168e52a3d94ea8c8db13d9b17a358ed6812134a6c419a5b177e5f7d55",
+      "invocationsRewritten": {
+        "backticked": 1
+      },
+      "placeholdersResolved": {},
+      "refusedVerbsMentioned": [
+        "concept-seed"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/mode-operate.md",
+      "upstreamSha256": "7a52dd7a94ee75f6ae89542c86a1b6e1d306812b16e0d9dbf12d4acad44d148b"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/mode-persuade.md",
+      "floeSha256": "13d9719934c13b1840985106dc3767db017ff0603142ef91473cea6894fe7243",
+      "invocationsRewritten": {
+        "backticked": 1
+      },
+      "placeholdersResolved": {},
+      "refusedVerbsMentioned": [
+        "concept-seed",
+        "hook",
+        "link"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/mode-persuade.md",
+      "upstreamSha256": "b3f8b39cbf89392b62c07298361fb2a7e8e0b4ef13bbb38bac974ccd8fd835fd"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/mode-read.md",
+      "floeSha256": "b59a5ba107a3f88346849436e868e29061861eb2f0952f8595d301f78479180c",
+      "invocationsRewritten": {
+        "backticked": 1
+      },
+      "placeholdersResolved": {},
+      "refusedVerbsMentioned": [
+        "concept-seed"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/mode-read.md",
+      "upstreamSha256": "a569989e6a3d6453b4c45e9474e162a15cc54e11732ac6baa7990a6e7cccc0b5"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/new-work.md",
+      "floeSha256": "2c89490a8d3b1ced298f983def757c74b2a4311dc6873fd6c72f3a9937cac387",
+      "invocationsRewritten": {
+        "backticked": 17,
+        "launcher": 13
+      },
+      "placeholdersResolved": {
+        "scripts_path": 13
+      },
+      "refusedVerbsMentioned": [
+        "component-review",
+        "generate-image",
+        "serve-question",
+        "surface-brief",
+        "concept-seed",
+        "embed-prompt",
+        "build-phase",
+        "font-match",
+        "comp-diff",
+        "comp-spec",
+        "install",
+        "update",
+        "check",
+        "hook",
+        "live",
+        "pin"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/new-work.md",
+      "upstreamSha256": "cbe4612444af11a45c3d0e6f1e0b3790e8f935f995d3c5fcda1a08cad3a6c6a5"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/onboard.md",
+      "floeSha256": "18d9c68c167e48550919fac2a182d3ab8fd089738090ef1c278198d56a46c212",
+      "invocationsRewritten": {
+        "backticked": 1
+      },
+      "placeholdersResolved": {
+        "command_prefix": 1
+      },
+      "refusedVerbsMentioned": [
+        "link"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/onboard.md",
+      "upstreamSha256": "7c8ef99e2671d121455f40179cf29aa5f8f029118cb1d97ce61b7d20a193b709"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/operate.md",
+      "floeSha256": "ecc38d80d1785dd660b791c142e2478518d1d9fca46c24267e151a42692c2b4b",
+      "invocationsRewritten": {},
+      "placeholdersResolved": {},
+      "refusedVerbsMentioned": [
+        "live"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/operate.md",
+      "upstreamSha256": "e5bf4980c547e60b091f82f38d0eec4cc3ab85610b4b15ec8f1d86584f9eb404"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/optimize.md",
+      "floeSha256": "adbf84a47e3d59f3eb2c2ec8cb07eb4bc0eef102c2a0e0ee77b636a43a6aaa4f",
+      "invocationsRewritten": {
+        "backticked": 1
+      },
+      "placeholdersResolved": {
+        "command_prefix": 1
+      },
+      "refusedVerbsMentioned": [],
+      "textCorrections": [],
+      "upstream": "skill/reference/optimize.md",
+      "upstreamSha256": "66e1142b606a2df263bf76774adcf1d007566fa8d220e0387affb7ee396eaec7"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/overdrive.md",
+      "floeSha256": "2f1a92f3a5dfb1ec0aa240ebe9a4190170b28b9df2218cdf0705cec538991fb4",
+      "invocationsRewritten": {},
+      "placeholdersResolved": {
+        "ask_instruction": 1
+      },
+      "refusedVerbsMentioned": [],
+      "textCorrections": [],
+      "upstream": "skill/reference/overdrive.md",
+      "upstreamSha256": "968c5374ab60080568b11fa53bb82a64b1b59a7ba6a51b3945bcbb03101d2924"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/polish.md",
+      "floeSha256": "200124b2e4497abbb706db924dd46f70399c03f236b8306d4546ba6ea335a9a7",
+      "invocationsRewritten": {
+        "backticked": 1,
+        "launcher": 2
+      },
+      "placeholdersResolved": {
+        "scripts_path": 2
+      },
+      "refusedVerbsMentioned": [
+        "critique-storage",
+        "hooks",
+        "live"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/polish.md",
+      "upstreamSha256": "c504e12ea076fd1a57b8c9ece79fbb532c54226b2b6298c5c62fa889ae1dd34d"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/quieter.md",
+      "floeSha256": "04f1c373b46eb367a9d9680bd42ea4f62e9eeb13b30f8b1b5878ee78b55c50de",
+      "invocationsRewritten": {
+        "backticked": 1
+      },
+      "placeholdersResolved": {
+        "ask_instruction": 1,
+        "command_prefix": 1
+      },
+      "refusedVerbsMentioned": [],
+      "textCorrections": [],
+      "upstream": "skill/reference/quieter.md",
+      "upstreamSha256": "c4755f41462f3534195912b64333df94dbdd0f54b8f2da1c9ef69ce94d974896"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/region-map.md",
+      "floeSha256": "1383cbd64ca4dcefa06c325f3f1f71c25a079c36b71329f56cc699070434dc02",
+      "invocationsRewritten": {
+        "launcher": 3
+      },
+      "placeholdersResolved": {
+        "scripts_path": 3
+      },
+      "refusedVerbsMentioned": [
+        "comp-spec"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/region-map.md",
+      "upstreamSha256": "d92168addd0bf7ff839304e55cd496fe89a60b4e75f08885260d021176017616"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/routing.md",
+      "floeSha256": "446323d52feddc84dcfe4d0265c4a5d6516d00c6dd91ef20bc88f4560dfeef41",
+      "invocationsRewritten": {
+        "backticked": 2,
+        "launcher": 2
+      },
+      "placeholdersResolved": {
+        "command_prefix": 1,
+        "scripts_path": 2
+      },
+      "refusedVerbsMentioned": [
+        "live"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/routing.md",
+      "upstreamSha256": "051540914d74dd64608a0f455c7135e5e6d47948c756290883501f01b6f3cd7d"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/shape.md",
+      "floeSha256": "3aa1532ba6a2abeaaa18ee0ea8ec99f206f2f94b4b73f3c341dd2fb23771bd06",
+      "invocationsRewritten": {},
+      "placeholdersResolved": {},
+      "refusedVerbsMentioned": [],
+      "textCorrections": [],
+      "upstream": "skill/reference/shape.md",
+      "upstreamSha256": "a55f016c046cb6a27c55bd7f346375aeb506a755c4fbca19a5f92dbd42309c23"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/typeset.md",
+      "floeSha256": "cd9a658d465e2dbb9801da2354bd932def167e072189120b545e73676ab8a4aa",
+      "invocationsRewritten": {
+        "backticked": 1,
+        "launcher": 1
+      },
+      "placeholdersResolved": {
+        "command_prefix": 1,
+        "scripts_path": 1
+      },
+      "refusedVerbsMentioned": [
+        "update",
+        "check",
+        "live"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/typeset.md",
+      "upstreamSha256": "925720c1d610d2a08a6811001303f395e4b2c971ef3d2506fbce43b2a1303152"
+    },
+    {
+      "danglingLinksAnnotated": [],
+      "file": "skill/reference/visualize.md",
+      "floeSha256": "0a26be8cdd4f94d443eb40ce666314b0882ce73130d524d5badb4e0d45e985d3",
+      "invocationsRewritten": {
+        "backticked": 15,
+        "launcher": 1
+      },
+      "placeholdersResolved": {
+        "scripts_path": 1
+      },
+      "refusedVerbsMentioned": [
+        "generate-image",
+        "serve-question",
+        "concept-seed",
+        "embed-prompt",
+        "build-phase",
+        "comp-spec"
+      ],
+      "textCorrections": [],
+      "upstream": "skill/reference/visualize.md",
+      "upstreamSha256": "00a0f810e67c82540ffc549f3b2012a27a1720a4271c0a82f315325517a7afca"
+    }
+  ],
+  "canonicalization": {
+    "descriptor": {
+      "authority": "frozen managed runtime artifact descriptor v1 (engines/impeccable/runtime-dependency/, coordinator 2026-10-26)",
+      "bytes": 563,
+      "path": "references/engine-dependency.json",
+      "sha256": "cec4a7fade52f6383f74bc9e15972b911552b2672eada138d890e353899be50a"
+    },
+    "engineDataMirror": {
+      "commands": 23,
+      "perFile": {
+        "reference/adapt.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/adapt.native.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/android.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/animate.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/audit.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 1
+        },
+        "reference/audit.native.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/bolder.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/clarify.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/colorize.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 1,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/craft-floor.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/craft.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/critique.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 7
+        },
+        "reference/delight.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/distill.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/document.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/extract.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/generate.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 2,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 6
+        },
+        "reference/harden.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/init.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 1,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/ios.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/layout.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 1,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 1
+        },
+        "reference/mode-operate.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/mode-persuade.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/mode-read.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/new-work.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 2,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 13
+        },
+        "reference/onboard.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/operate.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/optimize.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/overdrive.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/polish.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 2
+        },
+        "reference/quieter.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/region-map.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 3
+        },
+        "reference/routing.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 2
+        },
+        "reference/shape.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 0
+        },
+        "reference/typeset.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 1,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 1
+        },
+        "reference/visualize.md": {
+          "auditPointerTokensRewritten": 2,
+          "bareDanglingLinksAnnotated": 0,
+          "linksRewritten": 0,
+          "scriptsPathTokensRenamed": 1
+        }
+      },
+      "referenceFiles": 36
+    },
+    "frontmatter": {
+      "normalized": "name + description scalars only; allowed-tools/Bash/argument-hint/user-invocable/license fields removed (Floe grants come from floe.json and the runtime; the upstream license is preserved under references/licenses/)"
+    },
+    "launcher": {
+      "canonicalSha256": "e1760fb8a6b75e63c33d26969ad799c4ae7143a88a582ae29cac5dcde4cb222f",
+      "change": "IMPECCABLE_SKILL_DIR default moved to the canonical read-only data root references/engine-data, with explicit-value override first and a dev-checkout fallback; comments updated; resolution order, digest gate and no-download behaviour unchanged",
+      "parentSha256": "b317617bb9f473a4d80b3477543d015f8d7d2645f63f0998acbce43bcbf58cc4"
+    },
+    "movedOut": [
+      "LICENSE/NOTICE.md (package root) -> references/licenses/",
+      "README.md -> references/PROVENANCE.md",
+      "SOURCE-LOCK.json / MODIFICATIONS.json / MODIFICATIONS.md -> references/",
+      "scripts/normalize_skill_source.py -> hub maintenance tooling (engines/impeccable/build/skill-source/), never inside the installed package"
+    ],
+    "rootSkill": {
+      "auditPointerTokensRewritten": 2,
+      "bareDanglingLinksAnnotated": 0,
+      "excludedReferencePrefixLinksAnnotated": 3,
+      "linksRewritten": 32,
+      "proseCorrections": [
+        "setup invocation gains explicit `sh` and the canonical .sh launcher name",
+        "launcher sentence replaced with the managed-provisioning truth (Hub-staged, digest-bound, never downloaded, exit 127 before a provisioned+probed engine)",
+        "installed-layout mapping paragraph inserted"
+      ],
+      "scriptsPathTokensRenamed": 5
+    }
+  },
+  "commandMetadata": {
+    "changes": [
+      "kept 23 commands the Floe engine can carry out",
+      "dropped 1 commands whose flow needs an unavailable engine path",
+      "the engine prefers this sibling copy over its embedded command-metadata.json"
+    ],
+    "droppedCommands": [
+      {
+        "command": "live",
+        "reason": "live mode rewrites the page through a local server; not in the Floe v1 engine"
+      }
+    ],
+    "file": "skill/scripts/command-metadata.json",
+    "floeSha256": "002db467b0c93c2361e3d07750e1b6cc3f5b56d14cbfc7561d7f03fcd076c740",
+    "keptCommands": [
+      "adapt",
+      "animate",
+      "audit",
+      "bolder",
+      "clarify",
+      "colorize",
+      "craft",
+      "critique",
+      "delight",
+      "distill",
+      "document",
+      "extract",
+      "generate",
+      "harden",
+      "init",
+      "layout",
+      "onboard",
+      "optimize",
+      "overdrive",
+      "polish",
+      "quieter",
+      "shape",
+      "typeset"
+    ],
+    "upstream": "skill/scripts/command-metadata.json",
+    "upstreamSha256": "c6dcbeed7f13152205ca022c8f24d08683770835083f0a7325261c1c2d5f215c"
+  },
+  "derivedFrom": {
+    "engineVersion": "0.1.17",
+    "note": "the commit and tree are recorded in SOURCE-LOCK.json",
+    "project": "pbakaus/impeccable",
+    "skillPackageVersion": "4.7.1"
+  },
+  "excludedReferences": [
+    {
+      "file": "reference/component-review.md",
+      "reason": "component review needs the upstream Chromium/CDP capture service",
+      "upstreamSha256": "1ed71eaa66595b794af0fa2b59effa9a8522650742c818896313dd3c4c29dec7"
+    },
+    {
+      "file": "reference/doctor.md",
+      "reason": "doctor reports drift in upstream hook and update artifacts Floe does not install",
+      "upstreamSha256": "a3722b8c8300e39447b8374f97a5f54941f802a06295c53c42c8cb1f9d059b0c"
+    },
+    {
+      "file": "reference/hooks.md",
+      "reason": "editor design hooks; not in the Floe v1 engine",
+      "upstreamSha256": "107c254f2a6b4fbaa7f06b5fb0110768ba05efa3181e4308775eb9ff9b7ac723"
+    },
+    {
+      "file": "reference/live-setup.md",
+      "reason": "live mode setup; not in the Floe v1 engine",
+      "upstreamSha256": "bd50117a3a0c25a59445ffa561ecdfc7ffc01c5aa16a059270b4164181ea53fa"
+    },
+    {
+      "file": "reference/live.md",
+      "reason": "live mode rewrites the page through a local server; not in the Floe v1 engine",
+      "upstreamSha256": "d26048975955fd4a2b3643314fedb04698145cf6398b864d06cd71ef188c6140"
+    }
+  ],
+  "floeLicenseForNewFiles": "MPL-2.0 for Floe-authored files (the launcher, this script, SOURCE-LOCK.json, README.md)",
+  "regenerate": "sh <hub>/engines/impeccable/build/skill-source/run_pipeline.sh <pinned-upstream-clone-dir> <hub-root> <new-empty-work-root> (stage1 + stage2 + authoritative Hub helper gate; canonical bytes are emitted at <work-root>/canonical and adopted into <hub>/sources/impeccable only by a reviewed manual copy; existing non-empty output is refused, never deleted)",
+  "skillFile": {
+    "changes": [
+      "resolved {{scripts_path}}/{{command_prefix}}/{{command_hint}} for the Floe launcher",
+      "rewrote `impeccable <verb>` and `npx impeccable <verb>` to `floe-impeccable <verb>`",
+      "inserted the Floe v1 engine surface, the snapshot-scan design flow and the coverage limits"
+    ],
+    "file": "skill/SKILL.md",
+    "floeSha256": "34ff8c715a51aaf397496bf0a3e330b1d2d619e0ad5fd65d1bfa2c76ba9874b7",
+    "invocationsRewritten": {
+      "backticked": 4,
+      "launcher": 4,
+      "launcher.cmd": 1,
+      "npx-bare": 1
+    },
+    "placeholdersResolved": {
+      "command_hint": 1,
+      "command_prefix": 3,
+      "scripts_path": 5
+    },
+    "refusedVerbsMentioned": [
+      "doctor",
+      "hooks",
+      "hook",
+      "live",
+      "pin"
+    ],
+    "upstream": "skill/SKILL.src.md",
+    "upstreamSha256": "a2c627ba2fbfb0697921ff663b9ea9dbff6584e0fb23977a7185026d07131264"
+  },
+  "stage1Output": {
+    "commandMetadataSha256": "002db467b0c93c2361e3d07750e1b6cc3f5b56d14cbfc7561d7f03fcd076c740",
+    "skillMdSha256": "34ff8c715a51aaf397496bf0a3e330b1d2d619e0ad5fd65d1bfa2c76ba9874b7",
+    "versionSha256": "bd270b0ddecef6c53cde260e7964048b1186147606e6643d2ccb8cf04e167bd1"
+  },
+  "upstreamLicense": "Apache-2.0 (LICENSE and NOTICE.md copied verbatim)"
+}

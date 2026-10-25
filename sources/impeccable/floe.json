@@ -1,0 +1,1 @@
+{"capabilities":["browser.interact","browser.observe","execution.remote","workspace.read","workspace.write"],"id":"impeccable","platforms":["ios"],"pythonPackages":[],"schemaVersion":1,"scriptRuntime":"remote","tools":["exec.shell"],"version":"1.0.0"}

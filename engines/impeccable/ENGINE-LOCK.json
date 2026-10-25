@@ -1,0 +1,91 @@
+{
+  "engineId": "impeccable-0.1.17+floe.1.0.0",
+  "status": "candidate-build-not-qualified",
+  "upstream": {
+    "project": "pbakaus/impeccable",
+    "repository": "https://github.com/pbakaus/impeccable",
+    "commit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
+    "tree": "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72",
+    "engineVersion": "0.1.17",
+    "packageVersion": "4.7.1",
+    "commitDate": "2026-10-25T22:28:14+08:00",
+    "commitSubject": "Fix: judge only plain radius lengths, not math-function operands (#1168) (#1171)",
+    "license": "Apache-2.0",
+    "pinAuthority": "floe-skill-hub docs/UPSTREAM-PINS.json (reviewBaselineDate 2026-10-26)",
+    "skillEnginePairing": "the skill package under sources/impeccable and every engine artifact are produced from this one commit",
+    "earlierObservedCommit": {
+      "commit": "936867543ac2576920d663cc9803597f6044f3ac",
+      "tree": "27925ff34661beb5dd298cffe54f316071155b19",
+      "engineVersion": "0.1.17",
+      "relation": "verified ancestor of the pin, two commits behind, same ENGINE_VERSION; not used to build any artifact",
+      "delta": [
+        "crates/detect/src/design_system.rs (radius token rule fix)",
+        ".github/workflows/release-engine.yml (draft-first engine releases)",
+        "tests/release-engine-workflow.test.js"
+      ]
+    }
+  },
+  "floe": {
+    "adapterVersion": "1.0.0",
+    "contractVersion": 1,
+    "adapterCrate": "crates/floe-impeccable",
+    "adapterSourceOfTruth": "engines/impeccable/adapter",
+    "license": "MPL-2.0 for Floe-authored adapter files; upstream crates keep Apache-2.0",
+    "patches": [
+      "patches/0001-floe-context-network-and-updater-trim.patch"
+    ]
+  },
+  "vendoring": "the full upstream source tree is never committed to this repository; build_engine.py exports it from the pinned commit into task scratch, applies the tracked patches and stages the tracked adapter crate",
+  "toolchain": {
+    "rust": "1.98.1",
+    "rustcCommitHash": "48a229ceaefd4985c50990b14116b6d856af0985",
+    "rustupTargets": [
+      "aarch64-apple-darwin",
+      "riscv64gc-unknown-linux-musl",
+      "riscv64gc-unknown-linux-gnu"
+    ],
+    "zig": "0.17.0",
+    "zigRole": "C compiler and linker driver for the riscv64 musl target only; the engine dependency graph is pure Rust after patch 0001, so no C or assembly is compiled",
+    "buildHost": "aarch64-apple-darwin"
+  },
+  "targets": {
+    "riscv64gc-unknown-linux-musl": {
+      "purpose": "the Floe Linux guest (Debian 13 riscv64 userland on the pinned 4.15 kernel, TinyEMU)",
+      "linkage": "static (crt-static, Rust self-contained musl runtime); no dynamic loader or glibc version dependency",
+      "rustflags": "-C target-feature=+crt-static",
+      "guestExecution": "pending; a static ABI check and a host-side behavioral run are not guest execution"
+    },
+    "aarch64-apple-darwin": {
+      "purpose": "host behavioral comparison and the adapter test suite; never shipped as the guest engine",
+      "linkage": "dynamic (host)"
+    }
+  },
+  "releaseProfile": {
+    "inheritedFromUpstreamWorkspace": true,
+    "optLevel": 3,
+    "lto": "fat",
+    "codegenUnits": 1,
+    "strip": true,
+    "panic": "abort"
+  },
+  "excludedUpstreamCrates": {
+    "impeccable-browser": "Chromium/CDP URL engine; forbidden for a native page scan",
+    "impeccable-skills": "install/update/check/link with ring signature verification; the Floe Skill Hub owns installation",
+    "impeccable-live": "live rewrite server",
+    "impeccable-hook": "editor hooks",
+    "impeccable-comp": "comp-fidelity raster/font libraries used by the CDP capture verbs",
+    "impeccable-comp-verbs": "build-phase/comp-diff/comp-spec/font-match verbs",
+    "impeccable-cli": "the upstream verb router; replaced by the Floe router",
+    "impeccable-wasm": "in-page bundle target",
+    "impeccable-bundle": "bundler and wasm-pack caller",
+    "impeccable-xtask": "workspace tooling"
+  },
+  "includedUpstreamCrates": [
+    "impeccable-core",
+    "impeccable-foundation",
+    "impeccable-common",
+    "impeccable-detect",
+    "impeccable-html",
+    "impeccable-context"
+  ]
+}

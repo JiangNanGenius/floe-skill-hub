@@ -1,0 +1,578 @@
+{
+  "environment": {
+    "uname": [
+      "Darwin",
+      "arm64",
+      "27.0.0"
+    ],
+    "runner": "local host (no runner)",
+    "binarySha256": "079c102abecdf5157a9ab947cb0fbdff1d37b4d3db4aff422834d375d73fd86a",
+    "binaryBytes": 32791120
+  },
+  "checksTotal": 74,
+  "checksPassed": 74,
+  "failures": [],
+  "parity": {
+    "cases": 25,
+    "byteIdentical": 25,
+    "mismatched": []
+  },
+  "checks": [
+    {
+      "check": "the runner reports its architecture",
+      "ok": true,
+      "detail": [
+        "Darwin",
+        "arm64",
+        "27.0.0"
+      ]
+    },
+    {
+      "check": "the binary digest inside the runner matches the host artifact",
+      "ok": true,
+      "detail": {
+        "inRunner": "079c102abecdf5157a9ab947cb0fbdff1d37b4d3db4aff422834d375d73fd86a",
+        "host": "079c102abecdf5157a9ab947cb0fbdff1d37b4d3db4aff422834d375d73fd86a"
+      }
+    },
+    {
+      "check": "engine-probe answers the handshake",
+      "ok": true,
+      "detail": "impeccable-engine 0.1.17+floe.1.0.0"
+    },
+    {
+      "check": "engine-probe exits 0",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "--version prints engine+adapter",
+      "ok": true,
+      "detail": "0.1.17+floe.1.0.0"
+    },
+    {
+      "check": "the contract verb prints the committed contract bytes",
+      "ok": true,
+      "detail": {
+        "printed": "baf2453164be6162703af9d671be16da152fa874db53ce95ad5b3516d40de4a3",
+        "committed": "baf2453164be6162703af9d671be16da152fa874db53ce95ad5b3516d40de4a3"
+      }
+    },
+    {
+      "check": "snapshot-schema lists the pinned property columns",
+      "ok": true,
+      "detail": {
+        "styleProps": 138,
+        "pseudoProps": 23
+      }
+    },
+    {
+      "check": "help advertises the Floe verbs and not the refused ones",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "positive-round1: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "3",
+        "expected": 3
+      }
+    },
+    {
+      "check": "positive-round1: status",
+      "ok": true,
+      "detail": {
+        "actual": "needs-facts",
+        "expected": "needs-facts"
+      }
+    },
+    {
+      "check": "positive-round1: verdict",
+      "ok": true,
+      "detail": {
+        "actual": "none",
+        "expected": "none"
+      }
+    },
+    {
+      "check": "positive-round2: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "2",
+        "expected": 2
+      }
+    },
+    {
+      "check": "positive-round2: status",
+      "ok": true,
+      "detail": {
+        "actual": "complete",
+        "expected": "complete"
+      }
+    },
+    {
+      "check": "positive-round2: verdict",
+      "ok": true,
+      "detail": {
+        "actual": "findings",
+        "expected": "findings"
+      }
+    },
+    {
+      "check": "overlay-round1: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "3",
+        "expected": 3
+      }
+    },
+    {
+      "check": "overlay-round1: status",
+      "ok": true,
+      "detail": {
+        "actual": "needs-facts",
+        "expected": "needs-facts"
+      }
+    },
+    {
+      "check": "overlay-round1: verdict",
+      "ok": true,
+      "detail": {
+        "actual": "none",
+        "expected": "none"
+      }
+    },
+    {
+      "check": "overlay-round2: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "2",
+        "expected": 2
+      }
+    },
+    {
+      "check": "overlay-round2: status",
+      "ok": true,
+      "detail": {
+        "actual": "complete",
+        "expected": "complete"
+      }
+    },
+    {
+      "check": "overlay-round2: verdict",
+      "ok": true,
+      "detail": {
+        "actual": "findings",
+        "expected": "findings"
+      }
+    },
+    {
+      "check": "no-findings-round2: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "4",
+        "expected": 4
+      }
+    },
+    {
+      "check": "no-findings-round2: status",
+      "ok": true,
+      "detail": {
+        "actual": "inconclusive",
+        "expected": "inconclusive"
+      }
+    },
+    {
+      "check": "no-findings-round2: verdict",
+      "ok": true,
+      "detail": {
+        "actual": "inconclusive",
+        "expected": "inconclusive"
+      }
+    },
+    {
+      "check": "snapshot-truncated: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "snapshot-truncated: error.code",
+      "ok": true,
+      "detail": {
+        "actual": "snapshot-parse",
+        "expected": "snapshot-parse"
+      }
+    },
+    {
+      "check": "snapshot-bad-version: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "snapshot-bad-version: error.code",
+      "ok": true,
+      "detail": {
+        "actual": "snapshot-version-unsupported",
+        "expected": "snapshot-version-unsupported"
+      }
+    },
+    {
+      "check": "snapshot-column-mismatch: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "snapshot-column-mismatch: error.code",
+      "ok": true,
+      "detail": {
+        "actual": "schema-mismatch",
+        "expected": "schema-mismatch"
+      }
+    },
+    {
+      "check": "identity-mismatch: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "identity-mismatch: error.code",
+      "ok": true,
+      "detail": {
+        "actual": "identity-mismatch",
+        "expected": "identity-mismatch"
+      }
+    },
+    {
+      "check": "identity-missing-binding: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "identity-missing-binding: error.code",
+      "ok": true,
+      "detail": {
+        "actual": "identity-invalid",
+        "expected": "identity-invalid"
+      }
+    },
+    {
+      "check": "identity-redaction: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "identity-redaction: error.code",
+      "ok": true,
+      "detail": {
+        "actual": "identity-redaction-not-applied",
+        "expected": "identity-redaction-not-applied"
+      }
+    },
+    {
+      "check": "identity-model-trust: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "identity-model-trust: error.code",
+      "ok": true,
+      "detail": {
+        "actual": "identity-untrusted-producer",
+        "expected": "identity-untrusted-producer"
+      }
+    },
+    {
+      "check": "identity-fenced: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "identity-fenced: error.code",
+      "ok": true,
+      "detail": {
+        "actual": "identity-superseded",
+        "expected": "identity-superseded"
+      }
+    },
+    {
+      "check": "facts-bits-mismatch: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "facts-bits-mismatch: error.code",
+      "ok": true,
+      "detail": {
+        "actual": "facts-bits-mismatch",
+        "expected": "facts-bits-mismatch"
+      }
+    },
+    {
+      "check": "facts-stale-capture: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "facts-stale-capture: error.code",
+      "ok": true,
+      "detail": {
+        "actual": "facts-binding-mismatch",
+        "expected": "facts-binding-mismatch"
+      }
+    },
+    {
+      "check": "facts-other-tab: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "facts-other-tab: error.code",
+      "ok": true,
+      "detail": {
+        "actual": "facts-binding-mismatch",
+        "expected": "facts-binding-mismatch"
+      }
+    },
+    {
+      "check": "budget-bytes: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "budget-bytes: error.code",
+      "ok": true,
+      "detail": {
+        "actual": "budget-exceeded",
+        "expected": "budget-exceeded"
+      }
+    },
+    {
+      "check": "budget-rounds: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "budget-rounds: error.code",
+      "ok": true,
+      "detail": {
+        "actual": "budget-exceeded",
+        "expected": "budget-exceeded"
+      }
+    },
+    {
+      "check": "timeout: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "timeout: error.code",
+      "ok": true,
+      "detail": {
+        "actual": "timeout",
+        "expected": "timeout"
+      }
+    },
+    {
+      "check": "no-identity: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "no-identity: error.code",
+      "ok": true,
+      "detail": {
+        "actual": "identity-invalid",
+        "expected": "identity-invalid"
+      }
+    },
+    {
+      "check": "refused-update-verb: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "1",
+        "expected": 1
+      }
+    },
+    {
+      "check": "media-round2: exit code",
+      "ok": true,
+      "detail": {
+        "exit": "2",
+        "expected": 2
+      }
+    },
+    {
+      "check": "media-round2: status",
+      "ok": true,
+      "detail": {
+        "actual": "complete",
+        "expected": "complete"
+      }
+    },
+    {
+      "check": "media-round2: verdict",
+      "ok": true,
+      "detail": {
+        "actual": "findings",
+        "expected": "findings"
+      }
+    },
+    {
+      "check": "round 1 asks for hit tests and carries their exact bits",
+      "ok": true,
+      "detail": {
+        "points": 183,
+        "bits": 183
+      }
+    },
+    {
+      "check": "round 1 reports no findings",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "round 1 marks the fixpoint as needs-facts",
+      "ok": true,
+      "detail": "needs-facts"
+    },
+    {
+      "check": "round 2 reports the real finding",
+      "ok": true,
+      "detail": {
+        "tiny-text": 1
+      }
+    },
+    {
+      "check": "round 2 has nothing pending",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "round 2 marks the fixpoint covered",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "round 2 marks style parity complete",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "the overlay page reports text-occlusion once the hit tests are answered",
+      "ok": true,
+      "detail": {
+        "text-occlusion": 1
+      }
+    },
+    {
+      "check": "an empty finding list is inconclusive, never clean",
+      "ok": true,
+      "detail": {
+        "total": 0,
+        "verdict": "inconclusive"
+      }
+    },
+    {
+      "check": "the inconclusive receipt names the uncovered required passes",
+      "ok": true,
+      "detail": [
+        "pixel-contrast",
+        "reveal-sweep",
+        "content-hidden-at-rest-measure",
+        "script-errors",
+        "cross-origin-iframe",
+        "same-origin-iframe"
+      ]
+    },
+    {
+      "check": "the receipt says a clean verdict was not possible",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "media intrinsics are reported as covered when the capture records them",
+      "ok": true,
+      "detail": "covered"
+    },
+    {
+      "check": "refused-update-verb: refusal carries its reason",
+      "ok": true,
+      "detail": "Error [verb-unavailable]: \"update\" is not available in the Floe engine. Skill installation and updates are owned by the Floe Skill Hub (signed catalog, digest-b"
+    },
+    {
+      "check": "refused-telemetry-verb: refusal carries its reason",
+      "ok": true,
+      "detail": "Error [verb-unavailable]: \"telemetry\" is not available in the Floe engine. Telemetry is disabled in the Floe engine: no upstream endpoint is contacted and the b"
+    },
+    {
+      "check": "refused-cdp-verb: refusal carries its reason",
+      "ok": true,
+      "detail": "Error: --cdp is not available in the Floe engine: attaching to a running app through a DevTools endpoint is deliberately not supported. Use the native design ca"
+    },
+    {
+      "check": "detect --list-rules prints the upstream rule catalog",
+      "ok": true,
+      "detail": {
+        "rules": 62
+      }
+    },
+    {
+      "check": "the offline detect verb reproduces the upstream oracle goldens byte for byte",
+      "ok": true,
+      "detail": {
+        "cases": 25,
+        "byteIdentical": 25,
+        "mismatched": []
+      }
+    }
+  ],
+  "runnerExitCode": 0,
+  "ok": true,
+  "stage": "<scratch>/verify-stage-host"
+}

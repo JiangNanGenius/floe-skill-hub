@@ -1,0 +1,262 @@
+{
+  "contract": "floe.impeccable.snapshot",
+  "contractVersion": 1,
+  "status": "failed",
+  "verdict": "none",
+  "engine": {
+    "binary": "floe-impeccable",
+    "upstreamProject": "pbakaus/impeccable",
+    "upstreamEngineVersion": "0.1.17",
+    "upstreamCommit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
+    "upstreamTree": "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72",
+    "pinAuthority": "floe-skill-hub docs/UPSTREAM-PINS.json (reviewBaselineDate 2026-10-26)",
+    "floeAdapterVersion": "1.0.0",
+    "engineId": "impeccable-0.1.17+floe.1.0.0",
+    "targetTriple": "aarch64-apple-darwin",
+    "abi": "static ELF, no dynamic loader dependency",
+    "adapterCrateVersion": "1.0.0",
+    "contractTargetTriple": "riscv64gc-unknown-linux-musl",
+    "runtimeExecution": "host-comparison-build"
+  },
+  "identity": null,
+  "identityCheck": {
+    "state": "absent",
+    "mismatches": [],
+    "syntheticProducerDigest": false,
+    "redactionPolicy": null,
+    "producerTrust": null
+  },
+  "budget": {
+    "snapshotBytes": 18472,
+    "elements": 0,
+    "rounds": 0,
+    "maxRounds": 4,
+    "hitTestsAsked": 0,
+    "hitTestsAnswered": 0,
+    "maxHitTestsPerRound": 4096,
+    "maxHitTestsTotal": 16384,
+    "maxSnapshotBytes": 50331648,
+    "timeoutMs": 120000,
+    "elapsedMs": 0,
+    "exceeded": []
+  },
+  "coverage": {
+    "passes": [
+      {
+        "id": "core-rule-pass",
+        "title": "Snapshot rule pass (impeccable-core over SnapshotDom)",
+        "state": "failed",
+        "requiredForCleanVerdict": true,
+        "implemented": true,
+        "detail": {
+          "code": "identity-untrusted-producer"
+        }
+      },
+      {
+        "id": "hit-test-fixpoint",
+        "title": "elementFromPoint/elementsFromPoint answers for rule-decided points",
+        "state": "failed",
+        "requiredForCleanVerdict": true,
+        "implemented": true
+      },
+      {
+        "id": "style-parity",
+        "title": "Computed-style property parity (unknown_style_props)",
+        "state": "failed",
+        "requiredForCleanVerdict": true,
+        "implemented": true
+      },
+      {
+        "id": "scroll-probes",
+        "title": "shown_when_scrolled_to answers (content hidden at rest)",
+        "state": "failed",
+        "requiredForCleanVerdict": true,
+        "implemented": true
+      },
+      {
+        "id": "static-html-source-scan",
+        "title": "Static markup/source scan (impeccable-html + impeccable-detect)",
+        "state": "not-run",
+        "requiredForCleanVerdict": false,
+        "implemented": true,
+        "detail": {
+          "note": "separate verb (detect); a snapshot scan never claims it ran"
+        }
+      },
+      {
+        "id": "pixel-contrast",
+        "title": "Pixel-sampled contrast and routed low-contrast verdicts",
+        "state": "uncovered",
+        "requiredForCleanVerdict": true,
+        "implemented": false,
+        "reason": "Needs loadImage/readPixel or the PNG two-shot diff of the upstream URL engine; the v1 native capture has no pixel source.",
+        "detail": {
+          "reason": "Needs loadImage/readPixel or the PNG two-shot diff of the upstream URL engine; the v1 native capture has no pixel source.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "screenshot-diff",
+        "title": "Two-shot screenshot hiding/diff evidence",
+        "state": "uncovered",
+        "requiredForCleanVerdict": false,
+        "implemented": false,
+        "reason": "URL-engine evidence pass; not part of the snapshot contract.",
+        "detail": {
+          "reason": "URL-engine evidence pass; not part of the snapshot contract.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "reveal-sweep",
+        "title": "Pre-capture scroll/reveal sweep and overlay settling",
+        "state": "uncovered",
+        "requiredForCleanVerdict": true,
+        "implemented": false,
+        "reason": "Content revealed only by scrolling is not measured; reveal-on-scroll findings cannot be produced or excluded.",
+        "detail": {
+          "reason": "Content revealed only by scrolling is not measured; reveal-on-scroll findings cannot be produced or excluded.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "content-hidden-at-rest-measure",
+        "title": "Hidden-text measurement with scroll probes (URL engine step)",
+        "state": "uncovered",
+        "requiredForCleanVerdict": true,
+        "implemented": false,
+        "reason": "The URL engine's hidden-text step is not ported; scroll-probe needs are surfaced but never answered by Floe v1.",
+        "detail": {
+          "reason": "The URL engine's hidden-text step is not ported; scroll-probe needs are surfaced but never answered by Floe v1.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "consent-overlay-hiding",
+        "title": "Consent banner / page overlay hiding before capture",
+        "state": "uncovered",
+        "requiredForCleanVerdict": false,
+        "implemented": false,
+        "reason": "Requires live page mutation; Floe keeps the page untouched.",
+        "detail": {
+          "reason": "Requires live page mutation; Floe keeps the page untouched.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "script-errors",
+        "title": "Console/script error capture",
+        "state": "uncovered",
+        "requiredForCleanVerdict": true,
+        "implemented": false,
+        "reason": "Needs a console channel; not part of the fixed measurement contract.",
+        "detail": {
+          "reason": "Needs a console channel; not part of the fixed measurement contract.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "cross-origin-iframe",
+        "title": "Cross-origin frame content",
+        "state": "uncovered",
+        "requiredForCleanVerdict": true,
+        "implemented": false,
+        "reason": "SnapshotDom carries no frame content and WebKit isolation forbids cross-origin reads.",
+        "detail": {
+          "reason": "SnapshotDom carries no frame content and WebKit isolation forbids cross-origin reads.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "same-origin-iframe",
+        "title": "Same-origin frame content",
+        "state": "uncovered",
+        "requiredForCleanVerdict": true,
+        "implemented": false,
+        "reason": "The upstream capture producer never traverses iframes; rules inside frames are lost, not passed.",
+        "detail": {
+          "reason": "The upstream capture producer never traverses iframes; rules inside frames are lost, not passed.",
+          "implemented": false
+        }
+      },
+      {
+        "id": "media-intrinsics",
+        "title": "Image/video natural size and load state",
+        "state": "not-asked",
+        "requiredForCleanVerdict": false,
+        "implemented": true,
+        "detail": {
+          "mediaElements": 0
+        }
+      },
+      {
+        "id": "animations",
+        "title": "Running animation/transition properties",
+        "state": "unrecorded",
+        "requiredForCleanVerdict": false,
+        "implemented": true,
+        "detail": {
+          "note": "Driven by the snapshot `anim` flag."
+        }
+      },
+      {
+        "id": "shadow-trees",
+        "title": "Open shadow tree flat walk",
+        "state": "unrecorded",
+        "requiredForCleanVerdict": false,
+        "implemented": true,
+        "detail": {
+          "note": "Driven by the snapshot `shadow` flag."
+        }
+      },
+      {
+        "id": "text-lines",
+        "title": "Per-line rendered text rects",
+        "state": "unrecorded",
+        "requiredForCleanVerdict": true,
+        "implemented": true,
+        "detail": {
+          "note": "Without `textLines` the line-level rules stand down; that is a coverage loss, not a pass."
+        }
+      },
+      {
+        "id": "keyframes-and-linked-css",
+        "title": "@keyframes rules and readable linked stylesheet corpus",
+        "state": "unrecorded",
+        "requiredForCleanVerdict": false,
+        "implemented": true,
+        "detail": {
+          "keyframesRecorded": false,
+          "linkedCssRecorded": false
+        }
+      }
+    ],
+    "uncoveredRequired": [
+      "core-rule-pass",
+      "hit-test-fixpoint",
+      "style-parity",
+      "scroll-probes",
+      "pixel-contrast",
+      "reveal-sweep",
+      "content-hidden-at-rest-measure",
+      "script-errors",
+      "cross-origin-iframe",
+      "same-origin-iframe",
+      "text-lines"
+    ],
+    "unknownStyleProps": [],
+    "cleanCapable": false
+  },
+  "needs": null,
+  "findings": null,
+  "diagnostics": {
+    "strictSchema": true
+  },
+  "error": {
+    "code": "identity-untrusted-producer",
+    "message": "producerTrust must be \"native-fixed-script\"; only the fixed audited native producer is trusted",
+    "detail": {
+      "producerTrust": "model-declared"
+    }
+  }
+}

@@ -41,6 +41,7 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 import hubcore
+import runtime_dependency
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
 
@@ -76,9 +77,16 @@ def load_registry(root=REPO):
 
 
 def bind_package(entry, packages_root):
-    """Compute the released package binding from immutable archive bytes."""
+    """Compute the released package binding from immutable archive bytes.
+
+    When the archive embeds references/engine-dependency.json (the managed raw
+    runtime descriptor), it is strictly validated against the frozen tree
+    descriptor and the actual artifact bytes at packages_root — the same
+    immutable root the archive itself came from (release: the frozen X
+    snapshot; preview: the candidate tree).
+    """
     if not entry["status"]["packaged"]:
-        return None, None
+        return None, None, None
     if entry["upstream"] and entry["upstream"]["licenseStatus"] == "blocked-no-upstream-license":
         raise hubcore.HubError(f"{entry['id']}: license-blocked entries can never be packaged")
     version = entry["versionTarget"]
@@ -106,7 +114,10 @@ def bind_package(entry, packages_root):
             "contentDigest": hubcore.content_digest(files),
             "containsScripts": any(n.startswith("scripts/") for n in files),
         }
-    return bindings, manifest
+    runtime_blob = files.get(runtime_dependency.EMBEDDED_DESCRIPTOR_REL)
+    if runtime_blob is not None:
+        runtime_dependency.bind_package_descriptor(runtime_blob, packages_root, entry["id"])
+    return bindings, manifest, files
 
 
 def bind_review(entry, reviews_root, public_keys, package_binding=None, manifest=None,
@@ -150,7 +161,7 @@ def build(registry, mode, source_commit, packages_root, reviews_root, public_key
             if mode == "release":
                 if not reg_entry["status"]["qualified"]:
                     continue  # a release catalog carries only qualified entries
-                package_bindings, manifest = bind_package(reg_entry, packages_root)
+                package_bindings, manifest, files = bind_package(reg_entry, packages_root)
                 if package_bindings is None:
                     raise hubcore.HubError(
                         f"{reg_entry['id']}: qualified entry is missing its package binding")
@@ -171,8 +182,31 @@ def build(registry, mode, source_commit, packages_root, reviews_root, public_key
                 runtime["pythonPackagesPlan"] = [p["spec"] for p in manifest["pythonPackages"]]
                 runtime["installPlatforms"] = [channel]
                 reg_entry = dict(reg_entry, plannedRuntime=runtime)
+                # Stage BOTH the exact validated frozen descriptor bytes and
+                # the raw artifact bytes into the publication output, each at
+                # its exact descriptor-relative path, so a fresh output root
+                # (Y) can bind the runtime package standalone without any
+                # manual descriptor copy. The bytes come ONLY from the frozen
+                # X snapshot already validated by bind_package — never from a
+                # mutable checkout (a stale/tampered candidate-tree descriptor
+                # can therefore never leak into Y) — and never via a broad
+                # recursive engine copy.
+                runtime_blob = files.get(runtime_dependency.EMBEDDED_DESCRIPTOR_REL)
+                if runtime_blob is not None:
+                    descriptor = runtime_dependency.parse_descriptor(
+                        runtime_blob, reg_entry["id"])
+                    artifact_rel = descriptor["artifact"]["path"]
+                    frozen_bytes = runtime_dependency.load_frozen_descriptor_bytes(
+                        packages_root, reg_entry["id"])
+                    if frozen_bytes != runtime_blob:
+                        raise hubcore.HubError(
+                            f"{reg_entry['id']}: frozen snapshot descriptor "
+                            f"disagrees with the authenticated embedded descriptor")
+                    out[runtime_dependency.FROZEN_DESCRIPTOR_REL] = frozen_bytes
+                    out[artifact_rel] = runtime_dependency.load_artifact(
+                        packages_root, descriptor, reg_entry["id"])
             elif reg_entry["status"]["packaged"]:
-                package_bindings, manifest = bind_package(reg_entry, packages_root)
+                package_bindings, manifest, _files = bind_package(reg_entry, packages_root)
                 if package_bindings is not None:
                     package = package_bindings[channel]
                     review = bind_review(reg_entry, reviews_root, public_keys,

@@ -1,0 +1,190 @@
+{
+  "checksTotal": 25,
+  "checksPassed": 25,
+  "failures": [],
+  "checks": [
+    {
+      "check": "the launcher maps riscv64 to the static musl triple",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "the launcher has no download path (curl)",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "the launcher has no download path (wget)",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "the launcher has no download path (https://github.com)",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "the launcher has no download path (releases/download)",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "the launcher has no download path (IMPECCABLE_DOWNLOAD_BASE)",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "the launcher keeps the upstream engine-probe handshake",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "the launcher exports the skill directory the verbs read",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "the launcher fails closed with exit 127",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "the launcher offers an opt-in digest gate",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "the launcher is valid POSIX shell",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "the Hub layout resolves without any environment variable",
+      "ok": true,
+      "detail": {
+        "exit": 0,
+        "stdout": "impeccable-engine 0.1.17+floe.1.0.0",
+        "stderr": ""
+      }
+    },
+    {
+      "check": "an explicit engine path is exec'd",
+      "ok": true,
+      "detail": {
+        "exit": 0,
+        "stdout": "impeccable-engine 0.1.17+floe.1.0.0"
+      }
+    },
+    {
+      "check": "a missing explicit engine fails closed instead of downloading",
+      "ok": true,
+      "detail": {
+        "exit": 127,
+        "stderr": "ches/<build-cache>/verify-launcher/does-not-exist/floe-impeccable is not an executable engine binary.\nThe Floe engine is installed and updated only by the Floe Skill Hub (signed catalog, digest-bound). This launcher never downloads one.\n"
+      }
+    },
+    {
+      "check": "a runtime-chosen engine directory resolves by triple",
+      "ok": true,
+      "detail": {
+        "exit": 0,
+        "stdout": "0.1.17+floe.1.0.0"
+      }
+    },
+    {
+      "check": "the digest gate passes for the verified binary",
+      "ok": true,
+      "detail": {
+        "exit": 0,
+        "stderr": ""
+      }
+    },
+    {
+      "check": "the digest gate refuses a tampered binary",
+      "ok": true,
+      "detail": {
+        "exit": 127,
+        "stderr": "launcher/tampered/engines/impeccable/dist/impeccable-0.1.17+floe.1.0.0/aarch64-apple-darwin/floe-impeccable\n  expected 81c58fe5f6eec3cfb915c217a6bbe25cf7ccf281d3348e30b82df81ec72cf595\n  actual   fddc1a89382daf89232713a5c90e20694417c312d6295fc5288b07d848311b91\n"
+      }
+    },
+    {
+      "check": "a PATH candidate that fails the handshake is not exec'd",
+      "ok": true,
+      "detail": {
+        "exit": 127,
+        "stdout": "",
+        "stderr": "d and updated only by the Floe Skill Hub (signed catalog, digest-bound). This launcher never downloads one.\nInstall the engine from the Hub, or set FLOE_IMPECCABLE_ENGINE to the verified binary path.\n"
+      }
+    },
+    {
+      "check": "a PATH candidate that answers the handshake is exec'd",
+      "ok": true,
+      "detail": {
+        "exit": 0,
+        "stdout": "impeccable-engine 0.0.0-fake\n"
+      }
+    },
+    {
+      "check": "the launcher ran on a riscv64 machine",
+      "ok": true,
+      "detail": [
+        "Linux",
+        "riscv64"
+      ]
+    },
+    {
+      "check": "the Hub layout resolves the riscv64 engine and execs it",
+      "ok": true,
+      "detail": {
+        "exit": "0",
+        "stdout": "impeccable-engine 0.1.17+floe.1.0.0",
+        "stderr": ""
+      }
+    },
+    {
+      "check": "a missing riscv64 engine fails closed with no download",
+      "ok": true,
+      "detail": {
+        "exit": "127",
+        "stderr": "floe-impeccable: FLOE_IMPECCABLE_ENGINE=/l/empty/missing is not an executable engine binary.\nThe Floe engine is installed and updated only by the Floe Skill Hub (signed catalog, digest-bound). This launcher never downloads one.\n"
+      }
+    },
+    {
+      "check": "the digest gate accepts the verified riscv64 binary",
+      "ok": true,
+      "detail": {
+        "exit": "0",
+        "stderr": ""
+      }
+    },
+    {
+      "check": "the digest gate refuses a tampered riscv64 binary",
+      "ok": true,
+      "detail": {
+        "exit": "127",
+        "stderr": "floe-impeccable: digest mismatch for /l/tampered/floe-impeccable\n  expected af8795bf9636e763541c58ef90ee889941e468f453ec6580c32a89a5a758b87b\n  actual   9ba515cf3f4b81e9c16fb9abc56887059789009f32f91fecbf44901b240370e7\n"
+      }
+    },
+    {
+      "check": "a real snapshot scan runs through the launcher on riscv64 and returns Needs",
+      "ok": true,
+      "detail": {
+        "exit": "3",
+        "status": "needs-facts",
+        "points": 169
+      }
+    }
+  ],
+  "ok": true,
+  "launcher": "<hub-root>/sources/impeccable/scripts/floe-impeccable",
+  "launcherSha256": "b317617bb9f473a4d80b3477543d015f8d7d2645f63f0998acbce43bcbf58cc4",
+  "hostBinary": {
+    "path": "<build-cache>/host/aarch64-apple-darwin/debug/floe-impeccable",
+    "sha256": "81c58fe5f6eec3cfb915c217a6bbe25cf7ccf281d3348e30b82df81ec72cf595"
+  },
+  "riscv64Binary": {
+    "path": "<hub-root>/engines/impeccable/dist/impeccable-0.1.17+floe.1.0.0/riscv64gc-unknown-linux-musl/floe-impeccable",
+    "sha256": "af8795bf9636e763541c58ef90ee889941e468f453ec6580c32a89a5a758b87b"
+  },
+  "engineId": "impeccable-0.1.17+floe.1.0.0"
+}

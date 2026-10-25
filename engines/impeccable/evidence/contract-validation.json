@@ -1,0 +1,447 @@
+{
+  "contractDir": "<hub-root>/engines/impeccable/contract",
+  "upstream": "<scratch>/upstream",
+  "upstreamCommit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
+  "upstreamTree": "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72",
+  "engineVersion": "0.1.17",
+  "adapterVersion": "1.0.0",
+  "contractVersion": 1,
+  "checksTotal": 61,
+  "checksPassed": 61,
+  "failures": [],
+  "unimplementedRequiredPasses": [
+    "pixel-contrast",
+    "reveal-sweep",
+    "content-hidden-at-rest-measure",
+    "script-errors",
+    "cross-origin-iframe",
+    "same-origin-iframe"
+  ],
+  "digests": {
+    "snapshot-contract.v1.json": "baf2453164be6162703af9d671be16da152fa874db53ce95ad5b3516d40de4a3",
+    "producer/snapshot.schema.v1.json": "a0463585e7b167175d22482fcf4085131eeea38484efa9e73602f78d6402ff94",
+    "producer/facts.schema.v1.json": "b681b550d1f7fb31303db0f0b78c633ae3cb2b11e4f303aa583e77fe92762a8f",
+    "producer/identity.schema.v1.json": "568933906c53398437ef884710e356f141d0f98baab1253805656614515ee907",
+    "producer/result.schema.v1.json": "8a9db66d3725e6cd01eb332e0abb2388512d5cd61aba6c319577681f01d57bff",
+    "producer/style-props.v1.json": "6bcf54a6df96cf37e5be3f1f76948dd1d8913d611c9a705a7fdf50e309a53f95",
+    "producer/pseudo-props.v1.json": "a8893e759b862f23e97762d5e0743cfd67fc5463a08496e63889d1e7d57e70c1",
+    "producer/state-pseudos.v1.json": "537fff1d492181b2aa1878952c00acef64fcb3670b451d4624cd8fd3412b8fe1",
+    "producer/capture-limits.v1.json": "9d87ebb75cc14bedf783f1dbe0ddb8137a4422e36de2e957e0148b4ecfc1e821",
+    "fixtures/snapshot-positive.v1.json": "2c1fae27ef9135c2e70ba11cce028ddf48c46942f86483362830930821287de1",
+    "fixtures/snapshot-needs-hit-tests.v1.json": "4c9fec636a1c0d8a8bc593d963501dbd51aca147cba1e9e25fbd93179944127d",
+    "fixtures/config-default.v1.json": "be9906f3696a8a1e79da1e38d8e438d43ab4c32d8acbafc2c321d59283487456",
+    "fixtures/identity-positive.v1.json": "5b9c223a793cb12ccf5cf8e1e0efed35720fd7c5f0ffc038a6fbaefc75c98d9d",
+    "fixtures/identity-needs.v1.json": "bbcc122bd96c86c395c50a23c47db6d4bd7f7de7da99a83f35ee58a5fa38c08b",
+    "fixtures/facts-hit-tests.v1.json": "64c5cce236dfd9ba1396b65bbd560c42a8dc70cdc6c20330a73978faa2612560",
+    "fixtures/facts-shown-on-scroll.v1.json": "a6759293094c07e0d42dcb455f5d9f855ed8426961460592a74b89cb340de55a",
+    "fixtures/invalid/facts-bits-mismatch.v1.json": "f5610801c8a8cd6d0acc286a8f57cf255ae306017df173d3d23efe5afe762ea1",
+    "fixtures/invalid/facts-other-tab.v1.json": "23da0c5bdb2ecedbeb9be3a3031b0d4f1ae62011f7a3c15569ab983fa76f6c8f",
+    "fixtures/invalid/facts-stale-capture.v1.json": "67f2161549d616d2979d91693056ad6b981237c714fa7025066e6b8bc76f69ec",
+    "fixtures/invalid/identity-fenced.v1.json": "53450a1a0ec4ebf53032734cd1f1514eaed7a847c1121c30421718aade57d261",
+    "fixtures/invalid/identity-mismatch.v1.json": "204e7d04a6b97c5e8c9046e87830d3a7671c3aece409c332eae8a855f2deb633",
+    "fixtures/invalid/identity-missing-session-binding.v1.json": "c65ac3f53cb8247a795f2d6f80c82eb6a44d3a16ebf997c2ff38a135cf5eca1b",
+    "fixtures/invalid/identity-model-declared-trust.v1.json": "b31eae8e347dc1da2e03626e5c71029cb0fb16184febe3760e6931c39cba8490",
+    "fixtures/invalid/identity-redaction-not-applied.v1.json": "877ef30872338a47fd7399eb361503c8a342f192f93b3028b0a88bae64903dd9",
+    "fixtures/invalid/snapshot-bad-version.v1.json": "04d631c41d31a6874cc0562cb83cad5bcaace6b6ed6201edfe4e74f9090238be",
+    "fixtures/invalid/snapshot-style-column-mismatch.v1.json": "fb81a64a79c7b7234d4b2b7ff55320416e8818ef991ae00fd558dc657289d082",
+    "fixtures/invalid/snapshot-truncated.v1.json": "94695f564b3a419d490e223b2012871dea1342d6395f05744907a18eb0028414"
+  },
+  "checks": [
+    {
+      "check": "styleProps match pinned Rust STYLE_PROPS",
+      "ok": true,
+      "detail": {
+        "count": 138
+      }
+    },
+    {
+      "check": "pseudoProps match pinned Rust PSEUDO_PROPS",
+      "ok": true,
+      "detail": {
+        "count": 23
+      }
+    },
+    {
+      "check": "engineVersion matches pinned ENGINE_VERSION",
+      "ok": true,
+      "detail": "0.1.17"
+    },
+    {
+      "check": "contract styleProps equal producer styleProps",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "schema styleProps minItems equals column count",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "schema element style column is exactly one index per prop",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "schema state enum covers every state pseudo",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "budgets agree between contract and capture limits",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "upstream caps recorded",
+      "ok": true,
+      "detail": {
+        "maxElements": 30000,
+        "maxBytes": 50331648
+      }
+    },
+    {
+      "check": "every coverage pass has an id, states and a clean-verdict flag",
+      "ok": true,
+      "detail": {
+        "passes": 18
+      }
+    },
+    {
+      "check": "unimplemented passes that block a clean verdict are recorded",
+      "ok": true,
+      "detail": [
+        "pixel-contrast",
+        "reveal-sweep",
+        "content-hidden-at-rest-measure",
+        "script-errors",
+        "cross-origin-iframe",
+        "same-origin-iframe"
+      ]
+    },
+    {
+      "check": "no unimplemented pass claims a covered state",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "snapshot-positive.v1.json validates against snapshot.schema.v1",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "check": "snapshot-positive.v1.json carries one style index per column",
+      "ok": true,
+      "detail": {
+        "elements": 6
+      }
+    },
+    {
+      "check": "snapshot-positive.v1.json styleProps column list is the contract list",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "snapshot-positive.v1.json pseudoProps column list is the contract list",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "snapshot-positive.v1.json declares snapshot version 1",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "snapshot-positive.v1.json parent/child ids resolve inside the element table",
+      "ok": true,
+      "detail": {
+        "documentElement": 1,
+        "body": 4
+      }
+    },
+    {
+      "check": "snapshot-positive.v1.json child lists reference known ids or text",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "snapshot-needs-hit-tests.v1.json validates against snapshot.schema.v1",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "check": "snapshot-needs-hit-tests.v1.json carries one style index per column",
+      "ok": true,
+      "detail": {
+        "elements": 7
+      }
+    },
+    {
+      "check": "snapshot-needs-hit-tests.v1.json styleProps column list is the contract list",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "snapshot-needs-hit-tests.v1.json pseudoProps column list is the contract list",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "snapshot-needs-hit-tests.v1.json declares snapshot version 1",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "snapshot-needs-hit-tests.v1.json parent/child ids resolve inside the element table",
+      "ok": true,
+      "detail": {
+        "documentElement": 1,
+        "body": 4
+      }
+    },
+    {
+      "check": "snapshot-needs-hit-tests.v1.json child lists reference known ids or text",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "identity-positive.v1.json validates against identity.schema.v1",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "check": "identity-positive.v1.json carries the full native binding",
+      "ok": true,
+      "detail": {
+        "taskId": "task-fixture-0001",
+        "sessionId": "session-fixture-0001",
+        "tabId": "tab-fixture-0001",
+        "documentId": "doc-fixture-0001",
+        "captureId": "cap-fixture-positive-0001",
+        "documentGeneration": 1
+      }
+    },
+    {
+      "check": "identity-positive.v1.json binds the viewport and scroll",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "identity-positive.v1.json claims only the fixed native producer",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "identity-positive.v1.json records an applied redaction policy",
+      "ok": true,
+      "detail": {
+        "policy": "floe.impeccable.redaction.v1",
+        "applied": true,
+        "passwordInputs": 0,
+        "formValues": 0,
+        "credentialAttributes": [],
+        "textRuns": 0
+      }
+    },
+    {
+      "check": "identity-needs.v1.json validates against identity.schema.v1",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "check": "identity-needs.v1.json carries the full native binding",
+      "ok": true,
+      "detail": {
+        "taskId": "task-fixture-0001",
+        "sessionId": "session-fixture-0001",
+        "tabId": "tab-fixture-0001",
+        "documentId": "doc-fixture-0001",
+        "captureId": "cap-fixture-needs-0001",
+        "documentGeneration": 1
+      }
+    },
+    {
+      "check": "identity-needs.v1.json binds the viewport and scroll",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "identity-needs.v1.json claims only the fixed native producer",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "identity-needs.v1.json records an applied redaction policy",
+      "ok": true,
+      "detail": {
+        "policy": "floe.impeccable.redaction.v1",
+        "applied": true,
+        "passwordInputs": 0,
+        "formValues": 0,
+        "credentialAttributes": [],
+        "textRuns": 0
+      }
+    },
+    {
+      "check": "facts-hit-tests.v1.json validates against facts.schema.v1",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "check": "facts-hit-tests.v1.json is bound to the identity the needs were issued for",
+      "ok": true,
+      "detail": {
+        "taskId": "task-fixture-0001",
+        "sessionId": "session-fixture-0001",
+        "tabId": "tab-fixture-0001",
+        "documentId": "doc-fixture-0001",
+        "captureId": "cap-fixture-needs-0001"
+      }
+    },
+    {
+      "check": "facts-shown-on-scroll.v1.json validates against facts.schema.v1",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "check": "facts-shown-on-scroll.v1.json is bound to the identity the needs were issued for",
+      "ok": true,
+      "detail": {
+        "taskId": "task-fixture-0001",
+        "sessionId": "session-fixture-0001",
+        "tabId": "tab-fixture-0001",
+        "documentId": "doc-fixture-0001",
+        "captureId": "cap-fixture-needs-0001"
+      }
+    },
+    {
+      "check": "positive identity binds hostname and viewport to the snapshot",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "truncated snapshot is not parseable JSON",
+      "ok": true,
+      "detail": "Expecting ',' delimiter: line 1 column 4100 (char 4099)"
+    },
+    {
+      "check": "unsupported snapshot version is rejected by the schema",
+      "ok": true,
+      "detail": {
+        "v": 99
+      }
+    },
+    {
+      "check": "shortened styleProps column list is rejected by the schema",
+      "ok": true,
+      "detail": [
+        "['animationComposition', 'animationDelay', 'animationDirection', 'animationDuration', 'animationFillMode', 'animationIte"
+      ]
+    },
+    {
+      "check": "mismatched identity really differs from the snapshot binding",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "stale facts carry a different captureId than the needs identity",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "identity-missing-session-binding.v1.json is rejected for the missing binding fields",
+      "ok": true,
+      "detail": {
+        "dropped": [
+          "sessionId",
+          "tabId"
+        ],
+        "requiredErrors": [
+          "'sessionId' is a required property",
+          "'tabId' is a required property"
+        ]
+      }
+    },
+    {
+      "check": "identity-missing-session-binding.v1.json really omits ['sessionId', 'tabId']",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "identity without an applied redaction policy is rejected by the schema",
+      "ok": true,
+      "detail": [
+        "True was expected"
+      ]
+    },
+    {
+      "check": "model-declared producer trust is rejected by the schema",
+      "ok": true,
+      "detail": "model-declared"
+    },
+    {
+      "check": "a fenced capture identity is marked fenced",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "facts from another tab/session do not match the needs identity",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "bits-mismatch facts still validate structurally (the adapter must catch the bit drift)",
+      "ok": true,
+      "detail": "structural validation cannot catch a wrong xBits; the engine check is the gate"
+    },
+    {
+      "check": "result schema requires status, verdict and coverage",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "result schema forbids a clean verdict outside the documented enum",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "schema is frozen for native implementation",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "one deliberate upstream pin, no mixed bytes",
+      "ok": true,
+      "detail": {
+        "commit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
+        "tree": "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72"
+      }
+    },
+    {
+      "check": "pin authority is the tracked hub review baseline",
+      "ok": true,
+      "detail": "floe-skill-hub docs/UPSTREAM-PINS.json (reviewBaselineDate 2026-10-26)"
+    },
+    {
+      "check": "identity contract requires the native binding and fencing fields",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "identity contract states the privacy obligations",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "excluded upstream paths are recorded with an owner",
+      "ok": true,
+      "detail": [
+        "skills install/update/check/link",
+        "telemetry",
+        "generate-image / concept-seed / serve-question",
+        "live* / hook*",
+        "capture-server / component-review / font-match / build-phase",
+        "URL scan (--cdp, http targets)"
+      ]
+    }
+  ]
+}

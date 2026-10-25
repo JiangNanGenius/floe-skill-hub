@@ -17,6 +17,7 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import hubcore
+import runtime_dependency
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
 
@@ -47,6 +48,12 @@ def build_one(skill_id, entry, check, root=None):
         raise hubcore.HubError(f"{skill_id}: floe.json id mismatch")
     if entry["versionTarget"] != manifest["version"]:
         raise hubcore.HubError(f"{skill_id}: staged version differs from the registry target")
+    # A staged package embedding the managed raw runtime descriptor must match
+    # the frozen tree descriptor and the actual artifact bytes in the SAME tree
+    # (never a lookup elsewhere). No new permission flows from this data field.
+    runtime_blob = files.get(runtime_dependency.EMBEDDED_DESCRIPTOR_REL)
+    if runtime_blob is not None:
+        runtime_dependency.bind_package_descriptor(runtime_blob, root, skill_id)
     data = hubcore.make_zip(files)
     written = []
     for channel in entry["plannedRuntime"]["installPlatforms"]:

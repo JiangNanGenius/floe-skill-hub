@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Registry contract tests: 43 rows, pins, statuses, names and blockers."""
+import hashlib
 import json
 import pathlib
+import re
 import sys
 import unittest
 
@@ -66,20 +68,64 @@ class TestRegistry(unittest.TestCase):
         self.assertEqual(self.entries["impeccable"]["upstream"]["path"],
                          "plugin/skills/impeccable")
 
+    def assert_admitted_first_party_source(self, sid, required_phrases):
+        """Shared truth for first-party owned optional sources AFTER the
+        coordinator admitted the 34 complete ordinary sources at the source
+        freeze 4e1b3ff (2026-10-26): their own content is pinned by the actual
+        Hub source commit, not by fabricated upstream/firstParty pin blocks.
+        These replace the obsolete planning-state assertions that required
+        sourcePinned=False (and awaiting-implementation) forever."""
+        e = self.entries[sid]
+        # Identity stays honest: no fabricated upstream or firstParty pin.
+        self.assertEqual(e["source"], "F", sid)
+        self.assertIsNone(e["upstream"], sid)
+        self.assertIsNone(e["firstParty"], sid)
+        # Current admitted source state.
+        self.assertTrue(e["status"]["sourcePinned"], sid)
+        self.assertTrue(e["status"]["licenseChecked"], sid)
+        self.assertEqual(e["status"]["adaptation"], "frozen", sid)
+        # Approval gates stay closed until the real coordinator approval.
+        for pending in ("packaged", "reviewed", "qualified", "published",
+                        "executionVerified"):
+            self.assertFalse(e["status"][pending], f"{sid} claims {pending}")
+        self.assertTrue(e["notes"]["en"].strip() and e["notes"]["zh-Hans"].strip())
+        # Stronger positives: the actual owned source files exist and bind the
+        # registry row (valid manifest version/id).
+        source = REPO / "sources" / sid
+        skill = source / "SKILL.md"
+        self.assertTrue(skill.is_file() and skill.read_bytes().strip(), sid)
+        manifest = json.loads((source / "floe.json").read_bytes())
+        self.assertEqual(manifest["schemaVersion"], 1, sid)
+        self.assertEqual(manifest["id"], sid)
+        hubcore.require_version(manifest["version"], f"{sid} manifest version")
+        self.assertEqual(manifest["version"], e["versionTarget"], sid)
+        # Recorded provenance: original candidate identity and no-upstream
+        # bytes are documented, plus the full ownership notice and license.
+        provenance = (source / "references/PROVENANCE.md").read_text()
+        for phrase in required_phrases:
+            self.assertIn(phrase, provenance, f"{sid}: {phrase!r}")
+        self.assertTrue((source / "references/licenses/FLOE-OWNED-NOTICE.md").is_file())
+        self.assertTrue((source / "references/licenses/FLOE-LICENSE.txt").is_file())
+        # Re-provenance against the committed checkout bytes: every per-file
+        # sha256 recorded in PROVENANCE.md must still match what is on disk,
+        # so a silent source drift breaks this regression.
+        inventory = re.findall(r"`([^`]+)` sha256 `([0-9a-f]{64})`", provenance)
+        self.assertTrue(inventory, f"{sid}: no per-file hash inventory")
+        for rel, sha in inventory:
+            path = source / rel
+            self.assertTrue(path.is_file(), f"{sid}: inventory lists missing {rel}")
+            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), sha,
+                             f"{sid}: committed bytes drifted for {rel}")
+
     def test_unlicensed_candidates_use_documented_first_party_replacements(self):
+        # The five license-blocked upstream candidates were replaced by
+        # first-party owned content (no upstream bytes) and admitted at the
+        # 4e1b3ff source freeze; the row identity is preserved and every
+        # approval flag stays false.
         for sid in EXPECTED_ORIGINAL_REPLACEMENTS:
-            e = self.entries[sid]
-            self.assertEqual(e["source"], "F")
-            self.assertIsNone(e["upstream"])
-            self.assertIsNone(e["firstParty"])
-            self.assertFalse(e["status"]["sourcePinned"])
-            self.assertTrue(e["status"]["licenseChecked"])
-            self.assertTrue(e["notes"]["en"].strip() and e["notes"]["zh-Hans"].strip())
-            source = REPO / "sources" / sid
-            provenance = (source / "references/PROVENANCE.md").read_text()
-            self.assertIn("Original candidate identity", provenance)
-            self.assertIn("No upstream bytes", provenance)
-            self.assertTrue((source / "references/licenses/FLOE-OWNED-NOTICE.md").is_file())
+            with self.subTest(sid=sid):
+                self.assert_admitted_first_party_source(
+                    sid, ("Original candidate identity", "No upstream bytes"))
 
     def test_verified_status_requires_evidence_path(self):
         for e in REGISTRY["skills"]:
@@ -87,12 +133,39 @@ class TestRegistry(unittest.TestCase):
                 self.assertTrue(e["upstream"]["licenseEvidencePath"])
 
     def test_first_party_pending_entries_have_no_fabricated_pin(self):
+        # These three first-party guides were still "awaiting-implementation"
+        # when this regression was written; the coordinator has since admitted
+        # their complete owned sources (4e1b3ff). The anti-fabrication core is
+        # kept verbatim (upstream/firstParty must stay null); the obsolete
+        # planning-state lines are replaced by the current-source positives.
         for sid in EXPECTED_FIRST_PARTY_PENDING:
-            e = self.entries[sid]
-            self.assertIsNone(e["upstream"])
-            self.assertIsNone(e["firstParty"])
-            self.assertFalse(e["status"]["sourcePinned"])
-            self.assertEqual(e["status"]["adaptation"], "awaiting-implementation")
+            with self.subTest(sid=sid):
+                self.assert_admitted_first_party_source(
+                    sid, ("first-party", "No upstream sources were copied"))
+
+    def test_synthetic_qualification_without_prerequisites_is_rejected(self):
+        # Negatives stay real: a row may not claim qualification stages it has
+        # not earned, no matter what the source files look like on disk.
+        for field in ("qualified", "published"):
+            with self.subTest(field=field):
+                broken = json.loads(json.dumps(REGISTRY))
+                target = next(e for e in broken["skills"]
+                              if e["id"] == "doc-coauthoring")
+                target["status"][field] = True
+                with self.assertRaises(hubcore.HubError):
+                    hubcore.validate_registry(broken)
+        broken = json.loads(json.dumps(REGISTRY))
+        target = next(e for e in broken["skills"]
+                      if e["plannedRuntime"]["scriptRuntime"] != "none")
+        target["plannedRuntime"]["execution"]["evidence"] = "guest-verified"
+        with self.assertRaisesRegex(hubcore.HubError, "executionVerified"):
+            hubcore.validate_registry(broken)
+        broken = json.loads(json.dumps(REGISTRY))
+        row = next(e for e in broken["skills"] if e["id"] == "doc-coauthoring")
+        row["status"]["licenseChecked"] = False
+        row["status"]["reviewed"] = True  # reviewed requires a completed license check
+        with self.assertRaisesRegex(hubcore.HubError, "license check"):
+            hubcore.validate_registry(broken)
 
     def test_builtin_released_and_staged_versions_kept_distinct(self):
         office = self.entries["floe-office"]["firstParty"]

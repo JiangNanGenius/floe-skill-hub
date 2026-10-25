@@ -1,0 +1,544 @@
+{
+  "ok": true,
+  "appCommit": "6940f196b871c2dce15f26b45b08fadbe2e4b8c6",
+  "hubPin": {
+    "commit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
+    "tree": "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72",
+    "engineVersion": "0.1.17",
+    "engineId": "impeccable-0.1.17+floe.1.0.0"
+  },
+  "contractVersion": 1,
+  "vendoredContractFiles": {
+    "contract-snapshot-contract.v1.json": {
+      "sha256": "baf2453164be6162703af9d671be16da152fa874db53ce95ad5b3516d40de4a3",
+      "bytes": 22378,
+      "hubFile": "snapshot-contract.v1.json",
+      "identical": true
+    },
+    "snapshot.schema.v1.json": {
+      "sha256": "a0463585e7b167175d22482fcf4085131eeea38484efa9e73602f78d6402ff94",
+      "bytes": 7590,
+      "hubFile": "producer/snapshot.schema.v1.json",
+      "identical": true
+    },
+    "facts.schema.v1.json": {
+      "sha256": "b681b550d1f7fb31303db0f0b78c633ae3cb2b11e4f303aa583e77fe92762a8f",
+      "bytes": 2614,
+      "hubFile": "producer/facts.schema.v1.json",
+      "identical": true
+    },
+    "identity.schema.v1.json": {
+      "sha256": "568933906c53398437ef884710e356f141d0f98baab1253805656614515ee907",
+      "bytes": 3236,
+      "hubFile": "producer/identity.schema.v1.json",
+      "identical": true
+    },
+    "result.schema.v1.json": {
+      "sha256": "8a9db66d3725e6cd01eb332e0abb2388512d5cd61aba6c319577681f01d57bff",
+      "bytes": 4414,
+      "hubFile": "producer/result.schema.v1.json",
+      "identical": true
+    },
+    "style-props.v1.json": {
+      "sha256": "6bcf54a6df96cf37e5be3f1f76948dd1d8913d611c9a705a7fdf50e309a53f95",
+      "bytes": 3283,
+      "hubFile": "producer/style-props.v1.json",
+      "identical": true
+    },
+    "pseudo-props.v1.json": {
+      "sha256": "a8893e759b862f23e97762d5e0743cfd67fc5463a08496e63889d1e7d57e70c1",
+      "bytes": 887,
+      "hubFile": "producer/pseudo-props.v1.json",
+      "identical": true
+    },
+    "state-pseudos.v1.json": {
+      "sha256": "537fff1d492181b2aa1878952c00acef64fcb3670b451d4624cd8fd3412b8fe1",
+      "bytes": 1079,
+      "hubFile": "producer/state-pseudos.v1.json",
+      "identical": true
+    },
+    "capture-limits.v1.json": {
+      "sha256": "9d87ebb75cc14bedf783f1dbe0ddb8137a4422e36de2e957e0148b4ecfc1e821",
+      "bytes": 834,
+      "hubFile": "producer/capture-limits.v1.json",
+      "identical": true
+    }
+  },
+  "nativeProducer": {
+    "bytes": 55565,
+    "sha256": "5bfbcee7edd70d40ee562eeefabe416c62d2f4ab8b9a48de5be7afebceb8a89f",
+    "upstreamPrefixBytes": 40590,
+    "upstreamPrefixSha256": "99801a23f5e7ac4018edbea4cc6e6b790ed9890768bb2e632f892f42c9bd819a",
+    "upstreamFullFileSha256": "b97e055fa25eaba1186cee5174899be13efcfc82ab6c133e9306ed5791d3aef0",
+    "upstreamFullFileBytes": 40591,
+    "floeAdapterBytes": 14974,
+    "floeAdapterSha256": "4ce19da85104ee82820d624db562799f41ecfb9d9362779276bb4873dedfa791",
+    "note": "the pinned upstream file is 40591 bytes ending in a newline; the App embeds the first 40590 bytes verbatim (sha256 99801a23f5e7) and appends the Floe adapter after one separator newline (sha256 4ce19da85104). The contract's pinnedSourceDigests entry b97e055fa25e is the FULL upstream file digest, not the embedded prefix digest."
+  },
+  "checksTotal": 86,
+  "checksPassed": 86,
+  "failures": [],
+  "checks": [
+    {
+      "check": "the App's contract-snapshot-contract.v1.json is byte-identical to the frozen contract",
+      "ok": true,
+      "detail": {
+        "app": "baf2453164be6162",
+        "hub": "baf2453164be6162"
+      }
+    },
+    {
+      "check": "the App's snapshot.schema.v1.json is byte-identical to the frozen contract",
+      "ok": true,
+      "detail": {
+        "app": "a0463585e7b16717",
+        "hub": "a0463585e7b16717"
+      }
+    },
+    {
+      "check": "the App's facts.schema.v1.json is byte-identical to the frozen contract",
+      "ok": true,
+      "detail": {
+        "app": "b681b550d1f7fb31",
+        "hub": "b681b550d1f7fb31"
+      }
+    },
+    {
+      "check": "the App's identity.schema.v1.json is byte-identical to the frozen contract",
+      "ok": true,
+      "detail": {
+        "app": "568933906c533984",
+        "hub": "568933906c533984"
+      }
+    },
+    {
+      "check": "the App's result.schema.v1.json is byte-identical to the frozen contract",
+      "ok": true,
+      "detail": {
+        "app": "8a9db66d3725e6cd",
+        "hub": "8a9db66d3725e6cd"
+      }
+    },
+    {
+      "check": "the App's style-props.v1.json is byte-identical to the frozen contract",
+      "ok": true,
+      "detail": {
+        "app": "6bcf54a6df96cf37",
+        "hub": "6bcf54a6df96cf37"
+      }
+    },
+    {
+      "check": "the App's pseudo-props.v1.json is byte-identical to the frozen contract",
+      "ok": true,
+      "detail": {
+        "app": "a8893e759b862f23",
+        "hub": "a8893e759b862f23"
+      }
+    },
+    {
+      "check": "the App's state-pseudos.v1.json is byte-identical to the frozen contract",
+      "ok": true,
+      "detail": {
+        "app": "537fff1d492181b2",
+        "hub": "537fff1d492181b2"
+      }
+    },
+    {
+      "check": "the App's capture-limits.v1.json is byte-identical to the frozen contract",
+      "ok": true,
+      "detail": {
+        "app": "9d87ebb75cc14bed",
+        "hub": "9d87ebb75cc14bed"
+      }
+    },
+    {
+      "check": "the native code hardcodes the same upstream commit",
+      "ok": true,
+      "detail": "4fc2f83e1c8710dba772bfd4523d0efab57737b6"
+    },
+    {
+      "check": "the native code hardcodes the same upstream tree",
+      "ok": true,
+      "detail": "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72"
+    },
+    {
+      "check": "the native code hardcodes the same engine version",
+      "ok": true,
+      "detail": "0.1.17"
+    },
+    {
+      "check": "the native model declares contract name",
+      "ok": true,
+      "detail": "name = \"floe.impeccable.snapshot\""
+    },
+    {
+      "check": "the native model declares contract version",
+      "ok": true,
+      "detail": "contractVersion = 1"
+    },
+    {
+      "check": "the native model declares the only accepted producer trust",
+      "ok": true,
+      "detail": "producerTrust = \"native-fixed-script\""
+    },
+    {
+      "check": "the native model declares redaction policy",
+      "ok": true,
+      "detail": "redactionPolicy = \"floe.impeccable.redaction.v1\""
+    },
+    {
+      "check": "the native model declares producer engine",
+      "ok": true,
+      "detail": "producerEngine = \"WebKit\""
+    },
+    {
+      "check": "the native model declares style column count",
+      "ok": true,
+      "detail": "stylePropCount = 138"
+    },
+    {
+      "check": "the native model declares pseudo column count",
+      "ok": true,
+      "detail": "pseudoPropCount = 23"
+    },
+    {
+      "check": "the native model declares state pseudo count",
+      "ok": true,
+      "detail": "statePseudoCount = 31"
+    },
+    {
+      "check": "the native model declares 48 MiB snapshot budget",
+      "ok": true,
+      "detail": "maxSnapshotBytes: 50_331_648"
+    },
+    {
+      "check": "the native model declares element budget",
+      "ok": true,
+      "detail": "maxElements: 30_000"
+    },
+    {
+      "check": "the native model declares round budget",
+      "ok": true,
+      "detail": "maxRounds: 4"
+    },
+    {
+      "check": "the native model declares per-round hit-test budget",
+      "ok": true,
+      "detail": "maxHitTestsPerRound: 4_096"
+    },
+    {
+      "check": "the native model declares total hit-test budget",
+      "ok": true,
+      "detail": "maxHitTestsTotal: 16_384"
+    },
+    {
+      "check": "the native model declares timeout budget",
+      "ok": true,
+      "detail": "timeoutMs: 120_000"
+    },
+    {
+      "check": "the native model declares exit 0 clean",
+      "ok": true,
+      "detail": "case clean = 0"
+    },
+    {
+      "check": "the native model declares exit 1 failure",
+      "ok": true,
+      "detail": "case failure = 1"
+    },
+    {
+      "check": "the native model declares exit 2 findings",
+      "ok": true,
+      "detail": "case findings = 2"
+    },
+    {
+      "check": "the native model declares exit 3 needs-facts",
+      "ok": true,
+      "detail": "case needsFacts = 3"
+    },
+    {
+      "check": "the native model declares exit 4 inconclusive",
+      "ok": true,
+      "detail": "case inconclusive = 4"
+    },
+    {
+      "check": "the native model declares exact-bit hit-test channel",
+      "ok": true,
+      "detail": "hitTestsBits"
+    },
+    {
+      "check": "the native model declares unanswerable points are reported, not answered",
+      "ok": true,
+      "detail": "unanswerable"
+    },
+    {
+      "check": "the native model declares result finding count",
+      "ok": true,
+      "detail": "findingCount"
+    },
+    {
+      "check": "the native model declares coverage blockers",
+      "ok": true,
+      "detail": "uncoveredRequired"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `contract`",
+      "ok": true,
+      "detail": "contract"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `contractVersion`",
+      "ok": true,
+      "detail": "contractVersion"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `status`",
+      "ok": true,
+      "detail": "status"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `verdict`",
+      "ok": true,
+      "detail": "verdict"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `identityCheck`",
+      "ok": true,
+      "detail": "identityCheck"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `budget`",
+      "ok": true,
+      "detail": "budget"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `coverage`",
+      "ok": true,
+      "detail": "coverage"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `needs`",
+      "ok": true,
+      "detail": "needs"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `findings`",
+      "ok": true,
+      "detail": "findings"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `error`",
+      "ok": true,
+      "detail": "error"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `hitTests`",
+      "ok": true,
+      "detail": "hitTests"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `hitTestsBits`",
+      "ok": true,
+      "detail": "hitTestsBits"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `scrollProbes`",
+      "ok": true,
+      "detail": "scrollProbes"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `round`",
+      "ok": true,
+      "detail": "round"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `taskId`",
+      "ok": true,
+      "detail": "taskId"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `sessionId`",
+      "ok": true,
+      "detail": "sessionId"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `tabId`",
+      "ok": true,
+      "detail": "tabId"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `documentId`",
+      "ok": true,
+      "detail": "documentId"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `captureId`",
+      "ok": true,
+      "detail": "captureId"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `documentGeneration`",
+      "ok": true,
+      "detail": "documentGeneration"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `fenced`",
+      "ok": true,
+      "detail": "fenced"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `hits`",
+      "ok": true,
+      "detail": "hits"
+    },
+    {
+      "check": "the native model names the result/needs/facts key `shownOnScroll`",
+      "ok": true,
+      "detail": "shownOnScroll"
+    },
+    {
+      "check": "the capture receipt carries `captureId`",
+      "ok": true,
+      "detail": "captureId"
+    },
+    {
+      "check": "the capture receipt carries `binding`",
+      "ok": true,
+      "detail": "binding"
+    },
+    {
+      "check": "the capture receipt carries `bridgeRootIsTaskWorkspace`",
+      "ok": true,
+      "detail": "bridgeRootIsTaskWorkspace"
+    },
+    {
+      "check": "the capture receipt carries `relativeDirectory`",
+      "ok": true,
+      "detail": "relativeDirectory"
+    },
+    {
+      "check": "the capture receipt carries `relativeSnapshotFile`",
+      "ok": true,
+      "detail": "relativeSnapshotFile"
+    },
+    {
+      "check": "the capture receipt carries `relativeIdentityFile`",
+      "ok": true,
+      "detail": "relativeIdentityFile"
+    },
+    {
+      "check": "the capture receipt carries `documentGeneration`",
+      "ok": true,
+      "detail": "documentGeneration"
+    },
+    {
+      "check": "the capture receipt carries `elementCount`",
+      "ok": true,
+      "detail": "elementCount"
+    },
+    {
+      "check": "the capture receipt carries `snapshotBytes`",
+      "ok": true,
+      "detail": "snapshotBytes"
+    },
+    {
+      "check": "the capture receipt carries `viewport`",
+      "ok": true,
+      "detail": "viewport"
+    },
+    {
+      "check": "the capture receipt carries `scroll`",
+      "ok": true,
+      "detail": "scroll"
+    },
+    {
+      "check": "the capture receipt carries `redaction`",
+      "ok": true,
+      "detail": "redaction"
+    },
+    {
+      "check": "the capture receipt carries `scriptDigest`",
+      "ok": true,
+      "detail": "scriptDigest"
+    },
+    {
+      "check": "the bridge file naming uses `snapshot.v1.json`",
+      "ok": true,
+      "detail": "snapshot.v1.json"
+    },
+    {
+      "check": "the bridge file naming uses `identity.v1.json`",
+      "ok": true,
+      "detail": "identity.v1.json"
+    },
+    {
+      "check": "the bridge file naming uses `facts.round`",
+      "ok": true,
+      "detail": "facts.round"
+    },
+    {
+      "check": "the engine is invoked through the resolved Linux exec.shell, not in-process",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "check": "browser.observe exposes the design action `\"design\"`",
+      "ok": true,
+      "detail": "\"design\""
+    },
+    {
+      "check": "browser.observe exposes the design action `designAction`",
+      "ok": true,
+      "detail": "designAction"
+    },
+    {
+      "check": "browser.observe exposes the design action `captureID`",
+      "ok": true,
+      "detail": "captureID"
+    },
+    {
+      "check": "browser.observe exposes the design action `needsFile`",
+      "ok": true,
+      "detail": "needsFile"
+    },
+    {
+      "check": "browser.observe exposes the design action `\"capture\"`",
+      "ok": true,
+      "detail": "\"capture\""
+    },
+    {
+      "check": "browser.observe exposes the design action `\"facts\"`",
+      "ok": true,
+      "detail": "\"facts\""
+    },
+    {
+      "check": "browser.observe exposes the design action `\"release\"`",
+      "ok": true,
+      "detail": "\"release\""
+    },
+    {
+      "check": "browser.observe exposes the design action `relativeFactsFile`",
+      "ok": true,
+      "detail": "relativeFactsFile"
+    },
+    {
+      "check": "the producer manifest digest matches the vendored producer bytes",
+      "ok": true,
+      "detail": "5bfbcee7edd70d40"
+    },
+    {
+      "check": "the producer's prefix is the verbatim pinned upstream capture script",
+      "ok": true,
+      "detail": {
+        "prefixBytes": 40590,
+        "prefixSha256": "99801a23f5e7ac4018edbea4cc6e6b790ed9890768bb2e632f892f42c9bd819a",
+        "upstreamFullSha256": "b97e055fa25eaba1186cee5174899be13efcfc82ab6c133e9306ed5791d3aef0"
+      }
+    },
+    {
+      "check": "the producer manifest records the Floe adapter digest",
+      "ok": true,
+      "detail": "4ce19da85104ee82"
+    }
+  ]
+}

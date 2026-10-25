@@ -7,15 +7,18 @@ Checks performed (fail closed, aggregate report):
   3. schema documents are byte-stable against the validator (gen_schemas --check)
   4. fixture sample rebuilds identically and every signature/digest/join verifies
   5. production publication, when any production artifact exists, is verified
-     standalone from the published bytes: both channel feed+signature pairs,
-     each signature exact-byte verified under the configured public-key.json
-     trust (never the fixture identity), canonical schema-valid feeds carrying
-     a 40-hex audited sourceCommit X (external publication pin Y is where these
-     bytes live; X is never compared against a mutable HEAD), and every bound
-     package/review re-joined against the actual published archive and record
-     bytes. A valid publication is NOT invalidated by pending candidate-HEAD
-     changes, and an unreviewed candidate can never carry an install offer
-     inside the signed feed.
+      standalone from the published bytes: both channel feed+signature pairs,
+      each signature exact-byte verified under the configured public-key.json
+      trust (never the fixture identity), canonical schema-valid feeds carrying
+      a 40-hex audited sourceCommit X (external publication pin Y is where these
+      bytes live; X is never compared against a mutable HEAD), and every bound
+      package/review re-joined against the actual published archive and record
+      bytes. A package embedding references/engine-dependency.json
+      additionally binds the managed raw runtime descriptor and artifact bytes
+      at Y (strict known-component gate, exact size/SHA/static-ELF). A valid
+      publication is NOT invalidated by pending candidate-HEAD changes, and an
+      unreviewed candidate can never carry an install offer inside the signed
+      feed.
   6. staged sources (content lanes) package cleanly and immutably
   7. legacy four-item view renders only from qualified builtins — otherwise
      honestly reports it as pending
@@ -33,6 +36,7 @@ HERE = pathlib.Path(__file__).resolve()
 sys.path.insert(0, str(HERE.parent))
 import hubcore
 import make_fixture
+import runtime_dependency
 
 REPO = HERE.parents[1]
 
@@ -178,6 +182,20 @@ def check_production(reasons):
                         continue
                 except (ValueError, hubcore.HubError) as error:
                     fail(reasons, f"{field}: signed review chain failed: {error}")
+            # Managed raw runtime artifact binding: when the authenticated
+            # package embeds references/engine-dependency.json, the published
+            # frozen descriptor at Y must match it byte-identically and the
+            # referenced raw artifact must exist at Y with the exact size,
+            # SHA-256 and safe static-ELF shape. Reads only the published
+            # bytes — never a mutable candidate HEAD.
+            if files is not None:
+                runtime_blob = files.get(runtime_dependency.EMBEDDED_DESCRIPTOR_REL)
+                if runtime_blob is not None:
+                    try:
+                        runtime_dependency.bind_package_descriptor(
+                            runtime_blob, REPO, field)
+                    except hubcore.HubError as error:
+                        fail(reasons, f"{field}: runtime artifact binding failed: {error}")
 
 
 def check_sources(reasons):

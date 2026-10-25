@@ -1,0 +1,71 @@
+{
+  "claim": "the guest artifact is reproducible from the pinned source with the recorded toolchain",
+  "engineId": "impeccable-0.1.17+floe.1.0.0",
+  "pin": {
+    "commit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
+    "tree": "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72",
+    "engineVersion": "0.1.17"
+  },
+  "runs": [
+    {
+      "role": "primary",
+      "cargoTargetDir": "<build-cache>/riscv64",
+      "elapsedSeconds": 46.15,
+      "exitCode": 0,
+      "artifactSha256": "af8795bf9636e763541c58ef90ee889941e468f453ec6580c32a89a5a758b87b",
+      "artifactBytes": 5579704,
+      "rustflags": "-C target-feature=+crt-static -C link-self-contained=no --remap-path-prefix=<build-tree>=/build --remap-path-prefix=<cargo-target-dir>=/target --remap-path-prefix=<home>/.cargo/registry=/registry --remap-path-prefix=<home>/.rustup=/rustup --remap-path-prefix=<home>=/home"
+    },
+    {
+      "role": "cold-rebuild-fresh-cache",
+      "cargoTargetDir": "<build-cache>/riscv64-repro",
+      "cratesCompiled": 130,
+      "elapsedSeconds": 48.3,
+      "exitCode": 0,
+      "artifactSha256": "af8795bf9636e763541c58ef90ee889941e468f453ec6580c32a89a5a758b87b",
+      "artifactBytes": 5579704,
+      "rustflags": "-C target-feature=+crt-static -C link-self-contained=no --remap-path-prefix=<build-tree>=/build --remap-path-prefix=<cargo-target-dir>=/target --remap-path-prefix=<home>/.cargo/registry=/registry --remap-path-prefix=<home>/.rustup=/rustup --remap-path-prefix=<home>=/home"
+    }
+  ],
+  "byteIdentical": true,
+  "hostComparisonBuild": {
+    "target": "aarch64-apple-darwin",
+    "profile": "dev",
+    "artifactSha256": "079c102abecdf5157a9ab947cb0fbdff1d37b4d3db4aff422834d375d73fd86a",
+    "artifactBytes": 32791120,
+    "tests": {
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "<shared-build-wrapper>",
+        "--",
+        "cargo",
+        "test",
+        "--package",
+        "floe-impeccable",
+        "--target",
+        "aarch64-apple-darwin"
+      ],
+      "target": "aarch64-apple-darwin",
+      "exitCode": 0,
+      "passed": 38,
+      "failed": 0,
+      "log": "<log-dir>/cargo-test-host.log",
+      "logSha256": "9a6bf5f6ccb888b4d93c8c526a8ed511b983a3a74d47e720d5926845d6ed76a0"
+    }
+  },
+  "conditions": {
+    "sameSourceCommit": true,
+    "sameBuildTreePath": true,
+    "freshCargoTargetDir": true,
+    "sameToolchain": true,
+    "sameRustflags": true,
+    "sameJobs": true,
+    "sourceDateEpoch": 1761436800,
+    "offline": true,
+    "pathRemapping": "private absolute paths are remapped to /build, /target, /registry, /rustup and /home"
+  },
+  "caveat": [
+    "build trees must live on a space-free path: RUSTFLAGS is whitespace-split, so a --remap-path-prefix source containing a space cannot be expressed and is skipped (recorded as pathRemappingSkipped)",
+    "reproducibility was verified on one host (macOS 27.0.1, Apple M5 Pro, rustc 1.98.1, zig 0.17.0); a CI runner must pin the same versions to expect the same digest"
+  ]
+}
