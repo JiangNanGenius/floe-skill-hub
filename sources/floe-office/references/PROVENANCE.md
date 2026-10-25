@@ -18,7 +18,7 @@
 - This Hub package: version `1.5.0`; payload = [SKILL.md, floe.json, references/licenses/FLOE-OWNED-NOTICE.md, references/PROVENANCE.md].
 - Byte-comparison vs the published old payload: `SKILL.md` identical to the pin; `floe.json` identical except the `version` field (packaging a new release requires its own version); the added `references/` files change the contentDigest BY CONSTRUCTION.
 - Consequence honored: the Hub NEVER re-releases the same id+version with different bytes. Proposed registry delta for H1 (not applied by this lane): `versionTarget` 1.5.0 -> 1.5.0 and `firstParty.stagedSourceVersion` accordingly; floe-office keeps 1.5.0 because the legacy feed released 1.3.0 and the staged pin bytes already differ.
-- release.json moved out of the package gate to the private handoff (Local/Private/skill-hub-20261026/ordinary/builtin-release-metadata/) — legacy-feed metadata, not ZIP content; the old feed and native App are untouched.
+- release.json moved out of the package gate to the private maintainer handoff as legacy-feed metadata, not ZIP content; the old feed and native App are untouched.
 
 - Coordinator packaging review (2026-10-26): included the full applicable source license text alongside the existing ownership notice; upstream license files remain unchanged.
 

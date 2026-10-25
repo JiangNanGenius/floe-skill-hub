@@ -4,7 +4,7 @@
 - Pinned commit: `593377bb048752abb0152deab9fbb1083a6087df` (repository tree `d4d202beb151c1f1c6c15738be0692d65e0447af`; skill subtree `skills/exploratory-data-analysis` tree `05078b0b57ce5387f8883e6ae1273f11f8329115`, verified at fetch on 2026-10-26)
 - Upstream path: `skills/exploratory-data-analysis`
 - License: MIT (root `LICENSE.md` at the pinned commit, Copyright (c) 2025 K-Dense Inc.) — full text at references/licenses/UPSTREAM-LICENSE.txt; per-file audit in references/licenses/LICENSE-NOTE.md
-- Retrieval: sparse subtree fetch into task scratch (Local/Scratch/skill-hub-data-five/upstream); no full-repo vendoring.
+- Retrieval: sparse subtree fetch into maintainer-owned temporary storage; no full-repo vendoring.
 - Adaptation record: references/ADAPTATION-NOTES.md (kept-verbatim / modified / added / excluded, each with reasons).
 - Declared dependency layer (floe.json): numpy==2.2.4, pandas==2.2.3 — the exact versions the resolved Debian 13 (trixie) riscv64 guest provides as `python3-numpy` (1:2.2.4+ds-1) and `python3-pandas` (2.2.3+dfsg-9). Upstream's heavier pins (numpy 2.5.3, h5py, Biopython, Pillow, tifffile, pandas 3.0.6, Polars) are deliberately not declared; the corresponding upstream inspectors are not bundled.
 - First-release version: 1.0.0 (no previously published id/version exists for this skill in the legacy four-item feed or the candidate registry; registry versionTarget is 1.0.0).
