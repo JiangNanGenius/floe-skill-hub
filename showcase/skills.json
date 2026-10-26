@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "editorPicks": [
-    "impeccable",
-    "exploratory-data-analysis",
-    "markitdown"
+    "doc-coauthoring",
+    "webapp-testing",
+    "sympy"
   ],
   "entries": {
     "floe-pdf": {
