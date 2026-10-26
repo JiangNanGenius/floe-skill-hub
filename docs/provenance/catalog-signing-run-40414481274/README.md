@@ -1,0 +1,9 @@
+# Qualified 32-skill catalog publication
+
+[Signing run 40414481274](https://github.com/JiangNanGenius/floe-agent/actions/runs/40414481274) authenticated the two channel feeds from immutable source `72133ba73af34094c87aecc1de35ce70df203a13`, with trusted tooling `f351591c51e3c07e706fc8c90f2f547b3f6760fd` on transport `38f8b403dac993317dd0819ef1f07844a86b991c`. The receipt and signature are retained unmodified. Independent verification covered all 134 artifact files, both feed signatures, 64 channel package/review joins and the production key. All 124 package/review payload files from the previous 31-offer publication remain byte-identical.
+
+Both iOS and Android receive exactly 32 qualified optional skills: 28 content-reviewed guides and four real Linux/riscv64 execution-qualified script skills (SymPy, Citation Management, Webapp Testing and Literature Review). The four App-provided builtins are excluded by exact identity; the seven remaining scripted candidates are not offered. The incremental gate preserves per-item qualification and reports the two offered mandatory deep adaptations as 2/9; complete-selection coverage remains informational, not a waiting gate.
+
+Literature Review 1.0.0 keeps its unchanged package bytes and permissions. Its offline goldens, live DOI check and separate two-real-DOI offline workload were exercised in the real component guest; App-specific native PDF export was not exercised. The publication adds no dependency sidecar and requires no new App build. Future dependency-declaration packages require the first capable App version (candidate 1.7.60, not yet released) and new immutable Skill versions; this does not retrofit existing 1.0.0 packages.
+
+The actual signer enforced the reviewed cumulative history guard against the independently resolved live publication before signing. This content publication is separate from App compilation, App distribution and physical-device acceptance.
