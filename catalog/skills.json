@@ -2320,8 +2320,8 @@
         "zh-Hans": "Web 应用测试"
       },
       "notes": {
-        "en": "Uses Floe browser tools and supervised task services; no Playwright or Chromium installation. Source and reference fixtures are ready; actual guest and App browser qualification remain pending.",
-        "zh-Hans": "改用 Floe 浏览器工具与受管理的任务服务，无需安装 Playwright 或 Chromium。源码与参考测试已备好，仍待实际任务环境和 App 浏览器验收。"
+        "en": "Uses Floe browser tools and supervised task services without installing Playwright or Chromium. The unchanged package passed 14 actual App Simulator and Linux RISC-V cases; its signed review preserves the original assertions, run digest and raw-JSONL retention limitation.",
+        "zh-Hans": "使用 Floe 浏览器工具与受管理的任务服务，无需安装 Playwright 或 Chromium。冻结包已通过 14 项实际 App Simulator 与 Linux RISC-V 用例；签名审核保留原始断言、运行摘要及原始 JSONL 未归档的限制。"
       },
       "planNumber": 33,
       "plannedRuntime": {
@@ -2334,7 +2334,7 @@
         ],
         "execution": {
           "arch": "riscv64",
-          "evidence": "unproven",
+          "evidence": "guest-verified",
           "os": "linux"
         },
         "installPlatforms": [
@@ -2349,12 +2349,12 @@
       },
       "source": "A",
       "status": {
-        "adaptation": "in-progress",
-        "executionVerified": false,
+        "adaptation": "frozen",
+        "executionVerified": true,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
-        "qualified": false,
+        "qualified": true,
         "reviewed": true,
         "sourcePinned": true
       },

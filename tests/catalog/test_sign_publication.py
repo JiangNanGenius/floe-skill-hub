@@ -304,19 +304,19 @@ class BridgeFixture(unittest.TestCase):
         return registry, qualified
 
     def _incremental_catalog_registry(self):
-        """The exact REAL admission today (staged as a temp-tree fixture):
-        every row the genuine registry marks qualified — the 30 optional rows
-        (28 guide-only plus the two rows with real guest receipts) and the
-        four iOS-only builtins — and nothing else. The nine mandatory deep
-        IDs stay held back; under the incremental policy that no longer
-        blocks the honest 30/30 download publication (the four App-provided
-        builtins stay qualified registry data but are excluded from the
-        download feeds by their fixed IDs)."""
-        registry = base_registry()
-        real_by_id = {e["id"]: e for e in REAL_REGISTRY["skills"]}
-        qualified = {e["id"]: e for e in REAL_REGISTRY["skills"]
+        """Frozen first-release shape for synthetic bridge tests.
+
+        The 30-offer assertions below describe the initial release fixture,
+        not the mutable real registry. Live admission and future mandatory
+        additions are exercised independently by RealDataIncrementalGateTests.
+        """
+        initial = json.loads((HERE / "tests" / "catalog" / "fixtures" /
+                              "initial-release-registry-2026-10.json").read_bytes())
+        registry = fixture_status.stage_unadmitted_fixture(initial)
+        real_by_id = {e["id"]: e for e in initial["skills"]}
+        qualified = {e["id"]: e for e in initial["skills"]
                      if e["status"]["qualified"]}
-        self.assertTrue(set(MANDATORY) & set(qualified) == set())
+        self.assertFalse(set(MANDATORY) & set(qualified))
         for entry in registry["skills"]:
             if entry["id"] not in qualified:
                 continue
@@ -802,7 +802,7 @@ class CatalogModeTests(BridgeFixture):
         self.assertFalse(out.exists() and any(out.rglob("*")))
 
     def test_incremental_admission_publishes_exact_30_download_feeds(self):
-        """Positive incremental shape: exactly the real 30 qualified optional
+        """Frozen initial incremental shape: exactly the first 30 qualified optional
         rows (28 guides + 2 guest skills) publish as the 30/30 download feeds
         while all nine mandatory deep IDs and the four App-provided builtins
         stay out of the download offers. No engine bytes may be staged because
