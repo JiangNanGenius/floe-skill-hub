@@ -28,6 +28,17 @@ const PROBE_TOOL = 'template_read_only_probe_7f3c';
 // being asserted — there is no warm-up or retried handshake.
 const RPC_TIMEOUT_MS = 30_000;
 
+// Startup budget for spawning the real CLI entry, aligned to the 180-second
+// `waitForEndpoint` budget the shipping Floe App applies to this endpoint.
+// A fresh slow guest can exceed 30 seconds before the CLI reports its
+// listener, so readiness must not reuse the per-request IO budget. This
+// stays one finite cold start: no warm-up, retry or skip. The whole-test
+// bound additionally covers the one 30-second RPC exchange and shutdown; it
+// is not an execution deadline for the service itself.
+const CLI_STARTUP_TIMEOUT_MS = 180_000;
+const CLI_TEST_TIMEOUT_MS = 240_000;
+const CLI_STDERR_TAIL_LIMIT = 4096;
+
 async function withService(t, options = {}) {
   const service = await startService(
     { host: '127.0.0.1', port: 0, allowedHosts: ['127.0.0.1', 'localhost'] },
@@ -271,7 +282,7 @@ test('stop is idempotent and the previous endpoint is unavailable', async () => 
   await assert.rejects(fetch(service.endpoint, { signal: AbortSignal.timeout(1000) }));
 });
 
-test('actual command entry reports its listener and exits cleanly on SIGTERM', { timeout: 90_000 }, async t => {
+test('actual command entry reports its listener and exits cleanly on SIGTERM', { timeout: CLI_TEST_TIMEOUT_MS }, async t => {
   const reservation = createServer();
   reservation.listen(0, '127.0.0.1');
   await once(reservation, 'listening');
@@ -288,16 +299,33 @@ test('actual command entry reports its listener and exits cleanly on SIGTERM', {
     }
   });
   const exited = once(child, 'exit');
-  child.stderr.resume();
+  const startedAt = Date.now();
+  const stderrTail = { text: '' };
+  child.stderr.setEncoding('utf8');
+  child.stderr.on('data', chunk => {
+    stderrTail.text = (stderrTail.text + chunk).slice(-CLI_STDERR_TAIL_LIMIT);
+  });
+  const startupFailure = (reason, budget) => {
+    const elapsed = Date.now() - startedAt;
+    const tail = stderrTail.text.trim();
+    return new Error(
+      `${reason}: elapsed=${elapsed}ms budget=${budget}ms exit=${String(child.exitCode)} ` +
+      `signal=${String(child.signalCode)} stderrTail=${tail.length > 0 ? JSON.stringify(tail) : '<empty>'}`
+    );
+  };
   const ready = await new Promise((resolve, reject) => {
     let text = '';
-    const timer = setTimeout(() => reject(new Error('CLI did not produce a ready record')), RPC_TIMEOUT_MS);
-    const fail = () => {
+    const timer = setTimeout(() => {
+      reject(startupFailure('CLI did not produce a ready record', CLI_STARTUP_TIMEOUT_MS));
+    }, CLI_STARTUP_TIMEOUT_MS);
+    const fail = reason => {
       clearTimeout(timer);
-      reject(new Error('CLI exited before producing a ready record'));
+      reject(startupFailure(reason, CLI_STARTUP_TIMEOUT_MS));
     };
-    child.once('exit', fail);
-    child.once('error', fail);
+    const onExit = () => fail('CLI exited before producing a ready record');
+    const onError = () => fail('CLI process failed before producing a ready record');
+    child.once('exit', onExit);
+    child.once('error', onError);
     child.stdout.on('data', bytes => {
       text += bytes.toString('utf8');
       if (text.length > 8192) {
@@ -311,8 +339,8 @@ test('actual command entry reports its listener and exits cleanly on SIGTERM', {
         const parsed = JSON.parse(firstLine);
         if (parsed.event !== 'ready') return;
         clearTimeout(timer);
-        child.removeListener('exit', fail);
-        child.removeListener('error', fail);
+        child.removeListener('exit', onExit);
+        child.removeListener('error', onError);
         resolve(parsed);
       } catch { /* Wait for one complete JSON readiness line. */ }
     });
