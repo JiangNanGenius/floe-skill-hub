@@ -47,14 +47,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/floe-pdf.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "floe-office": {
@@ -99,14 +92,55 @@
         }
       ],
       "cover": {
-        "path": "showcase/media/covers/floe-office.svg",
-        "kind": "illustration",
+        "path": "showcase/media/covers/office-doc-zh.jpg",
+        "kind": "app-screenshot",
         "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+          "en": "Floe product screenshot, owned by Floe and published on the official Floe website (https://www.floe-agent.com/assets/demos/office-doc-zh.jpg); reused here with the owner’s authorization. © Floe.",
+          "zh-Hans": "Floe 自家产品截图，已由 Floe 发布于官方网站（https://www.floe-agent.com/assets/demos/office-doc-zh.jpg），经所有者授权在此复用。版权归 Floe 所有。"
+        },
+        "alt": {
+          "en": "Floe Office editing an example document on iPad",
+          "zh-Hans": "Floe Office 在 iPad 上编辑示例文档"
+        },
+        "caption": {
+          "en": "Example document open in Floe Office (Chinese UI).",
+          "zh-Hans": "Floe Office 中的示例文档（中文界面）。"
         }
       },
-      "gallery": []
+      "gallery": [
+        {
+          "path": "showcase/media/gallery/office-sheet-zh.jpg",
+          "kind": "app-screenshot",
+          "credit": {
+            "en": "Floe product screenshot, owned by Floe and published on the official Floe website (https://www.floe-agent.com/assets/demos/office-sheet-zh.jpg); reused here with the owner’s authorization. © Floe.",
+            "zh-Hans": "Floe 自家产品截图，已由 Floe 发布于官方网站（https://www.floe-agent.com/assets/demos/office-sheet-zh.jpg），经所有者授权在此复用。版权归 Floe 所有。"
+          },
+          "alt": {
+            "en": "Example spreadsheet open in Floe Office",
+            "zh-Hans": "Floe Office 中的示例电子表格"
+          },
+          "caption": {
+            "en": "Example spreadsheet in Floe Office (Chinese UI).",
+            "zh-Hans": "Floe Office 中的示例表格（中文界面）。"
+          }
+        },
+        {
+          "path": "showcase/media/gallery/office-slide-zh.jpg",
+          "kind": "app-screenshot",
+          "credit": {
+            "en": "Floe product screenshot, owned by Floe and published on the official Floe website (https://www.floe-agent.com/assets/demos/office-slide-zh.jpg); reused here with the owner’s authorization. © Floe.",
+            "zh-Hans": "Floe 自家产品截图，已由 Floe 发布于官方网站（https://www.floe-agent.com/assets/demos/office-slide-zh.jpg），经所有者授权在此复用。版权归 Floe 所有。"
+          },
+          "alt": {
+            "en": "Example presentation open in Floe Office",
+            "zh-Hans": "Floe Office 中的示例演示文稿"
+          },
+          "caption": {
+            "en": "Example presentation in Floe Office (Chinese UI).",
+            "zh-Hans": "Floe Office 中的示例演示（中文界面）。"
+          }
+        }
+      ]
     },
     "floe-network": {
       "overview": {
@@ -149,14 +183,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/floe-network.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "floe-video": {
@@ -200,14 +227,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/floe-video.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "doc-coauthoring": {
@@ -251,14 +271,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/doc-coauthoring.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "internal-comms": {
@@ -302,14 +315,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/internal-comms.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "writing-guidelines": {
@@ -353,14 +359,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/writing-guidelines.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "copywriting": {
@@ -404,14 +403,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/copywriting.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "copy-editing": {
@@ -455,14 +447,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/copy-editing.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "content-production": {
@@ -506,14 +491,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/content-production.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "social-content": {
@@ -557,14 +535,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/social-content.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "floe-email-drafting": {
@@ -608,14 +579,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/floe-email-drafting.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "deep-research": {
@@ -659,14 +623,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/deep-research.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "deepread": {
@@ -710,14 +667,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/deepread.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "literature-review": {
@@ -761,14 +711,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/literature-review.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "citation-management": {
@@ -812,14 +755,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/citation-management.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "scientific-critical-thinking": {
@@ -863,14 +799,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/scientific-critical-thinking.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "research-summarizer": {
@@ -914,14 +843,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/research-summarizer.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "exploratory-data-analysis": {
@@ -965,14 +887,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/exploratory-data-analysis.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "statistical-analysis": {
@@ -1016,14 +931,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/statistical-analysis.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "scientific-visualization": {
@@ -1067,14 +975,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/scientific-visualization.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "markitdown": {
@@ -1118,14 +1019,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/markitdown.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "sympy": {
@@ -1169,14 +1063,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/sympy.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "impeccable": {
@@ -1221,14 +1108,39 @@
         }
       ],
       "cover": {
-        "path": "showcase/media/covers/impeccable.svg",
+        "path": "showcase/media/covers/impeccable-promo-small.png",
         "kind": "illustration",
         "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
+          "en": "Official Impeccable browser-extension promo artwork from the upstream pbakaus/impeccable repository (pinned commit 4fc2f83e1c8710dba772bfd4523d0efab57737b6), used under the upstream Apache-2.0 license. It depicts the upstream extension, not Floe’s app UI or skill execution output.",
+          "zh-Hans": "上游 pbakaus/impeccable 仓库（锁定提交 4fc2f83e1c8710dba772bfd4523d0efab57737b6）的官方浏览器扩展宣传图，按上游 Apache-2.0 许可使用。画面是上游扩展本身，不是 Floe 应用界面，也不是技能执行结果。"
+        },
+        "alt": {
+          "en": "Impeccable browser extension official promo artwork",
+          "zh-Hans": "Impeccable 浏览器扩展官方宣传图"
+        },
+        "caption": {
+          "en": "Upstream official extension promo (440×280).",
+          "zh-Hans": "上游官方扩展宣传图（440×280）。"
         }
       },
-      "gallery": []
+      "gallery": [
+        {
+          "path": "showcase/media/gallery/impeccable-icon-128.png",
+          "kind": "illustration",
+          "credit": {
+            "en": "Official Impeccable project icon from the upstream pbakaus/impeccable repository (pinned commit 4fc2f83e1c8710dba772bfd4523d0efab57737b6), Apache-2.0. Project identity mark only — not an App screenshot or execution output.",
+            "zh-Hans": "上游 pbakaus/impeccable 仓库（锁定提交 4fc2f83e1c8710dba772bfd4523d0efab57737b6）的官方项目图标，Apache-2.0。仅为项目标识，不是 App 截图，也不是执行结果。"
+          },
+          "alt": {
+            "en": "Impeccable upstream project icon",
+            "zh-Hans": "Impeccable 上游项目图标"
+          },
+          "caption": {
+            "en": "Upstream project identity icon (128×128).",
+            "zh-Hans": "上游项目标识图标（128×128）。"
+          }
+        }
+      ]
     },
     "algorithmic-art": {
       "overview": {
@@ -1271,14 +1183,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/algorithmic-art.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "canvas-design": {
@@ -1322,14 +1227,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/canvas-design.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "theme-factory": {
@@ -1373,14 +1271,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/theme-factory.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "ui-design-system": {
@@ -1424,14 +1315,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/ui-design-system.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "ux-researcher-designer": {
@@ -1475,14 +1359,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/ux-researcher-designer.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "react-best-practices": {
@@ -1526,14 +1403,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/react-best-practices.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "composition-patterns": {
@@ -1577,14 +1447,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/composition-patterns.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "web-design-guidelines": {
@@ -1628,14 +1491,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/web-design-guidelines.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "webapp-testing": {
@@ -1679,14 +1535,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/webapp-testing.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "a11y-audit": {
@@ -1730,14 +1579,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/a11y-audit.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "systematic-debugging": {
@@ -1781,14 +1623,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/systematic-debugging.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "test-driven-development": {
@@ -1832,14 +1667,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/test-driven-development.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "requesting-code-review": {
@@ -1883,14 +1711,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/requesting-code-review.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "product-manager-toolkit": {
@@ -1934,14 +1755,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/product-manager-toolkit.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "product-discovery": {
@@ -1985,14 +1799,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/product-discovery.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "code-to-prd": {
@@ -2036,14 +1843,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/code-to-prd.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "meetings": {
@@ -2087,14 +1887,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/meetings.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "floe-file-organizer": {
@@ -2138,14 +1931,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/floe-file-organizer.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     },
     "floe-invoice-organizer": {
@@ -2189,14 +1975,7 @@
           }
         }
       ],
-      "cover": {
-        "path": "showcase/media/covers/floe-invoice-organizer.svg",
-        "kind": "illustration",
-        "credit": {
-          "en": "Floe original illustration; not an App screenshot.",
-          "zh-Hans": "Floe 原创插画，并非 App 截图。"
-        }
-      },
+      "cover": null,
       "gallery": []
     }
   }
