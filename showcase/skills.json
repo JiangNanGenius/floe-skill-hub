@@ -47,7 +47,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/floe-pdf.png",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "带高亮段落、章节标签与触控笔的展开文档。",
+          "en": "Open document with highlighted passages, a section tab and a stylus."
+        },
+        "caption": {
+          "zh-Hans": "PDF 阅读与批注用途示意；并非应用截图或技能运行成功的证据。",
+          "en": "Concept illustration for PDF reading and annotation. This is not a screenshot or evidence of a successful skill run."
+        }
+      },
       "gallery": []
     },
     "floe-office": {
@@ -183,7 +198,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/floe-network.png",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "放大镜检查路由器旁的网线插头。",
+          "en": "Router and Ethernet plug inspected through a magnifying glass."
+        },
+        "caption": {
+          "zh-Hans": "网络连接诊断用途示意；并非应用截图或技能运行成功的证据。",
+          "en": "Concept illustration for network connectivity diagnosis. This is not a screenshot or evidence of a successful skill run."
+        }
+      },
       "gallery": []
     },
     "floe-video": {
@@ -227,7 +257,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/floe-video.png",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "胶片环绕风景画面，前方放着音频波形。",
+          "en": "A film strip surrounds a landscape frame beside an audio waveform."
+        },
+        "caption": {
+          "zh-Hans": "音视频处理用途示意；并非应用截图或技能运行成功的证据。",
+          "en": "Concept illustration for audio and video processing. This is not a screenshot or evidence of a successful skill run."
+        }
+      },
       "gallery": []
     },
     "doc-coauthoring": {
@@ -887,7 +932,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/exploratory-data-analysis.png",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "放大镜查看叠放数据表中的缺失单元格与结构。",
+          "en": "Magnifying glass reveals missing cells and patterns in layered data sheets."
+        },
+        "caption": {
+          "zh-Hans": "数据探索用途示意；并非应用截图或技能运行成功的证据。",
+          "en": "Concept illustration for data exploration. This is not a screenshot or evidence of a successful skill run."
+        }
+      },
       "gallery": []
     },
     "statistical-analysis": {
@@ -1019,7 +1079,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/markitdown.png",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "多种文档版式汇成一页结构清楚的 Markdown。",
+          "en": "Document layouts gather into a clean structured Markdown page."
+        },
+        "caption": {
+          "zh-Hans": "文档转 Markdown用途示意；并非应用截图或技能运行成功的证据。",
+          "en": "Concept illustration for document-to-Markdown conversion. This is not a screenshot or evidence of a successful skill run."
+        }
+      },
       "gallery": []
     },
     "sympy": {
@@ -1975,7 +2050,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/floe-invoice-organizer.png",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "票据与分类文件夹整齐放入托盘，旁边是核对清单。",
+          "en": "Receipts and category folders arranged in a tray with a review checklist."
+        },
+        "caption": {
+          "zh-Hans": "票据整理归档用途示意；并非应用截图或技能运行成功的证据。",
+          "en": "Concept illustration for receipt organization and archiving. This is not a screenshot or evidence of a successful skill run."
+        }
+      },
       "gallery": []
     }
   }
