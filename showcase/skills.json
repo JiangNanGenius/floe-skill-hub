@@ -8,42 +8,56 @@
   "entries": {
     "floe-pdf": {
       "overview": {
-        "zh-Hans": "在 Floe 的任务线里直接处理 PDF：阅读、批注、填写与导出都在设备端完成。受保护文档继续经过 App 既有的 PDFKit 闸门，不会另开一条绕过的渲染路径。",
-        "en": "Work with PDFs directly inside a Floe task: read, annotate, fill and export on the device. Protected documents keep using the app’s existing PDFKit gate instead of a parallel, unguarded renderer."
+        "zh-Hans": "在工作任务里直接处理 PDF：阅读长文档、按页导出图片、合并拆分、旋转删页，也能加页码和水印。正文文字可以在保留可搜索性的前提下直接修改，段落能重新排版；批注、表单填写、插图换图、更新标题作者与书签，都能在同一任务里完成。扫描件可为其建立可搜索的文字层；需要真正抹除内容时，会先征得你的同意，再将页面整本重新生成为已打码的图片。\n\n交给它文件和要做的修改或想整理的信息，你会得到一份新的成品文档——改完会重新打开核对，原件保持原样。需要留意的边界：普通改字、裁剪或压平批注都不等于安全删除；机器识别的文字可能有错误，重要内容仍建议抽查。",
+        "en": "Work with PDFs directly in a task: read long documents, export pages as images, merge, split, rotate or drop pages, add page numbers or watermarks. Body text can be edited in place while staying searchable and paragraphs reflow; annotations, form filling, replacing images, and updating title, author and bookmarks all happen in the same pass. Scanned pages can gain a searchable text layer — and when content must truly be gone, pages are rebuilt as masked images after your explicit consent.\n\nHand it a file and describe the change or the information you need, and you receive a new finished document, reopened and checked after editing, while the original stays as it was. Worth knowing: ordinary editing, cropping or flattening is not secure deletion, and recognized text can contain mistakes worth spot-checking."
       },
       "useCases": [
         {
-          "zh-Hans": "给合同、报告加上批注并导出带标注的副本",
-          "en": "Annotate contracts or reports and export a marked-up copy"
+          "zh-Hans": "把多份 PDF 按指定顺序合并，或抽取其中几页另存新文件",
+          "en": "Merge several PDFs in an order you choose, or pull selected pages into a new file"
         },
         {
-          "zh-Hans": "按章节定位长文档内容并整理要点",
-          "en": "Locate sections in long documents and collect key points"
+          "zh-Hans": "直接修改正文措辞或标题，保留可搜索文本",
+          "en": "Correct wording in the body or headings while text stays searchable"
         },
         {
-          "zh-Hans": "填写表单类 PDF 后另存，不覆盖原件",
-          "en": "Fill form PDFs and save a new copy without touching the original"
+          "zh-Hans": "给合同和报告加批注、填写表单后另存副本",
+          "en": "Annotate contracts or reports and fill form fields, saving a new copy"
+        },
+        {
+          "zh-Hans": "为扫描件建立可搜索文字层，或在确认后完成整本脱敏",
+          "en": "Make a scan searchable, or run a fully consented redaction"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "把这份 40 页的采购合同按付款、交付、违约三类条款整理成风险清单，并标注对应页码。",
-            "en": "Turn this 40-page procurement contract into a risk list grouped by payment, delivery and default clauses, with page references."
+            "zh-Hans": "把这三份合同扫描件按 A、B、C 顺序合并成一个 PDF，再删掉所有空白封面页，输出新文件。",
+            "en": "Merge these three scanned contracts in order A, B, C, drop the blank cover pages, and save a new file."
           },
           "output": {
-            "zh-Hans": "一份按条款分类的风险清单，逐条标注页码与原文摘录，可导出为 PDF 附在合同旁。",
-            "en": "A clause-grouped risk list with page numbers and short quotes, exportable as a PDF beside the contract."
+            "zh-Hans": "一个合并后的新 PDF，页面顺序与删页结果经过重新打开核对；三份原件保持不变。",
+            "en": "A new merged PDF whose page order and removals were confirmed by reopening it; the three originals stay untouched."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "在第三页签署处添加签名批注，然后导出新的 PDF 副本。",
-            "en": "Add a signature annotation at the signing line on page three, then export a new PDF copy."
+            "zh-Hans": "第 4 页第 2 段的供应商名字全部换成新的，段落重排后仍要可搜索；改完把那一页渲染给我看。",
+            "en": "Replace the old vendor name everywhere it appears in paragraph 2 on page 4, let it reflow with searchable text, then show me that page rendered."
           },
           "output": {
-            "zh-Hans": "带签名的副本 PDF；原文件保持不变。",
-            "en": "A signed copy PDF; the original file stays untouched."
+            "zh-Hans": "一份编辑后的新 PDF 和第 4 页的渲染图；改不动的地方会明确说明原因，不会留下半完成的文件。",
+            "en": "An edited copy plus a render of page 4; anything that can't be applied is explained, never half-saved."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "这份 12 页的会议纪要扫描件，先做可搜索 OCR，再按识别出的文字导出要点。",
+            "en": "Run searchable OCR on this 12-page scanned meeting note, then export the key points from the recognized text."
+          },
+          "output": {
+            "zh-Hans": "带文字层的扫描件和基于真实识别内容导出的要点；没把握的位置会被指出，不会凭空补字。",
+            "en": "The scan with a text layer plus a summary exported from the recognized text; shaky passages are flagged rather than invented."
           }
         }
       ],
@@ -67,42 +81,56 @@
     },
     "floe-office": {
       "overview": {
-        "zh-Hans": "在同一个工作空间里编辑 DOCX、XLSX 与 PPTX，包括定位形状、图片与可编辑图表。文档仍以原格式保存，适合继续交给他人协作。",
-        "en": "Edit DOCX, XLSX and PPTX in the same workspace, including positioned shapes, images and editable charts. Files stay in their original formats so collaborators can keep working."
+        "zh-Hans": "创建和修改真正的 Word、Excel、PowerPoint 文件：从要点直接生成带标题和表格的文档、含公式的工作簿、带可编辑图表的演示稿——图表是真实的图表对象，背后带着数据，不是贴图。修改已有文件时先读取结构，再按位置精确改文字、样式、行列、冻结表头、排序筛选，或重排、对齐幻灯片元素。\n\n所有改动都保存为新文件并在完成后重新打开确认；自动处理只会写出核对过的副本，你能对照它改了什么。Word、Markdown、HTML、RTF 之间的格式转换在设备本地完成，内容不会被重新转述一遍。\n\n需要留意的边界：公式结果核对覆盖常用函数而非完整表格引擎；与编辑器里选中内容直接相关的操作，仍会在编辑器里等你确认；复杂排版的转换结果建议打开看一眼再定。",
+        "en": "Create and edit real Word, Excel and PowerPoint files: turn bullet points into a structured document, a workbook with formulas, or a deck whose charts are genuine editable charts backed by their own data — not pictures of charts. When revising an existing file, it reads the structure first, then changes text, styles, rows and columns, frozen headers, sorting and filters, or slide order and alignment, exactly where intended.\n\nEvery change saves as a new file that gets reopened and confirmed; automated edits produce a checked copy you can compare against the original. Conversions between Word, Markdown, HTML and RTF run locally on the device without retyping your content.\n\nWorth knowing: formula-result checking covers common functions, not a full spreadsheet engine; operations tied to what's selected in the editor wait for you there; complex layouts deserve a quick look after conversion."
       },
       "useCases": [
         {
-          "zh-Hans": "把季度数据整理成带图表的月报",
-          "en": "Turn quarterly numbers into a monthly report with charts"
+          "zh-Hans": "把笔记或报告要点变成带可编辑图表的演示文稿",
+          "en": "Turn notes or a report into a deck with editable, real-data charts"
         },
         {
-          "zh-Hans": "调整提案文档的样式、列表与页面结构",
-          "en": "Adjust styles, lists and page structure in a proposal"
+          "zh-Hans": "生成预算工作簿，设数字格式、冻结表头并排序",
+          "en": "Build a budget workbook with number formats, a frozen header and sorting"
         },
         {
-          "zh-Hans": "更新演示文稿的文字、图片与对象位置",
-          "en": "Update text, images and object placement in a deck"
+          "zh-Hans": "在现有 Word 稿里精确替换措辞并统一样式，保留原件",
+          "en": "Replace exact wording and styles in an existing Word file without touching the original"
+        },
+        {
+          "zh-Hans": "把一批 Markdown 文档离线转换成 Word 或 HTML",
+          "en": "Convert a set of Markdown documents to Word or HTML offline"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "把这份销售数据表做成月报文档，包含一张趋势图和一个要点总结页。",
-            "en": "Build a monthly report document from this sales spreadsheet, with a trend chart and a key-points page."
+            "zh-Hans": "用这份季度数据做一份 8 页复盘演示稿：趋势用柱状图，渠道占比用饼图，图表要能在 PowerPoint 里继续改数据。",
+            "en": "Make an 8-slide quarterly review deck from this data: a bar chart for the trend, a pie for channel share, and the charts must stay editable with their data."
           },
           "output": {
-            "zh-Hans": "一份可继续编辑的报告文档，图表保持可编辑格式。",
-            "en": "An editable report document whose chart remains an editable object."
+            "zh-Hans": "一个演示文稿文件，图表带着真实数据可继续编辑；页数、图表与文字经重新打开核对。",
+            "en": "A presentation whose charts carry real, editable data; slides, charts and text confirmed by reopening the file."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "把这份提案的标题层级和间距统一，并检查表格是否跨页断裂。",
-            "en": "Normalize this proposal’s heading levels and spacing, and check whether tables break across pages."
+            "zh-Hans": "把报销表按金额降序排一遍并冻结首行，第一行是表头，不要当成数据。",
+            "en": "Sort the expense sheet by amount descending and freeze the top row — the first row is a header, not data."
           },
           "output": {
-            "zh-Hans": "调整后的文档与一份改动说明，便于你逐项确认。",
-            "en": "The adjusted document plus a change summary you can review item by item."
+            "zh-Hans": "一份核对过的编辑副本（原件不动），排序与冻结状态重新打开确认，表头保留原位。",
+            "en": "A verified edited copy (original untouched), sorting and the frozen row confirmed on reopening, header left in place."
+          }
+        },
+        {
+          "prompt": {
+            "zh-Hans": "这份 Word 说明书里的旧产品名全部替换成新名，正文样式别乱，改完给我一份改动清单。",
+            "en": "Replace every old product name in this Word manual with the new one without disturbing the styles, then show me what changed."
+          },
+          "output": {
+            "zh-Hans": "一份新文档和逐处替换清单；文件中途被改过会先停下来重新读取，不会覆盖你的新版本。",
+            "en": "A new file with a change list per replacement; if the document changed meanwhile it re-reads first instead of overwriting."
           }
         }
       ],
@@ -159,42 +187,46 @@
     },
     "floe-network": {
       "overview": {
-        "zh-Hans": "在设备本机完成网络诊断：真实 ICMP ping、traceroute、DNS 与接口检查，不需要先准备一台 SSH 主机。结果用于判断问题出在解析、路由还是对端。",
-        "en": "Run network diagnostics on the device itself: real ICMP ping, traceroute, DNS and interface inspection without an SSH host. Results separate resolution, routing and remote-server failures."
+        "zh-Hans": "这台设备本身就是一台网络体检仪：查域名解析、测指定端口是否连通、做带延迟和丢包统计的 ping、沿路追踪连接经过的每一跳，全部从本机发起，不需要登录任何服务器。还能按你的要求列出局域网内的设备、用自定义的方法和请求头调试 API，或把允许下载的链接保存成工作区文件。\n\n读网页内容请使用应用自带的网页能力；这个条目专注网络层面的连通性判断。每一次诊断都是真实探测，报告会说清每一步测到了什么——端口不通和延迟高是两回事，它不会混为一谈。",
+        "en": "This device doubles as a network bench: resolve a domain, probe whether a specific service port answers, run a bounded ping with per-reply latency and loss, and trace each hop a connection travels — all from here, no server login required. On request it lists devices on your local network, issues API calls with your own method and headers for debugging, and saves an authorized download into your workspace.\n\nReading a web page as content stays with the app's web surfaces; this entry is about connectivity itself. Every report reflects probes that actually ran and says what each step measured — a closed port and a slow link are different answers, and never blended into one."
       },
       "useCases": [
         {
-          "zh-Hans": "排查某个站点无法访问的原因",
-          "en": "Diagnose why a specific site cannot be reached"
+          "zh-Hans": "网站打不开时按 DNS → TCP → ping → traceroute 定位卡在哪一环",
+          "en": "When a site won't load, trace whether DNS, the port, ICMP or a hop is failing"
         },
         {
-          "zh-Hans": "对比 DNS 解析结果与本机接口配置",
-          "en": "Compare DNS resolution with local interface settings"
+          "zh-Hans": "检查某台服务器的具体端口是否可达",
+          "en": "Check whether a specific service port on a server is reachable"
         },
         {
-          "zh-Hans": "记录一段可复查的连通性证据",
-          "en": "Capture connectivity evidence that can be reviewed later"
+          "zh-Hans": "枚举局域网设备，排查打印机或盒子是否在线",
+          "en": "Enumerate LAN devices to check whether a printer or box is online"
+        },
+        {
+          "zh-Hans": "带请求头调试 API，或把授权资源文件保存到工作区",
+          "en": "Debug an API with custom headers, or save an authorized resource into the workspace"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "依次做 DNS 解析、ping 和 traceroute，判断这个域名无法访问是解析问题还是链路问题。",
-            "en": "Run DNS resolution, ping and traceroute in order, and decide whether this domain fails at resolution or on the path."
+            "zh-Hans": "api.example.com 今天连不上，先查解析，再测 443 端口，然后 ping 和 traceroute 各跑一轮，告诉我断在哪。",
+            "en": "api.example.com is unreachable today. Look up DNS, probe port 443, then run a ping set and a traceroute, and tell me where it breaks."
           },
           "output": {
-            "zh-Hans": "一份分步诊断记录，指出失败发生的位置与下一步建议。",
-            "en": "A step-by-step diagnosis naming where the failure occurs and what to try next."
+            "zh-Hans": "四段真实探测记录：解析结果、端口连通性、逐包延迟与丢包、逐跳地址和延迟，并指出最可能的断点位置。",
+            "en": "Four real probe results: resolution, port reachability, per-packet latency with loss, and per-hop addresses — plus where the break most likely sits."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "检查当前网络接口、默认路由与 DNS 配置是否一致。",
-            "en": "Check whether the active interfaces, default route and DNS settings agree."
+            "zh-Hans": "帮我看下家里局域网现在有哪些设备在线，再把这份公开的固件说明 PDF 下载到工作区。",
+            "en": "List the devices currently on my home LAN, then download this public firmware-notes PDF into the workspace."
           },
           "output": {
-            "zh-Hans": "接口与解析配置对照表，标出可能冲突的条目。",
-            "en": "A comparison of interface and resolver settings with likely conflicts flagged."
+            "zh-Hans": "一份局域网设备枚举结果和已保存到工作区的文件；下载只针对你授权公开的地址。",
+            "en": "A LAN enumeration plus the saved workspace file; downloads are limited to the authorized address you named."
           }
         }
       ],
@@ -218,42 +250,46 @@
     },
     "floe-video": {
       "overview": {
-        "zh-Hans": "检查、转码与重封装音视频文件，并如实报告设备支持的能力。模型增强类操作以已核验的本地资源为前提，不存在的能力不会假装可用。",
-        "en": "Inspect, transcode and remux audio and video while reporting device capabilities honestly. Model-backed enhancement stays gated on validated local assets; unsupported operations are not presented as available."
+        "zh-Hans": "先把视频或音频看清楚：编码格式、分辨率、帧率、时长、采样率、声道数，一项项列出来，再决定怎么转。支持常见的处理：视频转码、只换封装不动画面质量的容器转换、音频格式转换。处理前会确认这台设备当前真的具备该能力才开始；输出文件重新打开检查过才交给你，源文件始终保留，失败或取消都不会丢原片。\n\n边界要说清：这里做的是可靠的格式转换，不是剪辑软件——没有补帧、超分、画面修复、人声分离或时间轴编辑。拿不准能不能转，先问一句，它会给你明确答复而不是硬试。",
+        "en": "Look first, convert second: it lists a media file's actual codec, resolution, frame rate, duration, sample rate and channels, then chooses the right job — video transcode, container swap that leaves the picture untouched, or audio format conversion. It verifies the capability is ready on this device before starting, reopens and checks the output before delivering, and always keeps your source file: a failed or cancelled job never costs you the original.\n\nThe scope is dependable conversion, not an editor: no frame interpolation, upscaling, restoration, voice-stem splitting or timeline work. Unsure whether something can convert? Ask — you'll get a straight answer instead of a gamble."
       },
       "useCases": [
         {
-          "zh-Hans": "把 MOV 等素材转成通用 H.264 MP4",
-          "en": "Convert source clips such as MOV to broadly playable H.264 MP4"
+          "zh-Hans": "把手机拍的 HEVC 视频转成剪辑软件通用的格式",
+          "en": "Convert phone-shot HEVC clips into a format your editing software accepts"
         },
         {
-          "zh-Hans": "检查编码参数并给出封装建议",
-          "en": "Inspect codec parameters and suggest a container"
+          "zh-Hans": "MKV 换 MP4 容器但不重压缩画面",
+          "en": "Remux MKV into MP4 without re-encoding the video"
         },
         {
-          "zh-Hans": "在不重编码的前提下重封装音轨",
-          "en": "Remux audio tracks without re-encoding"
+          "zh-Hans": "录音转成 MP3/AAC 并核对时长与采样率",
+          "en": "Convert recordings to MP3 or AAC and verify duration and sample rate"
+        },
+        {
+          "zh-Hans": "拿到未知媒体文件先做完整技术参数体检",
+          "en": "Profile an unknown media file's actual technical parameters first"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "把这个 MOV 转成 H.264 MP4，保持原分辨率与帧率。",
-            "en": "Convert this MOV to H.264 MP4 while keeping the original resolution and frame rate."
+            "zh-Hans": "这个 4K 的 mkv 只换成 mp4 封装，画面别重新压缩，时长必须和原片一致。",
+            "en": "Wrap this 4K .mkv into .mp4 without re-encoding the video, and the duration must match the original."
           },
           "output": {
-            "zh-Hans": "转码后的 MP4 文件与一份实际参数报告。",
-            "en": "A transcoded MP4 plus a report of the parameters actually used."
+            "zh-Hans": "一个新的 mp4，画面参数、时长与可播放性经重新打开确认；mkv 原件保留。",
+            "en": "A new .mp4 with picture parameters, duration and playability confirmed by reopening; the original .mkv stays."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "检查这个视频的编码参数，并说明为什么某些播放器无法打开。",
-            "en": "Inspect this video’s encoding parameters and explain why some players cannot open it."
+            "zh-Hans": "先看看这段会议录音的格式和采样率，再转成适合手机外放的 MP3。",
+            "en": "Inspect this meeting recording's format and sample rate, then convert it to an MP3 suited to phone speaker playback."
           },
           "output": {
-            "zh-Hans": "编码参数摘要与可执行的封装或转码建议。",
-            "en": "A codec summary with an actionable remux or transcode suggestion."
+            "zh-Hans": "一份源文件的如实说明和一个核对过的 MP3；若这个转换当前不可用，会直接说明原因。",
+            "en": "An honest source profile plus a verified MP3 — or a plain explanation of why that conversion isn't available right now."
           }
         }
       ],
@@ -277,42 +313,46 @@
     },
     "doc-coauthoring": {
       "overview": {
-        "zh-Hans": "把文档写作拆成可检查的多轮流程：先定结构，再逐节修订，最后记录审阅要点与版本变化。适合需要反复打磨的长文档，而不是一次成稿。",
-        "en": "Break document writing into reviewable passes: agree on structure, revise section by section, then record review notes and version changes. Suited to long documents that need several rounds."
+        "zh-Hans": "帮你把零散想法、资料和反馈整理成一份完整文档，适合方案、报告、产品说明和内部提案。可以从一句需求开始，也可以接着已有草稿继续修改。\n\n提供文档目的、读者、背景资料和语气偏好后，它会协助梳理提纲、逐节撰写，并结合你的反馈调整结构与表达；每一轮改了哪里、为什么改，都会留下简短记录，方便你随时回到任何一版继续。定稿前再从读者角度检查一遍：有没有遗漏、论据够不够、前后是否一致，帮助你得到一份清楚、连贯、便于继续编辑的文稿。",
+        "en": "It turns scattered thoughts, materials and feedback into a complete document — proposals, reports, product write-ups, internal pitches. Start from a single sentence of intent, or keep editing a draft you already have.\n\nShare the document's purpose, its readers, the background and your tone preference, and it helps shape an outline, write section by section, and adjust structure and wording as you react. Each revision round keeps a short record of what changed and why, so you can pick up from any version. Before delivery it re-reads the draft the way a reader would — gaps, support, consistency — leaving you a clear, coherent document that's easy to keep editing."
       },
       "useCases": [
         {
-          "zh-Hans": "把零散材料整理成提案结构",
-          "en": "Turn scattered material into a proposal structure"
+          "zh-Hans": "把散乱的会议记录与材料整理成有结构的立项提案",
+          "en": "Turn scattered meeting notes and material into a structured proposal"
         },
         {
-          "zh-Hans": "逐节扩写并保留修改理由",
-          "en": "Expand section by section while keeping revision reasons"
+          "zh-Hans": "逐节扩写规格文档并保留每轮修改理由",
+          "en": "Expand a spec section by section while keeping a reasoned change log"
         },
         {
-          "zh-Hans": "在交付前做一轮完整审阅",
-          "en": "Run a full review pass before delivery"
+          "zh-Hans": "交付前做盲点与事实复核，补上最强反对意见的回答",
+          "en": "Run the blind-spot and fact re-check before delivery, answering the strongest objections"
+        },
+        {
+          "zh-Hans": "迭代已发布版本：另存新文件、导出 Word/PDF 并回读验证",
+          "en": "Iterate a released version as a new file, exporting and reopening Word/PDF to verify"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "先根据这些会议记录提出文档结构，确认后再逐节扩写。",
-            "en": "Propose a document structure from these meeting notes, then expand it section by section after I confirm."
+            "zh-Hans": "根据这些会议记录和竞品笔记起草一份市场进入决策文档：先给我提纲和每节的一句话目标，数字没来源的先标出来。",
+            "en": "Draft a market-entry decision doc from these meeting notes and competitor memos: outline first with a one-sentence goal per section, flagging every figure that lacks a source."
           },
           "output": {
-            "zh-Hans": "一份结构提案；确认后得到逐节扩写的草稿。",
-            "en": "A structure proposal, followed by a section-by-section draft once confirmed."
+            "zh-Hans": "一份提纲和资料梳理，需要补来源的位置单独标出；你确认提纲后再逐节成稿。",
+            "en": "An outline plus organized background with spots needing sources marked; section drafts follow your approval."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "对这份文档做第二轮审阅，标出论证缺口并给出修订建议。",
-            "en": "Review this document for a second pass, flag argument gaps and propose revisions."
+            "zh-Hans": "这份提案已经定稿，别重写——只扮演怀疑的投资人，列出三个最强反对意见，并指出文稿哪里答不上。",
+            "en": "This proposal is final — don't rewrite it. Play the skeptical investor: list the three strongest objections and show which ones the draft fails to answer."
           },
           "output": {
-            "zh-Hans": "按段落编号的审阅清单与建议改写。",
-            "en": "A paragraph-numbered review list with suggested rewrites."
+            "zh-Hans": "按出现概率排序的反对意见清单，逐条指向相关章节与缺口，由你决定如何补。",
+            "en": "Objections ranked by likelihood, each pinned to the section where the draft falls short — your call how to answer them."
           }
         }
       ],
@@ -336,42 +376,46 @@
     },
     "internal-comms": {
       "overview": {
-        "zh-Hans": "面向内部的沟通写作：通知、状态更新、复盘与公告。模板负责结构，语气与受众适配负责让信息真正被读到。",
-        "en": "Internal communication writing: announcements, status updates, retrospectives and notices. Templates carry the structure; tone and audience adaptation make the message readable."
+        "zh-Hans": "把内部沟通写成对读者真正有用的文档：状态报告、给管理层的更新、公司简报、常见问题、事故通报，每一种都有自己的写法。同一件事，写给工程团队、管理层和全员，该先说什么、略掉什么、用什么语气都不同——它会先和你确认读者、目的和节奏，再动笔。\n\n公司专有的人名、频率和模板保持空缺并向你询问，不会编造。成稿是普通文档（Word、Markdown 或手记），随文附必要的数据和出处；它只负责写，发送、发布、共享都由你走应用自己的入口完成。",
+        "en": "Internal communication written to be useful to its readers: status reports, leadership updates, company newsletters, FAQs and incident reports each have their own craft. The same news lands differently for engineers, executives or an all-hands audience — what to lead with, what to drop, what tone fits. It confirms audience, purpose and cadence with you before writing.\n\nCompany-specific names, cadences and templates stay as blanks it asks about rather than invents. Deliverables are ordinary documents — Word, Markdown or Notes — with the needed data and sources attached. It only writes: sending, posting and sharing stay your actions through the app's own surfaces."
       },
       "useCases": [
         {
-          "zh-Hans": "写每周项目状态更新",
-          "en": "Write a weekly project status update"
+          "zh-Hans": "把本周工程进展整理成给管理层的一页式更新",
+          "en": "Condense the week's engineering progress into a one-page leadership update"
         },
         {
-          "zh-Hans": "为一次事故准备复盘公告",
-          "en": "Prepare an incident retrospective announcement"
+          "zh-Hans": "为一次线上事故起草对外温和、对内可执行的通报",
+          "en": "Draft an incident report that reads calm outwardly and actionable inwardly"
         },
         {
-          "zh-Hans": "把技术进展改写成跨团队可读的说明",
-          "en": "Rewrite technical progress for a cross-team audience"
+          "zh-Hans": "汇总团队动态成月度简报，含公告与致谢板块",
+          "en": "Assemble team news into a monthly newsletter with announcements and shout-outs"
+        },
+        {
+          "zh-Hans": "把重复被问的问题写成口径一致的 FAQ 回答",
+          "en": "Turn repeatedly-asked questions into consistently-answered FAQs"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "写一份本周项目状态更新，面向管理层，重点说明风险与需要的支持。",
-            "en": "Write this week’s project status update for leadership, emphasizing risks and the support needed."
+            "zh-Hans": "这是本周三条变更和一条延期：写给 VP 的版本要突出风险与决策点，全员版要平实、给上下文，各出一份并保留占位的数字来源。",
+            "en": "Here are three changes and one slip this week: the VP version must foreground risk and the decision needed, the all-hands version plain with context — produce both, keeping unsourced figures as placeholders."
           },
           "output": {
-            "zh-Hans": "一页状态更新，含进展、风险与明确请求。",
-            "en": "A one-page update with progress, risks and explicit asks."
+            "zh-Hans": "两份受众校准的工作区文档，延期事项如实呈现，未核实的数字标注待补。",
+            "en": "Two audience-calibrated workspace documents, the slip stated honestly and unverified figures marked for sourcing."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "为这次线上事故写复盘公告，包含时间线、影响范围与改进项。",
-            "en": "Draft a retrospective notice for this incident with a timeline, impact and follow-ups."
+            "zh-Hans": "按我们的事故复盘记录写一份不甩锅的通报：时间线、影响面、已恢复动作、后续整改各一段，别加没记录里的原因。",
+            "en": "From our incident postmortem notes, write a no-blame report: timeline, blast radius, recovery steps and follow-ups as four sections, with nothing beyond the record."
           },
           "output": {
-            "zh-Hans": "一份事实与改进项分离的复盘公告草稿。",
-            "en": "A retrospective draft that separates facts from follow-up actions."
+            "zh-Hans": "结构完整的通报草稿，每条影响和动作可指回复盘记录，未确认的根因明确留白。",
+            "en": "A complete report draft where every impact and action traces to the postmortem, with unconfirmed root causes explicitly left open."
           }
         }
       ],
@@ -395,42 +439,46 @@
     },
     "writing-guidelines": {
       "overview": {
-        "zh-Hans": "按固定规则校核技术写作：措辞、格式、可读性与一致性。规则以清单形式给出，便于在交付前逐条确认，而不是凭感觉判断好坏。",
-        "en": "Check technical writing against fixed rules for wording, formatting, readability and consistency. The rule list is explicit so each item can be confirmed before delivery."
+        "zh-Hans": "给中文加英文的文档做一次系统的文风体检：用词是否具体、标题层级是否规范、数字和单位是否统一、句子是否过长、术语前后是否一致。中英双语稿件还会多走一遍：两个版本说的是不是同一件事——漏掉的句子、对不上的数字、跑偏的语气都会被指出来。\n\n每条问题都标明位置和依据，先给你一份可逐条决定的清单；只有你要求时它才动手改，改动保留原稿版本，改完再核对一遍。风格问题可以检查，事实真假不能：查不到来源的说法只会标注「需要来源」，不会被润色过去。",
+        "en": "A systematic style check for your documents: concrete versus abstract wording, clean heading levels, unified numbers and units, sentence length, terminology used the same way throughout. Bilingual drafts get an extra pass — do the Chinese and English versions actually say the same thing? Dropped sentences, mismatched figures and drifting tone surface here.\n\nEvery issue arrives with its location and basis, as an accept-or-reject list; direct edits happen only when you ask, and the original stays as its own version, re-checked after editing. Style is checkable, truth isn't: an unverifiable claim gets marked 'needs a source' instead of being smoothed over."
       },
       "useCases": [
         {
-          "zh-Hans": "检查 README 与文档的格式一致性",
-          "en": "Check formatting consistency across READMEs and docs"
+          "zh-Hans": "发版前给 README 和帮助文档过一遍风格与一致性",
+          "en": "Sweep a README or help docs for style and consistency before release"
         },
         {
-          "zh-Hans": "清理被动语态与冗余表达",
-          "en": "Remove passive voice and redundant phrasing"
+          "zh-Hans": "揪出文档里前后矛盾的数值、版本号和术语",
+          "en": "Catch conflicting numbers, versions and terminology inside one document"
         },
         {
-          "zh-Hans": "统一术语与标题层级",
-          "en": "Unify terminology and heading levels"
+          "zh-Hans": "核对中英双语稿的主张、数字与注意事项是否对齐",
+          "en": "Verify bilingual drafts keep the same claims, numbers and caveats"
+        },
+        {
+          "zh-Hans": "要一份标明位置与依据、可逐条决定的修改清单",
+          "en": "Receive an accept/reject change list with location and basis for every item"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "按团队规范检查这份 README 的措辞、格式与一致性，列出需要修改的条目。",
-            "en": "Check this README against our guidelines for wording, formatting and consistency, and list what needs changing."
+            "zh-Hans": "对这份 API 指南做文风检查，只报告不要改：每条问题给出位置、依据和原文。",
+            "en": "Run a style pass on this API guide and report only, no edits: location, basis and quoted text per issue."
           },
           "output": {
-            "zh-Hans": "逐条对照的修改清单，标注规则与位置。",
-            "en": "An itemized change list with the rule and location for each."
+            "zh-Hans": "按类别分组的问题清单，含术语与数字一致性核对、以及标注「需要来源」的句子，原文件不动。",
+            "en": "A category-grouped issue list with the terminology-and-figures consistency check and 'needs a source' flags, original untouched."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "改写这段说明，去掉被动语态和重复表达，保留原意。",
-            "en": "Rewrite this explanation without passive voice or repetition while keeping the meaning."
+            "zh-Hans": "这份中文用户提示和英文版最近改过，检查两边说法、数字、限制条件还有没有对不上的地方，顺手统一术语。",
+            "en": "The Chinese and English versions of these user prompts drifted after edits — check paired claims, numbers and caveats, then unify terminology."
           },
           "output": {
-            "zh-Hans": "改写后的段落与一句改动理由。",
-            "en": "The rewritten paragraph with a one-line rationale."
+            "zh-Hans": "双语差异报告与逐条修订建议，中文标点保持原样，改完再核对一遍。",
+            "en": "A bilingual drift report with itemized fixes, Chinese punctuation left intact, re-checked after editing."
           }
         }
       ],
@@ -454,42 +502,46 @@
     },
     "copywriting": {
       "overview": {
-        "zh-Hans": "为站点与落地页产出可直接使用的文案：主张、标题、卖点与行动号召，并给出语气矩阵供选择。文案基于你提供的事实，不虚构数据与背书。",
-        "en": "Produce usable site and landing-page copy: value propositions, headlines, proof points and calls to action, plus a tone matrix to choose from. Copy stays grounded in the facts you supply."
+        "zh-Hans": "为页面写能促成行动的文案，而不是漂亮话。动笔前会和你确认：页面类型、最想让人做的那一件事、目标客户和他们描述问题的原话、产品真正的差异点和证据。有品牌语气资料就先沿用，只补空缺。\n\n方法上守四条：清楚胜过俏皮，收益胜过功能，具体胜过含糊，客户的语言胜过公司黑话；不造数据、不编证言。产出是可直接使用的主张句、标题候选、分节正文和行动按钮文案；竞品页面与受众用语可以用应用内置的检索来核实。它只写文案，发布由你决定；想逐行精修，可以接着用文稿编辑。",
+        "en": "Copy written to move people, not to impress them. Before drafting, you settle the page type, the one action it should drive, who the customer is and the exact words they use for their problem, plus the product's real difference and proof. Any brand-voice material you have is used first; only gaps get asked.\n\nFour rules hold: clarity over cleverness, benefit over feature, specific over vague, customer language over company jargon — and no invented statistics or testimonials. You receive a working value proposition, headline candidates, section copy and calls to action; competitor pages and audience phrasing can be checked with the app's built-in search. It writes; publishing stays your decision, and line-by-line polishing continues in copy-editing."
       },
       "useCases": [
         {
-          "zh-Hans": "为产品落地页写主标题与卖点",
-          "en": "Write the headline and proof points for a product landing page"
+          "zh-Hans": "给新产品落地页写主张、三段卖点与 CTA 全套",
+          "en": "Write the headline value prop, three benefit sections and CTAs for a landing page"
         },
         {
-          "zh-Hans": "生成两版不同语气的文案做对比",
-          "en": "Draft two tone variants for comparison"
+          "zh-Hans": "把功能清单翻译成客户听得懂的收益语言",
+          "en": "Translate a feature list into benefits a customer actually feels"
         },
         {
-          "zh-Hans": "为功能发布准备一句话说明",
-          "en": "Prepare a one-line description for a feature launch"
+          "zh-Hans": "用竞品页与真实评论语言重写现有页面文案",
+          "en": "Rewrite an existing page using competitor research and real customer phrasing"
+        },
+        {
+          "zh-Hans": "定价页或邮件落地页的多标题候选与小步 A/B 变体",
+          "en": "Headline candidates and small variants for pricing or email landing pages"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "为这个产品的落地页写主标题、三个卖点和两个行动号召按钮文案。",
-            "en": "Write a landing-page headline, three proof points and two call-to-action labels for this product."
+            "zh-Hans": "为这款离线转录工具写落地页：受众是被云收费和隐私条款搞烦的小团队，主行动是试用下载；给我 5 个标题、去含糊化的副文案和 CTA。",
+            "en": "Write a landing page for this offline transcription tool: audience is small teams tired of cloud pricing and privacy fine print, the one action is a trial download. Give 5 headlines, a de-vagued subhead and CTAs."
           },
           "output": {
-            "zh-Hans": "一组可直接放入页面的文案与简短使用说明。",
-            "en": "A ready-to-place copy set with short usage notes."
+            "zh-Hans": "一套含具体收益语言的主张与候选标题，标注各自假设，未证实数字一律留白待你补。",
+            "en": "A specific-benefit value prop with headline candidates, each annotated with its assumption, and no unverified numbers."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "用克制和热情两种语气各写一段产品介绍。",
-            "en": "Write one product paragraph in a restrained tone and one in an enthusiastic tone."
+            "zh-Hans": "这段文案满是「赋能、闭环、抓手」，改成人话：意思不许变，客户语言优先，改完列一条「原句 → 新句 → 理由」。",
+            "en": "This copy is stuffed with buzzwords. Rewrite it in human language without changing meaning, prefer customer words, and list original → rewrite → reason per line."
           },
           "output": {
-            "zh-Hans": "两段对照文案与适用场景说明。",
-            "en": "Two contrasting paragraphs with guidance on when to use each."
+            "zh-Hans": "逐行改写对照表与新正文；空心词、假数据和夸大被替换或标出。",
+            "en": "A line-by-line rewrite table with the clean copy; hollow words, invented data and hype replaced or flagged."
           }
         }
       ],
@@ -513,42 +565,46 @@
     },
     "copy-editing": {
       "overview": {
-        "zh-Hans": "对已有文案做结构、语气与事实一致性的校订：指出问题、给出改写，并说明为什么改。适合发布前的最后一轮文字检查。",
-        "en": "Edit existing copy for structure, tone and factual consistency: identify issues, propose rewrites and explain the reasoning. Fits the final text pass before publishing."
+        "zh-Hans": "改稿不是重写。这个流程把修改拆成七遍各有侧重的扫描，每一遍只看一件事：先查读者能不能看懂，再查语气是否前后一致，然后追问每个说法「所以对读者意味着什么」「拿什么证明」，接着把抽象词换成具体场景和数字，保留该有的情绪、删掉推卸责任的套话。改完会回头确认之前的改进没有被破坏。\n\n它在你真实的文件上工作：从工作区或手记读取原文，产出一份修改版新文件和逐条修改理由，原件保持不动。可读性等指标会量化对比，确保越改越清楚；事实需要核对时走应用自带的检索，查不到就标注存疑，不为顺口而编。",
+        "en": "Editing isn't rewriting. The job splits into seven focused passes, one dimension each: can the reader understand it; is the voice consistent; what does each claim mean for the buyer and what proves it; abstractions replaced with concrete scenes and numbers; the right emotion preserved; liability-hedging clichés cut. Each pass re-checks that earlier improvements survived.\n\nIt works on your actual copy — read from the workspace or Notes — and delivers an edited new file with a reason per change, the original left intact. Readability and similar measures are compared before and after so improvements are real, not cosmetic; when a claim needs checking it uses the app's own search, and unverifiable bits stay flagged instead of being smoothed."
       },
       "useCases": [
         {
-          "zh-Hans": "校订产品说明中的夸张表述",
-          "en": "Tone down overstated product claims"
+          "zh-Hans": "上线前把落地页文案按七遍框架系统过一遍",
+          "en": "Run launch copy through the seven-sweep framework before shipping"
         },
         {
-          "zh-Hans": "修正前后不一致的说法",
-          "en": "Fix statements that contradict each other"
+          "zh-Hans": "同事的推广邮件越改越像公文——拉回原有声音",
+          "en": "Pull a colleague's promo email back to its original voice"
         },
         {
-          "zh-Hans": "把生硬直译改成自然表达",
-          "en": "Turn stiff literal phrasing into natural copy"
+          "zh-Hans": "给夸张的市场主张逐条找证据或降级措辞",
+          "en": "Demand evidence for bold marketing claims or downgrade them honestly"
+        },
+        {
+          "zh-Hans": "要「问题 → 建议改法 → 理由」的可拒绝清单",
+          "en": "Receive an accept/reject list of issue → rewrite → reason"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "校订这份产品说明，标出与事实不符或无法验证的说法，并给出改写。",
-            "en": "Edit this product description, flag unverifiable claims and propose rewrites."
+            "zh-Hans": "这份产品发布邮件别重写，按七遍流程过：清晰、语气、读者收益、证据……每遍给我单独的问题清单。",
+            "en": "Don't rewrite this launch email — run the seven passes. Give me each pass's issues separately: clarity, voice, reader payoff, evidence…"
           },
           "output": {
-            "zh-Hans": "问题清单与逐条改写建议。",
-            "en": "An issue list with item-by-item rewrite suggestions."
+            "zh-Hans": "按扫描维度分组的问题与改写建议，附可读性等指标的前后对比，原稿不动。",
+            "en": "Findings grouped per editing pass with rewrite suggestions and before/after readability measures, original untouched."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "把这段介绍改写得自然一些，但不要增加新的事实。",
-            "en": "Make this introduction read naturally without adding new facts."
+            "zh-Hans": "这段文案里所有「行业领先」「大幅提升」这类说法，能查到证据的标证据，查不到的给出降级后的诚实版本。",
+            "en": "Every 'industry-leading' or 'massively improves' claim in this copy: mark ones with verifiable evidence, and rewrite the rest into honest, downgraded versions."
           },
           "output": {
-            "zh-Hans": "改写后的文本与改动点说明。",
-            "en": "The edited text plus a summary of the changes."
+            "zh-Hans": "带证据标注与逐条降级措辞的编辑副本；改后核对指标，确认没有越改越糟。",
+            "en": "An edited copy with evidence tags and honest downgrades per claim, re-checked afterward to confirm no regression."
           }
         }
       ],
@@ -572,42 +628,46 @@
     },
     "content-production": {
       "overview": {
-        "zh-Hans": "长文创作的全流程：选题、提纲、成稿与资源装配。每一步都保留可编辑的中间产物，方便你调整方向而不是推倒重来。",
-        "en": "The long-form pipeline: topic, outline, draft and bundled resources. Each stage keeps an editable intermediate artifact so direction can change without starting over."
+        "zh-Hans": "从选题到可发布成稿的生产流程，三段各管一段：调研与简报——看看目标关键词下已经排着的内容都是什么角度、读者搜时想要什么、还有什么没被讲清楚，再找三到五个可引用的来源，形成一份写作简报；写作——按简报结构写出完整正文；优化——检查搜索表现、可读性、结构、页面摘要信息与内链，给出可交付版本。可以顺序跑完，也可以直接进入任何一段。\n\n规矩是硬的：说不出具体数字就不许写「研究表明」；标题不能承诺正文没给的东西；每个主张和数据都能回指保存过的来源。成稿、来源清单和配图资料一起存在你的工作区里。\n\n它是生产线不是发布渠道：不自动发布、不代发，最终交回你审阅和你自己的渠道。选题太宽泛时，它会先追问读者是谁、解决什么问题。",
+        "en": "Production from topic to publish-ready piece, in three stages. Research & brief: map what already ranks for your keyword, read the search intent, find the underserved angle, gather three to five citable sources, and shape a writing brief. Draft: write the full piece to that structure. Optimize: a single polishing pass over search signals, readability, structure, snippet metadata and internal links that outputs the deliverable version. Run them in sequence or enter at any stage.\n\nThe rules are firm: no 'studies show' without a number you can cite, headings promise only what the body delivers, and every claim and figure stays traceable to a saved source. The piece, its sources and its media bundle live in your workspace.\n\nIt is a production line, not a channel: nothing publishes or posts by itself — the finished piece comes back to you and your own outlets. Ask too vaguely ('write about AI') and it pushes back: who reads this, and what's their problem?"
       },
       "useCases": [
         {
-          "zh-Hans": "从选题到初稿完成一篇长文",
-          "en": "Take a topic through to a complete first draft"
+          "zh-Hans": "从关键词与竞争分析出发产出内容简报，再顺写长文",
+          "en": "Produce a keyword-and-competition brief, then write the long-form piece from it"
         },
         {
-          "zh-Hans": "为长文补配图与引用清单",
-          "en": "Assemble images and citations for a long article"
+          "zh-Hans": "给既有草稿过 SEO、可读性与内链的优化整备",
+          "en": "Put an existing draft through an SEO, readability and internal-link tune-up"
         },
         {
-          "zh-Hans": "把系列主题拆成多篇的写作计划",
-          "en": "Split a broad subject into a multi-article plan"
+          "zh-Hans": "把研究来源、配图与表格整理成可复查的资源包",
+          "en": "Bundle sources, images and tables into a reviewable resource package"
+        },
+        {
+          "zh-Hans": "批量生产系列文时保证角度不重叠、结构一致",
+          "en": "Keep a multi-article series non-overlapping in angle and consistent in structure"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "以“设备端 AI 工作空间”为题，先给我三个选题角度，再展开成提纲与初稿。",
-            "en": "For “on-device AI workspaces”, propose three angles, then expand one into an outline and a first draft."
+            "zh-Hans": "目标关键词「offline transcription privacy」：先看排名内容找缺口，给我简报——角度、读者意图、三到五个来源和大纲，别开始写作。",
+            "en": "Target keyword 'offline transcription privacy': map what ranks, find the gap, and deliver the brief — angle, reader intent, three to five sources, outline. Don't start drafting yet."
           },
           "output": {
-            "zh-Hans": "选题对比、选定提纲与可直接编辑的初稿。",
-            "en": "An angle comparison, the chosen outline and an editable draft."
+            "zh-Hans": "一份写作简报：现有内容的角度盘点、读者意图判断、带出处的来源清单和逐节大纲。",
+            "en": "A writing brief: competitor-angle map, reader-intent read, a cited source list and section outline."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "为这篇长文列出配图需求和引用来源清单。",
-            "en": "List the illustration requirements and citation sources for this article."
+            "zh-Hans": "这篇 2000 词草稿按优化段整备：可读性提到技术读者能接受、大段落补小标题、给出三个内链位置、逐条列改了什么与为什么。",
+            "en": "Put this 2,000-word draft through the optimize stage: lift readability for a technical audience, add subheads to long stretches, propose three internal-link slots, and list every change with its reason."
           },
           "output": {
-            "zh-Hans": "按段落编号的资源清单，可直接交给下一环节。",
-            "en": "A paragraph-indexed resource list ready for the next stage."
+            "zh-Hans": "可发布的新副本与逐项优化记录；来源与数字保持可追溯。",
+            "en": "A publish-ready new copy plus a change-by-change optimization log, keeping sources and figures traceable."
           }
         }
       ],
@@ -631,42 +691,46 @@
     },
     "social-content": {
       "overview": {
-        "zh-Hans": "生成社媒内容与发布排期建议，默认不代发。平台差异在文案长度、语气与标签上体现，发布动作始终由你确认后执行。",
-        "en": "Generate social content and scheduling suggestions; nothing is posted automatically. Platform differences show up in length, tone and tags, and publishing always waits for your confirmation."
+        "zh-Hans": "让社媒发帖背后有一条清晰的策略线：先确认目标（认知、线索、流量、社区）、受众活跃在哪些平台、你的语气边界和能投入的时间，再搭出三到五个内容支柱并配比，配上各平台的格式与节奏建议（轮播、串帖、短视频等）和开场钩子写法。\n\n产出是能直接用的素材：逐条成稿的帖子文案与话题标签、按支柱铺开的两周排期表、把长文拆成系列帖的复用方案；热点与同类账号的参考用应用自带的检索完成。草稿和日历都保存在工作区或手记里。\n\n一条边界：它只生成内容和排期建议，不对接任何平台、不代你发帖——发布始终是你自己在平台上的动作。",
+        "en": "Social with a strategy line behind the posts. It starts with goals (awareness, leads, traffic, community), where your audience actually engages, your tone boundaries and realistic time budget; then builds three to five content pillars with mix percentages, per-platform format and cadence suggestions (carousels, threads, short video) and hook patterns.\n\nThe output is usable material: drafted post copy with hashtags, a two-week calendar laid out across the pillars, repurposing passes that split a long piece into a post series — trend and peer-account checks run through the app's own search. Drafts and calendars live in your workspace or Notes.\n\nOne boundary: it generates content and scheduling suggestions only. It connects to no platform and never posts for you — publishing stays your own action."
       },
       "useCases": [
         {
-          "zh-Hans": "把一个版本发布拆成多条社媒内容",
-          "en": "Turn one release into several social posts"
+          "zh-Hans": "为一个新产品账号搭内容支柱与两周发帖日历",
+          "en": "Set up content pillars and a two-week posting calendar for a new product account"
         },
         {
-          "zh-Hans": "为不同平台改写同一主题",
-          "en": "Adapt one topic across platforms"
+          "zh-Hans": "把一篇长博客拆成 LinkedIn 轮播与 X 串帖",
+          "en": "Repurpose a long blog post into a LinkedIn carousel and an X thread"
         },
         {
-          "zh-Hans": "准备一周的发布排期建议",
-          "en": "Prepare a week of scheduling suggestions"
+          "zh-Hans": "按品牌语气审改草稿队列，去掉不像你的句子",
+          "en": "Edit a draft queue to brand voice, removing lines that don't sound like you"
+        },
+        {
+          "zh-Hans": "追踪同类账号的热点形式，产出带钩子的候选帖",
+          "en": "Track what formats are working for comparable accounts and draft hooked candidates"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "为这次版本发布写三条社媒文案，分别适配微博、X 和小红书。",
-            "en": "Write three social posts for this release, adapted to Weibo, X and Xiaohongshu."
+            "zh-Hans": "目标是小团队的获客：按 4 个内容支柱给两周排期，LinkedIn 每周 3、X 每天 1，先出支柱配比与每帖一句钩子。",
+            "en": "Goal: small-team lead gen. Build a two-week calendar across 4 content pillars — 3 LinkedIn and 1 X post per day — showing the pillar mix and a one-line hook per post first."
           },
           "output": {
-            "zh-Hans": "三条平台化文案与建议发布时间。",
-            "en": "Three platform-tuned posts with suggested posting times."
+            "zh-Hans": "工作区里的排期文件：支柱占比、逐日平台与钩子句；发布由你手动完成。",
+            "en": "A workspace calendar: pillar mix, per-day assignments and hooks — posting stays manual and yours."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "把这篇博客改写成一周的发布内容计划。",
-            "en": "Turn this blog post into a one-week content plan."
+            "zh-Hans": "这篇「PDF 工作流」长文改成一条 6 帖的 X 串：每帖独立成立、第二帖放最强论点、最后回链原文。",
+            "en": "Turn this 'PDF workflows' article into a 6-post X thread: each stands alone, the strongest argument in post two, a link-back at the end."
           },
           "output": {
-            "zh-Hans": "按日期排列的内容主题与要点，发布仍需你确认。",
-            "en": "A date-ordered topic plan; publishing still requires your confirmation."
+            "zh-Hans": "6 条可直接取用的帖子草稿与钩子顺序说明；数字与主张沿用原文来源。",
+            "en": "Six ready-to-use post drafts with the hook ordering explained, carrying the article's own sources for every figure and claim."
           }
         }
       ],
@@ -690,42 +754,46 @@
     },
     "floe-email-drafting": {
       "overview": {
-        "zh-Hans": "复用 App 既有的邮件服务，按你的语气起草邮件；发送仍然走原有的审批路径。起草与发送分离，避免误发。",
-        "en": "Draft email in your voice through the app’s existing mail service; sending stays on the original approval path. Drafting and sending stay separate to prevent accidents."
+        "zh-Hans": "用你自己的语气起草邮件：先看你对这封邮件的明确要求，再用你授权打开的已发样本、手记或工作区文件，最后参考你平时维护的语气习惯；都没有时，它会先问一句语气方向，而不是默认公文腔。事实和数字只从你给的材料里来，核对不了的留成带提醒的占位，绝不编造。\n\n交付包括两三个简短的主题候选、把请求放在前面的正文、纯文本与可选的网页格式版本，附件以工作区文件路径引用。成稿放进你的邮件流程——写信页、剪贴板或草稿文件；发送、收件人和日程永远由你决定。涉及财务、法务或人事的内容，会附上发送前人工过目的提醒。",
+        "en": "Drafted in your own voice. It starts from your instructions for this specific email, then the samples you chose to open — sent mail, Notes, workspace files — or the tone profile you keep; if there's nothing to learn from, it asks one line of tone direction instead of defaulting to corporate-speak. Facts and figures come only from what you provide; anything unverifiable stays as a warned placeholder, never invented.\n\nYou receive two or three short subject options, a body that states the ask early, plain text plus an optional HTML variant, and attachments referenced by workspace path. The draft lands where your mail flow takes over — compose, clipboard or draft file. Sending, recipients and scheduling remain entirely yours, and finance, legal or HR-sensitive drafts carry a read-before-send reminder."
       },
       "useCases": [
         {
-          "zh-Hans": "用固定语气写延期说明或跟进邮件",
-          "en": "Write delay notices or follow-ups in a consistent voice"
+          "zh-Hans": "写一封礼貌但不背锅的逾期付款跟进",
+          "en": "Write a polite follow-up on a late payment without accepting blame"
         },
         {
-          "zh-Hans": "把长邮件压缩成简短版本",
-          "en": "Compress a long email into a shorter one"
+          "zh-Hans": "把任务成果整理成一封给上级的进展邮件",
+          "en": "Turn task results into a progress email to your manager"
         },
         {
-          "zh-Hans": "准备多封措辞一致的协作邮件",
-          "en": "Prepare several collaboration emails with consistent wording"
+          "zh-Hans": "按我的历史邮件语气起草回复",
+          "en": "Draft a reply that matches the tone of my past emails"
+        },
+        {
+          "zh-Hans": "同一封邮件要纯文本与 HTML 两个版本",
+          "en": "Produce both plain-text and HTML variants of one email"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "用我平时的语气给合作方写一封项目延期说明，先给我确认。",
-            "en": "Draft a project delay note to our partner in my usual voice, for review before sending."
+            "zh-Hans": "给客户写催款邮件：发票 7 月 12 日到期未付，语气坚定、给对方台阶、不承诺任何新账期。细节缺的留占位。",
+            "en": "Draft a payment reminder: the invoice was due July 12 and is unpaid — firm tone, keep their dignity, promise no new terms. Leave unknown details as placeholders."
           },
           "output": {
-            "zh-Hans": "一封待确认的邮件草稿，发送需你批准。",
-            "en": "An email draft awaiting your review; sending needs your approval."
+            "zh-Hans": "2–3 个主题候选加正文草稿，日期与单号与简报一致，未核实的人名金额是带警告的占位符；发送与否由你决定。",
+            "en": "2–3 subject options and a body draft whose dates and invoice number trace to the brief, with warned placeholders for anything unverified; sending remains your call."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "把这封英文邮件改成更简短的跟进版本。",
-            "en": "Turn this English email into a shorter follow-up."
+            "zh-Hans": "参考我上个月发给学校的那封请假邮件的语气，替我起草这次的请假回复，简短、手机上能读完。",
+            "en": "Using the tone of the excuse email I sent the school last month, draft this reply — brief enough to finish on a phone."
           },
           "output": {
-            "zh-Hans": "缩短后的草稿与保留的关键信息说明。",
-            "en": "A shortened draft with a note on the key details kept."
+            "zh-Hans": "一份贴合所给样本语气的短稿；如果它听起来完全不像你的任何样本，会直说并给出两个替代语气。",
+            "en": "A short draft matched to the sample's register; if it sounds nothing like your other samples, the draft says so and offers two alternatives."
           }
         }
       ],
@@ -749,42 +817,46 @@
     },
     "deep-research": {
       "overview": {
-        "zh-Hans": "围绕一个问题做多轮检索、证据整合与结论报告，复用 Floe 现有的搜索与任务服务。结论附来源，无法确认的部分会明确标注。",
-        "en": "Run multi-pass research on a question, synthesize evidence and produce a conclusion report using Floe’s existing search and task services. Conclusions carry sources, and unresolved points stay marked."
+        "zh-Hans": "把「研究一下」变成一个可以复查、可以接着用的资料库，而不是一篇用完即弃的长文。适合代价高的问题：战略选择、商业计划、要发表的内容、需要真正检验的假设——风险低的快速问答不值得用这么重的流程。\n\n它会先重新界定问题、锁定背后真正要做的决定，并写下两到四个可以被事实推翻的假设；然后多路并行检索，每个来源单独存档、附原文引句，按可信度、时效和立场打分；一个结论要求至少三个不同类型的来源互相印证，成稿前还专门跑一轮「找反证」的自我质疑。找不到支撑的主张会被留空，而不是配一个像样的假引用。\n\n最终交付一份带出处的报告，连同研究计划、来源索引和关键数据清单；一个月后要更新，只增量核对变化的部分。所有文件存在你的工作区里，随时可以逐条回查。",
+        "en": "Research that lands as a folder you can revisit and extend — not a one-shot wall of text. Built for questions where being wrong is expensive: strategy calls, business plans, published pieces, hypotheses that must actually be tested. Low-risk quick answers don't deserve this weight.\n\nIt reframes the question first, pins the decision behind it and commits two to four falsifiable hypotheses; then fans searches out in parallel, archives every source as its own file with verbatim quotes, and scores it on credibility, recency and stance. A conclusion needs at least three sources of different kinds backing it, and the synthesis includes a deliberate hunt for disconfirming evidence — a claim without a source stays empty instead of gaining a plausible-looking citation.\n\nYou receive a cited report plus its plan, source index and key figures; a month later an update checks only what changed. Everything lives in your workspace, auditable line by line."
       },
       "useCases": [
         {
-          "zh-Hans": "为技术选型做一轮证据调研",
-          "en": "Research a technical decision with evidence"
+          "zh-Hans": "为进入某市场做一份可复审的战略调研报告",
+          "en": "Produce an auditable market-entry strategy report"
         },
         {
-          "zh-Hans": "对比多个方案并形成决策报告",
-          "en": "Compare options and produce a decision report"
+          "zh-Hans": "在 N 个产品/方法/机构之间做有据可依的横向比较",
+          "en": "Compare N products, methods or institutions with per-cell sourcing"
         },
         {
-          "zh-Hans": "追踪一个话题的最新进展",
-          "en": "Track recent developments on a topic"
+          "zh-Hans": "用一个外部数据集检验自家假设站不站得住",
+          "en": "Test whether an internal hypothesis survives external data"
+        },
+        {
+          "zh-Hans": "为下季度的更新产出增量 delta 而不是重跑全部检索",
+          "en": "Refresh a landscape with a delta instead of re-running the whole sweep"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "调研设备端模型推理在 iPad 上的可行方案，给出结论、来源和未确认的问题。",
-            "en": "Research practical on-device model inference options on iPad, with conclusions, sources and open questions."
+            "zh-Hans": "研究「端侧语音转写对小团队的成本拐点」：中等深度，先给我重述后的问题、三个可证伪假设和检索计划，再开始撒网。",
+            "en": "Research 'the cost inflection of on-device transcription for small teams', medium depth: reframe the question, state three falsifiable hypotheses and the search plan before fanning out."
           },
           "output": {
-            "zh-Hans": "一份带来源的调研报告，明确区分已验证与待核实信息。",
-            "en": "A sourced research report separating verified facts from open items."
+            "zh-Hans": "研究计划与假设清单先供你确认；随后是每个来源的存档、互证结果与成稿报告。",
+            "en": "A plan and hypothesis list for your sign-off, then source files, cross-check results and the cited report."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "对比三种开源方案的许可与维护状态，输出决策要点。",
-            "en": "Compare the licenses and maintenance status of three open-source options and summarize the decision points."
+            "zh-Hans": "三个月前那份竞品景观调研该更新了，按当时记录的关注点只查变动项，给我差异报告。",
+            "en": "Update the competitor landscape I researched three months ago — follow the watch-list from that run and deliver only what changed."
           },
           "output": {
-            "zh-Hans": "对比表与决策建议，附来源链接。",
-            "en": "A comparison table with a recommendation and source links."
+            "zh-Hans": "一份增量更新：新变化、改动的数字和被推翻的旧判断，原档案保持完整。",
+            "en": "A delta: new entrants, changed figures and falsified old judgments, with the original folder intact."
           }
         }
       ],
@@ -808,42 +880,46 @@
     },
     "deepread": {
       "overview": {
-        "zh-Hans": "对长文档做分段精读、要点抽取与问答，接入 Floe 的文件与阅读流程。回答会指向具体章节，便于回看原文。",
-        "en": "Read long documents in passes, extract key points and answer questions through Floe’s file and reading flow. Answers point back to specific sections so you can verify them."
+        "zh-Hans": "精读不是缩写：它帮你重建作者的论证——核心主张是什么、推理怎么搭、证据在哪里、哪些其实只是例子、哪里藏着没说出口的假设、反方会怎么反驳。按需要选模式：快速要点、深度论证拆解、可转成思维导图的知识地图、费曼式复述检验（你讲，它找断点，再补一个准确的说法、一个类比和复习计划），或整本书的章节脉络与综合。\n\n超长材料会按内容分段消化后再统一综合；每个重要论断都记录它和上级主张的关系，证据条目锚定到页码或章节；抽取不完整的部分明说，不靠它立论。\n\n它只处理你给的材料：上网找来源交给深度调研，套格式的高管摘要交给摘要技能。笔记、主张地图和记忆卡片都会存回你的工作区或手记，长期可翻。",
+        "en": "Close reading, not shortening. It reconstructs the author's argument: the central claim, how the reasoning is built, where the support actually sits, what is only an example quietly promoted into a rule, which premises go unstated, and how a skeptic would push back. Modes on demand: quick gist, deep argument breakdown, a mind-map-ready knowledge map, the Feynman check (you explain, gaps get located, then the corrected version, an analogy and a review plan), or whole-book chapter mapping and synthesis.\n\nVery long material is split on content boundaries, digested part by part and synthesized once more; major claims record their relation to the ones above them, evidence entries are pinned to page or section, and incomplete extraction is stated rather than leaned on.\n\nIt works only on material you hand over — finding sources belongs to deep research, templated exec briefs to the summarizer. Notes, claim maps and recall cards write back to your workspace or Notes, durable and revisitable."
       },
       "useCases": [
         {
-          "zh-Hans": "精读白皮书并提炼论点与证据",
-          "en": "Close-read a white paper and extract claims and evidence"
+          "zh-Hans": "整本书读完做成章节地图与费曼复习计划",
+          "en": "Read a whole book into a chapter map plus a Feynman recall plan"
         },
         {
-          "zh-Hans": "在长报告里定位具体数据",
-          "en": "Locate specific figures inside a long report"
+          "zh-Hans": "把一篇长论文的论证拆成主张树与证据台账",
+          "en": "Decompose a long paper into an argument tree and evidence ledger"
         },
         {
-          "zh-Hans": "对比文档多个版本的差异",
-          "en": "Compare differences across document versions"
+          "zh-Hans": "为一门课的材料生成思维导图就绪的知识地图",
+          "en": "Generate a mind-map-ready knowledge map for course material"
+        },
+        {
+          "zh-Hans": "闭卷讲不清的概念用 feynman 模式定位断点并补类比",
+          "en": "Use feynman mode to find where your closed-book explanation breaks and fix it with an analogy"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "精读这份 80 页白皮书，按章节提炼核心论点与支撑证据。",
-            "en": "Close-read this 80-page white paper and extract the core claims and supporting evidence per chapter."
+            "zh-Hans": "精读《思考的快与慢》第六章，整本书模式：给我章节论点、反复出现的证据和与其他章节的张力，不要摘要流水账。",
+            "en": "Deep-read chapter 6 of Thinking, Fast and Slow in whole-book mode: chapter thesis, recurring evidence and cross-chapter tensions — not a summary log."
           },
           "output": {
-            "zh-Hans": "按章节组织的论点—证据对照表，附页码。",
-            "en": "A chapter-by-chapter claim/evidence table with page references."
+            "zh-Hans": "章节到论点的对应、证据清单（含页码）与张力列表，存进工作区。",
+            "en": "Chapter-to-thesis mapping, a page-pinned evidence list and the tension set, saved in your workspace."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "找出这份论文中方法与结论之间论证较弱的环节。",
-            "en": "Find where this paper’s methodology weakly supports its conclusions."
+            "zh-Hans": "这篇关于贝叶斯推理的章节我合上书讲不清，用费曼模式走一遍：我先讲，你找断点，再给修正版和一个好类比。",
+            "en": "I can't explain this Bayesian-inference chapter closed-book. Run the Feynman mode: I'll explain, you locate the gaps, then give the corrected version and one strong analogy."
           },
           "output": {
-            "zh-Hans": "需要重点核对的段落地标与理由。",
-            "en": "Flagged passages with reasons for closer checking."
+            "zh-Hans": "断点诊断、修正后的简洁解释与复习计划卡片。",
+            "en": "A gap diagnosis, a tightened corrected explanation and recall-plan cards."
           }
         }
       ],
@@ -867,42 +943,46 @@
     },
     "literature-review": {
       "overview": {
-        "zh-Hans": "使用现有检索与模型配置完成检索、去重、证据表与来源核验，交付 Markdown 与 BibTeX。首版聚焦可核验的综述产物，不把图示导出当成综述成功的前提。",
-        "en": "Search, deduplicate, build evidence tables and verify sources with your existing search and model configuration, delivering Markdown and BibTeX. The first release targets verifiable review artifacts rather than decorating the output."
+        "zh-Hans": "按规范方法做文献综述——系统综述、范围综述或叙述综述。先定研究问题和检索计划，再跨多个学术来源检索、逐条筛入或排除并给出各阶段的数量统计；记录按 DOI 等信息去重归并，逐篇提取证据表，最后综合成文并核对引文与出处。检索式和筛选标准都保留在文档里，别人可以照着复跑。\n\n引文核对只对已经取回的记录进行：能验证的验证，验证不了的明确标注缺失，绝不美化不存在的文献；某个数据库当时够不到，就直说够不到；没读到的原文不会被转述。\n\n产出是工作区里的一整套综述材料：检索协议、筛选记录、证据表与综述初稿。",
+        "en": "Literature reviews done to method — systematic, scoping or narrative. Define the question and search plan, retrieve across academic sources, screen records in and out with counts at each stage, deduplicate and merge by DOI and identifiers, extract per-study evidence tables, synthesize into text and check citations against sources. The queries and eligibility criteria stay in the documents so anyone can re-run them.\n\nCitation checking works only against records already retrieved: what can be verified is verified, what can't is marked missing, an unreachable database is named rather than glossed, and nothing is paraphrased from text that was never fetched.\n\nThe deliverable is a full review kit in your workspace: protocol, screening record, evidence tables and a drafted review."
       },
       "useCases": [
         {
-          "zh-Hans": "围绕一个主题做首轮文献综述",
-          "en": "Run a first-pass literature review on a topic"
+          "zh-Hans": "为一个研究问题产出带检索式与纳入标准的综述协议",
+          "en": "Produce a review protocol with search strings and eligibility criteria"
         },
         {
-          "zh-Hans": "整理去重后的证据表",
-          "en": "Assemble a deduplicated evidence table"
+          "zh-Hans": "把两百篇候选筛成带 PRISMA 计数的核心文献集",
+          "en": "Screen two hundred candidates into a core set with PRISMA counts"
         },
         {
-          "zh-Hans": "为综述准备可核验的引用清单",
-          "en": "Prepare a verifiable citation list for a review"
+          "zh-Hans": "生成逐篇证据表并按主题综合成综述初稿",
+          "en": "Build per-study evidence tables and synthesize a review draft"
+        },
+        {
+          "zh-Hans": "投稿前逐条核对参考文献的 DOI 与出处",
+          "en": "Check every reference's DOI and provenance before submission"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "围绕“端侧模型推理”做一次文献综述，输出去重后的证据表与 BibTeX。",
-            "en": "Review the literature on on-device model inference, producing a deduplicated evidence table and BibTeX."
+            "zh-Hans": "研究问题「干式耕作对土壤容重的影响」走系统综述：先给我检索计划与纳入/排除标准，再执行去重和筛选，出各阶段数量。",
+            "en": "Systematic review for 'effects of dry farming on soil bulk density': search plan and in/exclusion criteria first, then dedup and screen, with counts at each stage."
           },
           "output": {
-            "zh-Hans": "综述 Markdown、证据表与 BibTeX 文件。",
-            "en": "Review Markdown, an evidence table and a BibTeX file."
+            "zh-Hans": "可复跑的检索协议、带数量的筛选结果与文献集；当时够不到的来源明确标注。",
+            "en": "A re-runnable protocol, screening results with counts and the corpus; unreachable sources named, not glossed."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "检索近三年相关论文，按方法类别整理综述提纲。",
-            "en": "Find papers from the last three years and outline a review organized by method family."
+            "zh-Hans": "这份综述初稿里的引文逐条对已检索记录做核对，标题作者年份对不上的列出来，查不到来源的标缺失。",
+            "en": "Verify every citation in this draft against the retrieved records; list title/author/year mismatches and mark anything unsourced as missing."
           },
           "output": {
-            "zh-Hans": "按方法分类的提纲与候选文献清单。",
-            "en": "A method-organized outline with a candidate paper list."
+            "zh-Hans": "逐条核对表与修正建议；缺失字段保持缺失，不编造页码或年份。",
+            "en": "A per-citation verification table with suggested fixes; missing fields stay missing — no fabricated pages or years."
           }
         }
       ],
@@ -926,42 +1006,46 @@
     },
     "citation-management": {
       "overview": {
-        "zh-Hans": "检索、整理与校验引用元数据并产出 BibTeX。元数据来源需要核验，冲突的字段会被标出而不是静默合并。",
-        "en": "Fetch, organize and validate citation metadata with BibTeX output. Metadata sources are checked, and conflicting fields are flagged rather than silently merged."
+        "zh-Hans": "让参考文献不再靠手抄：检索学术数据库（OpenAlex 覆盖多学科，PubMed 是生物医学的首选——只搜一个库正是参考清单偏斜的头号原因），把 DOI、PMID、arXiv 编号或论文链接换成完整题录，产出干净的 BibTeX；已有的引文列表可以批量核对、去重和清洗格式。\n\n数据库返回的记录常有残缺，它会对照出版方页面补齐卷期页码并记下核查来源；线上优先的文章保持真实的出版状态，缺的信息宁可空着也不编造。可选的检索账号密钥只有你自己配置过才会使用。\n\n需要为综述成稿配示意图时，使用应用自带的绘图与画布。它与 hub 内的文献综述天然配对：一个管找与筛，一个管引与录。",
+        "en": "References without hand-copying: search academic databases (OpenAlex for broad coverage, PubMed as the biomedical authority — single-database searching is the top cause of a lopsided reference list), turn DOIs, PMIDs, arXiv IDs or article links into complete records, and emit clean BibTeX; existing bibliographies get batch-validated, deduplicated and reformatted.\n\nDatabase records are often incomplete, so missing volume and pages get verified against the publisher's own page with the check logged; online-first articles keep their real publication state, and absent information stays honestly absent. Optional service keys are used only if you configured them yourself.\n\nManuscript diagrams go through the app's own drawing and canvas surfaces. Paired with literature-review it clicks: one finds and screens, the other cites and records."
       },
       "useCases": [
         {
-          "zh-Hans": "把参考文献整理成规范 BibTeX",
-          "en": "Convert references into clean BibTeX"
+          "zh-Hans": "把论文草稿里的 DOI 清单一次转成规范 BibTeX",
+          "en": "Convert a draft's DOI list into proper BibTeX in one pass"
         },
         {
-          "zh-Hans": "核对 DOI 与作者信息",
-          "en": "Verify DOIs and author details"
+          "zh-Hans": "跨 OpenAlex 与 PubMed 检索同一主题避免单一偏倚",
+          "en": "Search OpenAlex and PubMed together to avoid single-source bias"
         },
         {
-          "zh-Hans": "检查正文主张与引用是否匹配",
-          "en": "Check that claims match their citations"
+          "zh-Hans": "批量核对既有引文与真实出版物是否一致",
+          "en": "Batch-check existing citations against the actual publications"
+        },
+        {
+          "zh-Hans": "合并多个 .bib 时按 DOI 查重并统一键名",
+          "en": "Merge .bib files with DOI-based dedup and consistent keys"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "把这 12 条参考文献整理成 BibTeX，并核对 DOI 是否有效。",
-            "en": "Convert these 12 references into BibTeX and verify the DOIs."
+            "zh-Hans": "这份参考文献清单有 60 个 DOI：逐条抽题录，缺卷期的按出版商页面核实并记录来源，输出 BibTeX 和核查记录。",
+            "en": "This reference list has 60 DOIs: extract metadata for each, verify missing volume/pages against publisher pages with the source logged, and output BibTeX plus a check log."
           },
           "output": {
-            "zh-Hans": "BibTeX 文件与逐条核验备注。",
-            "en": "A BibTeX file with per-entry verification notes."
+            "zh-Hans": "一份键名规范的 .bib 文件与逐条补全记录；确实缺失的字段保持空着。",
+            "en": "A clean, key-consistent .bib with per-record enrichment notes, and genuinely missing fields left blank."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "检查这份综述的引用标注是否与正文主张一致。",
-            "en": "Check whether this review’s citations actually support the claims made."
+            "zh-Hans": "检索「CRISPR 脱靶检测 2024 年以来」的方法学论文，OpenAlex 与 PubMed 各取前 50，标出两边重叠与各自独有。",
+            "en": "Search 'CRISPR off-target detection, 2024 onward' for methods papers — top 50 from OpenAlex and PubMed — and show the overlap and each side's uniques."
           },
           "output": {
-            "zh-Hans": "不一致条目的清单与建议修改。",
-            "en": "A list of mismatches with suggested fixes."
+            "zh-Hans": "两份带题录的结果集与重叠分析，检索式和日期界限写明，可复跑。",
+            "en": "Two metadata-rich result sets with overlap analysis, queries and date bounds stated for re-running."
           }
         }
       ],
@@ -985,42 +1069,46 @@
     },
     "scientific-critical-thinking": {
       "overview": {
-        "zh-Hans": "提供评估研究证据与方法的批判性阅读框架与检查清单。重点是把“结论是否被数据支持”拆成可以逐条回答的问题。",
-        "en": "A critical-reading framework and checklists for evaluating research evidence and methods. It turns “does the data support this?” into questions that can be answered one at a time."
+        "zh-Hans": "一套评估科学说法的思考工具：证据等级怎么看（从个案报道到系统综述），不同研究设计各自会带来什么偏倚，相关和因果的差距在哪，p 值和置信区间常见怎么被误读，结论通常在哪里过度外推。它也把方法本身讲给你听，帮你长出这双眼睛；需要时按分级框架给出证据质量评定和降级理由。\n\n它评的是你带进来的材料——论文、报道、网页内容或文档——评估写成工作区文件或手记。主张找不到支撑就写「证据未提供」，拿不准的偏倚风险就标注拿不准：产出是可复查的评估，而不是「这篇不行」的一锤子判决。",
+        "en": "A reasoning toolkit for weighing scientific claims: how to read the evidence hierarchy from case reports up to systematic reviews; which biases each study design invites; where correlation and causation part company; how p-values and confidence intervals commonly get misread; and where conclusions typically overreach past their data. It teaches the methods too, so the critical eye becomes yours; on request it grades evidence quality with explicit reasons for any downgrade.\n\nIt appraises what you bring in — papers, news coverage, fetched pages, documents — and writes the appraisal as a workspace file or Note. A claim without support is recorded as 'evidence not supplied', an uncertain bias call stays flagged: the output is an inspectable assessment, never a one-word verdict."
       },
       "useCases": [
         {
-          "zh-Hans": "评估样本与统计方法是否合适",
-          "en": "Assess whether sampling and statistics fit the claim"
+          "zh-Hans": "评一篇媒体报道「某食物致癌」背后的证据等级",
+          "en": "Grade the actual evidence behind a 'this food causes cancer' news story"
         },
         {
-          "zh-Hans": "识别过度推断与因果误读",
-          "en": "Spot overreach and causal misreads"
+          "zh-Hans": "审阅试验方案：对照、盲法、终点与外推边界",
+          "en": "Review a trial protocol: controls, blinding, endpoints and extrapolation limits"
         },
         {
-          "zh-Hans": "为期刊评审写结构化意见",
-          "en": "Write structured review comments for a journal"
+          "zh-Hans": "把论文里 p 值与效应量的表述与统计陷阱对照检查",
+          "en": "Check a paper's p-value and effect-size language against known statistical pitfalls"
+        },
+        {
+          "zh-Hans": "按 GRADE 思路给出证据质量分级与降级原因",
+          "en": "Deliver a GRADE-style quality rating with explicit reasons for downgrading"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "用批判性阅读清单评估这篇论文的样本代表性与统计方法。",
-            "en": "Evaluate this paper’s sample representativeness and statistical methods with a critical-reading checklist."
+            "zh-Hans": "这条新闻说「研究证明咖啡延长寿命」，附了论文摘要：对照证据等级和偏倚清单评一下报道与论文各自说了什么、夸大在哪。",
+            "en": "A headline claims 'study proves coffee extends lifespan' with the abstract attached: grade it against the evidence hierarchy and bias checklist — what do the paper and the coverage each say, and where is the overreach?"
           },
           "output": {
-            "zh-Hans": "逐项评估结果与需要作者澄清的问题。",
-            "en": "Item-by-item findings plus questions for the authors."
+            "zh-Hans": "分级评估：研究设计、样本与对照，报道与论文之间的主张落差，拿不准处明确标注。",
+            "en": "A graded appraisal: design, sample and controls, the claim gap between coverage and paper, uncertainties marked as such."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "找出这段结论中超出数据支持范围的表述。",
-            "en": "Find statements in this conclusion that exceed what the data supports."
+            "zh-Hans": "这份对照试验方案帮我预审：可能的偏倚通道、终点选择问题和结论外推的边界，按证据质量框架逐条给意见。",
+            "en": "Pre-review this controlled trial protocol: likely bias channels, endpoint-choice problems and how far the conclusions can travel, point by point in the quality framework."
           },
           "output": {
-            "zh-Hans": "过度表述清单与更谨慎的替代表达。",
-            "en": "An overreach list with more careful alternative wording."
+            "zh-Hans": "逐条意见清单，每条对应一个已知的偏倚或设计问题与修改方向。",
+            "en": "A point-by-point list, each item tied to a named bias or design issue with a suggested direction."
           }
         }
       ],
@@ -1044,42 +1132,46 @@
     },
     "research-summarizer": {
       "overview": {
-        "zh-Hans": "把研究材料压缩成带来源的摘要，适应现有检索服务返回的内容。每条摘要都能追溯到原文位置，避免无出处的概括。",
-        "en": "Condense research material into sourced summaries that fit what the existing search service returns. Each summary traces back to its source location instead of floating free."
+        "zh-Hans": "把你手里已有的论文、文章和报告消化成结构化简报：核心论点、带证据的关键发现、方法、局限、可行动的要点，以及标注出处的原文引句；每份摘要还附带对来源可信度、证据强度、时效与立场的快速评估。\n\n不止单篇：两到五份材料各自提炼后做对比，一致处、矛盾处、互补处一目了然；也可以从文档中抽取格式统一的引文清单。它只处理你提供的材料——需要先去网上找来源，那是调研类技能的活。\n\n简报按固定模板输出并存进你的工作区或手记，每次同构、可复查。",
+        "en": "Digests the papers, articles and reports you already have into structured briefs: the central thesis, evidence-backed findings, method, limitations, actionable takeaways and page-anchored quotes — each with a quick read on the source's credibility, evidence strength, recency and bias signals.\n\nBeyond single files: two to five documents get individually distilled and then compared, with agreements, contradictions and complements laid out; citation lists can be extracted in consistent formatting. It works on supplied material only — when sources still need to be found on the web, that's the research skills' job.\n\nBriefs follow fixed templates so every output has the same shape, and land in your workspace or Notes for later reference."
       },
       "useCases": [
         {
-          "zh-Hans": "把长报告压缩成一页摘要",
-          "en": "Compress a long report into a one-page summary"
+          "zh-Hans": "把一份 40 页白皮书压成带页码引句的研究简报",
+          "en": "Compress a 40-page whitepaper into a page-cited research brief"
         },
         {
-          "zh-Hans": "为多篇论文写对比摘要",
-          "en": "Write comparative summaries of several papers"
+          "zh-Hans": "对比三份行业报告的一致点与口径矛盾",
+          "en": "Compare three industry reports for agreements and contradictions"
         },
         {
-          "zh-Hans": "为会议准备材料要点",
-          "en": "Prepare talking points from source material"
+          "zh-Hans": "按学术结构拆解一篇论文的方法与局限",
+          "en": "Break down a paper's methodology and limits in academic structure"
+        },
+        {
+          "zh-Hans": "从材料里抽取格式统一的引文清单",
+          "en": "Extract a consistently formatted citation list from supplied material"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "把这份研究报告压缩成一页摘要，每个要点标注来源章节。",
-            "en": "Compress this research report into a one-page summary with a source section for each point."
+            "zh-Hans": "这份论文按学术结构出简报：论点、三个主要发现各配证据、样本与方法、作者承认的局限、以及我下周能用的一条行动。",
+            "en": "Brief this paper in the academic structure: thesis, three findings each with evidence, sample and method, author-acknowledged limits, plus one action I can use next week."
           },
           "output": {
-            "zh-Hans": "一页摘要与来源索引。",
-            "en": "A one-page summary with a source index."
+            "zh-Hans": "工作区简报，每条发现附原文位置与可信度评估。",
+            "en": "A workspace brief; every finding carries its source location and a credibility note."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "为这五篇论文各写三句摘要，并标注出处。",
-            "en": "Write three-sentence summaries of each of these five papers with citations."
+            "zh-Hans": "这两份市场规模估计口径差很大，做成对比：各自数据源、时间窗、定义边界，指出矛盾可能出在哪一层。",
+            "en": "These two market-size estimates disagree. Compare their data sources, time windows and definitional scope, and say which layer the conflict sits in."
           },
           "output": {
-            "zh-Hans": "五段带出处的摘要。",
-            "en": "Five sourced summary paragraphs."
+            "zh-Hans": "逐维度对齐的对比与矛盾归因，保留双方原文数字，不折中取平均。",
+            "en": "A dimension-aligned comparison with conflict attribution, keeping both figures as printed rather than averaging them."
           }
         }
       ],
@@ -1103,42 +1195,46 @@
     },
     "exploratory-data-analysis": {
       "overview": {
-        "zh-Hans": "检查 CSV、TSV、JSON 数据的结构，输出缺失值、字段类型与异常值概览，帮助判断数据能否直接使用。",
-        "en": "Inspect the structure of CSV, TSV and JSON data: missing values, field types and outliers, so you can tell whether sources are ready to combine."
+        "zh-Hans": "在建模或下结论之前，先给数据做一次有边界的体检：CSV、TSV、JSON 文件里的字段结构、缺失情况、类型是否混杂、分布形态、离群点线索，以及分组或时间切分上可能造成数据泄漏的迹象。分析只读取你授权文件夹里的内容，绝不改动原始数据，报告默认不暴露具体标识；输出是一份可复查的说明——看到了什么、建议接下来查什么。\n\n需要更稳的对照时，可以启用第二套分析做交叉核对，两套结果不一致就停下来报告分歧点。表格之外的专业格式（基因组、医学影像等）提供的是阅读指南，不是自动解析。\n\n这是描述性检查：它不替你认证数据质量，也不支持任何临床或因果结论。",
+        "en": "A bounded check-up of your data before modeling or concluding: for CSV, TSV and JSON files — field structure, missing-value patterns, mixed types, distribution shape, outlier hints, and signs of leakage across groups, entities or time splits. It reads only inside the folder you authorize, never touches the originals, and keeps specific identifiers out of reports; the output is a reviewable profile saying what was seen and what to inspect next.\n\nFor extra assurance a second analysis path can be layered on for cross-checking — the two must agree or the run stops and shows exactly where they diverge. Specialist formats beyond tables (genomics, medical imaging and the like) come with reading guidance, not automatic parsing.\n\nThis is descriptive work: it certifies no data quality and supports no clinical or causal claim."
       },
       "useCases": [
         {
-          "zh-Hans": "快速摸清一份陌生数据的结构",
-          "en": "Understand an unfamiliar dataset quickly"
+          "zh-Hans": "分析前给实验 CSV 建立缺失/类型/分组基线画像",
+          "en": "Profile an experiment CSV for missingness, types and groups before analysis"
         },
         {
-          "zh-Hans": "发现缺失值与异常值分布",
-          "en": "Find missing-value and outlier patterns"
+          "zh-Hans": "审计训练/测试切分与个体重复造成的泄漏风险",
+          "en": "Audit split and per-subject leakage risks in a dataset"
         },
         {
-          "zh-Hans": "判断两份表能否直接合并",
-          "en": "Decide whether two tables can be joined directly"
+          "zh-Hans": "评估离群值与不同变换下结论的敏感性",
+          "en": "Check how conclusions shift under outliers and alternate transformations"
+        },
+        {
+          "zh-Hans": "对照表与新收数据做结构一致性核查（重复键、NaN）",
+          "en": "Structural integrity checks on fresh data: duplicate keys, NaN, ragged rows"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "分析这份 CSV 的字段类型、缺失值与异常值，输出概览报告。",
-            "en": "Profile this CSV for field types, missing values and outliers, and produce an overview report."
+            "zh-Hans": "这份 trial.csv 在我授权的目录里：先确认格式在支持范围内，再看字段与缺失画像、condition 分组下按 subject_id 的泄漏检查，标识符保持脱敏。",
+            "en": "trial.csv is inside my authorized folder: confirm the format is supported, then show structure and missingness profiles, a leakage check grouped by condition over subject_id, identifiers kept anonymized."
           },
           "output": {
-            "zh-Hans": "一份数据概览报告，含字段统计与可疑值清单。",
-            "en": "A data overview report with per-field statistics and a suspicious-value list."
+            "zh-Hans": "一份画像与泄漏检查报告，逐列说明缺失与类型情况；不支持的格式会指引下一步而不是硬读。",
+            "en": "A profile and leakage report with per-column missing/type notes; an unsupported format gets routed onward instead of force-read."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "对比这两份销售数据的字段差异，指出不能直接合并的列。",
-            "en": "Compare the fields of these two sales datasets and point out columns that would not join cleanly."
+            "zh-Hans": "比较 measurement 列在取对数与截尾两种处理下的分布差异，只出有界报告，原始文件别动，处理建议列出来给我决定。",
+            "en": "Compare the measurement column's distribution under log-transform versus winsorizing — bounded reports only, don't touch the raw file, and list proposed treatments for me to decide."
           },
           "output": {
-            "zh-Hans": "字段对照表与合并风险说明。",
-            "en": "A field comparison table with merge risks explained."
+            "zh-Hans": "两种处理下的对照统计、图示说明与边界样本清单；数据零改动。",
+            "en": "Side-by-side statistics under both treatments, described plots, a boundary-sample list — and the data unchanged."
           }
         }
       ],
@@ -1162,42 +1258,46 @@
     },
     "statistical-analysis": {
       "overview": {
-        "zh-Hans": "完成描述统计、常用检验与回归分析，并保存假设检查与可复现脚本。首版不含贝叶斯建模等高级方法。",
-        "en": "Run descriptive statistics, common tests and regression, with assumption checks and reproducible scripts. Advanced methods such as Bayesian modeling are not included in the first version."
+        "zh-Hans": "把统计比较做成有纪律的流程：先写清假设、比较对象和判断标准，再按预先定好的方案执行检验——两组比较、配对设计、多组方差分析（含事后两两比较）、非参数检验、列联表与相关分析、常用回归，以及实验前的样本量测算。每次检验都附带效应量和置信区间，按学术报告格式给出描述统计与结果，不显著的发现同样如实呈现。\n\n正态性、方差齐性等前提检查随报告给出，但只作提醒，不会自动替你换检验；数据缺格按规则处理并计数；同样的文件和方案能得到相同的结果，便于复核。\n\n范围之外也明说：贝叶斯分析、多层模型、生存分析、元分析和时间序列建模不在其中——宁可说不做，不会给你近似糊过去。",
+        "en": "Statistics with discipline: hypotheses, comparisons and decision thresholds are written down before anything runs, then executed from the prespecified plan — two-group and paired tests, analysis of variance with post-hoc comparisons, nonparametric tests, contingency tables and correlations, standard regression, and pre-experiment sample-size solving. Every result carries its effect size and confidence interval, reported with descriptives in academic style; non-significant findings stay in.\n\nAssumption checks (normality, variance equality) accompany the report as information, never as an automatic switch of tests; missing cells follow stated rules with counts; the same data and plan reproduce the same numbers for review.\n\nOut of scope, stated plainly: Bayesian analysis, multilevel models, survival analysis, meta-analysis and time-series fitting — declined rather than approximated."
       },
       "useCases": [
         {
-          "zh-Hans": "对实验数据做描述统计与检验",
-          "en": "Run descriptive statistics and tests on experiment data"
+          "zh-Hans": "两独立组比较：Welch t 加 Hedges g 与置信区间",
+          "en": "Compare two independent groups: Welch t plus effect size with CI"
         },
         {
-          "zh-Hans": "拟合回归并检查前提假设",
-          "en": "Fit a regression and check its assumptions"
+          "zh-Hans": "多组比较后接 Tukey HSD 事后检验",
+          "en": "Run multi-group ANOVA followed by Tukey HSD post-hoc tests"
         },
         {
-          "zh-Hans": "保留可复现的分析脚本",
-          "en": "Keep a reproducible analysis script"
+          "zh-Hans": "实验前先解出达到目标功效所需样本量",
+          "en": "Solve the sample size needed to reach target power before the experiment"
+        },
+        {
+          "zh-Hans": "OLS 回归配诊断与稳健标准误，按 APA 出报告",
+          "en": "OLS regression with diagnostics and robust errors, reported in APA form"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "对这份实验数据做描述统计与 t 检验，并检查前提假设。",
-            "en": "Run descriptive statistics and a t-test on this experiment data, and check the assumptions."
+            "zh-Hans": "按这份方案跑组间比较：描述统计、Welch t 检验、效应量、前提检查全套，报告里把不显著结果也写出来。",
+            "en": "Run the group comparison per this plan: descriptives, Welch t-test, effect size, assumption checks — keep non-significant results in the report."
           },
           "output": {
-            "zh-Hans": "统计结果、假设检查与可重跑脚本。",
-            "en": "Test results, assumption checks and a rerunnable script."
+            "zh-Hans": "完整的检验结果与报告，含效应量、置信区间与前提检查；异常筛查只报告，不自动换检验。",
+            "en": "Full test results with effect sizes, confidence intervals and assumption checks; odd screens are reported, never used to auto-switch tests."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "拟合一个线性回归，输出系数、诊断图与解释。",
-            "en": "Fit a linear regression and output coefficients, diagnostic plots and interpretation."
+            "zh-Hans": "效应量 d=0.5、功效 0.8、双侧 α=0.05 的配对设计要多少样本？顺带算一下 d=0.4 的情况。",
+            "en": "How many paired samples for d=0.5, power 0.8, two-sided α=0.05? Also solve the d=0.4 case."
           },
           "output": {
-            "zh-Hans": "回归摘要、诊断图与注意事项。",
-            "en": "A regression summary, diagnostics and caveats."
+            "zh-Hans": "两组精确求解的样本量与假设说明，标注这是实验前的功效估算，不是结果的保证。",
+            "en": "Both solved sample sizes with stated assumptions, labeled a-priori power estimates rather than outcome guarantees."
           }
         }
       ],
@@ -1221,42 +1321,46 @@
     },
     "scientific-visualization": {
       "overview": {
-        "zh-Hans": "导出出版级 PNG、PDF 与 SVG 图表，核验中文标注、缺失值与误差表达；交互式 HTML 图表为可选产物。",
-        "en": "Export publication-ready PNG, PDF and SVG charts, with checks for Chinese labels, missing values and error bars. Interactive HTML charts are an optional extra."
+        "zh-Hans": "先保住含义，再谈好看。这个流程教你做不撒谎的科研图：柱和面积从零点起，断轴必须声明；误差线说清是哪一种不确定度、样本量多少；缺失、零值和被排除的点用看得见的区分，而不是悄悄连线；能用双轴就尽量不用。原始数据、过滤规则、归一化方式与随机种子随图一起保存，成品会重新打开检查，而不是相信默认值。\n\n在任务计算环境里出图：常用出版风格预设、色盲友好配色与文字对比检查，颜色之外再配形状或标注做第二重线索；导出 PNG、PDF、SVG，尺寸与字体可控。目标期刊的要求不靠猜：确认刊名与投稿阶段后，按现行官方指南核对，最后由人过目定稿。\n\n静态出版图是这一版的交付物；自动检查只是辅助，合规与否要人来判。",
+        "en": "Preserve meaning before optimizing looks. This workflow makes figures that don't lie: bars and areas start at zero, axis breaks are declared, error bars state which uncertainty and how much data behind them, missing/zero/excluded points are visibly distinguished rather than quietly connected, and dual axes get avoided where possible. Raw data, filters, normalizations and seeds stay filed beside the figure, and the delivered file is reopened and inspected instead of trusting defaults.\n\nPlotting runs in the task's compute environment with publication style presets, color-blind-safe palettes and text-contrast checks — color always paired with a second cue like shape or label — exporting PNG, PDF and SVG at controlled sizes and fonts. Journal requirements are never guessed: identify journal, article type and stage, verify against current official guidance, then a human eye closes the loop.\n\nStatic publication figures are this release's deliverable; automated checks assist, but compliance calls remain human."
       },
       "useCases": [
         {
-          "zh-Hans": "生成带误差线的分组柱状图",
-          "en": "Create grouped bar charts with error bars"
+          "zh-Hans": "为论文方法学画误差与样本量清楚的图，数据处理说明随图归档",
+          "en": "Produce manuscript figures with clearly named error bars and sample sizes, data notes archived alongside"
         },
         {
-          "zh-Hans": "输出中文标注的出版级图表",
-          "en": "Produce publication-ready charts with Chinese labels"
+          "zh-Hans": "审计既有图色的对比度与灰度可辨性",
+          "en": "Audit existing figures for contrast and grayscale legibility"
         },
         {
-          "zh-Hans": "显式表达缺失与不确定数据",
-          "en": "Show missing and uncertain data explicitly"
+          "zh-Hans": "按目标期刊的实时要求做导出规划与尺寸核查",
+          "en": "Plan exports against the target journal's live requirements with size checks"
+        },
+        {
+          "zh-Hans": "把色盲不可辨的旧图改成双重编码版本",
+          "en": "Rebuild color-blind-hostile figures with redundant visual encoding"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "把这份数据画成带误差线的分组柱状图，导出 PNG 和 PDF。",
-            "en": "Plot this data as grouped bars with error bars, exporting PNG and PDF."
+            "zh-Hans": "这组三时间点的均值数据出期刊单栏图：95% bootstrap 置信区间、原始点叠加、色盲友好配色加标记冗余，导 600dpi PNG 与矢量 PDF，附数据来源说明。",
+            "en": "Make a journal single-column figure from these three-timepoint means: 95% bootstrap CIs, raw points overlaid, color-blind-safe palette with marker redundancy, export 600-dpi PNG plus vector PDF with data provenance."
           },
           "output": {
-            "zh-Hans": "两个格式的图表文件与绘图脚本。",
-            "en": "Chart files in both formats plus the plotting script."
+            "zh-Hans": "重新打开核对过的两套导出，随附数据来源与处理说明，以及对比度检查结果。",
+            "en": "Two reopened-and-verified exports with their data-provenance notes (sources, processing, seed, missing-data handling) and contrast-check results."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "生成一张中文标注的折线图，缺测值要明确标出。",
-            "en": "Generate a line chart with Chinese labels that marks missing measurements explicitly."
+            "zh-Hans": "这张双轴图看起来在放大相关性——按守则重做：说明为什么放弃双轴、给替代画法，并列出图注里哪些说法必须改。",
+            "en": "This dual-axis chart looks like it's inflating a correlation — rebuild it per the guardrails: justify dropping dual axes, show the alternative encoding, and list which caption claims must change."
           },
           "output": {
-            "zh-Hans": "带图例与缺失标记的图表文件。",
-            "en": "A chart file with a legend and missing-data markers."
+            "zh-Hans": "诚实编码的替换图与逐条图注修订建议；原始数据与旧图保留。",
+            "en": "An honestly re-encoded replacement figure with caption corrections itemized, originals kept."
           }
         }
       ],
@@ -1280,42 +1384,46 @@
     },
     "markitdown": {
       "overview": {
-        "zh-Hans": "把 DOCX、XLSX、PPTX、HTML、CSV 与可提取的 PDF 转成 Markdown，保留标题层级与表格结构；扫描件使用 App 内置 OCR，受保护 PDF 走 App 内置的审阅通道，不新增付费服务。",
-        "en": "Convert DOCX, XLSX, PPTX, HTML, CSV and extractable PDFs to Markdown while keeping heading levels and tables. Scans use the app’s built-in OCR and protected PDFs use its built-in review path, with no new paid services."
+        "zh-Hans": "把各类文档变成干净的 Markdown，选对路线是关键：单份 Word、HTML、RTF、纯文本走应用的原生转换，信息直接取自文件本身；能提取文字的 PDF 转成带页标记的 Markdown；扫描件交给文字识别，加密 PDF 先解锁再处理。批量目录转换、表格转写、幻灯片文字与演讲备注提取由随包工具完成——按真实放映顺序输出，公式没有可显示的值会明确警告，宏永不被执行。\n\n每份转换都留下可查的记录：走的是哪条路、各输入输出一一对应、原件完好；不支持的格式会得到下一步建议，绝不猜格式硬转，全程不联网。转换出的文字按外部内容对待——后续步骤不执行它，也不信它自述的「成功」。\n\n保留的是文字结构，不承诺像素级排版：图形、版式和复杂表格要用应用内预览核对。",
+        "en": "Documents into clean Markdown, along the right route. Single Word, HTML, RTF and text files use the app's native conversion, reading structure directly from the file itself; extractable PDFs become Markdown with page markers; scans route to text recognition, and encrypted PDFs unlock first. Batch folders, spreadsheet tables and slide text plus speaker notes run through the bundled tooling — slides in true presentation order, formula cells with no displayable value warned loudly, macros never executed.\n\nEach conversion leaves a traceable record: which route ran, inputs matched one-to-one with outputs, sources kept intact; unsupported formats get routing advice, never a guessed conversion, and nothing goes online. The resulting text is treated as outside content — later steps never execute it or trust its self-declared 'success'.\n\nText structure is preserved, pixel layout is not promised: figures, styling and complex tables get checked through in-app previews."
       },
       "useCases": [
         {
-          "zh-Hans": "把办公文档批量转成 Markdown",
-          "en": "Convert office documents to Markdown in batches"
+          "zh-Hans": "把一目录的表格和幻灯片报告批量转成可检索的 Markdown",
+          "en": "Batch-convert a folder of spreadsheet and slide reports into searchable Markdown"
         },
         {
-          "zh-Hans": "保留标题层级与表格结构",
-          "en": "Preserve heading levels and table structure"
+          "zh-Hans": "从 PDF 论文提取带页标记的正文供后续摘要",
+          "en": "Extract page-marked text from PDF papers for downstream summarizing"
         },
         {
-          "zh-Hans": "为知识库准备可检索文本",
-          "en": "Prepare searchable text for a knowledge base"
+          "zh-Hans": "为每份转换留下可复查的路线与结果记录",
+          "en": "Keep a re-checkable per-file record of which route ran and what it produced"
+        },
+        {
+          "zh-Hans": "弄清某个格式是直接转、要先识别、还是暂不支持",
+          "en": "Find out whether a format converts directly, needs recognition first, or isn't supported"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "把这份 DOCX 和这组表格转换成 Markdown，保留标题层级。",
-            "en": "Convert this DOCX and these tables to Markdown while keeping heading levels."
+            "zh-Hans": "把 documents 目录下的表格、幻灯片、CSV 和 PDF 递归转成 Markdown，保留目录结构，跳过快捷方式，列出转不了的老格式文档。",
+            "en": "Recursively convert spreadsheets, slides, CSVs and PDFs under documents/ into Markdown, keep the folder structure, skip shortcuts, and list legacy documents that can't convert."
           },
           "output": {
-            "zh-Hans": "一个或多个 Markdown 文件与转换说明。",
-            "en": "One or more Markdown files with a conversion note."
+            "zh-Hans": "一份转换清单：逐文件结果与数量汇总、各文件的 Markdown 输出，原件确认未动。",
+            "en": "A conversion record listing each file's outcome and counts, the Markdown outputs, and proof the originals were left untouched."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "把这个 HTML 页面转成 Markdown，并说明哪些元素被丢弃。",
-            "en": "Convert this HTML page to Markdown and list which elements were dropped."
+            "zh-Hans": "这份 PDF 转出来的表格列串了位，先说明是文字顺序的问题还是真的丢了内容，再告诉我核对结构和取文字分别该用什么。",
+            "en": "The converted PDF's table columns interleaved wrongly — explain whether that's a text-order artifact or real loss, and tell me how to verify structure and extract text reliably."
           },
           "output": {
-            "zh-Hans": "Markdown 文本与丢弃元素清单。",
-            "en": "Markdown text plus a list of dropped elements."
+            "zh-Hans": "对照源文件的差异说明与逐页文本；结构关键的表格改用应用内预览核对的建议。",
+            "en": "A diff explanation against the source with page-marked text, plus advice to verify layout-critical tables through in-app previews."
           }
         }
       ],
@@ -1339,42 +1447,46 @@
     },
     "sympy": {
       "overview": {
-        "zh-Hans": "符号数学求解与推演：方程、积分、化简与验证。以真实 Linux 依赖与样例验证，结果显示每一步推导而不是只给结论。",
-        "en": "Symbolic mathematics: equations, integrals, simplification and verification. Validated against real Linux dependencies and examples, with derivations shown rather than only final answers."
+        "zh-Hans": "在任务的计算环境里做精确的符号数学：化简、求导、积分、级数、方程与微分方程、矩阵与线性代数，还有物理、数论和几何问题——答案保持精确，得到根号 2 而不是 1.414 的近似。过程可以一步步展示，结果能自动代回验证；算式还能直接导出 LaTeX 排版，或生成可运行的数值代码。\n\n适合带着推导的学习与复核：解微分方程看每一步、算完积分求导回验、含参问题在给定假设下化简。计算前会先确认环境就绪，数值扩展只在环境本来具备时使用。\n\n拿到的是能带走的推导和验证过的结果，而不是一个自信但可疑的数字。",
+        "en": "Exact symbolic mathematics inside the task's compute environment: simplification, derivatives, integrals and series, equations and differential equations, matrices and linear algebra, plus physics, number theory and geometry — answers stay exact, giving root-2 rather than a 1.414 approximation. Work unfolds step by step, results can be substituted back and verified automatically, and formulas export directly as LaTeX or as runnable numeric code.\n\nBuilt for learning and checking with the derivation in hand: solve an ODE seeing each move, integrate then differentiate to confirm, simplify a parameterized expression under stated assumptions. It confirms the environment is ready before solving, and numeric extensions are used only when the environment already provides them.\n\nWhat you keep is the verified working, not a confident but suspicious number."
       },
       "useCases": [
         {
-          "zh-Hans": "求解微分方程并化简结果",
-          "en": "Solve differential equations and simplify results"
+          "zh-Hans": "解微分方程并把推导一步步写出来",
+          "en": "Solve a differential equation with the derivation shown step by step"
         },
         {
-          "zh-Hans": "推导积分并反向验证",
-          "en": "Derive integrals and verify them backwards"
+          "zh-Hans": "算积分后用求导回代验证结果",
+          "en": "Compute an integral and verify it by differentiating the result back"
         },
         {
-          "zh-Hans": "检查代数推导中的错误",
-          "en": "Check algebraic derivations for mistakes"
+          "zh-Hans": "把公式排版成 LaTeX 或编译成 C/Fortran 数值代码",
+          "en": "Render formulas as LaTeX or generate C/Fortran numeric code from them"
+        },
+        {
+          "zh-Hans": "对矩阵与多项式做精确的符号线性代数",
+          "en": "Run exact symbolic linear algebra on matrices and polynomials"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "解这个微分方程并化简结果，保留推导步骤。",
-            "en": "Solve this differential equation, simplify the result and keep the derivation steps."
+            "zh-Hans": "解 y'' + 4y = cos(2x) 的特解，保留中间步骤，最后代回原方程验证，并给 LaTeX。",
+            "en": "Solve for the particular solution of y'' + 4y = cos(2x), keep the intermediate steps, verify by substituting back into the equation, and give me the LaTeX."
           },
           "output": {
-            "zh-Hans": "推导过程与最终表达式。",
-            "en": "The derivation and the final expression."
+            "zh-Hans": "符号解、代回验证成立的结果，与可直接粘贴的 LaTeX 表达式。",
+            "en": "The symbolic solution, substitution confirming it, and a paste-ready LaTeX expression."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "推导这个积分，并验证结果对 x 的导数等于被积函数。",
-            "en": "Derive this integral and verify that its derivative with respect to x equals the integrand."
+            "zh-Hans": "先确认数学环境可用，再算这个含参积分，参数按正数假设处理，结果给化简形式。",
+            "en": "Confirm the math environment is ready, then compute this parameterized integral treating the parameters as positive, and simplify the result."
           },
           "output": {
-            "zh-Hans": "积分结果与验证步骤。",
-            "en": "The integral result and the verification steps."
+            "zh-Hans": "确认就绪后给出的精确积分与化简步骤；环境没备好会先说明，而不是硬算。",
+            "en": "An exact integral with steps once readiness is confirmed — if the environment isn't ready it says so instead of forcing an answer."
           }
         }
       ],
@@ -1398,42 +1510,46 @@
     },
     "impeccable": {
       "overview": {
-        "zh-Hans": "面向网页界面设计审计与修改闭环：先建立上下文，再在受控页面快照上做规则扫描，完成再设计与复查。",
-        "en": "A design audit and rework loop for web interfaces: establish context, run rule scans over controlled page snapshots, then redesign and recheck."
+        "zh-Hans": "网页界面设计的审计与打磨：当你想把一个页面、仪表盘或产品界面做得更好——视觉层次重排、字体与间距校准、交互状态理顺、品牌气质统一——它按设计负责人的标准工作：先弄清这个界面要让人完成什么，再给出有明确取向的设计，并落到可用的代码与文案上。\n\n它区分两种改法：精修保留现有身份、内容与行为，只做提升；改版会更换视觉方向，但产品事实、内容和约束原样继承。你钉死的风格要求优先于它的偏好。\n\n对已打开的页面还能做设计检查，指出可见的层次、对比与交互问题；这类自动检查覆盖有限，最终效果仍要真人浏览确认。本条目描述该技能的完整工作方式，当前可安装状态以商店页面为准。",
+        "en": "Design audit and refinement for web interfaces. When you want a page, dashboard or product UI to work better — visual hierarchy reordered, type and spacing calibrated, interaction states sorted, brand feel unified — it works like the design lead: what should this surface make people do comes first, then a design with a clear point of view, landed in working code and copy.\n\nTwo modes of change stay distinct: refinement preserves the existing identity, content and behavior while raising quality; a redesign replaces the visual direction while inheriting product truth, content and constraints. Your pinned style outranks its preference.\n\nFor opened pages it can also run design checks that surface visible hierarchy, contrast and interaction problems; automated coverage is limited, so the final word stays with a human looking at the page. This entry describes the skill's complete working; current availability follows the storefront."
       },
       "useCases": [
         {
-          "zh-Hans": "审查落地页的视觉层级与可访问性",
-          "en": "Audit a landing page’s hierarchy and accessibility"
+          "zh-Hans": "给落地页定一个鲜明的视觉方向并落成可用代码",
+          "en": "Choose a distinct visual direction for a landing page and land it in working code"
         },
         {
-          "zh-Hans": "按设计规范重做首屏并复查",
-          "en": "Rework a hero against a design spec, then recheck"
+          "zh-Hans": "以设计评审视角批判现有仪表盘界面",
+          "en": "Critique an existing dashboard with a design review's eye"
         },
         {
-          "zh-Hans": "把检查结果整理成可执行的修改清单",
-          "en": "Turn findings into an actionable fix list"
+          "zh-Hans": "检查已打开页面的层次、对比与交互问题",
+          "en": "Check an opened page for hierarchy, contrast and interaction problems"
+        },
+        {
+          "zh-Hans": "在不改文案与行为的前提下克制地精修界面",
+          "en": "Refine an interface with restraint while preserving copy and behavior"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "审查这个落地页的视觉层级、间距与可访问性，给出按优先级排序的修改清单。",
-            "en": "Audit this landing page for visual hierarchy, spacing and accessibility, then produce a priority-ordered fix list."
+            "zh-Hans": "给这个笔记应用的引导页做重设计：保留现有文案事实，换一个纸质印刷质感的视觉方向，交可直接用的页面代码并说明设计决定。",
+            "en": "Redesign this notes app's onboarding: keep the factual copy, move to a paper-and-print visual direction, deliver usable page code with the design decisions noted."
           },
           "output": {
-            "zh-Hans": "基于受控页面快照的检查结果与分级修改建议；未覆盖的检查项会明确列出。",
-            "en": "Findings from controlled page snapshots with ranked fixes; checks that were not covered are listed explicitly."
+            "zh-Hans": "带明确取向的重设计与新的视觉方向，范围之外的内容与行为原样保留。",
+            "en": "A redesign with a stated direction and new visual language, everything outside scope preserved."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "按这份设计规范重做首屏，然后复查改动前后的差异。",
-            "en": "Rework the hero against this design spec, then review the before/after differences."
+            "zh-Hans": "检查我打开的这个定价页的设计问题：层次、对比、间距和按钮状态，按严重程度列出，测不到的部分直接说明。",
+            "en": "Check design problems on this opened pricing page: hierarchy, contrast, spacing and button states — list them by severity, and say plainly what couldn't be measured."
           },
           "output": {
-            "zh-Hans": "再设计后的页面与复检清单；无法自动验证的部分会说明原因。",
-            "en": "The redesigned page plus a recheck list; anything not automatically verifiable is explained."
+            "zh-Hans": "按问题分组的检查报告与覆盖说明——没检到的部分写出来，而不是报「通过」。",
+            "en": "A findings report with explicit coverage notes — unmeasured aspects are listed, not passed off as clean."
           }
         }
       ],
@@ -1474,42 +1590,46 @@
     },
     "algorithmic-art": {
       "overview": {
-        "zh-Hans": "用可复现的种子生成算法艺术，并导出 Floe 可预览的 HTML。宿主专属的品牌与展示方式会被替换，离线声明必须实测通过后才写入结果。",
-        "en": "Generate algorithmic art from reproducible seeds and export HTML that Floe can preview. Host-specific branding is replaced, and offline claims are only made after measurement."
+        "zh-Hans": "生成艺术，但种子说了算：先写一段计算哲学——什么过程在涌现什么、秩序与混沌在哪里拉扯——再从你的需求里推出概念种子，落在内置算法上生成作品。交付是一组配套文件：可交互的网页作品（换种子、调参数、调色板、切换算法、下载图片，单文件离线可用）、同一颗种子的静态图，以及保存下来的生成参数，凭种子可以原样重跑。\n\n换一颗种子是姐妹作，同一个种子永远是同一件作品。想表达新哲学，可以在核心里增加算法。\n\n页面效果以应用内真实打开和截图为准——数字核心正确不等于屏幕效果，最终以看得见的那一版定稿。",
+        "en": "Generative art where the seed is law. Write a computational philosophy — what emerges from which process, where order and chaos pull — then deduce the conceptual seed from your brief and generate on the built-in algorithms. You receive a matched set: an interactive web piece (swap seeds, tune parameters and palettes, switch algorithms, download an image — one self-contained file that works offline), a static render of the same seed, and the saved generation parameters so the piece re-runs exactly from its seed.\n\nA new seed is a sister piece; the same seed is always the same piece. New philosophies can extend the core with fresh algorithms.\n\nOn-screen behavior is judged by actually opening and capturing the page in the app — a correct numeric core isn't the same as the visible result, and what you see is what ships."
       },
       "useCases": [
         {
-          "zh-Hans": "用固定种子生成可复现的画面",
-          "en": "Produce reproducible visuals from fixed seeds"
+          "zh-Hans": "按一句美学描述生成可调参的交互作品与静态图",
+          "en": "Turn an aesthetic one-liner into a tunable interactive piece plus static renders"
         },
         {
-          "zh-Hans": "导出可交互的参数页面",
-          "en": "Export an interactive parameter page"
+          "zh-Hans": "为品牌做可复现的种子系列（同配方姐妹作）",
+          "en": "Build a reproducible seed series for a brand — same recipe, sister pieces"
         },
         {
-          "zh-Hans": "为视觉实验准备系列变体",
-          "en": "Prepare a series of visual variants"
+          "zh-Hans": "对比两种核心算法在同一组参数下的性格",
+          "en": "Compare the two built-in algorithms' personalities under one parameter set"
+        },
+        {
+          "zh-Hans": "保存生成参数，让任何一件作品都能原样复现",
+          "en": "Save generation parameters so any piece can be exactly reproduced"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "用固定种子生成一组生成艺术作品，参数可在页面上调整。",
-            "en": "Generate a set of algorithmic artworks from a fixed seed with adjustable page parameters."
+            "zh-Hans": "哲学走「潮汐呼吸」：flowfield、1200x1200、种子 987654321，出交互网页作品与静态图，再给同参数三个相邻种子做对照页。",
+            "en": "Philosophy 'tidal breathing': flowfield, 1200x1200, seed 987654321 — ship the interactive piece and static render, then three neighboring seeds at the same parameters as a comparison sheet."
           },
           "output": {
-            "zh-Hans": "可在 Floe 预览的 HTML 与参数说明。",
-            "en": "HTML previewable in Floe with parameter documentation."
+            "zh-Hans": "一整套生成文件（交互页、静态图、参数），用同一颗种子重跑得到完全相同的结果。",
+            "en": "The full file set (interactive page, static render, parameters); rerunning the seed reproduces the identical piece."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "把这个生成艺术草图导出为 HTML，并注明是否需要网络。",
-            "en": "Export this generative-art sketch as HTML and state whether it needs a network."
+            "zh-Hans": "在应用里打开这件作品：试一遍参数滑杆和种子切换，截一张实际渲染的图给我，以屏幕效果为准。",
+            "en": "Open the piece in the app: exercise the sliders and seed switches, then give me one actually-rendered screenshot — screen truth decides."
           },
           "output": {
-            "zh-Hans": "HTML 文件与依赖声明（离线可用性以实测为准）。",
-            "en": "An HTML file with a dependency statement (offline availability as measured)."
+            "zh-Hans": "交互操作说明与一张真实渲染截图；数字自检和画面验证分开报告。",
+            "en": "An interaction walkthrough plus one genuine rendered screenshot; numeric self-checks and screen verification reported separately."
           }
         }
       ],
@@ -1533,42 +1653,46 @@
     },
     "canvas-design": {
       "overview": {
-        "zh-Hans": "使用已验证的脚本与服务生成中文海报或版面，输出并重新打开 PNG 与 PDF，核验字体归属、尺寸与可读性。不使用 Notes 或 Canvas 的编辑状态。",
-        "en": "Produce Chinese posters and layouts with validated scripts and services, exporting and reopening PNG and PDF while checking font provenance, sizing and legibility. Notes and Canvas editing state stay untouched."
+        "zh-Hans": "把海报和图形版式当作有思想的手工件来做：先写一段视觉哲学——给这个方向起个两词的名字，比如「Brutalist Joy」「Chromatic Silence」，讲清它如何体现在空间、色彩、尺度与构图上；再从你的需求里推出那条安静的概念线索，在一页画布上完成九成视觉、一成必要文字的构图。\n\n成稿按版式规格生成，排版引擎用字体的真实度量拦住两大类问题——内容出界和文字互相重叠；中日韩字形有覆盖核对。度量拦得住粗错，拦不住所有光学意外，所以最后一步仍是真人目验。字体随包配置，不下载外部字库。\n\nSVG 与网页是源文件；需要整幅图片或 PDF 时，通过应用真实渲染后取图交付——不会声称未渲染的文件能自动导出。",
+        "en": "Posters and graphic layouts as crafted objects with a thesis: write a short visual philosophy first — name the direction in two words, 'Brutalist Joy', 'Chromatic Silence' — saying how it lives in space, color, scale and composition; then deduce the quiet conceptual thread from your brief and compose one canvas at ninety percent visual, ten percent essential text.\n\nThe artifact is generated from a layout spec, using the fonts' real measurements to block the two classic disasters — content running off the page and text colliding — with coverage checks for Chinese and Japanese glyphs. Measurements catch blunders, not every optical edge case, so a human look is the final step. Fonts come bundled; nothing external is downloaded.\n\nSVG and web pages are the source files; a full-size image or PDF is produced by rendering through the app for real, never promised from an unrendered file."
       },
       "useCases": [
         {
-          "zh-Hans": "制作中文活动海报",
-          "en": "Create a Chinese event poster"
+          "zh-Hans": "为线下活动做一张有概念线索的排版海报",
+          "en": "Compose an event poster carrying a subtle conceptual thread"
         },
         {
-          "zh-Hans": "把文案排成多栏版面",
-          "en": "Lay copy out in columns"
+          "zh-Hans": "给报告或专栏做系列统一的版头图形",
+          "en": "Build a consistent masthead system for a report or column"
         },
         {
-          "zh-Hans": "核验导出文件的字体与边距",
-          "en": "Verify fonts and margins in exported files"
+          "zh-Hans": "做中西文混排的视觉物料并核对字形覆盖",
+          "en": "Produce mixed Chinese/Latin visual material with glyph coverage checked"
+        },
+        {
+          "zh-Hans": "从一句风格描述推导出完整配色与构图方案",
+          "en": "Derive a full palette and composition from a one-line style prompt"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "做一张中文活动海报，A3 尺寸，导出 PNG 与 PDF。",
-            "en": "Create a Chinese event poster at A3 size and export both PNG and PDF."
+            "zh-Hans": "为一场爵士读书会让海报定调：先写「Concrete Poetry」式的哲学，再把一首 Bill Evans 曲名藏进构图，出海报版式与 SVG。",
+            "en": "Tone-set a poster for a jazz book club: write a Concrete-Poetry-style philosophy, hide a Bill Evans tune title in the composition, then output the poster layout and SVG."
           },
           "output": {
-            "zh-Hans": "两个格式的海报文件与字体使用说明。",
-            "en": "Poster files in both formats with a note on fonts used."
+            "zh-Hans": "哲学文稿、埋着隐性引用的版式与生成的 SVG；出界与重叠问题在生成阶段就被拦下。",
+            "en": "A philosophy file, a layout carrying the quiet reference and the generated SVG — off-page and overlap faults caught at generation."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "把这份文案排成两栏版面，检查字号与边距是否合理。",
-            "en": "Lay this copy out in two columns and check type size and margins."
+            "zh-Hans": "这张海报要全尺寸 PNG：在应用里真实渲染后截图取图，别声称源文件自己能导出图片。",
+            "en": "I need this poster as a full-size PNG: render it in the app and capture the real image — don't claim the source file exports raster by itself."
           },
           "output": {
-            "zh-Hans": "排版结果与可读性检查记录。",
-            "en": "The layout output with a legibility check record."
+            "zh-Hans": "来自真实渲染的成品图与说明；没渲染过的格式不会出现在交付里。",
+            "en": "A capture-backed image with its provenance stated; formats that were never rendered don't appear in the delivery."
           }
         }
       ],
@@ -1592,42 +1716,46 @@
     },
     "theme-factory": {
       "overview": {
-        "zh-Hans": "生成并成套管理主题与配色：字体、色板与模板素材按可复用方式装配。产出是能落地的令牌与示例，而不只是几张配色图。",
-        "en": "Generate and manage theme kits: fonts, color boards and template assets assembled for reuse. Outputs are deployable tokens and examples, not just palette images."
+        "zh-Hans": "十套成品主题随取随用：每套都有完整的配色、字体搭配与使用规则，另有一份展示册帮你先看图再决定。挑一套，或者按同样格式从你的需求生成一个新主题——新主题先存档，经你过目再投入使用。\n\n「应用主题」是把确定的颜色和字体写进交付物本身：演示文稿、文档或网页直接带上这套外观。主题点名的是字体名称，不安装字体软件——设备上没有对应字体时，用可用的系统字体替代并明确告诉你换了哪处。\n\n适合的场景很具体：季报要一套沉稳的深蓝灰、课程幻灯片要亲和的手作感、博客整体换肤——一次选定，处处一致。",
+        "en": "Ten complete themes ready to pick: each carries its full palette, font pairings and application rules, plus a showcase to browse before deciding. Choose one, or generate a new theme in the same format from your brief — new themes are saved for your review before use.\n\n'Applying a theme' means its exact colors and fonts written into the deliverable itself: decks, documents or web pages arrive dressed. Themes name fonts rather than installing them; when a named font isn't on your device, an available system font stands in and the swap is disclosed.\n\nThe fit is concrete: a quarterly report that should feel deep blue-gray, course slides that should feel approachable and handmade, a blog re-skinned end to end — chosen once, consistent everywhere."
       },
       "useCases": [
         {
-          "zh-Hans": "为产品生成深浅两套主题",
-          "en": "Generate light and dark themes for a product"
+          "zh-Hans": "为整套材料（deck+文档+网页）固定一个主题",
+          "en": "Lock one theme across a deck, docs and web material"
         },
         {
-          "zh-Hans": "扩展品牌色为语义色令牌",
-          "en": "Extend brand colors into semantic tokens"
+          "zh-Hans": "先翻展示册再决定哪套配色契合场合",
+          "en": "Browse the showcase before deciding which palette fits the occasion"
         },
         {
-          "zh-Hans": "统一字体配对与字号阶梯",
-          "en": "Unify font pairing and type scale"
+          "zh-Hans": "按品牌要求生成一个新主题的完整定义",
+          "en": "Generate a new theme's full definition against brand requirements"
+        },
+        {
+          "zh-Hans": "把旧文档的杂色收敛到成套色阶",
+          "en": "Converge a legacy document's loose colors into the theme's scale"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "为这套产品生成深色与浅色主题的色板、字体配对和组件示例。",
-            "en": "Generate color boards, font pairings and component examples for dark and light themes of this product."
+            "zh-Hans": "用预设里最适合年报的沉稳主题重建这份演示稿的配色与字阶，逐页列出改了哪些颜色。",
+            "en": "Rebuild this deck's palette and type scale with the preset that best suits an annual report, listing the color changes slide by slide."
           },
           "output": {
-            "zh-Hans": "两套主题令牌与组件预览。",
-            "en": "Two token sets with component previews."
+            "zh-Hans": "换装后的新演示稿与改动清单；缺字体处标注了替代方案。",
+            "en": "A re-themed deck plus the change list, with any font substitutions noted."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "把现有品牌色扩展成完整的语义色令牌。",
-            "en": "Extend the existing brand color into a complete semantic token set."
+            "zh-Hans": "按「清晨薄雾」的感觉生成一个新主题：给我完整定义（主辅色、中性阶、字体搭配、应用规则），先存档待我审。",
+            "en": "Create a new theme feeling like 'morning mist': give me the full definition — primaries, neutrals, font pairings, application rules — saved for my review."
           },
           "output": {
-            "zh-Hans": "语义令牌表与对比度检查说明。",
-            "en": "A semantic token table with contrast notes."
+            "zh-Hans": "一份格式完整的新主题定义文件，未经你确认不投入使用。",
+            "en": "A complete theme definition file, held back until you approve it."
           }
         }
       ],
@@ -1651,42 +1779,46 @@
     },
     "ui-design-system": {
       "overview": {
-        "zh-Hans": "把组件、令牌与规范沉淀成可维护的 UI 设计系统工作流。脚本与交付格式已经适配 Floe，输出可以直接交给实现方。",
-        "en": "Turn components, tokens and specs into a maintainable design-system workflow. Scripts and deliverable formats are adapted to Floe so output can go straight to implementation."
+        "zh-Hans": "从一个品牌色出发，得到一整套能交接的设计体系：主色扩展成完整的色板家族，连同字族与字号阶梯、间距体系、圆角与阴影层级，按记录在案的规则计算——同样的输入永远得到同样的输出，不靠临场灵感。再配组件架构文档、响应式断点与流式字号计算，以及开发交接用的变量输出（CSS、SCSS 等），文字与界面的对比达标检查贯穿始终。\n\n产出都是可复查的工作区文档：token 表、组件规范、响应式规则、交接说明。触发话很直白——「生成色板」「八点对齐体系」「导出 CSS 变量」「准备交接」都会走到这里。\n\n它做体系与规格，让界面获得可延续的共同语言，而不是一张一次性的漂亮稿。",
+        "en": "From one brand color to a handoff-ready design system: the primary expands into full color families, joined by font, size and weight scales, a spacing system, radii and shadow tiers — computed by recorded rules, so identical inputs give identical output, never mood-board improvisation. Component architecture docs, responsive breakpoint and fluid type math, and variable exports (CSS, SCSS and friends) for developer handoff come along, with contrast checks threaded throughout.\n\nEverything lands as reviewable workspace documents: token tables, component specs, responsive rules, handoff notes. The trigger phrasing is plain — 'generate a palette', '8pt grid', 'export CSS variables', 'prepare handoff' — all route here.\n\nIt builds systems and specs so an interface gains a reusable language instead of one beautiful throwaway screen."
       },
       "useCases": [
         {
-          "zh-Hans": "整理按钮、输入框与卡片规范",
-          "en": "Document button, input and card specs"
+          "zh-Hans": "把品牌主色扩成前后端都能用的 token 集",
+          "en": "Expand a brand hex into a token set both engineers and designers consume"
         },
         {
-          "zh-Hans": "统一间距与圆角令牌",
-          "en": "Unify spacing and radius tokens"
+          "zh-Hans": "为组件库写架构文档与状态矩阵",
+          "en": "Document a component library's architecture and interaction states"
         },
         {
-          "zh-Hans": "评审现有界面的组件一致性",
-          "en": "Review component consistency in an existing UI"
+          "zh-Hans": "计算移动优先的断点与流式排版尺度",
+          "en": "Compute mobile-first breakpoints and fluid type scales"
+        },
+        {
+          "zh-Hans": "产出带对比核查结论的开发者交接包",
+          "en": "Produce a developer handoff package with contrast-check results included"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "为这个应用整理按钮、输入框与卡片的组件规范。",
-            "en": "Document component specs for buttons, inputs and cards in this app."
+            "zh-Hans": "品牌色 #C9463D、风格 playful：出完整 token 表（含 light/dark 双色板与语义色），每条文字色对底色标 AA 结果。",
+            "en": "Brand #C9463D, playful style: emit the full token table — light/dark palettes and semantic colors — annotating each text-on-surface pair with its AA result."
           },
           "output": {
-            "zh-Hans": "组件规范文档与令牌清单。",
-            "en": "A component spec document with a token list."
+            "zh-Hans": "可复算的 token 文档与 CSS/SCSS 输出，对比度逐项有数值。",
+            "en": "A re-computable token document plus CSS/SCSS output, every contrast ratio shown as a number."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "审查现有界面的间距与圆角是否统一，输出令牌表。",
-            "en": "Check whether spacing and radii are consistent across this UI and output a token table."
+            "zh-Hans": "按现有 token 给表单组件族写架构文档：命名、槽位、状态矩阵与反例清单，交接给前端直接照建。",
+            "en": "Write the form-component family architecture doc on the existing tokens: naming, slots, state matrix and anti-patterns, ready for engineers to build from."
           },
           "output": {
-            "zh-Hans": "不一致项清单与建议令牌。",
-            "en": "An inconsistency list with suggested tokens."
+            "zh-Hans": "工作区里的组件架构与交接文档，引用同一套 token 命名。",
+            "en": "Workspace component-architecture and handoff docs referencing the same token names."
           }
         }
       ],
@@ -1710,42 +1842,46 @@
     },
     "ux-researcher-designer": {
       "overview": {
-        "zh-Hans": "用户研究、可用性洞察与设计决策记录的内容与脚本适配。重点是把观察整理成可追溯的问题与决策，而不是泛泛的“用户喜欢”。",
-        "en": "User research, usability findings and design-decision records with adapted content and scripts. Observations become traceable issues and decisions rather than vague “users like it” notes."
+        "zh-Hans": "让研究结论直接长成设计的语言。四条工作流：用户画像——把你收集的问卷、访谈或分析数据按简单格式整理进来，得到有证据背书的用户原型，目标与痛点逐条能回指数据；旅程地图——阶段、触点、情绪起伏与机会点逐层摆开；可用性测试计划——任务脚本、招募标准、样本量参考与成功判据，写成可以直接执行的方案；研究综合——多份访谈的发现归并成按优先级排序的问题与机会清单。\n\n方法论文件随包携带，需要估算样本量时按记录的方法执行。「建用户画像」「画旅程图」「设计可用性测试」「综合访谈」——这些说法都会走到这里。\n\n产出落在工作区文档里，设计师和产品可以接着往下用——研究不该死在报告抽屉里。",
+        "en": "Findings that grow into design language. Four workflows. Personas: organize your survey, interview or analytics data in a simple format and get evidence-backed archetypes — every goal and pain traceable to the data. Journey maps: stages, touchpoints, the emotional curve and opportunity gaps laid out in layers. Usability test plans: task scripts, recruiting criteria, sample-size guidance and success metrics, written as a protocol you can run. Research synthesis: findings from multiple interviews merged into a prioritized list of problems and opportunities.\n\nMethodology files ship inside, and sample-size estimates follow the recorded method. 'Build a persona', 'map the journey', 'plan a usability test', 'synthesize interviews' — all route here.\n\nDeliverables land as workspace documents designers and product can pick up directly. Research shouldn't die in a report drawer."
       },
       "useCases": [
         {
-          "zh-Hans": "设计访谈提纲并整理洞察",
-          "en": "Draft interview guides and synthesize findings"
+          "zh-Hans": "从问卷与分析数据生成三个证据画像",
+          "en": "Generate three evidence-backed personas from survey and analytics data"
         },
         {
-          "zh-Hans": "把可用性测试记录分级",
-          "en": "Grade usability-test observations"
+          "zh-Hans": "把首次安装流程画成带情绪曲线的旅程图",
+          "en": "Map the first-install flow as a journey with an emotion curve"
         },
         {
-          "zh-Hans": "记录设计决策与依据",
-          "en": "Record design decisions and their rationale"
+          "zh-Hans": "为改版方案写可执行的可用性测试计划",
+          "en": "Write an executable usability test plan for a redesign"
+        },
+        {
+          "zh-Hans": "综合十次访谈成带优先级的机会清单",
+          "en": "Synthesize ten interviews into a prioritized opportunity list"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "为这个新功能设计 6 个访谈问题，并给出洞察整理模板。",
-            "en": "Design six interview questions for this new feature and provide a synthesis template."
+            "zh-Hans": "这份 260 条问卷数据按方法生成画像：每个画像给占比、三条挂出处的痛点，以及一个「别过度概括」的反例提醒。",
+            "en": "From this 260-response survey, generate personas per the method: each with its share of the data, three sourced pains, and one counterexample caution against over-generalizing."
           },
           "output": {
-            "zh-Hans": "访谈提纲与结构化洞察模板。",
-            "en": "An interview guide and a structured synthesis template."
+            "zh-Hans": "画像文档与数据映射：占比和痛点都能从同一份输入复核。",
+            "en": "Persona documents with data mappings; shares and pains re-checkable from the same input."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "把这份可用性测试记录整理成问题分级与设计建议。",
-            "en": "Turn these usability-test notes into graded issues and design recommendations."
+            "zh-Hans": "给「教师上传试卷并拿到批注版」写可用性测试方案：5 个任务、招募标准、样本量依据、每个任务的失败判据。",
+            "en": "Write a usability test plan for 'teachers upload an exam and get an annotated version': 5 tasks, recruiting criteria, sample-size basis and per-task failure metrics."
           },
           "output": {
-            "zh-Hans": "按严重程度分级的问题清单。",
-            "en": "A severity-graded issue list."
+            "zh-Hans": "可直接执行的研究方案文件，含脚本、度量表与时间预算。",
+            "en": "A ready-to-run research protocol with scripts, measures and a time budget."
           }
         }
       ],
@@ -1769,42 +1905,46 @@
     },
     "react-best-practices": {
       "overview": {
-        "zh-Hans": "React 编写规则与示例的 Floe 适配版，覆盖性能、组件结构与常见误区。规则来自固定版本并附示例，避免只给抽象建议。",
-        "en": "A Floe-adapted set of React rules and examples covering performance, structure and common pitfalls. Rules come from pinned versions and ship with examples instead of abstract advice."
+        "zh-Hans": "写给 React 开发者的工程守则：十三条规则，外加一条总纪律。状态放在需要它的最低组件；能推导的就别复制；effect 只用来对接外部系统；列表 key 要稳定；记忆化必须拿着证据——先测量再优化，用 React DevTools 找重渲染原因、构建统计看包体，「感觉快了」不算数。异步要处理竞态与取消，加载和错误是正经状态不是弹窗；在路由与重组件边界拆分代码；表单受控、服务端仍是最终权威；测试断言用户看得见的行为，而不是内部实现。\n\n每条规则都写明打破它的代价与检查办法，评审清单把守则变成逐项核对的表。读代码用任务的工具，跑项目真实的测试与构建在授权环境里按项目自己的命令进行——守则本身不授予任何权限。",
+        "en": "React engineering rules — thirteen, plus the discipline that precedes them. State lives at the lowest component that needs it; derive instead of duplicating; effects serve external systems only; list keys stay stable; memoize with evidence — measure before optimizing, with DevTools for render causes and build stats for bundle size; 'feels faster' is not evidence. Async handles races and cancellation, with loading and error as real states, not toasts. Split code at route and heavy-component boundaries; forms stay controlled while the server remains the final authority; tests assert what users can see, not internal implementation.\n\nEach rule states the cost of breaking it and how to check; the review checklist turns them into tickable items. Reading code uses the task's tools, and the project's real tests and builds run under the project's own commands in the authorized environment — the guide itself grants nothing."
       },
       "useCases": [
         {
-          "zh-Hans": "审查组件树的性能问题",
-          "en": "Audit a component tree for performance issues"
+          "zh-Hans": "评审 PR 时逐条勾规则清单：状态位置、key、memo 证据",
+          "en": "Review a PR against the checklist: state placement, keys, memo evidence"
         },
         {
-          "zh-Hans": "重构重复渲染的列表组件",
-          "en": "Refactor a list that re-renders excessively"
+          "zh-Hans": "给渲染性能问题定取证路线再动手优化",
+          "en": "Set the measurement path for a render-performance issue before optimizing"
         },
         {
-          "zh-Hans": "统一项目内的 React 写法",
-          "en": "Standardize React patterns across a project"
+          "zh-Hans": "重排 useEffect：哪些该改成事件处理或派生",
+          "en": "Rework effects: which belong in event handlers or plain derivation"
+        },
+        {
+          "zh-Hans": "修列表重排错乱：从 key 稳定性查起",
+          "en": "Fix scrambled list reorders starting from key stability"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "审查这个 React 组件树的性能问题，并给出重构建议。",
-            "en": "Audit this React component tree for performance problems and suggest refactors."
+            "zh-Hans": "这页每敲一个字整表重渲：先测量定位状态位置与重复计算，再给有数字支撑的优化步骤，别直接把一切 memo 起来。",
+            "en": "Every keystroke re-renders the whole table: measure first to locate state placement and redundant computation, then give evidence-backed optimization steps — don't just memo everything."
           },
           "output": {
-            "zh-Hans": "问题定位与按影响排序的修改建议。",
-            "en": "Located issues with fixes ranked by impact."
+            "zh-Hans": "以测量结果开头的重构步骤，每步附前后对比的数字。",
+            "en": "Measurement-first refactor steps, each with before/after numbers."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "按最佳实践重写这个列表组件，避免不必要的重渲染。",
-            "en": "Rewrite this list component following best practices to avoid unnecessary re-renders."
+            "zh-Hans": "评审这份改动里的异步处理：竞态、取消、加载与错误态，按守则逐条给结论和代码位置。",
+            "en": "Review this diff's async handling — races, cancellation, loading and error states — with per-rule conclusions and code locations."
           },
           "output": {
-            "zh-Hans": "改写后的组件与行为不变说明。",
-            "en": "The rewritten component with a note that behavior is unchanged."
+            "zh-Hans": "按守则组织的发现清单，标明位置与建议改法。",
+            "en": "A findings list organized by rule, with location and suggested fix."
           }
         }
       ],
@@ -1828,42 +1968,46 @@
     },
     "composition-patterns": {
       "overview": {
-        "zh-Hans": "React 组件组合模式的规则与样例：把大组件拆成可组合、可测试的结构。示例强调接口边界，而不是追求抽象的层数。",
-        "en": "React composition-pattern rules and samples: split large components into composable, testable structures. Examples emphasize clear interfaces over abstract layering."
+        "zh-Hans": "写给 React 开发者的组件构成指南，主题只有一个：怎么设计组件的边界，让它长大时不 fork。十条模式各说清解决的问题和接受的代价：children 当内容插槽、props 当开关，一个挂六个布尔开关的组件其实是三个组件；成组组件共享一条只负责结构接线的内部契约，不夹带业务数据；用显式变体取代布尔参数汤，让不可能的组合根本写不出来；两个兄弟要商量的状态放到共同父节点；空槽位、加载中、空列表都要有自己的形状；逃生舱最后才用并且要有名字；布局只管几何、内容只管含义；测试贴着公开接口和用户可见行为走。\n\n配套的模式卡把每条展开成可套用的写法，适合评审组件 API、拆解布尔参数膨胀、给团队一套共同的说法。",
+        "en": "A React composition guide on one theme: shape component boundaries so they grow without forks. Ten patterns, each naming the problem it solves and the cost it accepts. Children as content slots, props as knobs — a component with six boolean flags is really three components. Compound pieces share one internal contract for structural wiring only, never business data. Explicit variants replace boolean soup, so impossible combinations simply can't be written. State negotiated between siblings lifts to their common parent. Empty slots, loading content and empty lists each carry their own shape. Escape hatches come last and named; layout owns geometry while content owns meaning; tests ride public props and user-visible behavior.\n\nPattern cards expand each rule into applicable code — for reviewing component APIs, taming boolean-prop sprawl, and giving the team one shared vocabulary."
       },
       "useCases": [
         {
-          "zh-Hans": "拆分职责过多的巨型组件",
-          "en": "Split an oversized component"
+          "zh-Hans": "评审组件库 API：旗标膨胀与契约泄漏逐一指出",
+          "en": "Review a component library's API: flag explosion and contract leaks, called out"
         },
         {
-          "zh-Hans": "让表单校验逻辑可复用",
-          "en": "Make form validation logic reusable"
+          "zh-Hans": "把 Tabs/Menu/Accordion 重构成 compound 模式",
+          "en": "Refactor Tabs/Menu/Accordion into the compound pattern"
         },
         {
-          "zh-Hans": "统一组合式组件的 API",
-          "en": "Unify composition-component APIs"
+          "zh-Hans": "用显式 variant 消灭不可能状态的组合",
+          "en": "Make impossible state combinations unnameable with explicit variants"
+        },
+        {
+          "zh-Hans": "给受控/非受控双模式组件定契约",
+          "en": "Set the controlled/uncontrolled contract for dual-mode components"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "把这个巨型组件拆成可组合的子组件，保持行为不变。",
-            "en": "Split this large component into composable children without changing behavior."
+            "zh-Hans": "这个 Card 组件已经挂了 11 个布尔开关：按「内容插槽 + 显式变体」的思路给重构方案，列出会被消灭的无效组合。",
+            "en": "This Card has 11 boolean flags: propose the refactor — children as slots, an explicit variant set — and list the invalid state combinations it kills."
           },
           "output": {
-            "zh-Hans": "拆分后的组件结构与迁移说明。",
-            "en": "The new component structure with migration notes."
+            "zh-Hans": "重构蓝图：新接口形状、迁移映射，和一份「从此写不出」的无效状态清单。",
+            "en": "A refactor blueprint: the new API shape, a migration map, and the state combinations now impossible to write."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "用组合模式重写这个表单，让校验逻辑可以复用。",
-            "en": "Rewrite this form using composition so validation can be reused."
+            "zh-Hans": "我们的对话框 context 里夹带了业务数据，一半消费者直接读它：按「接口与实现对偶分离」重画分界线。",
+            "en": "Our Dialog context smuggles business data and half the consumers read it directly: redraw the interface/implementation line."
           },
           "output": {
-            "zh-Hans": "重写后的表单与可复用校验模块。",
-            "en": "The rewritten form plus a reusable validation module."
+            "zh-Hans": "稳定的 useDialog 接口提案与迁移步骤，消费者改写点逐一列出。",
+            "en": "A stable useDialog interface proposal with migration steps and each consumer rewrite enumerated."
           }
         }
       ],
@@ -1887,42 +2031,46 @@
     },
     "web-design-guidelines": {
       "overview": {
-        "zh-Hans": "网页设计规范清单的 Floe 适配版，规则依赖已固定并经过审核。适合在设计与实现之间做一次结构化对照检查。",
-        "en": "A Floe-adapted checklist of web design guidelines with pinned, reviewed rule dependencies. Useful as a structured comparison between design and implementation."
+        "zh-Hans": "一份可逐条核对的网页设计清单，把「凭感觉」赶出评审。无障碍是底线：按钮和链接语义正确、控件都有名字、键盘走得通、焦点看得见、文字与界面元素对比达标、尊重减弱动效的设置、表单报错说清错在哪、触控目标够大。设计系统这半边管：字体族不过量、字号有比例、间距有节奏、颜色按语义命名、悬停/聚焦/禁用/加载等状态被认真设计过、内容随宽度重排而不是缩小、可点的东西看起来可点、按钮文案写出动作的结果、卡片不无意义叠卡片。\n\n检查页面时，每条问题都要指明条目、依据和现场证据——截图、页面结构或代码位置；「看着不对」不成为结论。自动工具只能发现约三成问题，所以配套了规定的实时走查与源码核对步骤。\n\n它是评审标准；大规模的无障碍修复目录在无障碍审计条目那边。",
+        "en": "A checkable design checklist that pushes 'vibes' out of review. Accessibility is the floor: real button and link semantics, every control named, keyboard paths that work, visible focus, contrast that meets the numbers, motion that respects reduced-motion settings, form errors that say what's wrong and where, touch targets you can actually hit. The design-system half: font families under a limit, a proportional type scale, spacing with rhythm, colors named by meaning, hover/focus/disabled/loading states designed rather than defaulted, content that reflows instead of shrinking, clickable things that look clickable, button copy that names the outcome, and card-on-card stacks that add only chrome get flagged.\n\nWhen reviewing a page, each issue cites its checklist item, its basis and live evidence — a screenshot, the page structure, or a source line; 'looks off' is not a conclusion. Automated tools catch about thirty percent of issues, so prescribed live walks and source passes carry the rest.\n\nIt is the review standard; the deep remediation catalog lives with the accessibility-audit entry."
       },
       "useCases": [
         {
-          "zh-Hans": "检查排版、对比度与交互状态",
-          "en": "Check typography, contrast and interaction states"
+          "zh-Hans": "评审页面时给每个问题挂上规则号与证据",
+          "en": "Attach a rule id and rendered evidence to every review finding"
         },
         {
-          "zh-Hans": "输出逐条对照的检查清单",
-          "en": "Produce an item-by-item checklist result"
+          "zh-Hans": "用对比度工作表核对文字与 UI 元素色值",
+          "en": "Check text and UI colors with the deterministic contrast worksheet"
         },
         {
-          "zh-Hans": "在交付前做一次设计规范复核",
-          "en": "Run a guideline pass before delivery"
+          "zh-Hans": "对照设计系统清单体检间距、字阶与状态",
+          "en": "Audit spacing rhythm, type scale and interaction states against the system list"
+        },
+        {
+          "zh-Hans": "把界面文案扫一遍：按钮动词、错误出路、空态引导",
+          "en": "Sweep the interface copy: outcome verbs on buttons, fix paths in errors, guiding empty states"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "按网页设计规范检查这个页面的排版、对比度与交互状态。",
-            "en": "Check this page’s typography, contrast and interaction states against the web design guidelines."
+            "zh-Hans": "按这份清单评审我的设置页：逐条给条目号、依据和严重程度；对比度按公式算，别目测。",
+            "en": "Review my settings page against this checklist: item, basis and severity per finding; compute contrast with the formula, don't eyeball it."
           },
           "output": {
-            "zh-Hans": "逐条检查结果与修改建议。",
-            "en": "Item-by-item results with suggested fixes."
+            "zh-Hans": "逐条评审报告，含实测数值（对比度、焦点表现）与证据截图。",
+            "en": "An itemized review report with measured numbers (contrast, focus behavior) and evidence screenshots."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "为这个页面输出一份可执行的规范检查清单。",
-            "en": "Produce an actionable guideline checklist for this page."
+            "zh-Hans": "这个弹窗的键盘走查：tab 进得去吗出得来吗、焦点环看不看得见、关闭后焦点回哪儿——逐项记录。",
+            "en": "Keyboard-walk this modal: can tab enter and leave, is the focus ring obvious, where does focus return on close — record each item."
           },
           "output": {
-            "zh-Hans": "带优先级的检查清单。",
-            "en": "A prioritized checklist."
+            "zh-Hans": "焦点与键盘路径的走查记录和截图，指出违反的具体条目。",
+            "en": "A focus-and-keyboard walkthrough with screenshots, naming the exact checklist items broken."
           }
         }
       ],
@@ -1946,42 +2094,46 @@
     },
     "webapp-testing": {
       "overview": {
-        "zh-Hans": "使用 Floe 受控浏览器执行可重放的导航、观察、点击、输入、等待、断言与截图步骤，验证一个真实交互的 Web 应用。本地服务由现有 supervisor 管理，不依赖 Playwright。",
-        "en": "Validate a real interactive web app through Floe’s controlled browser with replayable navigate, observe, click, type, wait, assert and screenshot steps. Local services stay under the existing supervisor; Playwright is not required."
+        "zh-Hans": "在应用内置的可控浏览器里，像真实用户一样测你的本地 Web 界面：打开页面、点按钮、填表单、提交，验证该出现的东西真的出现了。你把地址（或待测项目）和几条关键旅程告诉它——注册、下单、保存这类真实路径；它先把用例写清楚，其中至少包含一条故意通不过的检查，用来证明「失败会被如实报告」；然后逐个操作、等页面真正稳定后再查看。\n\n结果以看得见的证据交付：页面状态观察、截图，以及从服务端独立读回的状态核对——页面上写着「成功」不算数。哪一步没等到或没通过，就按真实情况记录，不粉饰。\n\n测完服务自动关闭、页面收回；长任务在后台运行，关掉窗口不打断。密码与真人验证环节不绕过，需要时会请你接手。",
+        "en": "Test a local web app like a real user inside the app's controlled browser: open the page, click buttons, fill the form, submit, and verify that what should happen actually happens. You give it the URL (or the project under test) plus a few key journeys — sign-up, checkout, save — and it writes the cases first, including at least one deliberately impossible check so the run proves failures get reported honestly. Then it acts step by step, waits for the page to genuinely settle, and inspects.\n\nResults ship as visible evidence: observed page state, screenshots, and state read back independently from the server — on-page 'success' text never counts as proof. A step that timed out or failed is recorded as it happened, not dressed up.\n\nWhen done, the test service and tab close on their own; longer runs live in the background so closing the window never interrupts them. Password and human-verification steps are never bypassed — when a human is needed, it asks you."
       },
       "useCases": [
         {
-          "zh-Hans": "验证一条完整的用户操作路径",
-          "en": "Verify a complete user flow"
+          "zh-Hans": "验证本地表单流：提交后确认服务端真的收到了",
+          "en": "Verify a local form flow and confirm the server actually received the submission"
         },
         {
-          "zh-Hans": "重放交互步骤并断言结果",
-          "en": "Replay interaction steps and assert outcomes"
+          "zh-Hans": "走查从注册到下单的关键旅程，逐步截图",
+          "en": "Walk key journeys from sign-up to checkout with step screenshots"
         },
         {
-          "zh-Hans": "为一次改动保留可复查的测试记录",
-          "en": "Keep a reviewable test record for a change"
+          "zh-Hans": "为回归测试留一份可复查的运行记录",
+          "en": "Keep a re-checkable run record for regression testing"
+        },
+        {
+          "zh-Hans": "排查动态页面的按钮状态与时序问题",
+          "en": "Debug button states and timing issues on dynamic pages"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "用 Floe 浏览器验证登录、新建任务、保存的完整流程，并记录每一步。",
-            "en": "Use the Floe browser to verify login, task creation and save end to end, recording each step."
+            "zh-Hans": "按这套用例跑这个购物车演示页：打开、加购、下单、提交，结果对照服务端记录确认；那条故意失败的检查要如实报失败。",
+            "en": "Run this checkout demo against my case list: open, add to cart, order, submit — confirm results against the server's records, and the deliberately failing check must honestly report FAIL."
           },
           "output": {
-            "zh-Hans": "可重放的步骤记录、断言结果与关键截图。",
-            "en": "A replayable step log, assertion results and key screenshots."
+            "zh-Hans": "逐条用例的结果记录与截图，含那条故意失败用例的如实报告。",
+            "en": "Per-case results with screenshots, including the deliberately failing case honestly reported as failed."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "重放这组交互步骤，断言结果并保存关键截图。",
-            "en": "Replay this interaction sequence, assert the results and save key screenshots."
+            "zh-Hans": "提交后弹窗没出现，页面也变了：判断是提交没生效还是界面没更新——从服务端独立确认，别重复点提交。",
+            "en": "After submit the confirmation never appeared and the page changed: determine whether the submission landed or the UI just didn't update — check the server independently and don't click submit again."
           },
           "output": {
-            "zh-Hans": "重放记录与通过/失败结论。",
-            "en": "A replay log with pass/fail conclusions."
+            "zh-Hans": "从服务端读回的状态结论，判明提交是否已生效。",
+            "en": "A server-side read-back stating whether the submission actually landed."
           }
         }
       ],
@@ -2005,42 +2157,46 @@
     },
     "a11y-audit": {
       "overview": {
-        "zh-Hans": "复用受控浏览器与代码检查完成可访问性审计，按 WCAG 条款输出问题与修复清单。发现的问题会区分自动可判定与需要人工判断的部分。",
-        "en": "Run accessibility audits with the controlled browser and code checks, reporting issues and fixes against WCAG clauses. Findings separate automatically decidable items from those needing human judgment."
+        "zh-Hans": "一套完整的网页无障碍审计：找出 WCAG 2.2 A/AA 级的问题——语义结构、标题层级、控件命名、图片替代文本、键盘可达、焦点顺序、ARIA 用法、颜色对比——每条按严重程度分级、定位到文件和行，并给出你所用框架的改前改后写法。修完后以首轮结果为基线复查，确认问题关闭、没有引入新麻烦。\n\n对比度按 WCAG 规定的算法计算（正文 4.5:1、大字与界面元素 3:1），页面还可以在应用里打开，做键盘遍历和无障碍结构检查——自动检查大约只能发现三成问题，剩下的靠这些规定的人工步骤补齐。\n\n交付是可复查的资产：问题清单、逐条修复、写给开发者/产品/合规读者的报告，并可接入 CI 防止后续回归。",
+        "en": "A complete web accessibility audit: finds WCAG 2.2 A/AA issues — semantics, heading order, control names, image alt text, keyboard reachability, focus sequence, ARIA usage, color contrast — grading each by severity, pinning it to file and line, and supplying before/after patterns for your framework (React, Next.js, Vue, Angular, Svelte or plain HTML). After fixes, the same pass re-checks against the first findings as a baseline, confirming issues closed and nothing new introduced.\n\nContrast is computed with WCAG's own formula (4.5:1 body text, 3:1 large text and UI); live pages additionally get a keyboard walk and accessibility-structure check inside the app's browser. Automated scanning catches roughly thirty percent of problems — the prescribed manual steps here cover the rest.\n\nDeliverables are re-checkable assets: a findings list, per-issue fixes, reports written for developers, product and compliance readers, and CI hooks that guard the future."
       },
       "useCases": [
         {
-          "zh-Hans": "检查键盘焦点与标签完整性",
-          "en": "Check keyboard focus and labelling completeness"
+          "zh-Hans": "发布前对整个前端工程做 WCAG A/AA 全量扫描",
+          "en": "Run a full A/AA sweep on a frontend project before release"
         },
         {
-          "zh-Hans": "按 WCAG 条款列出问题",
-          "en": "List issues by WCAG clause"
+          "zh-Hans": "为每条违规拿到框架定制的修复代码",
+          "en": "Get framework-specific fix code for every violation found"
         },
         {
-          "zh-Hans": "为修复排定优先级",
-          "en": "Prioritize accessibility fixes"
+          "zh-Hans": "在 CI 里挂无障碍检查防止后续回归",
+          "en": "Wire accessibility checks into CI to block future regressions"
+        },
+        {
+          "zh-Hans": "给干系人出一份带通过率的合规报告",
+          "en": "Produce a stakeholder compliance report with pass/fail summaries"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "对这个页面做可访问性审计，按 WCAG 条款列出问题。",
-            "en": "Audit this page for accessibility and list issues by WCAG clause."
+            "zh-Hans": "扫描这个前端项目做无障碍审计：先出问题表与严重程度，React 组件逐条给改前改后，修完按首轮清单复查。",
+            "en": "Audit this frontend project for accessibility: findings table with severities first, React before/after fixes per issue, then a re-check against the original list."
           },
           "output": {
-            "zh-Hans": "分条款的问题清单与修复建议。",
-            "en": "A clause-grouped issue list with fixes."
+            "zh-Hans": "问题表、逐条补丁与复查结果，报告文件可直接给合规读者。",
+            "en": "A findings table, per-issue patches and re-check results — report files ready for compliance readers."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "检查键盘焦点顺序与表单标签是否完整。",
-            "en": "Check the keyboard focus order and whether form labels are complete."
+            "zh-Hans": "实时页走一遍键盘：tab 能不能进得去出得来、焦点看不看得见、表单错误提示有没有和输入框关联上，逐条截图留证。",
+            "en": "Walk the live page by keyboard: does tab enter and leave, is focus obvious, do form errors connect to their inputs — screenshot each finding."
           },
           "output": {
-            "zh-Hans": "焦点与标签检查记录。",
-            "en": "A focus and labelling check record."
+            "zh-Hans": "带键盘走查记录与截图的实时检查清单，与静态检查结果合并。",
+            "en": "A live-pass checklist with the recorded keyboard walk and screenshots, merged with the static results."
           }
         }
       ],
@@ -2064,42 +2220,46 @@
     },
     "systematic-debugging": {
       "overview": {
-        "zh-Hans": "按“复现—假设—最小验证”的流程调试，适配 Floe 的任务、日志与执行工具。每一步都要求可观察的结果，避免凭直觉改动。",
-        "en": "Debug with a reproduce/hypothesize/minimal-test loop adapted to Floe tasks, logs and execution tools. Each step demands an observable result instead of intuition-driven edits."
+        "zh-Hans": "调试的流程纪律，专治「改改看」。先把现象固定下来：出错原文、触发条件、最短的能稳定复现的路径；不急着碰症状，而是顺着调用链往上问「是谁调用了它」，一层层追到最初的触发点——补丁打在症状旁边，只会保证复发；再只立一个当下最可能的假设，用最小实验去证实或推翻；修复之前先让一个失败测试存在，它钉住症状，也证明修好的是真问题。之后在入口、业务规则、环境检查几层各设一道防线，让这类问题不再无声复发。\n\n配套参考讲透三件常被忽略的事：追溯时留下线索的时机、在一堆测试里定位谁污染了共享状态，以及用「等条件成立」代替「固定等几秒」。\n\n读代码用任务的工具，跑测试用项目自己的命令、在授权环境里进行——快修不是交付物，根因和回归测试才是。",
+        "en": "Debugging discipline that cures 'try a tweak'. First, fix the symptom in place: the exact error, its trigger, the shortest path that reproduces it reliably. Second, instead of patching next to the symptom, walk up the chain asking 'who called this?' until you reach the original trigger — padding beside the symptom only guarantees a repeat. Third, hold exactly one current hypothesis and design the smallest experiment that could falsify it. Fourth, before fixing, create a test that fails — it nails the symptom and proves the patch killed the real bug. Afterwards, set guards at the entry point, in the business rules and with environment checks, so the whole class of problem stops recurring silently.\n\nThe references cover three routinely ignored skills: when to leave breadcrumbs along the trace, how to find which test pollutes shared state, and waiting on conditions instead of the clock.\n\nReading code uses the task's tools; tests run with the project's own commands in its authorized environment. The quick patch is not the deliverable — the root cause and its regression test are."
       },
       "useCases": [
         {
-          "zh-Hans": "定位启动或运行失败的原因",
-          "en": "Locate the cause of a startup or runtime failure"
+          "zh-Hans": "偶现的跨层崩溃从堆栈追到最初触发点",
+          "en": "Trace an intermittent cross-layer crash from stack to original trigger"
         },
         {
-          "zh-Hans": "对比日志与最近改动",
-          "en": "Compare logs with recent changes"
+          "zh-Hans": "共享状态被上一个测试污染：定位元凶用例",
+          "en": "Locate the exact test polluting shared state across a suite"
         },
         {
-          "zh-Hans": "设计最小复现实验",
-          "en": "Design a minimal reproduction"
+          "zh-Hans": "把 flaky 的固定 sleep 改成条件等待",
+          "en": "Replace flaky fixed sleeps with condition-based waiting"
+        },
+        {
+          "zh-Hans": "为一个已复现的缺陷先立钉死它的失败测试",
+          "en": "Write the failing test that nails a reproduced defect before fixing it"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "按复现、假设、最小验证的流程定位这个启动失败。",
-            "en": "Locate this startup failure using reproduce, hypothesize, minimal-test steps."
+            "zh-Hans": "这个回调偶发拿到空目录：别急着加保护——顺着调用链从症状回推到最初触发点，列出中间每一跳的证据。",
+            "en": "This callback intermittently sees an empty directory: don't bolt on a guard — trace from symptom back to the original trigger, with evidence at every hop."
           },
           "output": {
-            "zh-Hans": "每一步的观察结果与结论，附最小复现步骤。",
-            "en": "Observed results per step with a minimal reproduction."
+            "zh-Hans": "逐跳的追溯记录与触发点结论；修复方案附带钉住症状的回归测试。",
+            "en": "A hop-by-hop trace and trigger verdict; the fix proposal carries its regression test."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "对比日志与最近改动，给出最可能的三个原因和验证步骤。",
-            "en": "Compare the logs with recent changes and give the three most likely causes with verification steps."
+            "zh-Hans": "全套跑通、单跑第二条就挂：找出改写共享状态的那个用例，给最小隔离改法。",
+            "en": "The suite passes all together but case two fails alone: find the test mutating shared state and propose the minimal isolation fix."
           },
           "output": {
-            "zh-Hans": "按可能性排序的原因与验证计划。",
-            "en": "Ranked causes with a verification plan."
+            "zh-Hans": "定位到具体用例的证据，和对应的隔离改造建议。",
+            "en": "Evidence naming the culprit case, plus a minimal isolation change."
           }
         }
       ],
@@ -2123,42 +2283,46 @@
     },
     "test-driven-development": {
       "overview": {
-        "zh-Hans": "在项目内真实测试命令约束下的测试驱动开发流程：先写出失败的测试，再实现、再确认全量通过。示例与命令取自项目本身。",
-        "en": "Test-driven development bound to the project’s real test commands: write the failing test first, implement, then confirm the full run. Examples and commands come from the project itself."
+        "zh-Hans": "测试先行的完整纪律，钉在项目的真实命令上：先弄清这个代码库实际怎么跑测试（命令属于项目自己的文档与构建配置），然后红—绿—重构——亲眼看新测试因为功能还不存在而失败，写下刚好让它变绿的最简实现，再在全部保持通过的保护下整理结构。跳过「看它红」这一步，等于允许一条从没失败过的测试假装守住了行为。\n\n好测试的标准同样可执行：名字说清「什么坏了」；测真实对象而不是替身的礼貌；测试与实现同一批交付。再加变异自检——故意把实现改坏一处，如果全套仍然通过，那些测试测的是空气；常见假测试信号也配了对照清单。\n\n所有命令都在授权环境里用项目真实入口跑，通过与否以实际输出为准——「应该能过」不是结果。适合新功能落地、缺陷钉死，和一切「先证明再合并」的场合。",
+        "en": "Full test-first discipline, anchored to how this codebase actually runs its tests — that command belongs to the project's own docs and build configuration. Then red-green-refactor: watch the new test fail because the capability genuinely doesn't exist yet, write the minimum that turns it green, reshape only while everything stays green. Skipping the 'watch it fail' step licenses a test that never proved anything to pretend it guards behavior.\n\nGood tests meet executable standards: the name says what breaks, tests exercise the real thing rather than polite stand-ins, tests ship in the same batch as the implementation. Add the mutation check — deliberately break one line of the code; if the whole suite still passes, those tests were guarding air. Common fake-test signals (mirror-image structure, coverage padding, assertions on internals) come with a comparison list.\n\nCommands run with the project's real entrypoints in the task's authorized environment, and 'should pass' is never a result. Built for landing new features, nailing defect fixes, and every 'prove it before merge' setting."
       },
       "useCases": [
         {
-          "zh-Hans": "为边界问题补写回归测试",
-          "en": "Add a regression test for an edge case"
+          "zh-Hans": "新功能从失败的第一条测试开始写",
+          "en": "Start a new feature from its first failing test"
         },
         {
-          "zh-Hans": "先写测试再实现小功能",
-          "en": "Write the test before a small feature"
+          "zh-Hans": "给已复现的缺陷钉一条回归测试再修",
+          "en": "Pin a reproduced defect with a regression test before fixing"
         },
         {
-          "zh-Hans": "确认改动没有破坏既有测试",
-          "en": "Confirm a change did not break existing tests"
+          "zh-Hans": "用变异检查体检一套「全绿但没牙」的测试",
+          "en": "Mutation-check a green suite to see if it actually has teeth"
+        },
+        {
+          "zh-Hans": "把示例命令换成仓库真实测试入口",
+          "en": "Replace placeholder commands with the repo's real test entrypoints"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "先写一个失败的测试复现这个边界问题，再实现修复。",
-            "en": "Write a failing test that reproduces this edge case, then implement the fix."
+            "zh-Hans": "要加「导出文件名带日期」：先按仓库实际的测试命令写一条失败测试，给我看它失败的输出，再写最小实现。",
+            "en": "Add 'export filename carries the date': write one failing test against the repo's real test command, show me its failing output, then the minimal implementation."
           },
           "output": {
-            "zh-Hans": "先失败后通过的测试记录与修复代码。",
-            "en": "A fail-then-pass test record with the fix."
+            "zh-Hans": "失败与通过两段的真实运行记录，和最小改动集；全程套件保持通过。",
+            "en": "Honest red-then-green run records and a minimal change set, suite staying green."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "为这个函数补齐测试，并运行项目现有测试命令确认。",
-            "en": "Add tests for this function and run the project’s existing test command to confirm."
+            "zh-Hans": "这套 200 条全绿的测试做次变异体检：把实现故意改坏五处，看哪些断言没反应，再给加固清单。",
+            "en": "Give this 200-case green suite a mutation check: deliberately break five things in the implementation, see which assertions never react, then a hardening list."
           },
           "output": {
-            "zh-Hans": "新增测试与真实运行结果。",
-            "en": "The new tests and the actual run results."
+            "zh-Hans": "逐项变异的结果表：哪些如期变红、哪些毫无反应，以及需要加固的测试名单。",
+            "en": "A per-mutation table: assertions that caught the break, ones that slept, and the tests needing hardening."
           }
         }
       ],
@@ -2182,42 +2346,46 @@
     },
     "requesting-code-review": {
       "overview": {
-        "zh-Hans": "复用现有任务与审阅机制发起与处理代码评审：说明改动意图、风险点与验证方式，并把意见整理成可执行项。",
-        "en": "Initiate and process code reviews through the existing task and review mechanisms: state intent, risks and verification, and turn comments into actionable items."
+        "zh-Hans": "把「帮我看看这次改动」变成一次组织良好的评审：为评审者备齐材料——改了什么、对应的需求或计划原文、要看的改动范围（起止提交），以及该重点检查什么：功能是否齐全、偏离是改进还是跑偏、代码质量与结构、风险处有没有测试。它复用应用已有的子任务与评审入口来开卷，不另起一套审批。\n\n两条判断规矩：需求文档写的是愿景，没覆盖到的行为按「正常使用者会合理期待什么」来评，文档沉默不等于许可；评审者给结论前，要把「考虑过但本轮不评」的行为逐条列出并说明理由，由你定夺，没有一条会被悄悄跳过。评审过程只读你的代码，不动工作区。\n\n评审意见供参考，本身不自动授权任何修改——采纳与否、怎么改，仍由你和你的授权流程决定。配套模板把开卷与答复的格式固定下来，让「被评审」变成流水而不是人情。",
+        "en": "Turn 'take a look at my changes' into a well-organized review. The reviewer gets a complete brief: what was implemented, the requirements or plan verbatim, the exact commit range in view, and what to weigh — feature completeness, whether deviations are improvements or departures, code quality and structure, and whether the risky parts got tested. It reuses the app's existing subtask and review surfaces rather than inventing a parallel approval system.\n\nTwo judgment rules worth stating: a spec is a vision document — behavior it never mentions is judged by what a reasonable user would expect, and silence is not permission — and before any verdict the reviewer lists everything considered and deliberately set aside, with reasons, for you to rule on; nothing gets skipped silently. The review itself is read-only; your workspace stays untouched.\n\nReview findings inform, they don't authorize: whether and how to apply them stays with you and your usual approvals. A bundled template fixes the brief-and-response format, making review a pipeline instead of a favor."
       },
       "useCases": [
         {
-          "zh-Hans": "为一次改动发起结构化评审",
-          "en": "Start a structured review for a change"
+          "zh-Hans": "功能合入前，给一段提交区间的改动开一份组织良好的评审",
+          "en": "Open a well-briefed review over a commit range before merging a feature"
         },
         {
-          "zh-Hans": "区分阻塞项与建议项",
-          "en": "Separate blocking comments from suggestions"
+          "zh-Hans": "让评审者对照原始需求判断偏离与缺口",
+          "en": "Have a reviewer grade deviations and gaps against the original requirements"
         },
         {
-          "zh-Hans": "整理评审结论与后续动作",
-          "en": "Summarize review outcomes and follow-ups"
+          "zh-Hans": "把「本轮不评什么」也记录成可裁决的清单",
+          "en": "Record what this round declined to judge as a list you can rule on"
+        },
+        {
+          "zh-Hans": "处理收到的评审：逐条回应、留证据、不越权改动",
+          "en": "Process incoming reviews: respond per item, keep evidence, don't over-apply"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "为这次改动发起代码评审，列出风险点与验证方式。",
-            "en": "Start a code review for this change, listing risks and how to verify them."
+            "zh-Hans": "对 a3f9c21..e81b0d4 开一次只读评审：需求是这三条验收，按检查重点给结论，先列你考虑过但本轮不评的行为。",
+            "en": "Open a read-only review of a3f9c21..e81b0d4 against these three acceptance criteria; list what you considered but won't judge this round before the verdict."
           },
           "output": {
-            "zh-Hans": "一份评审请求说明与风险清单。",
-            "en": "A review request with a risk list."
+            "zh-Hans": "一份评审报告：范围说明、逐项发现与需要你先定的取舍；代码与分支状态未被改动。",
+            "en": "A review report: scope statement, itemized findings and the tradeoffs needing your call — code and branch state untouched."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "整理这份 diff 的评审意见，区分阻塞项与建议项。",
-            "en": "Organize the review comments on this diff into blocking items and suggestions."
+            "zh-Hans": "评审回来了 9 条意见：逐条分类——采纳修复/存疑待证据/拒绝并给理由，建议不等于命令。",
+            "en": "Nine review comments came back: triage each into fix / needs-evidence / decline-with-reason — suggestions are not commands."
           },
           "output": {
-            "zh-Hans": "分类后的处理清单。",
-            "en": "A categorized action list."
+            "zh-Hans": "逐条处置表与其依据，改动范围仍按任务授权决定。",
+            "en": "A per-comment disposition table with its basis; edit scope stays governed by the task's authorization."
           }
         }
       ],
@@ -2241,42 +2409,46 @@
     },
     "product-manager-toolkit": {
       "overview": {
-        "zh-Hans": "产品经理常用模板与脚本：需求分析、路线图与决策记录。模板约束输出结构，脚本负责重复整理工作。",
-        "en": "Product-manager templates and scripts for requirements analysis, roadmaps and decision records. Templates constrain the structure while scripts handle repetitive assembly."
+        "zh-Hans": "PM 日常四件套，每件都有可复跑的工序。需求排序：把支持工单、销售阻塞、技术债和战略目标收进同一张输入表，按 RICE 打分，再看组合是否健康——速赢与大注的比例、工作量有没有全压在少数大项上、和战略的缺口在哪，再落成路线图草案。用户访谈：逐字稿进去，按主题聚类的发现出来，每条结论带着可回指的引语。PRD：从随包模板起草，把探索结论填进目标、范围、非目标与度量。\n\n输入模板和评分公式都在包里，同样的输入算出同样的分数——排序争议可以回到数字上解决，而不是比嗓门。\n\n产出都是可评审的工作区文档：评分表、访谈综合、路线图和 PRD 草稿。给已经存在的系统补规格，可以用配套的 Code→PRD 从反方向接手。",
+        "en": "The PM's four daily crafts, each with a re-runnable procedure. Prioritization: feed support tickets, sales blockers, technical debt and strategy into one input sheet, score with RICE, then read the portfolio — quick wins versus big bets, effort piled onto a few items, strategic gaps — and draft the roadmap from it. Interviews: transcripts in, theme-clustered findings out, every conclusion carrying quotes you can point back to. PRDs: start from the bundled templates and fill goals, scope, non-goals and metrics from your discovery work.\n\nInput templates and scoring formulas ship in the package, so identical inputs produce identical scores — ranking disputes settle back into the numbers instead of into volume.\n\nOutputs are reviewable workspace documents: score tables, interview syntheses, roadmaps and PRD drafts. For writing specs of systems that already exist, its companion Code→PRD covers the reverse direction."
       },
       "useCases": [
         {
-          "zh-Hans": "把想法整理成一页需求说明",
-          "en": "Turn a rough idea into a one-page requirement"
+          "zh-Hans": "把 30 条混杂需求源一次 RICE 排序并看组合失衡",
+          "en": "RICE-score 30 mixed requests and spot portfolio imbalances"
         },
         {
-          "zh-Hans": "制定季度路线图草案",
-          "en": "Draft a quarterly roadmap"
+          "zh-Hans": "从 12 份访谈逐字稿聚出带引语的主题",
+          "en": "Cluster twelve interview transcripts into themes with quotes"
         },
         {
-          "zh-Hans": "记录关键决策与取舍",
-          "en": "Record key decisions and trade-offs"
+          "zh-Hans": "按模板起草可评审的 PRD 骨架",
+          "en": "Draft a reviewable PRD shell from the templates"
+        },
+        {
+          "zh-Hans": "为路线图争议调出计算过程与假设",
+          "en": "Pull up the arithmetic and assumptions behind roadmap arguments"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "把这个想法整理成一页需求说明与验收标准。",
-            "en": "Turn this idea into a one-page requirement with acceptance criteria."
+            "zh-Hans": "这是 support tickets 和 CRM 里收集的 22 条请求，填进 RICE 模板打分；reach 的依据标注来源，然后给我速赢清单和三个 XL 警示。",
+            "en": "Score these 22 requests from support tickets and CRM on the RICE template; cite the basis for every reach number, then give me a quick-wins list and flag any XL pile-up."
           },
           "output": {
-            "zh-Hans": "需求说明与可检查的验收标准。",
-            "en": "A requirement page with checkable acceptance criteria."
+            "zh-Hans": "带来源标注的评分表、排序结果与组合分析摘要。",
+            "en": "A sourced score table, the ranking, and a portfolio-analysis summary."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "为下个季度做一份带优先级的路线图草案。",
-            "en": "Draft a prioritized roadmap for next quarter."
+            "zh-Hans": "这四场用户访谈逐字稿做主题聚类：每个主题给出现次数、代表性引语、与现有路线图条目的关联建议。",
+            "en": "Synthesize these four interview transcripts: per theme show occurrence count, a representative quote, and which roadmap items it touches."
           },
           "output": {
-            "zh-Hans": "按优先级排列的路线图草案与假设说明。",
-            "en": "A prioritized roadmap draft with stated assumptions."
+            "zh-Hans": "综合文档：主题×证据矩阵，引语可回指逐字稿位置。",
+            "en": "A synthesis document: a theme-by-evidence matrix with quotes pointing back to transcript locations."
           }
         }
       ],
@@ -2300,42 +2472,46 @@
     },
     "product-discovery": {
       "overview": {
-        "zh-Hans": "产品探索的证据流程：提出机会假设、设计验证实验、归档结论。重点在于区分“我们以为”和“我们验证过”。",
-        "en": "A discovery evidence flow: state opportunity hypotheses, design validation experiments and archive conclusions. The point is separating what we assume from what we tested."
+        "zh-Hans": "在承诺投入开发之前，把产品想法拆成可以小步验证的选择。先钉住一个可度量的结果（现状基线与目标期限），再搭一棵机会解决方案树：结果之下是有用户证据支撑的机会点，机会之下是候选方案，方案之下是最快能学到东西的小实验——至少攒出三个不同的机会再收敛。\n\n然后把假设摊上桌面：用户是否想要、商业上是否成立、技术上是否可行、用起来是否顺手，四类各自按风险和不确定程度打分，从最危险的那条开始设计验证。问题侧用访谈确认频率、痛感和解决意愿，弱信号趁早放弃；方案侧先做原型，测概念与真实行为，看人做什么而不是说什么。\n\n节奏排成一到两周的探索循环：每轮带着明确假设、每天过证据，结束时做一个决定——继续、转向还是停止。留在工作区的是树、假设清单和循环计划，不是又一份没人读的报告。",
+        "en": "Before committing to building, break the product idea into small verifiable bets. Pin one measurable outcome (baseline and target horizon), then grow an opportunity-solution tree: under the outcome, opportunities backed by user evidence; under those, candidate solutions; under those, the fastest-learning experiments — at least three distinct opportunities before converging.\n\nThen put assumptions on the table: do users want it, does the business hold, can it be built, is it usable — each scored by risk and uncertainty, tested from the riskiest outward. On the problem side, interviews confirm frequency, pain and willingness to act, and weak signals die early; on the solution side, prototypes test concept and value by watching behavior, not stated preference.\n\nThe cadence is a one-to-two-week discovery loop with explicit hypotheses, daily evidence reviews and a closing call: proceed, pivot or stop. What stays in your workspace is the tree, the assumption map and the loop plan — not another report nobody rereads."
       },
       "useCases": [
         {
-          "zh-Hans": "为产品假设设计验证实验",
-          "en": "Design experiments for a product hypothesis"
+          "zh-Hans": "为一个功能方向搭 OST 并标出证据缺口",
+          "en": "Build an Opportunity Solution Tree for a feature direction and mark evidence gaps"
         },
         {
-          "zh-Hans": "整理访谈为机会点",
-          "en": "Turn interviews into opportunity areas"
+          "zh-Hans": "把「感觉要做」拆成按风险打分的假设清单",
+          "en": "Turn 'I feel we should build this' into a risk-scored assumption map"
         },
         {
-          "zh-Hans": "归档探索结论与证据",
-          "en": "Archive discovery conclusions and evidence"
+          "zh-Hans": "设计访谈提纲确认问题频率与痛感",
+          "en": "Design an interview guide that tests frequency, severity and willingness"
+        },
+        {
+          "zh-Hans": "规划两周 discovery sprint 并定 proceed/pivot/stop 判据",
+          "en": "Plan a two-week discovery sprint with proceed/pivot/stop criteria"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "为这个假设设计三个可验证的实验，并说明判定标准。",
-            "en": "Design three testable experiments for this hypothesis and define success criteria."
+            "zh-Hans": "方向「给 iPad 用户加手写批注」：先给结果指标与机会树骨架，机会必须挂到我给的三条用户访谈证据上，缺口直接标出。",
+            "en": "Direction 'handwriting annotation for iPad users': give the outcome metric and an opportunity-tree skeleton, attach every opportunity to one of the three interview quotes I supplied, and mark gaps plainly."
           },
           "output": {
-            "zh-Hans": "实验设计、判定标准与成本估计。",
-            "en": "Experiment designs, success criteria and cost estimates."
+            "zh-Hans": "探索树与证据对照表：每个机会点都能回指访谈材料，没有证据的位置标出来而不是补猜测。",
+            "en": "A tree with an evidence map: every opportunity points back to your interview material, unsupported spots flagged, not back-filled."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "把这些用户访谈整理成机会点与验证结论。",
-            "en": "Synthesize these user interviews into opportunity areas and validated findings."
+            "zh-Hans": "对这棵树做假设映射：四类假设列全，按风险和不确定程度打分，给最危险的三条各配一个两周内能跑完的小实验。",
+            "en": "Assumption-map that tree: list all four assumption classes, score by risk and uncertainty, and give the three riskiest each a small experiment finishable within two weeks."
           },
           "output": {
-            "zh-Hans": "机会点清单与支撑证据。",
-            "en": "An opportunity list with supporting evidence."
+            "zh-Hans": "打分后的假设表与三个实验方案（假设、判据、样本、通过标准），附两周计划。",
+            "en": "A scored assumption table plus three experiments — hypothesis, measure, sample, pass bar — with a two-week plan."
           }
         }
       ],
@@ -2359,42 +2535,46 @@
     },
     "code-to-prd": {
       "overview": {
-        "zh-Hans": "读取现有项目并生成需求说明：从代码结构推断功能边界、依赖与风险，并明确标注不确定处。适合接手项目或补历史文档。",
-        "en": "Read an existing project and generate a PRD: infer capability boundaries, dependencies and risks from the code, and mark uncertainties. Useful for taking over a project or backfilling documentation."
+        "zh-Hans": "把一个已经存在的代码库反推成完整的产品需求文档：先全局扫描识别技术栈，再逐页、逐接口分析，最后生成结构化文档。前端覆盖 React、Vue、Angular、Svelte、Next.js、Nuxt、SvelteKit、Remix、Astro；后端覆盖 NestJS、Express、Django、FastAPI、Flask；全栈项目把页面与接口合到一份统一文档。路由、组件、状态、模型与接口逐项取证，演示数据与真实接口区分开——假数据不会被写成产品事实。\n\n文档写给两批读者：产品和合作方能读懂每个页面做什么，工程和 AI 代理能据此重建字段、交互与关系。\n\n交付是一个 PRD 文档包：逐页说明、枚举字典、接口清单与数据模型。过程只读代码、只写新文档，被分析的工程不会被改动。",
+        "en": "Reverse-engineer an existing codebase into a complete PRD: a global scan identifies the stack, page-by-page and endpoint-by-endpoint analysis follows, then structured documents are generated. Frontends covered: React, Vue, Angular, Svelte, Next.js, Nuxt, SvelteKit, Remix, Astro; backends: NestJS, Express, Django, FastAPI, Flask; fullstack projects merge pages and APIs into one document. Routes, components, state, models, enums and calls are evidenced one by one, and demo fixtures are distinguished from real integrations — mock data never gets written up as product truth.\n\nTwo audiences are served: product and partners read what each page does, while engineers or AI agents get enough detail to reconstruct fields, interactions and relationships — business language, zero business details omitted.\n\nThe delivery is a PRD package: per-page documents, an enum dictionary, an API inventory and model schemas, with a completeness check attached. The process only reads code and writes new documents; the analyzed project itself is never modified."
       },
       "useCases": [
         {
-          "zh-Hans": "为旧模块补一份需求说明",
-          "en": "Backfill a requirement document for an old module"
+          "zh-Hans": "给没有文档的内部系统建可重建级 PRD",
+          "en": "Produce reconstruction-grade PRDs for undocumented internal systems"
         },
         {
-          "zh-Hans": "梳理功能边界与依赖",
-          "en": "Map capability boundaries and dependencies"
+          "zh-Hans": "接手遗留前端时先出页面与路由清单",
+          "en": "On inheriting a legacy frontend, get pages and routes inventoried first"
         },
         {
-          "zh-Hans": "评估改动的影响面",
-          "en": "Assess the impact surface of a change"
+          "zh-Hans": "把 Django 后端的模型与权限导出成数据字典",
+          "en": "Export a Django backend's models and permissions as a data dictionary"
+        },
+        {
+          "zh-Hans": "识别哪些接口真实联调、哪些还挂着 mock",
+          "en": "Identify which endpoints are real integrations and which still mock"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "阅读这个项目并生成需求说明，标注不确定处。",
-            "en": "Read this project and produce a PRD, marking where you are uncertain."
+            "zh-Hans": "对这个 Next.js 全栈仓库反推 PRD：页面与接口合到一份文档，枚举单独成表，演示数据标出来。",
+            "en": "Reverse-engineer this Next.js fullstack repo into a PRD: merge pages and APIs into one document, tabulate enums separately, and mark every mock."
           },
           "output": {
-            "zh-Hans": "需求说明文档与待确认问题清单。",
-            "en": "A PRD with a list of open questions."
+            "zh-Hans": "一套 PRD 文档：逐页说明、枚举字典、接口清单，演示数据单独列出。",
+            "en": "A PRD package: per-page docs, an enum dictionary and an API inventory, with mock data called out separately."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "把这个功能模块的现状整理成 PRD 与影响面分析。",
-            "en": "Document this module’s current state as a PRD with an impact analysis."
+            "zh-Hans": "新团队下周接手这个 Django 项目：出一份业务同学能读的总体说明，外加工程可照建的模型与接口规格。",
+            "en": "A new team takes over this Django project next week: produce a business-readable overview plus engineer-grade model and endpoint specs."
           },
           "output": {
-            "zh-Hans": "模块说明、依赖关系与影响面评估。",
-            "en": "A module description, dependency map and impact assessment."
+            "zh-Hans": "双读者文档集：功能语义用业务语言，规格细到字段与权限。",
+            "en": "A dual-audience set: feature meaning in business language, specs down to fields and permissions."
           }
         }
       ],
@@ -2418,42 +2598,46 @@
     },
     "meetings": {
       "overview": {
-        "zh-Hans": "从已授权的文本或转写生成会议纪要、行动项与跟进清单。纪要区分讨论、决定与待办，行动项必须带负责人与期限才算完整。",
-        "en": "Produce minutes, action items and follow-ups from authorized text or transcripts. Minutes separate discussion, decisions and todos, and an action item is only complete with an owner and due date."
+        "zh-Hans": "多数会议本该是一封邮件——这个流程把「该不该开」变成一道可回答的题。先为会议定价：人数乘时长乘人力成本，然后过三道检查：没有决策要发生，判异步——改发备忘，这个结论本身就是赢；有决策但议程或负责人缺位，判未就绪，点名缺什么；三样齐了才值得开，并附上这场会总共花掉多少。\n\n值得开的会才配议程：每个议题写明期望结果，空议题被拒绝；决策类排在讨论和知会之前；每段时间盒加上最后五分钟的行动复述，装不下就删减或拆分，直到通过。会议由你主持，议程就是你的台本。\n\n会后把笔记给它：口头承诺、待办与「谁将在何时做什么」自动归成按负责人分组的清单，没主的标「无负责人」、没期的标「无期限」——每个行动都有主、有期，这场会才算开完。它从不自发邀请或群发；产出是你决定要不要发的文字。",
+        "en": "Most meetings should be an email — this workflow turns 'should this exist' into an answerable question. Price the meeting: heads times hours times labor cost, then three checks. No decision to make ⇒ async; draft a memo instead — that verdict is a win. A decision but no agenda or owner ⇒ not ready, naming the gap. All three present ⇒ it earns its cost, stated as a total.\n\nOnly survivors get an agenda: every topic carries a desired outcome (empty ones are refused), decisions sort before discussion and information, and timeboxes plus a five-minute closing recap must fit — trim, split and re-check until they do. You run the meeting; the agenda is your script.\n\nAfterwards the notes reveal their actions: commitments, to-dos and 'name will do X by Y' lines group into a checklist by owner, with no-owner and no-due-date flags. The meeting ends when every action has an owner and a date. It never sends invites or mass messages — the output is text you decide to send."
       },
       "useCases": [
         {
-          "zh-Hans": "把会议转写整理成纪要",
-          "en": "Turn a transcript into minutes"
+          "zh-Hans": "例会前跑关口：这真的需要八个人一小时吗",
+          "en": "Gate a recurring sync: does this really need eight people for an hour"
         },
         {
-          "zh-Hans": "提取行动项与负责人",
-          "en": "Extract action items and owners"
+          "zh-Hans": "把松散议题压成决策优先的时间盒议程",
+          "en": "Compress loose topics into a decision-first timeboxed agenda"
         },
         {
-          "zh-Hans": "为下次会议准备跟进清单",
-          "en": "Prepare a follow-up list for the next meeting"
+          "zh-Hans": "会后从笔记提取带负责人与期限的行动清单",
+          "en": "Extract an owner-and-due-date action checklist from post-meeting notes"
+        },
+        {
+          "zh-Hans": "给改期前的评审会写一份备忘替代方案",
+          "en": "Draft the async memo that replaces the meeting"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "把这段会议转写整理成纪要、行动项与负责人。",
-            "en": "Turn this transcript into minutes, action items and owners."
+            "zh-Hans": "周四「项目同步」8 人一小时：先算成本过关；没有待决事项就别硬排议程，给我改异步的备忘草稿。",
+            "en": "Thursday's project sync: 8 people for an hour. Price it and run the checks; if there's no pending decision, skip the agenda and draft the async memo."
           },
           "output": {
-            "zh-Hans": "结构化纪要与行动项表。",
-            "en": "Structured minutes with an action-item table."
+            "zh-Hans": "带成本核算的异步判定和一份备忘草稿；不会为不存在的决策硬造议程。",
+            "en": "An async verdict with the cost figures plus a memo draft — no agenda fabricated for a nonexistent decision."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "从这份讨论记录里提取待跟进事项并按优先级排序。",
-            "en": "Extract follow-ups from these discussion notes and rank them by priority."
+            "zh-Hans": "这是刚才评审会的笔记：提取行动项，按人分组，没主的标「无负责人」、没日期的标「无期限」，末尾给完成统计。",
+            "en": "From these review-meeting notes, extract action items grouped by owner, flagging no-owner and no-due-date entries, with counts at the end."
           },
           "output": {
-            "zh-Hans": "按优先级排列的待办清单。",
-            "en": "A prioritized todo list."
+            "zh-Hans": "按人分组的行动清单与缺口统计；发送与否由你决定。",
+            "en": "An owner-grouped checklist with gap counts; sending remains your call."
           }
         }
       ],
@@ -2477,42 +2661,46 @@
     },
     "floe-file-organizer": {
       "overview": {
-        "zh-Hans": "整理工作区文件，先给出变更预览，再以可恢复方式提交。没有撤销计划的移动与删除不会发生，重名与冲突会先被指出。",
-        "en": "Organize workspace files with a change preview before a recoverable commit. Moves and deletions never happen without an undo plan, and name conflicts are surfaced first."
+        "zh-Hans": "整理文件不是一键乱动。它会先盘点：类型、大小、命名规律、修改时间，重复文件按内容识别而不是只看名字；然后把每个动作写成一条可审阅的计划，给出分组预览和撤销办法；你确认后才执行，先建目录、再逐项移动。所谓删除，其实是移入按日期命名的归档文件夹，随时可以整体找回；只有你明确点名归档里的文件，才会真正移除。\n\n重名冲突、跨设备移动这类拿不准的情况只标记、不猜测；命名沿用你已有的文件夹风格，不推销「更理论化」的方案。大批量整理可以后台进行，关掉页面不打断。结束时逐条核对计划与实际结果：哪些动了、哪些没动，一目了然。",
+        "en": "Organizing without chaos. It inventories first — types, sizes, naming patterns, dates, duplicates recognized by content rather than by name — then drafts a reviewable plan listing every move, rename and archive as one line, with grouped previews and undo paths. Only after you approve does it execute, parent folders before children. A 'delete' is really a move into a dated archive folder, restorable in bulk; actual removal happens only when you name archived items specifically.\n\nName collisions and cross-device oddities get flagged, not guessed around; naming follows your existing folders instead of pitching a prettier scheme. Large passes run in the background so closing the view never interrupts them, and the close-out checks plan against reality: what moved, what didn't, stated plainly."
       },
       "useCases": [
         {
-          "zh-Hans": "按类型与日期整理下载目录",
-          "en": "Sort a downloads folder by type and date"
+          "zh-Hans": "把杂乱的下载目录按类型和日期归档，重复文件先按内容确认",
+          "en": "Tidy a downloads mess by type and date, confirming duplicates by content rather than name"
         },
         {
-          "zh-Hans": "找出重复文件并生成整理方案",
-          "en": "Find duplicates and propose a cleanup plan"
+          "zh-Hans": "按现有命名规范批量重命名截图与照片",
+          "en": "Rename screenshots or photos in bulk to your existing convention"
         },
         {
-          "zh-Hans": "在提交前确认变更清单",
-          "en": "Confirm the change list before committing"
+          "zh-Hans": "清理任务产物，保留完整计划与逐步撤销路径",
+          "en": "Clean task outputs while keeping the full plan and per-step undo path"
+        },
+        {
+          "zh-Hans": "找出内容重复的文件并保留规范副本",
+          "en": "Find byte-identical duplicates and keep the canonical copy"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "整理下载目录，按类型与日期分组，先给我预览。",
-            "en": "Organize the downloads folder by type and date, and show me a preview first."
+            "zh-Hans": "把 Downloads 里这季度的票据截图和 PDF 归到「票据/2026-Q3」，截图命名对齐 PDF，内容重复的归档不删除，先给我看计划。",
+            "en": "File this quarter's receipt screenshots and PDFs into Receipts/2026-Q3, match the screenshots' names to the PDFs, archive identical content instead of deleting, and show me the plan first."
           },
           "output": {
-            "zh-Hans": "变更预览与可恢复的提交方案。",
-            "en": "A change preview with a recoverable commit plan."
+            "zh-Hans": "一份逐行计划与分组预览（数量、体积、如何撤销），确认后给出逐项结果；没动的文件原样保留。",
+            "en": "A line-by-line plan with a grouped preview (counts, sizes, how to undo), then per-operation results once you confirm; anything untouched stays put."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "找出重复文件并生成可恢复的整理方案。",
-            "en": "Find duplicate files and produce a recoverable cleanup plan."
+            "zh-Hans": "上次归档错了，把那天归档文件夹里的文件放回原位，放回前先核对目录现状。",
+            "en": "That archive was a mistake — put that day's archived files back where they came from, checking the current folder state first."
           },
           "output": {
-            "zh-Hans": "重复文件清单与带撤销计划的方案。",
-            "en": "A duplicate list with an undo plan."
+            "zh-Hans": "按原计划逆向执行的还原报告，每一步核对来源与去处；中途停下也会如实说明哪些已还原。",
+            "en": "A restoration report reversing the original plan with per-step checks; any stop point is stated honestly."
           }
         }
       ],
@@ -2536,42 +2724,46 @@
     },
     "floe-invoice-organizer": {
       "overview": {
-        "zh-Hans": "复用 App 的 OCR 与表格服务提取、归类并归档票据，提交可恢复。识别不确定的字段会被标出，而不是猜一个数字填进去。",
-        "en": "Extract, classify and archive invoices through the app’s OCR and table services with recoverable commits. Uncertain fields are flagged rather than guessed."
+        "zh-Hans": "把成堆的票据照片和发票 PDF 变成可检索的归档和一份能直接用的台账。照片和文件都在设备本地读取，每张单据提取商户、单号、日期、到期日、币种、金额、税额等信息，并标注确定程度：清楚印刷的、需要抽查的、缺失的。录入前自动交叉核对——合计对行项、币种一致、同一商户重复单号、日期是否合理——对不上的进入问题清单等你处理，绝不擅自「修正」。\n\n归档布局可以商量（默认按商户、年份、单号命名），台账按年份分表并附商户汇总，写完会重新打开确认。全程使用应用自带的识别与表格能力，不经过云端服务；看不清的金额宁可标出来，也不会猜。",
+        "en": "Turn piles of receipt photos and invoice PDFs into a searchable archive plus a working ledger. Everything is read on-device; each document yields vendor, number, invoice and due dates, currency, gross, tax and payment method, each confidence-tagged: printed, needs spot-check, or missing. Cross-checks run before filing — totals against line items, currency consistency, repeated invoice numbers per vendor, plausible dates — and anything that fails lands on an exceptions list for your ruling, never silently 'corrected'.\n\nThe filing layout is adjustable (vendor/year/number by default); the ledger keeps one worksheet per year with a per-vendor summary, and is reopened to verify after writing. All of it rides the app's own recognition and spreadsheet services — no cloud OCR, no expense API — and illegible amounts are flagged rather than guessed."
       },
       "useCases": [
         {
-          "zh-Hans": "从票据图片提取金额与日期",
-          "en": "Extract amounts and dates from invoice images"
+          "zh-Hans": "把一个月的报销照片整理成带可信度标注的台账",
+          "en": "Turn a month of expense photos into a confidence-tagged ledger"
         },
         {
-          "zh-Hans": "按月份归类并归档",
-          "en": "Group by month and archive"
+          "zh-Hans": "跨归档揪出重复发票号与合计不符的单据",
+          "en": "Surface duplicate invoice numbers and total mismatches across the archive"
         },
         {
-          "zh-Hans": "核对识别结果再提交",
-          "en": "Verify extracted values before committing"
+          "zh-Hans": "为按商户与年份汇总的支出建立逐年工作表",
+          "en": "Build yearly worksheets that roll up spend by vendor and year"
+        },
+        {
+          "zh-Hans": "批量提取电子发票字段并归档到规范目录",
+          "en": "Extract e-invoice fields in bulk and file them into a clean layout"
         }
       ],
       "examples": [
         {
           "prompt": {
-            "zh-Hans": "从这批票据图片里提取金额、日期与商户，整理成表格。",
-            "en": "Extract amount, date and merchant from these invoice images into a table."
+            "zh-Hans": "这 40 张餐饮和打车票据：建 2026 台账，商户、金额、日期、支付方式都要，没把握的字段单独列出来让我抽查。",
+            "en": "From these 40 meal and taxi receipts, build a 2026 ledger with vendor, amount, date and payment method, and list the uncertain fields separately for spot-checking."
           },
           "output": {
-            "zh-Hans": "票据明细表与识别不确定项标注。",
-            "en": "An invoice table with uncertain extractions marked."
+            "zh-Hans": "重新打开确认过的台账、按确定程度分组的提取统计，和一份需要你抽查的清单。",
+            "en": "A reopened-and-verified ledger, extraction stats grouped by confidence, and a spot-check list."
           }
         },
         {
           "prompt": {
-            "zh-Hans": "按月份归类这些发票，并生成可恢复的归档方案。",
-            "en": "Group these invoices by month and produce a recoverable archive plan."
+            "zh-Hans": "检查这批 PDF 发票有没有同一商户开重号的、或行项加不出总额的，有问题的先别归档。",
+            "en": "Check this batch of PDF invoices for the same vendor reusing an invoice number or lines that don't sum to the total, and hold anything suspicious out of the archive."
           },
           "output": {
-            "zh-Hans": "按月归档方案与变更预览。",
-            "en": "A month-based archive plan with a change preview."
+            "zh-Hans": "一份核对报告：逐条列出重号与合计差异及具体数字，问题单据保留在原位等你决定。",
+            "en": "A cross-check report listing each duplicate number and sum mismatch with its figures, keeping flagged documents in place for your call."
           }
         }
       ],
