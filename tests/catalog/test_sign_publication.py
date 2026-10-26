@@ -13,13 +13,17 @@ roots are real disposable Git repositories with the official origin intent
 so the bridge's exact-snapshot verification is exercised, not stubbed.
 
 The gate is exercised in BOTH admission shapes of the Root-approved
-incremental policy (2026-10-27): the complete-selection fixture (40 unique
-qualified offers with all nine mandatory deep IDs admitted) and the
+incremental policy (2026-10-27): the complete-selection fixture (all 39
+optional rows qualified with all nine mandatory deep IDs admitted — 39
+download offers once the four App-provided builtins are excluded) and the
 incremental fixture carrying exactly the rows the REAL registry admits today
-(32 guide-only plus the 2 guest-qualified skills, the nine mandatory IDs held
-back), plus a key-free in-memory gate probe against the ACTUAL signed
-repository data. Held-back mandatory IDs no longer block the qualified set;
-every per-item trust refusal stays enforced.
+(28 guide-only plus the 2 guest-qualified skills, the nine mandatory IDs held
+back — 30/30 download offers), plus a key-free in-memory gate probe against
+the ACTUAL signed repository data whose expectations are DERIVED from the
+registry (so a future honest admission changes no test, only the counts), and
+a FROZEN initial-release fixture pinning the exact first-wave semantics.
+Held-back mandatory IDs no longer block the qualified set; every per-item
+trust refusal stays enforced.
 """
 import base64
 import copy
@@ -270,9 +274,13 @@ class BridgeFixture(unittest.TestCase):
         return proc
 
     def _standard_catalog_registry(self):
-        """40 qualified iOS: all 39 optional rows (9 mandatory deep plus any
-        other scripted rows guest-verified, guides static) plus the floe-pdf
-        builtin guide; floe-office/network/video stay candidates."""
+        """Complete-selection fixture: all 39 optional rows qualified (the 9
+        mandatory deep plus every other optional row, scripted rows
+        guest-verified, guides static) — 40 qualified registry rows of which
+        exactly 39 are download offers, because the four App-provided builtins
+        are never Hub download offers (floe-office/network/video stay
+        candidates; floe-pdf is qualified registry data but excluded from the
+        feed by its fixed ID)."""
         registry = base_registry()
         entries = {e["id"]: e for e in registry["skills"]}
         qualified = set()
@@ -297,17 +305,18 @@ class BridgeFixture(unittest.TestCase):
 
     def _incremental_catalog_registry(self):
         """The exact REAL admission today (staged as a temp-tree fixture):
-        every row the genuine registry marks qualified — the 32 guide-only
-        rows (including the four iOS-only builtins) plus the two rows with
-        real guest receipts — and nothing else. The nine mandatory deep IDs
-        stay held back; under the incremental policy that no longer blocks
-        the honest 34/30 publication."""
+        every row the genuine registry marks qualified — the 30 optional rows
+        (28 guide-only plus the two rows with real guest receipts) and the
+        four iOS-only builtins — and nothing else. The nine mandatory deep
+        IDs stay held back; under the incremental policy that no longer
+        blocks the honest 30/30 download publication (the four App-provided
+        builtins stay qualified registry data but are excluded from the
+        download feeds by their fixed IDs)."""
         registry = base_registry()
         real_by_id = {e["id"]: e for e in REAL_REGISTRY["skills"]}
-        qualified = {e["id"] for e in REAL_REGISTRY["skills"]
+        qualified = {e["id"]: e for e in REAL_REGISTRY["skills"]
                      if e["status"]["qualified"]}
-        self.assertEqual(len(qualified), 34)
-        self.assertTrue(set(MANDATORY) & qualified == set())
+        self.assertTrue(set(MANDATORY) & set(qualified) == set())
         for entry in registry["skills"]:
             if entry["id"] not in qualified:
                 continue
@@ -318,7 +327,7 @@ class BridgeFixture(unittest.TestCase):
             if scripted:
                 status = dict(status, adaptation="frozen", executionVerified=True)
             entry["status"] = status
-        return registry, qualified
+        return registry, set(qualified)
 
     def _stage_catalog_data(self, name, registry, qualified_ids, sign=True,
                             real_impeccable=True, impeccable_real=False):
@@ -708,8 +717,14 @@ class CatalogModeTests(BridgeFixture):
         ios = json.loads((out / "catalog.json").read_bytes())
         android = json.loads((out / "android/catalog.json").read_bytes())
         self.assertEqual(ios["sourceCommit"], commit)
-        self.assertEqual(len(ios["entries"]), 40)
+        # 40 qualified registry rows (39 optional + the floe-pdf builtin) but
+        # only 39 download offers: the four App-provided builtins are never
+        # Hub download offers.
+        self.assertEqual(len(ios["entries"]), 39)
         self.assertEqual(len(android["entries"]), 39)
+        self.assertNotIn("floe-pdf", {e["id"] for e in ios["entries"]})
+        for entry in ios["entries"]:
+            self.assertTrue(entry["status"]["published"], entry["id"])
         for id_ in MANDATORY:
             self.assertIn(id_, {e["id"] for e in ios["entries"]})
             self.assertIn(id_, {e["id"] for e in android["entries"]})
@@ -751,13 +766,18 @@ class CatalogModeTests(BridgeFixture):
         self.assertEqual(receipt["sourceCommit"], commit)
         self.assertEqual(receipt["toolingCommit"], self.tooling_commit)
         self.assertEqual(receipt["launchGate"]["policy"], "incremental-2026-10-27")
-        self.assertEqual(receipt["launchGate"]["iosQualified"], 40)
+        self.assertEqual(receipt["launchGate"]["iosQualified"], 39)
         self.assertEqual(receipt["launchGate"]["androidQualified"], 39)
+        self.assertEqual(receipt["launchGate"]["selectionQualified"], 40)
+        self.assertEqual(receipt["launchGate"]["builtinProvided"], 1)
         self.assertEqual(receipt["launchGate"]["mandatoryDeepIds"], sorted(MANDATORY))
         self.assertEqual(receipt["launchGate"]["mandatoryDeepOffered"], sorted(MANDATORY))
         coverage = receipt["launchGate"]["completeSelectionCoverage"]
         self.assertTrue(coverage["informationalOnly"])
+        self.assertEqual(coverage["selectionQualified"], 40)
         self.assertTrue(coverage["meetsQualifiedTarget"])
+        self.assertEqual(coverage["builtinProvided"], 1)
+        self.assertEqual(coverage["downloadEligible"], 39)
         self.assertTrue(coverage["mandatoryDeepAllPresent"])
         self.assertTrue(coverage["complete"])
         listed = {entry["path"] for entry in receipt["outputs"]}
@@ -781,12 +801,13 @@ class CatalogModeTests(BridgeFixture):
         self.assertIn(message_fragment, proc.stderr)
         self.assertFalse(out.exists() and any(out.rglob("*")))
 
-    def test_incremental_34_admission_publishes_exact_feeds(self):
-        """Positive incremental shape: exactly the real 34 qualified iOS rows
-        (32 guides including the four iOS-only builtins + 2 guest skills) and
-        the 30 Android rows publish while all nine mandatory deep IDs are
-        held back. No engine bytes may be staged because impeccable is not
-        offered; the coverage metadata must honestly say NOT complete."""
+    def test_incremental_admission_publishes_exact_30_download_feeds(self):
+        """Positive incremental shape: exactly the real 30 qualified optional
+        rows (28 guides + 2 guest skills) publish as the 30/30 download feeds
+        while all nine mandatory deep IDs and the four App-provided builtins
+        stay out of the download offers. No engine bytes may be staged because
+        impeccable is not offered; the coverage metadata must honestly say
+        NOT complete (34 selection / 40, 0/9)."""
         registry, qualified = self._incremental_catalog_registry()
         data, commit, _staged = self._stage_catalog_data(
             "catalog-incremental", registry, qualified, real_impeccable=False)
@@ -808,17 +829,23 @@ class CatalogModeTests(BridgeFixture):
         ios = json.loads((out / "catalog.json").read_bytes())
         android = json.loads((out / "android/catalog.json").read_bytes())
         self.assertEqual(ios["sourceCommit"], commit)
-        self.assertEqual(len(ios["entries"]), 34)
+        self.assertEqual(len(ios["entries"]), 30)
         self.assertEqual(len(android["entries"]), 30)
-        self.assertEqual({e["id"] for e in ios["entries"]}, qualified)
+        download = qualified - set(hubcore.RESERVED_BUILTIN_IDS)
+        self.assertEqual(len(download), 30)
+        self.assertEqual({e["id"] for e in ios["entries"]}, download)
+        self.assertEqual({e["id"] for e in android["entries"]}, download)
+        for entry in ios["entries"]:
+            self.assertTrue(entry["status"]["published"], entry["id"])
         self.assertNotIn("impeccable", {e["id"] for e in ios["entries"]})
         for id_ in MANDATORY:
             self.assertNotIn(id_, {e["id"] for e in ios["entries"]})
             self.assertNotIn(id_, {e["id"] for e in android["entries"]})
         for id_ in hubcore.RESERVED_BUILTIN_IDS:
+            self.assertNotIn(id_, {e["id"] for e in ios["entries"]})
             self.assertNotIn(id_, {e["id"] for e in android["entries"]})
         # per-item stages stay honest: exactly the two real guest receipts
-        # carry guest-execution-qualified; the other 32 offers are static.
+        # carry guest-execution-qualified; the other 28 offers are static.
         guest, static = set(), set()
         for entry in ios["entries"]:
             record = json.loads((out / entry["review"]["path"]).read_bytes())
@@ -827,7 +854,7 @@ class CatalogModeTests(BridgeFixture):
             else:
                 static.add(entry["id"])
         self.assertEqual(guest, {"citation-management", "sympy"})
-        self.assertEqual(len(static), 32)
+        self.assertEqual(len(static), 28)
         # standalone staging of every offered archive + signed review
         for feed_name in ("catalog.json", "android/catalog.json"):
             feed = json.loads((out / feed_name).read_bytes())
@@ -846,13 +873,18 @@ class CatalogModeTests(BridgeFixture):
         receipt = self.verify_receipt(out, trust)
         gate = receipt["launchGate"]
         self.assertEqual(gate["policy"], "incremental-2026-10-27")
-        self.assertEqual(gate["iosQualified"], 34)
+        self.assertEqual(gate["iosQualified"], 30)
         self.assertEqual(gate["androidQualified"], 30)
+        self.assertEqual(gate["selectionQualified"], 34)
+        self.assertEqual(gate["builtinProvided"], 4)
         self.assertEqual(gate["mandatoryDeepIds"], sorted(MANDATORY))
         self.assertEqual(gate["mandatoryDeepOffered"], [])
         coverage = gate["completeSelectionCoverage"]
         self.assertTrue(coverage["informationalOnly"])
+        self.assertEqual(coverage["selectionQualified"], 34)
         self.assertFalse(coverage["meetsQualifiedTarget"])
+        self.assertEqual(coverage["builtinProvided"], 4)
+        self.assertEqual(coverage["downloadEligible"], 30)
         self.assertFalse(coverage["mandatoryDeepAllPresent"])
         self.assertFalse(coverage["complete"])
         listed = {entry["path"] for entry in receipt["outputs"]}
@@ -1089,35 +1121,73 @@ class RealDataIncrementalGateTests(unittest.TestCase):
             self.outputs if outputs is None else outputs)
 
     def test_actual_admission_passes_incremental_gate(self):
+        # Expectations are DERIVED from the registry, not hardcoded: a future
+        # honest admission (e.g. another optional skill qualifying) changes
+        # only the recomputed counts, never this test's structure.
         gate = self._gate()
         self.assertEqual(gate["policy"], "incremental-2026-10-27")
-        self.assertEqual(gate["iosQualified"], 34)
-        self.assertEqual(gate["androidQualified"], 30)
         self.assertEqual(gate["mandatoryDeepIds"], sorted(MANDATORY))
-        self.assertEqual(gate["mandatoryDeepOffered"], [])
-        coverage = gate["completeSelectionCoverage"]
-        self.assertTrue(coverage["informationalOnly"])
-        self.assertFalse(coverage["meetsQualifiedTarget"])
-        self.assertFalse(coverage["mandatoryDeepAllPresent"])
-        self.assertFalse(coverage["complete"])
-        ios = json.loads(self.outputs["catalog.json"])
-        android = json.loads(self.outputs["android/catalog.json"])
         admitted = {e["id"] for e in REAL_REGISTRY["skills"]
                     if e["status"]["qualified"]}
-        self.assertEqual(len(admitted), 34)
-        self.assertEqual({e["id"] for e in ios["entries"]}, admitted)
-        self.assertEqual({e["id"] for e in android["entries"]},
-                         admitted - set(hubcore.RESERVED_BUILTIN_IDS))
+        download_ios = {e["id"] for e in REAL_REGISTRY["skills"]
+                        if e["status"]["qualified"]
+                        and "ios" in e["plannedRuntime"]["installPlatforms"]
+                        and not hubcore.is_download_offer_excluded(e["id"])}
+        download_android = {e["id"] for e in REAL_REGISTRY["skills"]
+                            if e["status"]["qualified"]
+                            and "android" in e["plannedRuntime"]["installPlatforms"]
+                            and not hubcore.is_download_offer_excluded(e["id"])}
+        self.assertTrue(download_ios)
+        self.assertTrue(download_android)
+        expected_mandatory = set(MANDATORY) & (download_ios | download_android)
+        self.assertEqual(gate["mandatoryDeepOffered"], sorted(expected_mandatory))
+        self.assertEqual(gate["iosQualified"], len(download_ios))
+        self.assertEqual(gate["androidQualified"], len(download_android))
+        self.assertEqual(gate["selectionQualified"], len(admitted))
+        self.assertEqual(
+            gate["builtinProvided"],
+            sum(1 for e in REAL_REGISTRY["skills"]
+                if e["id"] in hubcore.APP_PROVIDED_BUILTIN_IDS
+                and e["status"]["qualified"]))
+        coverage = gate["completeSelectionCoverage"]
+        self.assertTrue(coverage["informationalOnly"])
+        self.assertEqual(coverage["selectionQualified"], len(admitted))
+        self.assertEqual(coverage["meetsQualifiedTarget"],
+                         len(admitted) >= self.sign_publication.COMPLETE_SELECTION_QUALIFIED_TARGET)
+        all_mandatory = (set(MANDATORY) <= download_ios
+                         and set(MANDATORY) <= download_android)
+        self.assertEqual(coverage["mandatoryDeepAllPresent"], all_mandatory)
+        self.assertEqual(coverage["complete"],
+                         coverage["meetsQualifiedTarget"] and all_mandatory)
+        ios = json.loads(self.outputs["catalog.json"])
+        android = json.loads(self.outputs["android/catalog.json"])
+        self.assertEqual({e["id"] for e in ios["entries"]}, download_ios)
+        self.assertEqual({e["id"] for e in android["entries"]}, download_android)
+        # The four App-provided builtins are qualified registry data but never
+        # download offers.
+        self.assertFalse(set(hubcore.RESERVED_BUILTIN_IDS) & download_ios)
+        self.assertFalse(set(hubcore.RESERVED_BUILTIN_IDS) & download_android)
+        # The release feed is the publication act: every offer carries the
+        # feed-only published=true projection, while the source registry
+        # object stays published=false (never mutated by the build).
+        for feed in (ios, android):
+            for entry in feed["entries"]:
+                self.assertTrue(entry["status"]["published"], entry["id"])
+        self.assertTrue(all(not e["status"]["published"]
+                            for e in REAL_REGISTRY["skills"]))
         scripted = {e["id"] for e in ios["entries"]
                     if e["runtime"]["scriptRuntime"] != "none"}
-        self.assertEqual(scripted, {"citation-management", "sympy"})
+        self.assertEqual(scripted, {
+            e["id"] for e in REAL_REGISTRY["skills"]
+            if e["id"] in download_ios
+            and e["plannedRuntime"]["scriptRuntime"] != "none"})
         for entry in ios["entries"]:
             if entry["runtime"]["scriptRuntime"] != "none":
                 self.assertTrue(entry["status"]["executionVerified"], entry["id"])
             else:
                 self.assertFalse(entry["status"]["executionVerified"], entry["id"])
-        # no impeccable offer means no H6 runtime bytes may appear anywhere
-        self.assertFalse(any(name.startswith("engines/") for name in self.outputs))
+        self.assertEqual(any(name.startswith("engines/") for name in self.outputs),
+                         "impeccable" in download_ios)
 
     def _refused(self, outputs, fragment):
         with self.assertRaises(self.sign_publication.SigningError) as ctx:
@@ -1134,11 +1204,13 @@ class RealDataIncrementalGateTests(unittest.TestCase):
                       "exactly the qualified rows advertising iOS")
 
     def test_invented_row_refused(self):
-        unqualified = next(e["id"] for e in REAL_REGISTRY["skills"]
-                           if not e["status"]["qualified"])
+        registered = {e["id"] for e in REAL_REGISTRY["skills"]}
+        invented = "unregistered-offer"
+        while invented in registered:
+            invented += "-extra"
 
         def add(feed):
-            feed["entries"].append(dict(feed["entries"][0], id=unqualified))
+            feed["entries"].append(dict(feed["entries"][0], id=invented))
         self._refused(self._tamper_ios_feed(add),
                       "exactly the qualified rows advertising iOS")
 
@@ -1163,12 +1235,140 @@ class RealDataIncrementalGateTests(unittest.TestCase):
     def test_runtime_relabel_false_claim_refused(self):
         # A guide package whose feed entry falsely claims the remote runtime
         # is caught by the unchanged per-item status gate, not by any count.
-        def relabel(feed):
-            for e in feed["entries"]:
-                if e["id"] == "deep-research":
-                    e["runtime"] = dict(e["runtime"], scriptRuntime="remote")
-        self._refused(self._tamper_ios_feed(relabel),
-                      "offered script package requires")
+        feed = json.loads(self.outputs["catalog.json"])
+        guide = next((e for e in feed["entries"]
+                      if e["runtime"]["scriptRuntime"] == "none"), None)
+        if guide is not None:
+            guide["runtime"] = dict(guide["runtime"], scriptRuntime="remote")
+            refusal = "offered script package requires"
+        else:
+            feed["entries"][0]["runtime"] = dict(
+                feed["entries"][0]["runtime"], scriptRuntime="none")
+            refusal = "guide-only package"
+        self._refused(dict(self.outputs, **{"catalog.json": hubcore.encoded(feed)}),
+                      refusal)
+
+    def test_unpublished_release_offer_refused(self):
+        def hide(feed):
+            feed["entries"][0]["status"]["published"] = False
+        self._refused(self._tamper_ios_feed(hide),
+                      "release offer requires feed status.published true")
+
+
+class FrozenInitialReleaseTests(unittest.TestCase):
+    """EXPLICIT frozen first-wave semantics on the initial-release registry.
+
+    `fixtures/initial-release-registry-2026-10.json` is an immutable copy of
+    the registry as it stood when the first incremental release opened: 43
+    rows, 34 qualified (28 optional guides + 2 guest-qualified scripts + the
+    4 App-provided builtins), the 9 mandatory deep IDs held back. These
+    expectations are pinned to that frozen data — they never drift with the
+    live registry — while the real-data probe above derives its counts
+    dynamically so future honest admissions never break it.
+    """
+
+    FROZEN = json.loads(
+        (HERE / "tests" / "catalog" / "fixtures" /
+         "initial-release-registry-2026-10.json").read_bytes())
+    SOURCE_X = "1111111111111111111111111111111111111111"
+
+    @classmethod
+    def setUpClass(cls):
+        import build_catalog
+        import runtime_dependency
+        import sign_publication
+        cls.build_catalog = build_catalog
+        cls.runtime_dependency = runtime_dependency
+        cls.sign_publication = sign_publication
+        cls.registry = hubcore.validate_registry(copy.deepcopy(cls.FROZEN))
+        cls.trust = build_catalog.load_trust(HERE)
+        cls.outputs = build_catalog.build(cls.registry, "release", cls.SOURCE_X,
+                                          HERE, HERE, cls.trust)
+        cls.args = SimpleNamespace(data=str(HERE), source_commit=cls.SOURCE_X)
+        cls.gate = sign_publication.enforce_launch_gate(
+            hubcore, cls.runtime_dependency, cls.args, cls.registry, cls.outputs)
+
+    def test_frozen_initial_data_shape(self):
+        skills = self.FROZEN["skills"]
+        self.assertEqual(len(skills), 43)
+        admitted = {e["id"] for e in skills if e["status"]["qualified"]}
+        self.assertEqual(len(admitted), 34)
+        self.assertEqual({e["id"] for e in skills
+                          if e["id"] in hubcore.APP_PROVIDED_BUILTIN_IDS
+                          and e["status"]["qualified"]},
+                         set(hubcore.RESERVED_BUILTIN_IDS))
+        self.assertTrue(all(not e["status"]["published"] for e in skills))
+        self.assertEqual({e["id"] for e in skills
+                          if e["status"]["executionVerified"]},
+                         {"citation-management", "sympy"})
+        deep = {e["id"] for e in skills if e["deepAdaptation"]}
+        self.assertEqual(deep, set(MANDATORY))
+        self.assertTrue(all(not e["status"]["qualified"] for e in skills
+                            if e["deepAdaptation"]))
+
+    def test_frozen_first_wave_download_offers_exactly_30(self):
+        ios = json.loads(self.outputs["catalog.json"])
+        android = json.loads(self.outputs["android/catalog.json"])
+        self.assertEqual(len(ios["entries"]), 30)
+        self.assertEqual(len(android["entries"]), 30)
+        offered = {e["id"] for e in ios["entries"]}
+        self.assertEqual(offered, {e["id"] for e in android["entries"]})
+        # exactly the 30 qualified optional rows, never the 4 builtins
+        self.assertFalse(offered & set(hubcore.RESERVED_BUILTIN_IDS))
+        self.assertEqual(offered, {e["id"] for e in self.FROZEN["skills"]
+                                   if e["status"]["qualified"]
+                                   and e["id"] not in hubcore.APP_PROVIDED_BUILTIN_IDS})
+        for feed in (ios, android):
+            self.assertEqual(feed["counts"]["offerQualified"], 30)
+            self.assertEqual(feed["counts"]["builtin"], 0)
+            for entry in feed["entries"]:
+                self.assertEqual(entry["installOffer"], "qualified", entry["id"])
+                self.assertTrue(entry["status"]["published"], entry["id"])
+        # the frozen source rows keep published=false (feed-only projection)
+        self.assertTrue(all(not e["status"]["published"]
+                            for e in self.FROZEN["skills"]))
+        gate = self.gate
+        self.assertEqual(gate["iosQualified"], 30)
+        self.assertEqual(gate["androidQualified"], 30)
+        self.assertEqual(gate["selectionQualified"], 34)
+        self.assertEqual(gate["builtinProvided"], 4)
+        coverage = gate["completeSelectionCoverage"]
+        self.assertEqual(coverage["selectionQualified"], 34)
+        self.assertEqual(coverage["qualifiedTarget"], 40)
+        self.assertFalse(coverage["meetsQualifiedTarget"])
+        self.assertEqual(coverage["builtinProvided"], 4)
+        self.assertEqual(coverage["downloadEligible"], 30)
+        self.assertEqual(coverage["mandatoryDeepOfferedCount"], 0)
+        self.assertFalse(coverage["mandatoryDeepAllPresent"])
+        self.assertFalse(coverage["complete"])
+        self.assertFalse(any(name.startswith("engines/") for name in self.outputs))
+
+    def test_offer_selection_follows_copied_registry_without_mutation(self):
+        # Change eligibility of an already authenticated guide in a COPIED
+        # fixture. Merely flipping a held script's qualified flag would not
+        # constitute a genuine guest-qualified admission. The live registry
+        # may legitimately gain such admissions later; it must be preserved,
+        # not asserted to remain forever in this initial epoch.
+        live_before = copy.deepcopy(REAL_REGISTRY)
+        changed = copy.deepcopy(self.registry)
+        for entry in changed["skills"]:
+            if entry["id"] == "a11y-audit":
+                entry["status"] = dict(entry["status"], qualified=False)
+        changed = hubcore.validate_registry(changed)
+        outputs = self.build_catalog.build(changed, "release", self.SOURCE_X,
+                                           HERE, HERE, self.trust)
+        ios = json.loads(outputs["catalog.json"])
+        android = json.loads(outputs["android/catalog.json"])
+        self.assertEqual(len(ios["entries"]), 29)
+        self.assertEqual(len(android["entries"]), 29)
+        self.assertNotIn("a11y-audit", {e["id"] for e in ios["entries"]})
+        gate = self.sign_publication.enforce_launch_gate(
+            hubcore, self.runtime_dependency, self.args, changed, outputs)
+        self.assertEqual(gate["iosQualified"], 29)
+        self.assertEqual(gate["androidQualified"], 29)
+        self.assertEqual(REAL_REGISTRY, live_before)
+        self.assertTrue(next(e for e in self.FROZEN["skills"]
+                             if e["id"] == "a11y-audit")["status"]["qualified"])
 
 
 if __name__ == "__main__":

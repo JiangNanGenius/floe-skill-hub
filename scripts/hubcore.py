@@ -85,6 +85,26 @@ FIXTURE_SEED_LABEL = (
 )
 RESERVED_BUILTIN_IDS = ("floe-pdf", "floe-office", "floe-network", "floe-video")
 
+# The four reserved builtin IDs are native App features: the App already ships
+# them, so a Hub release feed must never advertise them as download/install
+# offers (a same-version curated install would collide with the bundled row
+# and fail-close `immutableVersion`). The exclusion is pinned by EXACT ID
+# here, in trusted tooling — never by the `builtin` kind/display/source label
+# — so a registry relabel can never hide an arbitrary mandatory ID behind the
+# builtin name. Builtin rows stay valid, reviewable registry data; they are
+# simply never download offers.
+APP_PROVIDED_BUILTIN_IDS = frozenset(RESERVED_BUILTIN_IDS)
+
+
+def is_download_offer_excluded(id_):
+    """True when an id must never appear as a Hub download/install offer.
+
+    Only the four fixed App-provided builtin IDs are excluded; every other
+    genuinely qualified registry row is admitted as a download offer
+    automatically after its real qualification.
+    """
+    return id_ in APP_PROVIDED_BUILTIN_IDS
+
 REGISTRY_SCHEMA_VERSION = 1
 CATALOG_SCHEMA_VERSION = 3          # outside [1,2]: old clients fail closed by design
 LEGACY_CATALOG_SCHEMA_VERSION = 2   # the four-item compatibility shape

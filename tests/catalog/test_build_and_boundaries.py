@@ -121,20 +121,75 @@ class TestPreviewBuild(unittest.TestCase):
 
     def test_release_build_offers_exactly_the_admitted_entries(self):
         # Positive current truth: a release build over the integrated tree
-        # carries only the admitted rows, each with real package+review
-        # bindings verified against public-key.json trust.
+        # carries only the admitted NON-BUILTIN rows (the four App-provided
+        # builtins are native App features, never Hub download offers), each
+        # with real package+review bindings verified against public-key.json
+        # trust and the feed-only published=true projection.
         feeds = build_catalog.build(self.registry, "release", FAKE_COMMIT, REPO, REPO, TRUST)
         ios = json.loads(feeds["catalog.json"])
         android = json.loads(feeds["android/catalog.json"])
-        self.assertEqual(ios["counts"]["total"], 34)
+        self.assertEqual(ios["counts"]["total"], 30)
         self.assertEqual(android["counts"]["total"], 30)
+        self.assertEqual(ios["counts"]["builtin"], 0)
+        self.assertEqual(android["counts"]["builtin"], 0)
+        self.assertFalse({e["id"] for e in ios["entries"]}
+                         & set(hubcore.RESERVED_BUILTIN_IDS))
+        self.assertFalse({e["id"] for e in android["entries"]}
+                         & set(hubcore.RESERVED_BUILTIN_IDS))
         for feed in (ios, android):
             self.assertEqual(feed["counts"]["offerQualified"], feed["counts"]["total"])
             for e in feed["entries"]:
                 self.assertEqual(e["installOffer"], "qualified", e["id"])
+                self.assertTrue(e["status"]["published"], e["id"])
                 self.assertIsNotNone(e["package"], e["id"])
                 self.assertIsNotNone(e["review"], e["id"])
                 hubcore.validate_catalog(feed, channel=feed["channel"])
+        # the feed-only projection never mutates the source registry object:
+        # every candidate row keeps published=false after the build.
+        self.assertTrue(all(not e["status"]["published"]
+                            for e in self.registry["skills"]))
+
+    def test_preview_keeps_all_43_unpromoted_after_release_change(self):
+        # Preview/fixture metadata still describes all 43 candidates with no
+        # offers and no publication claim, unaffected by the release policy.
+        feeds = build_catalog.build(self.registry, "preview", FAKE_COMMIT, REPO, REPO, TRUST)
+        ios = json.loads(feeds["catalog.json"])
+        self.assertEqual(len(ios["entries"]), 43)
+        self.assertTrue(all(e["installOffer"] == "none" for e in ios["entries"]))
+        self.assertTrue(all(not e["status"]["published"] for e in ios["entries"]))
+        self.assertEqual({e["id"] for e in ios["entries"]
+                          if e["id"] in hubcore.RESERVED_BUILTIN_IDS},
+                         set(hubcore.RESERVED_BUILTIN_IDS))
+
+    def test_builtin_exclusion_is_by_exact_id_not_by_kind_or_display(self):
+        # The download-offer exclusion is pinned by EXACT builtin ID in
+        # trusted tooling, never by the 'builtin' kind/source/display label:
+        # relabeling feed-level display/kind fields can never hide an
+        # arbitrary optional (or mandatory) ID behind the builtin name.
+        for id_ in hubcore.RESERVED_BUILTIN_IDS:
+            self.assertTrue(hubcore.is_download_offer_excluded(id_))
+        for id_ in ("a11y-audit", "webapp-testing", "deep-research"):
+            self.assertFalse(hubcore.is_download_offer_excluded(id_))
+        # a feed whose entries carry a builtin-looking kind label is still
+        # checked by ID: the launch gate accepts it unchanged...
+        import sign_publication
+        import runtime_dependency
+        from types import SimpleNamespace
+        feeds = build_catalog.build(self.registry, "release", FAKE_COMMIT, REPO, REPO, TRUST)
+        ios = json.loads(feeds["catalog.json"])
+        for entry in ios["entries"]:
+            entry["kind"] = "builtin"
+            entry["name"] = {"en": "builtin " + entry["id"], "zh-Hans": "内置 " + entry["id"]}
+        outputs = dict(feeds, **{"catalog.json": hubcore.encoded(ios)})
+        registry = hubcore.validate_registry(
+            json.loads((REPO / "catalog" / "skills.json").read_bytes()))
+        args = SimpleNamespace(data=str(REPO), source_commit=FAKE_COMMIT)
+        gate = sign_publication.enforce_launch_gate(
+            hubcore, runtime_dependency, args, registry, outputs)
+        self.assertEqual(gate["iosQualified"], 30)
+        self.assertEqual(gate["androidQualified"], 30)
+        self.assertEqual(gate["selectionQualified"], 34)
+        self.assertEqual(gate["builtinProvided"], 4)
 
     def test_release_mode_refuses_when_nothing_is_admitted(self):
         # The fail-closed refusal stays meaningful as an explicit fixture:

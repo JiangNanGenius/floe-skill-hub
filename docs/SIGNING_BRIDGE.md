@@ -80,11 +80,15 @@ plus all nine mandatory deep IDs present in both feeds). Per-item trust is
 unchanged and every gate below stays fully enforced:
 
 - a nonempty genuinely qualified advertised set in BOTH feeds: each feed
-  must be EXACTLY the qualified registry rows whose
+  must be EXACTLY the qualified, download-eligible registry rows whose
   `plannedRuntime.installPlatforms` include that channel — no invented
-  rows, no partial drop, no duplicates (the four builtins are iOS-only by
-  contract; the iOS exactness is now checked explicitly, where the old gate
-  had only implied it); an empty feed is always refused;
+  rows, no partial drop, no duplicates. The four App-provided builtin ids
+  are native App features and never Hub download offers, so they are
+  excluded by exact ID pinned in the trusted tooling (a `kind`/display/source
+  relabel can never hide an arbitrary mandatory ID behind the builtin name);
+  the builtins are iOS-only by contract and the iOS exactness is checked
+  explicitly, where the old gate had only implied it; an empty feed is
+  always refused;
 - every offered scripted package still requires `status.executionVerified`
   true, frozen adaptation, and its actually bound review
   `guest-execution-qualified` with execution `linux/riscv64/guest-verified`;
@@ -113,8 +117,12 @@ unchanged and every gate below stays fully enforced:
   complete-selection coverage metadata in the gate summary
   (`completeSelectionCoverage` with `informationalOnly: true`), computed
   honestly from what is actually offered, so a partial feed can never claim
-  all-nine or 40 completeness. There is no option, flag or environment
-  value that disables any part of this gate.
+  all-nine or 40 completeness. The 40 target counts the QUALIFIED REGISTRY
+  SELECTION (including the four App-provided builtins, reported separately
+  as `builtinProvided`); the actual download offers are the qualified
+  non-builtin rows (`iosQualified`/`androidQualified`, with
+  `downloadEligible = selectionQualified - builtinProvided`). There is no
+  option, flag or environment value that disables any part of this gate.
 
 Output: both canonical feeds plus their `.sig` envelopes, EXACTLY the
 feed-referenced package archives and signed review records + envelopes
@@ -175,18 +183,22 @@ the first production signing run (workflow run 40316068787) signed exactly the
 `signing-receipt.json(+.sig)` is retained unmodified under
 `docs/provenance/review-signing-run-40316068787/` and every record and
 signature in this repository re-verifies against `public-key.json`. With
-those signatures verified, the registry admits 34 qualified entries — the 32
-guide-only rows holding static-content-reviewed approvals plus the 2 rows
-(citation-management, sympy) holding genuine guest receipts, which alone carry
-`executionVerified`; the other 9 scripted rows, including all nine mandatory
-deep adaptations, stay unqualified and unproven. Under the old batch rule that
+those signatures verified, the registry admits 34 qualified entries — the 28
+optional guide-only rows holding static-content-reviewed approvals plus the 2
+rows (citation-management, sympy) holding genuine guest receipts and the 4
+App-provided builtin rows, of which only the 30 optional rows are ever Hub
+download offers; the other 9 scripted rows, including all nine mandatory deep
+adaptations, stay unqualified and unproven. Under the old batch rule that
 state was honestly refused; on 2026-10-27 Root adopted the incremental
 publication policy above, so today's admitted state is publishable as-is:
-the gate accepts the EXACT 34-iOS / 30-Android qualified feeds with all nine
-mandatory IDs held back, and the complete-selection coverage metadata
-faithfully reports 34/40 with 0/9 mandatory offered — never complete. No
-production channel feed has been signed or published yet: publication stays a
-coordinator-dispatched act through this bridge with the real key, and every
-per-item trust requirement (signatures, guest-execution evidence, exact
-advertised sets, H6 whenever impeccable is offered, both-channel presence for
-offered mandatory IDs, empty-feed refusal) remains enforced unchanged.
+the gate accepts the EXACT 30-iOS / 30-Android qualified download feeds with
+all nine mandatory IDs and the four App-provided builtins held out of the
+download offers (the builtins stay qualified registry data, never download
+offers), and the complete-selection coverage metadata faithfully reports
+selection 34/40 with `builtinProvided` 4, `downloadEligible` 30 and 0/9
+mandatory offered — never complete. No production channel feed has been
+signed or published yet: publication stays a coordinator-dispatched act
+through this bridge with the real key, and every per-item trust requirement
+(signatures, guest-execution evidence, exact advertised download-eligible
+sets, H6 whenever impeccable is offered, both-channel presence for offered
+mandatory IDs, empty-feed refusal) remains enforced unchanged.

@@ -15,6 +15,13 @@ Modes:
            refuses outright when nothing is qualified yet (fail closed). Release
            input (registry/archives/reviews) comes only from --source-snapshot,
            a frozen fetch of the audited X, never from the mutable candidate tree.
+Release offer policy: the four App-provided builtin ids (floe-pdf, floe-office,
+           floe-network, floe-video) are native App features and are never Hub
+           download offers, so a release feed carries every genuinely qualified
+           NON-builtin row and never references the four builtin archives or
+           reviews. Each admitted offer carries status.published=true in the
+           FEED only (a deep-copied status block); the source registry object
+           is never mutated and its candidate rows keep published=false.
 Source semantics: --source-commit is the audited source revision X signed
 into the feed as provenance. The immutable publication revision Y that will
 contain the emitted feed/ZIP/review bytes is resolved externally by the
@@ -161,6 +168,11 @@ def build(registry, mode, source_commit, packages_root, reviews_root, public_key
             if mode == "release":
                 if not reg_entry["status"]["qualified"]:
                     continue  # a release catalog carries only qualified entries
+                if hubcore.is_download_offer_excluded(reg_entry["id"]):
+                    # App-provided builtins are native App features, never Hub
+                    # download offers; their registry rows stay valid,
+                    # reviewable data but are not admitted to the feed.
+                    continue
                 package_bindings, manifest, files = bind_package(reg_entry, packages_root)
                 if package_bindings is None:
                     raise hubcore.HubError(
@@ -181,7 +193,15 @@ def build(registry, mode, source_commit, packages_root, reviews_root, public_key
                 runtime["tools"] = manifest["tools"]
                 runtime["pythonPackagesPlan"] = [p["spec"] for p in manifest["pythonPackages"]]
                 runtime["installPlatforms"] = [channel]
-                reg_entry = dict(reg_entry, plannedRuntime=runtime)
+                # The signed release feed is the publication act itself: every
+                # qualified download offer carries published=true HERE, while
+                # the candidate registry blob keeps asserting only source
+                # progress (published stays false there — the website
+                # candidate pipeline refuses a published claim in registry
+                # data). The status block is deep-copied so the caller's
+                # registry object is never mutated.
+                reg_entry = dict(reg_entry, plannedRuntime=runtime,
+                                 status=dict(reg_entry["status"], published=True))
                 # Stage BOTH the exact validated frozen descriptor bytes and
                 # the raw artifact bytes into the publication output, each at
                 # its exact descriptor-relative path, so a fresh output root

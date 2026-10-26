@@ -165,6 +165,18 @@ qualified → published`, with `executionVerified` only from real guest runs.
 `published ⇒ qualified`; a same-version rewrite or digest change invalidates
 the review binding.
 
+Publication is a **feed-side projection, not a registry-data flip**: the
+signed release feed is the publication act itself, so every qualified
+download offer carries `status.published=true` in the feed (a deep-copied
+status block — the builder never mutates the registry object it was given),
+while the candidate registry rows keep `published=false`. The website
+candidate pipeline refuses a `published` claim in registry data, and the
+four App-provided builtin ids (`floe-pdf`, `floe-office`, `floe-network`,
+`floe-video`) are native App features: they stay valid, reviewable registry
+rows but are **never Hub download offers**, so a release feed never carries
+them and never references their archives or reviews. Preview/fixture
+metadata continues to describe all 43 candidates unpromoted.
+
 Client must fail closed on any of:
 
 1. `schemaVersion != 3`, unknown `channel`/`feedStatus`, publisher or
@@ -234,7 +246,7 @@ and no fixture file may exist at production paths.
 | --- | --- |
 | `python3 scripts/gen_schemas.py [--check]` | emit/verify `schema/*.json` from validator constants |
 | `python3 scripts/build_catalog.py --mode preview --source-commit <X> [--out-root DIR \| --check]` | rebuild both candidate feeds from the working tree; the legacy `--hub-commit` flag remains as an exact alias for `--source-commit` |
-| `python3 scripts/build_catalog.py --mode release --source-commit <X> --source-snapshot <DIR> [--out-root DIR] [--sign-env <ENV>]` | publication-path build: registry, archives and reviews are read ONLY from the frozen fetch of X, so the claimed X honestly binds the payload; includes only qualified entries with trust-verified signed reviews. The incremental signing policy admits the exact nonempty qualified set in each channel (currently 34 iOS / 30 Android), retaining all per-item review, execution and runtime-dependency gates. The target of 40 entries and all nine deep adaptations is informational coverage, not a batch-release prerequisite. `--sign-env` first requires the derived public identity to match `public-key.json` |
+| `python3 scripts/build_catalog.py --mode release --source-commit <X> --source-snapshot <DIR> [--out-root DIR] [--sign-env <ENV>]` | publication-path build: registry, archives and reviews are read ONLY from the frozen fetch of X, so the claimed X honestly binds the payload; includes only qualified, download-eligible entries (every genuinely qualified non-builtin row) with trust-verified signed reviews. The incremental signing policy admits the exact nonempty qualified download set in each channel — currently 30 iOS / 30 Android download offers, because the four App-provided builtin ids are native App features and never Hub download offers — and every admitted offer carries the feed-only `published=true` projection while the source registry rows stay `published=false`. It retains all per-item review, execution and runtime-dependency gates. The 40-entry selection target (which counts the qualified registry selection including the four builtins) and all nine deep adaptations are informational coverage, not a batch-release prerequisite. `--sign-env` first requires the derived public identity to match `public-key.json` |
 | `python3 scripts/build_packages.py [--check]` | gate + package staged `sources/{id}` into immutable channel archives |
 | `python3 scripts/make_fixture.py [--check]` | emit/verify the fixture sample |
 | `python3 scripts/check_catalog.py` | read-only: registry, pins-vs-`docs/UPSTREAM-PINS.json`, schemas, fixtures, secret scan, and the standalone publication gate — once ANY production artifact exists it requires both channel feed+signature pairs, verifies every signature over the exact bytes under `public-key.json` trust, checks canonical production feed shape with a 40-hex `sourceCommit`, and re-joins every published archive and review record against the actual bytes; a valid publication is never rebuilt from or invalidated by the mutable candidate HEAD, and an absent or wrong-key signature never passes |

@@ -34,6 +34,11 @@ REPO = HERE.parents[2]
 SIGN_ENV = "FLOE_TEST_EPHEMERAL_SIGNING_KEY"  # test-local name; value is ephemeral
 SOURCE_X = "1111111111111111111111111111111111111111"
 QUALIFIED_VERSION = "1.3.1"  # Isolated test identity, independent of live candidates.
+# Synthetic qualified entry for the publication-path regressions: an OPTIONAL
+# guide row. A builtin can never be used here — the four App-provided builtin
+# ids are never Hub download offers, so a registry whose only qualified row
+# is a builtin correctly builds no release feed at all (fail closed).
+SYNTHETIC_ID = "a11y-audit"
 
 # Canonical public trust root, deliberately hardcoded so the regression is
 # identical in a standalone Hub clone (CI) and in the full App workspace,
@@ -64,18 +69,19 @@ def trust_file(pub_b64, key_id=hubcore.PRODUCTION_KEY_ID):
 
 
 def synthetic_registry():
-    """Registry copy with exactly one synthetically qualified builtin.
+    """Registry copy with exactly one synthetically qualified OPTIONAL row.
 
     The status flip is isolated temp-tree test data letting the real release
     CLI walk its qualified branch. It never claims real review or publication,
-    and the repository registry file stays untouched.
+    and the repository registry file stays untouched. A builtin id can never
+    play this role: builtins are never Hub download offers, so the release
+    builder would (correctly) emit no feed for a builtin-only registry.
     """
     reg = fixture_status.stage_unadmitted_fixture(
         json.loads((REPO / "catalog" / "skills.json").read_bytes()))
     for entry in reg["skills"]:
-        if entry["id"] == "floe-pdf":
+        if entry["id"] == SYNTHETIC_ID:
             entry["versionTarget"] = QUALIFIED_VERSION
-            entry["firstParty"]["stagedSourceVersion"] = QUALIFIED_VERSION
             entry["status"] = dict(entry["status"], licenseChecked=True,
                                    adaptation="frozen", packaged=True,
                                    reviewed=True, qualified=True)
@@ -85,18 +91,19 @@ def synthetic_registry():
 
 
 def qualified_entry(registry):
-    return next(e for e in registry["skills"] if e["id"] == "floe-pdf")
+    return next(e for e in registry["skills"] if e["id"] == SYNTHETIC_ID)
 
 
 def stage_package(root, entry):
     """Deterministic synthetic archive at both channel paths; returns (files, bytes)."""
+    id_ = entry["id"]
     files = {
-        "SKILL.md": (b"---\nname: floe-pdf\ndescription: Isolated publication-path "
+        "SKILL.md": (b"---\nname: " + id_.encode() + b"\ndescription: Isolated publication-path "
                      b"test sample; synthetic data, never released content.\n"
                      b"---\n\nSynthetic guide body for the ephemeral publication CLI "
                      b"regression. Not a published artifact.\n"),
         "floe.json": hubcore.encoded({
-            "schemaVersion": 1, "id": "floe-pdf", "version": entry["versionTarget"],
+            "schemaVersion": 1, "id": id_, "version": entry["versionTarget"],
             "capabilities": [], "tools": [], "platforms": ["ios"],
             "scriptRuntime": "none", "pythonPackages": []}),
         "references/NOTICE.md": (b"Floe-owned synthetic test material staged only for "
@@ -105,7 +112,7 @@ def stage_package(root, entry):
     hubcore.validate_package_files(files)
     data = hubcore.make_zip(files)
     for channel in ("ios", "android"):
-        rel = hubcore.package_path_for("floe-pdf", entry["versionTarget"], channel)
+        rel = hubcore.package_path_for(id_, entry["versionTarget"], channel)
         target = root / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
@@ -115,7 +122,7 @@ def stage_package(root, entry):
 def stage_review(root, key, files, data, entry):
     manifest, _ = hubcore.validate_package_files(files)
     record = {
-        "schemaVersion": 1, "id": "floe-pdf", "version": entry["versionTarget"],
+        "schemaVersion": 1, "id": entry["id"], "version": entry["versionTarget"],
         "contentDigest": hubcore.content_digest(files),
         "packageSha256": hubcore.sha256_hex(data),
         "reviewedCapabilities": list(manifest["capabilities"]),
@@ -130,7 +137,7 @@ def stage_review(root, key, files, data, entry):
                   "zh-Hans": "仅供隔离临时密钥 CLI 回归使用的合成审核记录。"},
     }
     record_bytes = hubcore.encoded(record)
-    path = root / "reviews" / "floe-pdf" / (entry["versionTarget"] + ".review.json")
+    path = root / "reviews" / entry["id"] / (entry["versionTarget"] + ".review.json")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(record_bytes)
     path.with_suffix(path.suffix + ".sig").write_bytes(
@@ -295,10 +302,11 @@ class TestCliSourceCommitArguments(unittest.TestCase):
             self.assertEqual(code, 0, out)
             # advance the mutable candidate tree AFTER the freeze: same snapshot
             # must still produce byte-identical release payloads.
-            (root / "packages" / "floe-pdf" / QUALIFIED_VERSION / "floe-pdf.zip").unlink()
+            (root / "packages" / SYNTHETIC_ID / QUALIFIED_VERSION /
+             (SYNTHETIC_ID + ".zip")).unlink()
             advanced = synthetic_registry()
             for e in advanced["skills"]:
-                if e["id"] == "floe-pdf":
+                if e["id"] == SYNTHETIC_ID:
                     e["versionTarget"] = "1.4.0"
             (root / "catalog" / "skills.json").write_bytes(hubcore.encoded(advanced))
             second = pathlib.Path(tmp) / "out2"
@@ -443,9 +451,10 @@ class TestSigningIdentityGate(unittest.TestCase):
             for prefix in ("", "android/"):
                 feed = json.loads((root / (prefix + "catalog.json")).read_bytes())
                 self.assertEqual(feed["sourceCommit"], SOURCE_X)
-                floe_pdf = next(e for e in feed["entries"] if e["id"] == "floe-pdf")
-                self.assertEqual(floe_pdf["installOffer"], "qualified")
-                self.assertNotEqual(floe_pdf["review"]["keyID"], hubcore.FIXTURE_KEY_ID)
+                offered = next(e for e in feed["entries"] if e["id"] == SYNTHETIC_ID)
+                self.assertEqual(offered["installOffer"], "qualified")
+                self.assertTrue(offered["status"]["published"])
+                self.assertNotEqual(offered["review"]["keyID"], hubcore.FIXTURE_KEY_ID)
 
     def test_release_refuses_review_signed_by_untrusted_key(self):
         _key_a, pub_a, _raw_a = ephemeral_key()
@@ -486,7 +495,7 @@ class TestPublicationGate(unittest.TestCase):
                        "android/catalog.sig")}
             registry = json.loads((root / "catalog" / "skills.json").read_bytes())
             for e in registry["skills"]:
-                if e["id"] == "floe-pdf":
+                if e["id"] == SYNTHETIC_ID:
                     e["versionTarget"] = "1.4.0"          # pending next version
                     e["status"] = dict(e["status"], packaged=False, reviewed=False,
                                        qualified=False, adaptation="in-progress")
@@ -497,7 +506,7 @@ class TestPublicationGate(unittest.TestCase):
                 self.assertEqual((root / rel).read_bytes(), blob,
                                  f"gate mutated published bytes: {rel}")
             feed = json.loads((root / "catalog.json").read_bytes())
-            entry = next(e for e in feed["entries"] if e["id"] == "floe-pdf")
+            entry = next(e for e in feed["entries"] if e["id"] == SYNTHETIC_ID)
             self.assertEqual(entry["installOffer"], "qualified")  # old published truth
             self.assertEqual(entry["version"], QUALIFIED_VERSION)
             self.assertNotIn("1.4.0", json.dumps(feed))
@@ -523,7 +532,7 @@ class TestPublicationGate(unittest.TestCase):
         # exact-byte signature can catch this, never a re-parse-and-rebuild
         feed = json.loads(path.read_bytes())
         for e in feed["entries"]:
-            if e["id"] == "floe-pdf":
+            if e["id"] == SYNTHETIC_ID:
                 e["installOffer"] = "none"
         path.write_bytes(hubcore.encoded(feed))
 
@@ -592,21 +601,21 @@ class TestPublicationGate(unittest.TestCase):
     def test_tampered_published_archive_fails(self):
         with tempfile.TemporaryDirectory() as tmp:
             root, *_ = published_repo(tmp)
-            path = root / "packages" / "floe-pdf" / QUALIFIED_VERSION / "floe-pdf.zip"
+            path = root / "packages" / SYNTHETIC_ID / QUALIFIED_VERSION / (SYNTHETIC_ID + ".zip")
             path.write_bytes(path.read_bytes() + b"x")
             code, out = run_script(root, "check_catalog.py", [])
             self.assertNotEqual(code, 0)
-            self.assertIn("ios/floe-pdf", out)
+            self.assertIn("ios/" + SYNTHETIC_ID, out)
             self.assertIn("sha256", out)
 
     def test_missing_bound_archive_fails(self):
         with tempfile.TemporaryDirectory() as tmp:
             root, *_ = published_repo(tmp)
-            (root / "android" / "packages" / "floe-pdf" / QUALIFIED_VERSION /
-             "floe-pdf.zip").unlink()
+            (root / "android" / "packages" / SYNTHETIC_ID / QUALIFIED_VERSION /
+             (SYNTHETIC_ID + ".zip")).unlink()
             code, out = run_script(root, "check_catalog.py", [])
             self.assertNotEqual(code, 0)
-            self.assertIn("android/floe-pdf", out)
+            self.assertIn("android/" + SYNTHETIC_ID, out)
 
     def test_feed_only_publication_still_requires_android_pair(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -680,14 +689,14 @@ class TestXPinnedYPublication(unittest.TestCase):
             # tampered head tree honestly fails.
             advanced = json.loads((repo / "catalog" / "skills.json").read_bytes())
             for e in advanced["skills"]:
-                if e["id"] == "floe-pdf":
+                if e["id"] == SYNTHETIC_ID:
                     e["versionTarget"] = "1.4.0"
                     e["status"] = dict(e["status"], packaged=False, reviewed=False,
                                        qualified=False, adaptation="in-progress")
             (repo / "catalog" / "skills.json").write_bytes(hubcore.encoded(advanced))
             bad = json.loads((repo / "catalog.json").read_bytes())
             for e in bad["entries"]:
-                if e["id"] == "floe-pdf":
+                if e["id"] == SYNTHETIC_ID:
                     e["installOffer"] = "none"
             (repo / "catalog.json").write_bytes(hubcore.encoded(bad))
             self.git(root, "add", "-A")

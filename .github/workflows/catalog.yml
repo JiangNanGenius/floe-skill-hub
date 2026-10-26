@@ -70,13 +70,17 @@ jobs:
       - name: Incremental publication policy probe (read-only, in-memory)
         run: |
           # Root-approved staged opening (2026-10-27): the launch gate admits
-          # the EXACT genuinely qualified set incrementally while every
-          # per-item trust invariant stays enforced. Here the current signed
-          # material must pass the gate as-is; a partial drop must still be
-          # refused by the exact-set rule; an explicit zero-qualified fixture
-          # must always refuse release; and the retired 40/all-nine batch rule
-          # may only appear as informational coverage metadata that never
-          # claims completeness for a partial feed. Nothing signs or writes.
+          # the EXACT genuinely qualified, download-eligible set incrementally
+          # (the four App-provided builtins are native App features and never
+          # Hub download offers) while every per-item trust invariant stays
+          # enforced. Here the current signed material must pass the gate
+          # as-is; every release offer must carry the FEED-ONLY published=true
+          # projection while the raw registry rows stay published=false; a
+          # partial drop must still be refused by the exact-set rule; an
+          # explicit zero-qualified fixture must always refuse release; and
+          # the retired 40/all-nine batch rule may only appear as informational
+          # coverage metadata that never claims completeness for a partial
+          # feed. Nothing signs or writes.
           python3 - <<'PY'
           import hashlib, json, pathlib, sys
           from types import SimpleNamespace
@@ -109,21 +113,50 @@ jobs:
           expected = {
               channel: {entry["id"] for entry in registry["skills"]
                         if entry["status"]["qualified"]
-                        and channel in entry["plannedRuntime"]["installPlatforms"]}
+                        and channel in entry["plannedRuntime"]["installPlatforms"]
+                        and not hubcore.is_download_offer_excluded(entry["id"])}
               for channel in ("ios", "android")
           }
           for channel, feed in (("ios", ios), ("android", android)):
               ids = [entry["id"] for entry in feed["entries"]]
               if set(ids) != expected[channel] or len(ids) != len(expected[channel]):
-                  raise SystemExit(f"{channel}: release offers must match qualified registry rows")
+                  raise SystemExit(f"{channel}: release offers must match the qualified "
+                                   "download-eligible registry rows")
               if feed["counts"]["total"] != len(ids):
                   raise SystemExit(f"{channel}: release counts disagree with actual offers")
+              if not expected[channel]:
+                  raise SystemExit(f"{channel}: a zero-qualified release feed is never built")
+              if any(entry["id"] in hubcore.APP_PROVIDED_BUILTIN_IDS for entry in feed["entries"]):
+                  raise SystemExit(f"{channel}: App-provided builtin ids must never be download offers")
+              for entry in feed["entries"]:
+                  if not entry["status"]["published"]:
+                      raise SystemExit(f"{channel}/{entry['id']}: a release offer must carry "
+                                       "the feed-only published=true projection")
+          for entry in registry["skills"]:
+              if entry["status"]["published"]:
+                  raise SystemExit(f"{entry['id']}: the raw registry must stay published=false "
+                                   "(publication is a feed-side projection only)")
           args = SimpleNamespace(data=str(root), source_commit="${{ github.sha }}")
           gate = sign_publication.enforce_launch_gate(
               hubcore, runtime_dependency, args, registry, outputs)
           coverage = gate["completeSelectionCoverage"]
           if not coverage["informationalOnly"]:
               raise SystemExit("coverage metadata lost its informationalOnly flag")
+          selection_qualified = sum(1 for entry in registry["skills"]
+                                    if entry["status"]["qualified"])
+          builtin_provided = sum(1 for entry in registry["skills"]
+                                 if entry["id"] in hubcore.APP_PROVIDED_BUILTIN_IDS
+                                 and entry["status"]["qualified"])
+          if coverage["selectionQualified"] != selection_qualified:
+              raise SystemExit("coverage selectionQualified disagrees with the registry")
+          if coverage["builtinProvided"] != builtin_provided:
+              raise SystemExit("coverage builtinProvided disagrees with the registry")
+          if coverage["downloadEligible"] != selection_qualified - builtin_provided:
+              raise SystemExit("coverage downloadEligible disagrees with its own parts")
+          if gate["selectionQualified"] != selection_qualified:
+              raise SystemExit("gate selectionQualified disagrees with the registry")
+          if gate["builtinProvided"] != builtin_provided:
+              raise SystemExit("gate builtinProvided disagrees with the registry")
           if coverage["mandatoryDeepAllPresent"] != (
                   sign_publication.MANDATORY_DEEP_IDS <= expected["ios"]
                   and sign_publication.MANDATORY_DEEP_IDS <= expected["android"]):
@@ -134,9 +167,13 @@ jobs:
           if set(gate["mandatoryDeepOffered"]) != (
                   sign_publication.MANDATORY_DEEP_IDS & (expected["ios"] | expected["android"])):
               raise SystemExit("offered mandatory set disagrees with the registry")
-          print(f"incremental launch gate accepted the exact qualified set: iOS "
-                f"{gate['iosQualified']}, Android {gate['androidQualified']}; "
-                f"mandatory deep offered {len(gate['mandatoryDeepOffered'])}/"
+          print(f"incremental launch gate accepted the exact qualified download set: "
+                f"iOS {gate['iosQualified']}, Android {gate['androidQualified']}; "
+                f"selection {coverage['selectionQualified']}/"
+                f"{coverage['qualifiedTarget']} (builtins provided "
+                f"{coverage['builtinProvided']}, download-eligible "
+                f"{coverage['downloadEligible']}); mandatory deep offered "
+                f"{len(gate['mandatoryDeepOffered'])}/"
                 f"{coverage['mandatoryDeepTotal']}; complete-selection coverage "
                 f"(informational): {coverage['complete']}")
           dropped = json.loads(outputs["catalog.json"])

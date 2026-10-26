@@ -51,9 +51,11 @@ Modes (fixed; there is no arbitrary script/command input):
             offers plus all nine mandatory deep IDs present); per-item trust
             is unchanged and still fully enforced:
               * a nonempty genuinely qualified set in BOTH feeds: each feed
-                must be EXACTLY the qualified registry rows advertising that
-                channel (no invented rows, no partial drop, no duplicates;
-                four builtins are iOS-only by contract); an empty feed is
+                must be EXACTLY the qualified, download-eligible registry rows
+                advertising that channel (no invented rows, no partial drop,
+                no duplicates; the four App-provided builtin ids are never
+                Hub download offers and are excluded by exact ID, and the
+                builtins are iOS-only by contract); an empty feed is
                 always refused;
               * every offered scripted manifest requires
                 status.executionVerified true, adaptation frozen, its actual
@@ -626,9 +628,12 @@ def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
     now checked EXPLICITLY instead of implicitly:
 
       * both feeds exist, are nonempty, and carry unique ids;
-      * each feed is EXACTLY the qualified registry rows advertising that
-        channel — no invented rows, no partial drop, no duplicates (the four
-        builtins are iOS-only by contract);
+      * each feed is EXACTLY the qualified, download-eligible registry rows
+        advertising that channel — no invented rows, no partial drop, no
+        duplicates. The four App-provided builtin ids are native App features
+        and never Hub download offers, so they are excluded by exact ID
+        (a kind/display/source relabel can never hide an arbitrary mandatory
+        ID behind the builtin name); the builtins are iOS-only by contract;
       * every offered scripted entry requires status.executionVerified true,
         frozen adaptation and its actually bound review
         guest-execution-qualified with execution linux/riscv64/guest-verified;
@@ -664,18 +669,25 @@ def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
         raise SigningError("launch gate: an empty feed is never publishable")
     expected_ios = {e["id"] for e in registry["skills"]
                     if e["status"]["qualified"]
-                    and "ios" in e["plannedRuntime"]["installPlatforms"]}
+                    and "ios" in e["plannedRuntime"]["installPlatforms"]
+                    and not hubcore.is_download_offer_excluded(e["id"])}
     if set(ios_ids) != expected_ios:
         raise SigningError("launch gate: the iOS feed must be exactly the qualified "
-                           "rows advertising iOS (no partial drop, no invented rows)")
+                           "rows advertising iOS (App-provided builtin offers "
+                           "excluded; no partial drop, no invented rows)")
     expected_android = {e["id"] for e in registry["skills"]
                         if e["status"]["qualified"]
-                        and "android" in e["plannedRuntime"]["installPlatforms"]}
+                        and "android" in e["plannedRuntime"]["installPlatforms"]
+                        and not hubcore.is_download_offer_excluded(e["id"])}
     if set(android_ids) != expected_android:
         raise SigningError("launch gate: the Android feed must be exactly the qualified "
-                           "rows advertising android (no partial drop, no invented rows)")
+                           "rows advertising android (App-provided builtin offers "
+                           "excluded; no partial drop, no invented rows)")
     for feed in (ios_feed, android_feed):
         for entry in feed["entries"]:
+            if entry.get("status", {}).get("published") is not True:
+                raise SigningError(f"{entry['id']}: release offer requires "
+                                   "feed status.published true")
             registry_entry = entries_by_id[entry["id"]]
             scripted = entry["runtime"]["scriptRuntime"] != "none"
             record = _review_block_from_snapshot(hubcore, args, entry, entry["review"])
@@ -725,13 +737,25 @@ def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
             _gate_impeccable_runtime(hubcore, runtime_dependency, args, entry, outputs)
     # Informational complete-selection coverage ONLY: honest metadata about
     # how far this feed is from the retired 40 + all-nine launch batch, never
-    # a blockade and never a completeness claim for a partial feed.
-    meets_target = len(set(ios_ids)) >= COMPLETE_SELECTION_QUALIFIED_TARGET
+    # a blockade and never a completeness claim for a partial feed. The
+    # retired target counts the QUALIFIED REGISTRY SELECTION (including the
+    # four App-provided builtins); the actual download offers are the
+    # qualified non-builtin rows, so the coverage reports the selection and
+    # the builtin-provided count separately from the offer counts.
+    selection_qualified = sum(1 for e in registry["skills"]
+                              if e["status"]["qualified"])
+    builtin_provided = sum(1 for e in registry["skills"]
+                           if e["id"] in hubcore.APP_PROVIDED_BUILTIN_IDS
+                           and e["status"]["qualified"])
+    download_eligible = selection_qualified - builtin_provided
+    meets_target = selection_qualified >= COMPLETE_SELECTION_QUALIFIED_TARGET
     all_mandatory_present = bool(offered_mandatory) and set(offered_mandatory) == MANDATORY_DEEP_IDS
     return {
         "policy": "incremental-2026-10-27",
         "iosQualified": len(set(ios_ids)),
         "androidQualified": len(set(android_ids)),
+        "selectionQualified": selection_qualified,
+        "builtinProvided": builtin_provided,
         "iosMatchesRegistry": True,
         "androidMatchesRegistry": True,
         "mandatoryDeepIds": sorted(MANDATORY_DEEP_IDS),
@@ -739,7 +763,10 @@ def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
         "completeSelectionCoverage": {
             "informationalOnly": True,
             "qualifiedTarget": COMPLETE_SELECTION_QUALIFIED_TARGET,
+            "selectionQualified": selection_qualified,
             "meetsQualifiedTarget": meets_target,
+            "builtinProvided": builtin_provided,
+            "downloadEligible": download_eligible,
             "mandatoryDeepTotal": len(MANDATORY_DEEP_IDS),
             "mandatoryDeepOfferedCount": len(offered_mandatory),
             "mandatoryDeepAllPresent": all_mandatory_present,
