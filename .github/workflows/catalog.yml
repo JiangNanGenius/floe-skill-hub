@@ -67,20 +67,38 @@ jobs:
         run: python3 scripts/check_catalog.py
       - name: Behaviour tests
         run: python3 -m unittest discover -s tests/catalog -t tests/catalog -v
-      - name: Admission follows the unchanged launch gate (read-only, in-memory)
+      - name: Incremental publication policy probe (read-only, in-memory)
         run: |
-          # Check the current admission set without freezing today's counts.
-          # Incomplete admission must fail at the precise unchanged gate;
-          # complete admission may pass this in-memory check, never publish.
-          # An explicit zero-qualified fixture must always refuse release.
+          # Root-approved staged opening (2026-10-27): the launch gate admits
+          # the EXACT genuinely qualified set incrementally while every
+          # per-item trust invariant stays enforced. Here the current signed
+          # material must pass the gate as-is; a partial drop must still be
+          # refused by the exact-set rule; an explicit zero-qualified fixture
+          # must always refuse release; and the retired 40/all-nine batch rule
+          # may only appear as informational coverage metadata that never
+          # claims completeness for a partial feed. Nothing signs or writes.
           python3 - <<'PY'
-          import json, pathlib, sys
+          import hashlib, json, pathlib, sys
           from types import SimpleNamespace
+          sys.dont_write_bytecode = True
           sys.path.insert(0, "scripts")
           sys.path.insert(0, "tests/catalog")
           import hubcore, build_catalog, sign_publication, runtime_dependency
           import fixture_status
           root = pathlib.Path(".")
+          publication_paths = ("catalog.json", "catalog.sig",
+                               "android/catalog.json", "android/catalog.sig")
+          def publication_snapshot():
+              snapshot = {}
+              for relative in publication_paths:
+                  path = root / relative
+                  if path.is_symlink():
+                      raise SystemExit(f"publication path must not be a symlink: {relative}")
+                  snapshot[relative] = None if not path.exists() else (
+                      path.stat().st_size, path.stat().st_mtime_ns,
+                      hashlib.sha256(path.read_bytes()).hexdigest())
+              return snapshot
+          publication_before = publication_snapshot()
           registry = hubcore.validate_registry(
               json.loads((root / "catalog" / "skills.json").read_bytes()))
           trust = build_catalog.load_trust(root)
@@ -100,32 +118,39 @@ jobs:
                   raise SystemExit(f"{channel}: release offers must match qualified registry rows")
               if feed["counts"]["total"] != len(ids):
                   raise SystemExit(f"{channel}: release counts disagree with actual offers")
-          expected_refusal = None
-          if len(expected["ios"]) < sign_publication.MIN_QUALIFIED_UNIQUE:
-              expected_refusal = (
-                  f"launch gate: at least {sign_publication.MIN_QUALIFIED_UNIQUE} unique "
-                  f"qualified iOS offers are required, feed carries {len(expected['ios'])}")
-          else:
-              for channel, label in (("ios", "iOS"), ("android", "Android")):
-                  missing = sign_publication.MANDATORY_DEEP_IDS - expected[channel]
-                  if missing:
-                      expected_refusal = (
-                          "launch gate: pinned mandatory deep adaptations are missing "
-                          f"from the {label} feed: " + ", ".join(sorted(missing)))
-                      break
           args = SimpleNamespace(data=str(root), source_commit="${{ github.sha }}")
+          gate = sign_publication.enforce_launch_gate(
+              hubcore, runtime_dependency, args, registry, outputs)
+          coverage = gate["completeSelectionCoverage"]
+          if not coverage["informationalOnly"]:
+              raise SystemExit("coverage metadata lost its informationalOnly flag")
+          if coverage["mandatoryDeepAllPresent"] != (
+                  sign_publication.MANDATORY_DEEP_IDS <= expected["ios"]
+                  and sign_publication.MANDATORY_DEEP_IDS <= expected["android"]):
+              raise SystemExit("complete-selection coverage disagrees with the feeds")
+          if coverage["complete"] != (coverage["meetsQualifiedTarget"]
+                                      and coverage["mandatoryDeepAllPresent"]):
+              raise SystemExit("coverage completeness disagrees with its own parts")
+          if set(gate["mandatoryDeepOffered"]) != (
+                  sign_publication.MANDATORY_DEEP_IDS & (expected["ios"] | expected["android"])):
+              raise SystemExit("offered mandatory set disagrees with the registry")
+          print(f"incremental launch gate accepted the exact qualified set: iOS "
+                f"{gate['iosQualified']}, Android {gate['androidQualified']}; "
+                f"mandatory deep offered {len(gate['mandatoryDeepOffered'])}/"
+                f"{coverage['mandatoryDeepTotal']}; complete-selection coverage "
+                f"(informational): {coverage['complete']}")
+          dropped = json.loads(outputs["catalog.json"])
+          dropped["entries"] = dropped["entries"][:-1]
           try:
               sign_publication.enforce_launch_gate(
-                  hubcore, runtime_dependency, args, registry, outputs)
+                  hubcore, runtime_dependency, args, registry,
+                  dict(outputs, **{"catalog.json": hubcore.encoded(dropped)}))
           except sign_publication.SigningError as error:
-              reason = str(error)
-              if reason != expected_refusal:
-                  raise SystemExit(f"launch gate refused for an unexpected reason: {reason}")
-              print(f"launch gate refuses incomplete admission as required: {reason}")
+              if "exactly the qualified rows advertising iOS" not in str(error):
+                  raise SystemExit(f"partial-drop refusal changed: {error}")
+              print(f"partial-dropped iOS feed still refused: {error}")
           else:
-              if expected_refusal is not None:
-                  raise SystemExit(f"launch gate failed to refuse: {expected_refusal}")
-              print("complete admission passed the unchanged launch gate; no publication performed")
+              raise SystemExit("a partial-dropped iOS feed must be refused")
           stripped = fixture_status.stage_unadmitted_fixture(registry)
           try:
               build_catalog.build(stripped, "release", "${{ github.sha }}",
@@ -138,11 +163,11 @@ jobs:
           else:
               raise SystemExit("a zero-qualified fixture registry must never build "
                                "a release catalog")
-          # nothing above wrote catalog.json/catalog.sig anywhere
-          for forbidden in ("catalog.json", "catalog.sig",
-                           "android/catalog.json", "android/catalog.sig"):
-              if (root / forbidden).exists():
-                  raise SystemExit(f"probe must not create live publication path: {forbidden}")
+          # A published repository already contains these files. The probe
+          # must preserve their presence, bytes and write timestamps exactly.
+          if publication_snapshot() != publication_before:
+              raise SystemExit("probe changed live publication paths")
+          print("read-only probe preserved existing publication paths")
           PY
       - name: Clean up regenerable build output
         if: always()

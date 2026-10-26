@@ -42,33 +42,43 @@ Modes (fixed; there is no arbitrary script/command input):
 
   catalog  X = clean snapshot carrying ALREADY-SIGNED reviews
            (``.review.json`` + ``.sig`` pairs) and a qualified registry.
-           The bridge invokes the existing trusted-T
-           ``build_catalog.build`` release API as a data operation (both
-           channels, package/review joins and the H6 runtime artifact
-           staging included) and then enforces the agreed first-release
-           launch gate BEFORE signing:
-             * at least 40 unique qualified iOS-channel offers;
-             * the nine pinned mandatory deep-adaptation IDs (constants in
-               this trusted tooling; registry deepAdaptation relabeling can
-               never satisfy the gate) present and qualified in BOTH feeds;
-               all nine are real remote-script adaptations in the frozen
-               contract, so each must ship with actual manifest
-               scriptRuntime remote, frozen adaptation,
-               status.executionVerified true and a guest-execution-qualified
-               review bound to linux/riscv64/guest-verified execution — a
-               guide-only replacement of a mandatory slot is refused;
-               impeccable must additionally retain its real embedded
-               ``references/engine-dependency.json`` with the builder-
-               validated frozen descriptor and raw engine bytes staged in
-               the output (omitting the descriptor cannot bypass H6);
-             * the Android feed is exactly the set of qualified registry
-               rows whose plannedRuntime.installPlatforms include android
-               (no partial drop; four builtins are iOS-only by contract);
-             * every offered scripted manifest requires
-               status.executionVerified true, adaptation frozen, its actual
-               bound review guest-execution-qualified with execution
-               linux/riscv64/guest-verified; guide-only packages keep
-               static-content-reviewed and no invented guest claim.
+            The bridge invokes the existing trusted-T
+            ``build_catalog.build`` release API as a data operation (both
+            channels, package/review joins and the H6 runtime artifact
+            staging included) and then enforces the agreed launch gate BEFORE
+            signing. The Root-approved staged opening (2026-10-27) changed
+            ONLY the old batch-completeness rule (>=40 unique qualified iOS
+            offers plus all nine mandatory deep IDs present); per-item trust
+            is unchanged and still fully enforced:
+              * a nonempty genuinely qualified set in BOTH feeds: each feed
+                must be EXACTLY the qualified registry rows advertising that
+                channel (no invented rows, no partial drop, no duplicates;
+                four builtins are iOS-only by contract); an empty feed is
+                always refused;
+              * every offered scripted manifest requires
+                status.executionVerified true, adaptation frozen, its actual
+                bound review guest-execution-qualified with execution
+                linux/riscv64/guest-verified; guide-only packages keep
+                static-content-reviewed and no invented guest claim;
+              * the nine pinned mandatory deep-adaptation IDs (constants in
+                this trusted tooling; registry deepAdaptation relabeling can
+                never satisfy the gate) keep their full per-offered contract:
+                whenever such an ID is offered it must be present and
+                qualified in BOTH feeds and ship with actual manifest
+                scriptRuntime remote, frozen adaptation,
+                status.executionVerified true and a guest-execution-qualified
+                review bound to linux/riscv64/guest-verified execution — a
+                guide-only replacement of a mandatory slot is refused, and a
+                mandatory slot can never be advertised on a single channel;
+                impeccable must additionally retain its real embedded
+                ``references/engine-dependency.json`` with the builder-
+                validated frozen descriptor and raw engine bytes staged in
+                the output (omitting the descriptor cannot bypass H6);
+              * a held-back (not yet admitted) mandatory ID no longer blocks
+                unrelated qualified offers. The retired batch rule survives
+                ONLY as informational complete-selection coverage metadata
+                in the gate summary; it can never claim completeness for a
+                partial feed. There is no option that disables any gate.
            The two canonical channel feeds are then signed with the
            production identity and written together with EXACTLY the
            feed-referenced package archives and signed review records
@@ -105,7 +115,15 @@ OFFICIAL_HUB_OWNER_REPO = "JiangNanGenius/floe-skill-hub"
 SIGNING_ENV_NAME = "FLOE_SKILL_HUB_SIGNING_KEY"
 RECEIPT_REL = "signing-receipt.json"
 RECEIPT_SIG_REL = RECEIPT_REL + ".sig"
-MIN_QUALIFIED_UNIQUE = 40
+# Root-approved staged opening (2026-10-27): the old product launch BATCH rule
+# (at least 40 unique qualified iOS offers plus all nine mandatory deep IDs
+# present in both feeds) is superseded by the incremental policy enforced in
+# enforce_launch_gate. The number 40 and the nine-ID complete set stay here
+# ONLY as informational complete-selection coverage metadata; they can never
+# gate a publication on and can never claim completeness for a partial feed.
+# Per-item trust (exact advertised qualified set, signatures, guest-execution
+# evidence, H6, both-channel presence for offered mandatory IDs) is unchanged.
+COMPLETE_SELECTION_QUALIFIED_TARGET = 40
 IMPECCABLE_ID = "impeccable"
 # The nine mandatory deep adaptations are pinned HERE, in trusted tooling.
 # A candidate registry flipping deepAdaptation labels can never satisfy the
@@ -600,6 +618,36 @@ def _gate_impeccable_runtime(hubcore, runtime_dependency, args, entry, outputs):
 
 
 def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
+    """Root-approved incremental publication gate (staged opening, 2026-10-27).
+
+    This replaced ONLY the old batch-completeness rule (>=40 unique qualified
+    iOS offers plus all nine mandatory deep IDs present in both feeds). Every
+    per-item trust invariant stays enforced here, with the iOS advertised set
+    now checked EXPLICITLY instead of implicitly:
+
+      * both feeds exist, are nonempty, and carry unique ids;
+      * each feed is EXACTLY the qualified registry rows advertising that
+        channel — no invented rows, no partial drop, no duplicates (the four
+        builtins are iOS-only by contract);
+      * every offered scripted entry requires status.executionVerified true,
+        frozen adaptation and its actually bound review
+        guest-execution-qualified with execution linux/riscv64/guest-verified;
+        guide-only entries keep static-content-reviewed with an empty
+        execution claim (no invented guest claim, no guide/script relabel);
+      * the nine mandatory deep IDs stay pinned in this trusted tooling
+        (registry relabeling can never satisfy the gate): whenever such an ID
+        is actually offered it must appear in BOTH feeds, ship as a real
+        remote-script package matching the frozen plannedRuntime contract,
+        and impeccable additionally carries the full H6 runtime binding;
+      * held-back (not yet admitted) mandatory IDs no longer block unrelated
+        qualified offers;
+      * the retired batch rule is reported ONLY as informational
+        complete-selection coverage metadata, computed honestly so a partial
+        feed can never claim all-nine/40 completeness.
+
+    There is no parameter, flag or environment option that disables any of
+    the above.
+    """
     entries_by_id = {e["id"]: e for e in registry["skills"]}
     try:
         ios_feed = json.loads(outputs["catalog.json"])
@@ -610,18 +658,16 @@ def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
     android_ids = [e["id"] for e in android_feed["entries"]]
     if len(set(ios_ids)) != len(ios_ids):
         raise SigningError("duplicate ids inside the iOS feed")
-    if len(set(ios_ids)) < MIN_QUALIFIED_UNIQUE:
-        raise SigningError(f"launch gate: at least {MIN_QUALIFIED_UNIQUE} unique "
-                           f"qualified iOS offers are required, feed carries "
-                           f"{len(set(ios_ids))}")
-    if not MANDATORY_DEEP_IDS <= set(ios_ids):
-        raise SigningError("launch gate: pinned mandatory deep adaptations are missing "
-                           "from the iOS feed: "
-                           + ", ".join(sorted(MANDATORY_DEEP_IDS - set(ios_ids))))
-    if not MANDATORY_DEEP_IDS <= set(android_ids):
-        raise SigningError("launch gate: pinned mandatory deep adaptations are missing "
-                           "from the Android feed: "
-                           + ", ".join(sorted(MANDATORY_DEEP_IDS - set(android_ids))))
+    if len(set(android_ids)) != len(android_ids):
+        raise SigningError("duplicate ids inside the Android feed")
+    if not set(ios_ids) or not set(android_ids):
+        raise SigningError("launch gate: an empty feed is never publishable")
+    expected_ios = {e["id"] for e in registry["skills"]
+                    if e["status"]["qualified"]
+                    and "ios" in e["plannedRuntime"]["installPlatforms"]}
+    if set(ios_ids) != expected_ios:
+        raise SigningError("launch gate: the iOS feed must be exactly the qualified "
+                           "rows advertising iOS (no partial drop, no invented rows)")
     expected_android = {e["id"] for e in registry["skills"]
                         if e["status"]["qualified"]
                         and "android" in e["plannedRuntime"]["installPlatforms"]}
@@ -652,10 +698,21 @@ def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
                 if record["execution"] != {"os": None, "arch": "n/a", "evidence": "unproven"}:
                     raise SigningError(f"{entry['id']}: guide-only package carries an "
                                        "invented guest claim")
-    # The nine pinned mandatory IDs are real remote-script adaptations in the
-    # frozen contract: a guide relabel can never satisfy a mandatory slot.
+    # A pinned mandatory ID that is actually offered keeps its full contract:
+    # both-channel presence, real remote-script bytes, frozen plan and — for
+    # impeccable — the H6 runtime binding. A guide relabel can never satisfy a
+    # mandatory slot, and a mandatory slot can never ship on one channel only.
     ios_by_id = {e["id"]: e for e in ios_feed["entries"]}
-    for id_ in sorted(MANDATORY_DEEP_IDS):
+    android_by_id = {e["id"]: e for e in android_feed["entries"]}
+    offered_mandatory = sorted(MANDATORY_DEEP_IDS & (set(ios_ids) | set(android_ids)))
+    for id_ in offered_mandatory:
+        if id_ not in ios_by_id or id_ not in android_by_id:
+            missing = "iOS" if id_ not in ios_by_id else "Android"
+            raise SigningError(f"launch gate: {id_}: an offered mandatory deep "
+                               f"adaptation is missing from the {missing} feed; a "
+                               "mandatory slot can never be advertised on a single "
+                               "channel")
+    for id_ in offered_mandatory:
         entry = ios_by_id[id_]
         if entry["runtime"]["scriptRuntime"] != "remote":
             raise SigningError(f"{id_}: mandatory deep adaptations must ship as "
@@ -666,11 +723,28 @@ def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
                                "from the frozen remote-script contract")
         if id_ == IMPECCABLE_ID:
             _gate_impeccable_runtime(hubcore, runtime_dependency, args, entry, outputs)
+    # Informational complete-selection coverage ONLY: honest metadata about
+    # how far this feed is from the retired 40 + all-nine launch batch, never
+    # a blockade and never a completeness claim for a partial feed.
+    meets_target = len(set(ios_ids)) >= COMPLETE_SELECTION_QUALIFIED_TARGET
+    all_mandatory_present = bool(offered_mandatory) and set(offered_mandatory) == MANDATORY_DEEP_IDS
     return {
+        "policy": "incremental-2026-10-27",
         "iosQualified": len(set(ios_ids)),
         "androidQualified": len(set(android_ids)),
+        "iosMatchesRegistry": True,
         "androidMatchesRegistry": True,
         "mandatoryDeepIds": sorted(MANDATORY_DEEP_IDS),
+        "mandatoryDeepOffered": offered_mandatory,
+        "completeSelectionCoverage": {
+            "informationalOnly": True,
+            "qualifiedTarget": COMPLETE_SELECTION_QUALIFIED_TARGET,
+            "meetsQualifiedTarget": meets_target,
+            "mandatoryDeepTotal": len(MANDATORY_DEEP_IDS),
+            "mandatoryDeepOfferedCount": len(offered_mandatory),
+            "mandatoryDeepAllPresent": all_mandatory_present,
+            "complete": meets_target and all_mandatory_present,
+        },
     }
 
 
@@ -811,9 +885,14 @@ def run_catalog_mode(args, hubcore, build_catalog, runtime_dependency,
     }
     finalize_receipt(hubcore, files, receipt, key, trust)
     written = write_outputs(out_root, files)
+    coverage = gate["completeSelectionCoverage"]
     print(f"signing-bridge catalog: signed both channel feeds at source "
           f"{args.source_commit}; iOS qualified {gate['iosQualified']}, Android "
-          f"{gate['androidQualified']}; wrote {len(written)} file(s) to {out_root}")
+          f"{gate['androidQualified']}; mandatory deep offered "
+          f"{len(gate['mandatoryDeepOffered'])}/"
+          f"{coverage['mandatoryDeepTotal']}; complete-selection coverage "
+          f"(informational only) {coverage['complete']}; wrote {len(written)} "
+          f"file(s) to {out_root}")
 
 
 # ---------------------------------------------------------------------------

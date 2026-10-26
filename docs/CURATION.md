@@ -52,6 +52,6 @@ Repository context is recorded with API source URLs and an exact observation tim
 | Floe File Organizer (`floe-file-organizer`) | 77 | Original workflow with previews and recoverable changes under existing file permissions. |
 | Floe Invoice Organizer (`floe-invoice-organizer`) | 76 | Existing OCR and spreadsheet services preserve source and correction traceability. |
 
-The per-dimension record and source revisions are in [catalog/curation.json](../catalog/curation.json). The target remains 43 candidates and at least 40 qualified launch entries; all nine deep adaptations and MCP integration remain mandatory. Skill Creator and MCP Builder are system workflows and do not inflate the product count.
+The per-dimension record and source revisions are in [catalog/curation.json](../catalog/curation.json). The target remains 43 candidates with at least 40 qualified entries and all nine deep adaptations; these are coverage goals. The user-approved staged opening publishes qualified items incrementally, prioritizing text guides and scripts without binary dependencies. Each offered item still needs its authentic review and applicable execution/runtime proofs; missing deep adaptations do not block unrelated qualified items. MCP integration remains a system workflow. Skill Creator and MCP Builder do not inflate the product count.
 
 These planning scores are not imported into the App/store feed or shown as star ratings. The live signed catalog remains the authority for release availability.

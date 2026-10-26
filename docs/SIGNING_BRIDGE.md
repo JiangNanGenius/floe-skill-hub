@@ -72,32 +72,49 @@ Input: clean X carrying ALREADY-SIGNED reviews (`record + .sig`) and the
 qualified registry. The bridge invokes the EXISTING trusted `build_catalog`
 release API as a data operation (per-channel package binds, signed-review
 joins under T's configured trust, and the H6 runtime-descriptor/artifact
-staging included), then enforces the agreed first-release launch gate
-BEFORE signing:
+staging included), then enforces the launch gate BEFORE signing. The
+Root-approved staged opening (2026-10-27, following the user's explicit
+request to gradually open skills that are still preparing) superseded ONLY
+the old batch-completeness rule (at least 40 unique qualified iOS offers
+plus all nine mandatory deep IDs present in both feeds). Per-item trust is
+unchanged and every gate below stays fully enforced:
 
-- at least 40 unique qualified iOS-channel offers;
-- the nine mandatory deep-adaptation IDs are pinned as constants inside the
-  trusted tooling (registry `deepAdaptation` relabeling can never satisfy
-  the gate): `algorithmic-art`, `canvas-design`,
-  `exploratory-data-analysis`, `impeccable`, `literature-review`,
-  `markitdown`, `scientific-visualization`, `statistical-analysis`,
-  `webapp-testing` — all nine must be present and qualified in BOTH feeds;
-- because all nine are real remote-script adaptations in the frozen
-  contract, each mandatory slot additionally requires the actual manifest
-  `scriptRuntime` remote, frozen adaptation, `status.executionVerified`
-  true and a genuinely bound `guest-execution-qualified` review with
-  execution `linux/riscv64/guest-verified`. A guide-only replacement of a
-  mandatory slot is refused;
-- every offered scripted package carries the same guest-qualified review;
+- a nonempty genuinely qualified advertised set in BOTH feeds: each feed
+  must be EXACTLY the qualified registry rows whose
+  `plannedRuntime.installPlatforms` include that channel — no invented
+  rows, no partial drop, no duplicates (the four builtins are iOS-only by
+  contract; the iOS exactness is now checked explicitly, where the old gate
+  had only implied it); an empty feed is always refused;
+- every offered scripted package still requires `status.executionVerified`
+  true, frozen adaptation, and its actually bound review
+  `guest-execution-qualified` with execution `linux/riscv64/guest-verified`;
   guide-only packages keep `static-content-reviewed` with
   `{os:null, arch:"n/a", evidence:"unproven"}` and no invented guest claim;
-- the Android feed must be EXACTLY the set of qualified registry rows whose
-  `plannedRuntime.installPlatforms` include `android` (the four builtins are
-  iOS-only by contract — no partial drop, no invented rows);
-- `impeccable` must retain its real embedded
+- the nine mandatory deep-adaptation IDs remain pinned as constants inside
+  the trusted tooling (registry `deepAdaptation` relabeling can never
+  satisfy the gate): `algorithmic-art`, `canvas-design`,
+  `exploratory-data-analysis`, `impeccable`, `literature-review`,
+  `markitdown`, `scientific-visualization`, `statistical-analysis`,
+  `webapp-testing`. Whenever one of them is ACTUALLY offered it must be
+  present and qualified in BOTH feeds — a mandatory slot can never be
+  advertised on a single channel — and, because all nine are real
+  remote-script adaptations in the frozen contract, ship with the actual
+  manifest `scriptRuntime` remote, frozen adaptation,
+  `status.executionVerified` true and a genuinely bound
+  guest-execution-qualified review. A guide-only replacement of a mandatory
+  slot is refused;
+- `impeccable`, when offered, must retain its real embedded
   `references/engine-dependency.json`; the builder-validated 563-byte
   frozen descriptor bytes and the raw static-ELF `riscv64` engine bytes
-  must be present in the output (omitting the descriptor cannot bypass H6).
+  must be present in the output (omitting the descriptor cannot bypass H6);
+- a held-back (not yet admitted) mandatory ID no longer blocks unrelated
+  qualified offers;
+- the retired 40/all-nine batch rule survives ONLY as informational
+  complete-selection coverage metadata in the gate summary
+  (`completeSelectionCoverage` with `informationalOnly: true`), computed
+  honestly from what is actually offered, so a partial feed can never claim
+  all-nine or 40 completeness. There is no option, flag or environment
+  value that disables any part of this gate.
 
 Output: both canonical feeds plus their `.sig` envelopes, EXACTLY the
 feed-referenced package archives and signed review records + envelopes
@@ -162,8 +179,14 @@ those signatures verified, the registry admits 34 qualified entries — the 32
 guide-only rows holding static-content-reviewed approvals plus the 2 rows
 (citation-management, sympy) holding genuine guest receipts, which alone carry
 `executionVerified`; the other 9 scripted rows, including all nine mandatory
-deep adaptations, stay unqualified and unproven. No production channel feed
-has been signed or published: the unchanged catalog-mode launch gate still
-requires at least 40 unique qualified iOS offers and all nine mandatory deep
-IDs in both feeds, and today's admitted state is honestly refused by that
-gate.
+deep adaptations, stay unqualified and unproven. Under the old batch rule that
+state was honestly refused; on 2026-10-27 Root adopted the incremental
+publication policy above, so today's admitted state is publishable as-is:
+the gate accepts the EXACT 34-iOS / 30-Android qualified feeds with all nine
+mandatory IDs held back, and the complete-selection coverage metadata
+faithfully reports 34/40 with 0/9 mandatory offered — never complete. No
+production channel feed has been signed or published yet: publication stays a
+coordinator-dispatched act through this bridge with the real key, and every
+per-item trust requirement (signatures, guest-execution evidence, exact
+advertised sets, H6 whenever impeccable is offered, both-channel presence for
+offered mandatory IDs, empty-feed refusal) remains enforced unchanged.
