@@ -124,10 +124,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -188,10 +188,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -253,10 +253,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -324,10 +324,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -382,10 +382,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -439,10 +439,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -509,10 +509,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -567,10 +567,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -638,10 +638,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -709,10 +709,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -780,10 +780,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -847,10 +847,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -905,10 +905,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -976,10 +976,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1051,10 +1051,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1132,10 +1132,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1202,10 +1202,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1274,10 +1274,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1350,10 +1350,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1429,10 +1429,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1508,10 +1508,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1585,10 +1585,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1663,10 +1663,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1738,11 +1738,11 @@
       "status": {
         "adaptation": "in-progress",
         "executionVerified": false,
-        "licenseChecked": false,
-        "packaged": false,
+        "licenseChecked": true,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1815,10 +1815,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1890,10 +1890,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1962,10 +1962,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -2034,10 +2034,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -2105,10 +2105,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -2175,10 +2175,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -2232,10 +2232,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -2289,10 +2289,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -2352,10 +2352,10 @@
         "adaptation": "in-progress",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -2424,10 +2424,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -2494,10 +2494,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -2564,10 +2564,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -2634,10 +2634,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -2704,10 +2704,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -2775,10 +2775,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -2846,10 +2846,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -2917,10 +2917,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -2989,10 +2989,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -3047,10 +3047,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
