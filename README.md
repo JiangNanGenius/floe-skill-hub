@@ -2,7 +2,7 @@
 
 Curated, source-pinned agent skills adapted for Floe Agent. This repository owns content, review records, package production and separately verified Linux execution dependencies. App UI, native services and release ownership stay in the Floe Agent repository.
 
-The first release targets 43 skills. Entries remain candidates until license, package and functional qualification pass; an entry or a successful build is not proof of execution.
+The curated selection contains 43 entries. The first signed download catalog offers 30 optional skills on both iOS and Android: 28 reviewed text guides and two script skills with verified Linux RISC-V execution evidence (SymPy and Citation Management). Four builtin features stay App-provided; nine other scripted entries remain unavailable pending qualification. An entry or a successful build is not proof of execution. See the [signed publication receipt](docs/provenance/catalog-signing-run-40372899273/README.md).
 
 The App reads the signed catalog and downloads skill/runtime artifacts directly from GitHub. The official website is a browser client of the same Hub data with a pre-rendered cache. Shared editorial, references and media live under [showcase/](showcase/CONTRACT.md); the website does not serve App store requests or proxy downloads.
 

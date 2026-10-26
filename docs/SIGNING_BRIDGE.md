@@ -196,9 +196,13 @@ all nine mandatory IDs and the four App-provided builtins held out of the
 download offers (the builtins stay qualified registry data, never download
 offers), and the complete-selection coverage metadata faithfully reports
 selection 34/40 with `builtinProvided` 4, `downloadEligible` 30 and 0/9
-mandatory offered — never complete. No production channel feed has been
-signed or published yet: publication stays a coordinator-dispatched act
-through this bridge with the real key, and every per-item trust requirement
+mandatory offered — never complete. The first production channel feeds were signed in catalog-mode run
+`40372899273` with exact tooling and audited source
+`f7480044aaf5c22d19f55a083a513482261f1d39`. Their authenticated, unmodified
+receipt is retained in `docs/provenance/catalog-signing-run-40372899273/`.
+Both 30-entry feeds and signatures are included in this publication; App UI
+and runtime acceptance remain separate. Publication stays a coordinator-
+dispatched act through this bridge with the real key, and every per-item trust requirement
 (signatures, guest-execution evidence, exact advertised download-eligible
 sets, H6 whenever impeccable is offered, both-channel presence for offered
 mandatory IDs, empty-feed refusal) remains enforced unchanged.
