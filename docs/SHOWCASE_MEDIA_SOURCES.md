@@ -5,7 +5,7 @@ currently referenced by `showcase/skills.json`. It is presentation data for the
 unsigned candidate storefront; it implies no review, qualification, publication
 or install offer. Paths below are relative to `showcase/media/`.
 
-## Covers and gallery: the complete referenced set (5 files)
+## Covers and gallery: the complete referenced set (11 files)
 
 ### `covers/impeccable-promo-small.png` — Impeccable entry cover
 
@@ -62,9 +62,26 @@ or install offer. Paths below are relative to `showcase/media/`.
 - Exact bytes: image/jpeg, 76,673 bytes, 1280×960 px,
   SHA-256 `8b240c252e4fdc98b5fb52f7d59e33ce809dd6654dd72ab31af87cfb4fccfb8c`.
 
+## Floe illustrations (6 files)
+
+Original concept illustrations created for this catalog on 2026-10-26 using
+AI-assisted image generation, included with the project owner’s permission.
+These depict their respective uses; they are not upstream brand assets or
+product screenshots. All six are unchanged 1254×1254 PNGs under `covers/`.
+Their public source is this repository’s `showcase/media/covers/` directory.
+
+| File | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `exploratory-data-analysis.png` | 1,927,366 | `79937c042f75d406010760fe402e26e9f8e60e16c58dc40eca3dab25ce90ec1e` |
+| `markitdown.png` | 1,774,973 | `c94df186ab37a141e1d6bcbd03ba54986e9a4e7efb32fd441d09a2a9995955d3` |
+| `floe-pdf.png` | 1,989,169 | `2d5503fe8af7a166244759d5ed3a6b08721bb2dc13aa9c47afe07e7cc9af642b` |
+| `floe-network.png` | 1,749,595 | `bbf3f72ef540f58f04aad243e584955bf84e9ecdb2f604cf507ef73742b9406e` |
+| `floe-video.png` | 1,805,636 | `0c1b214e1c5de96006974c213a736a67d3f20d8a3d96398ba8b95c2566271e39` |
+| `floe-invoice-organizer.png` | 2,005,153 | `f0a44507947abc7aa3254871dd228b15e55c2157a4d999236a44939d8421a117` |
+
 ## Null covers for the remaining entries
 
-The other 41 editorial entries currently have no selected cover and use
+The other 35 editorial entries currently have no selected cover and use
 `"cover": null` with an empty gallery. Their image review can continue while
 readers use compact identity/text cards. Previously generated SVG illustrations
 were removed from the active references on 2026-10-26; the originals remain in
