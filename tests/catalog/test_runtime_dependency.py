@@ -40,6 +40,7 @@ import unittest
 HERE = pathlib.Path(__file__).resolve()
 sys.path.insert(0, str(HERE.parents[2] / "scripts"))
 import hubcore
+import fixture_status
 import runtime_dependency
 import build_packages
 from test_publication_integrity import (
@@ -624,7 +625,8 @@ class TestSourcePackageGate(unittest.TestCase):
 
 def synthetic_registry():
     """Registry copy with ONLY impeccable flipped qualified (isolated test)."""
-    reg = json.loads((REPO / "catalog" / "skills.json").read_bytes())
+    reg = fixture_status.stage_unadmitted_fixture(
+        json.loads((REPO / "catalog" / "skills.json").read_bytes()))
     for entry in reg["skills"]:
         if entry["id"] == "impeccable":
             entry["status"] = dict(entry["status"], licenseChecked=True,

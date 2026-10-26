@@ -21,6 +21,26 @@ EXPECTED_ORIGINAL_REPLACEMENTS = {"doc-coauthoring", "writing-guidelines", "reac
                     "composition-patterns", "web-design-guidelines"}
 EXPECTED_FIRST_PARTY_PENDING = {"floe-email-drafting", "floe-file-organizer",
                                 "floe-invoice-organizer"}
+# Signed-review admission epoch (Root curation decision, 2026-10-26): the 32
+# guide-only IDs carry a static-content-reviewed approve record and are
+# admitted qualified; the 2 guest IDs also hold a real riscv64 guest receipt.
+EXPECTED_GUIDE_QUALIFIED = {
+    "a11y-audit", "code-to-prd", "composition-patterns", "content-production",
+    "copy-editing", "copywriting", "deep-research", "deepread", "doc-coauthoring",
+    "floe-email-drafting", "floe-file-organizer", "floe-invoice-organizer",
+    "floe-network", "floe-office", "floe-pdf", "floe-video", "internal-comms",
+    "meetings", "product-discovery", "product-manager-toolkit",
+    "react-best-practices", "requesting-code-review", "research-summarizer",
+    "scientific-critical-thinking", "social-content", "systematic-debugging",
+    "test-driven-development", "theme-factory", "ui-design-system",
+    "ux-researcher-designer", "web-design-guidelines", "writing-guidelines"}
+EXPECTED_GUEST_EXEC_VERIFIED = {"citation-management", "sympy"}
+# The remaining scripted rows keep executionVerified False and unproven
+# evidence until their own real guest runs exist; none may claim qualification.
+EXPECTED_UNQUALIFIED_SCRIPT_IDS = {
+    "algorithmic-art", "canvas-design", "exploratory-data-analysis", "impeccable",
+    "literature-review", "markitdown", "scientific-visualization",
+    "statistical-analysis", "webapp-testing"}
 PLAN_ZH = {5: "文档协作", 7: "技术写作检查", 15: "文献综述", 22: "格式转 Markdown",
            24: "Impeccable", 30: "React 最佳实践", 41: "会议纪要"}
 
@@ -44,11 +64,66 @@ class TestRegistry(unittest.TestCase):
         self.assertEqual({e["id"] for e in REGISTRY["skills"] if e["deepAdaptation"]},
                          EXPECTED_DEEP)
 
-    def test_no_status_exceeds_candidate_evidence(self):
+    def test_current_admission_is_exact_after_signed_reviews(self):
+        # Positive truth of the signed-review admission epoch: every row is
+        # packaged+reviewed (all 43 records now carry verified signatures),
+        # exactly the 32 guides + 2 guest scripts are qualified, the 2 guests
+        # alone carry executionVerified from real receipts, and NOTHING is
+        # published until the coordinator runs the launch gate and signs feeds.
+        admitted = EXPECTED_GUIDE_QUALIFIED | EXPECTED_GUEST_EXEC_VERIFIED
         for e in REGISTRY["skills"]:
-            for forbidden in ("reviewed", "qualified", "published", "executionVerified"):
-                self.assertFalse(e["status"][forbidden], f"{e['id']} claims {forbidden}")
-            self.assertFalse(e["status"]["packaged"])
+            st = e["status"]
+            self.assertTrue(st["packaged"] and st["reviewed"] and st["licenseChecked"],
+                            f"{e['id']} must be packaged+reviewed+licenseChecked")
+            self.assertFalse(st["published"], f"{e['id']} claims publication")
+            self.assertEqual(st["qualified"], e["id"] in admitted, e["id"])
+            self.assertEqual(st["executionVerified"], e["id"] in EXPECTED_GUEST_EXEC_VERIFIED,
+                             e["id"])
+        self.assertEqual({e["id"] for e in REGISTRY["skills"] if e["status"]["qualified"]},
+                         admitted)
+        # The nine held scripts stay fully unqualified and unproven.
+        for e in REGISTRY["skills"]:
+            if e["id"] in EXPECTED_UNQUALIFIED_SCRIPT_IDS:
+                self.assertEqual(e["plannedRuntime"]["scriptRuntime"], "remote", e["id"])
+                self.assertFalse(e["status"]["qualified"], e["id"])
+                self.assertFalse(e["status"]["executionVerified"], e["id"])
+
+    def test_status_invariants_reject_explicitly_constructed_invalid_rows(self):
+        # Negatives are real fixtures, not accidental registry state: each
+        # case deliberately builds a status claim the entry has not earned.
+        cases = ("published_without_qualified", "qualified_without_reviewed",
+                 "qualified_without_packaged", "executionVerified_without_frozen")
+        for case in cases:
+            with self.subTest(case=case):
+                broken = json.loads(json.dumps(REGISTRY))
+                target = next(e for e in broken["skills"] if e["id"] == "a11y-audit")
+                if case == "published_without_qualified":
+                    target["status"]["qualified"] = False
+                    target["status"]["published"] = True
+                elif case == "qualified_without_reviewed":
+                    target["status"]["reviewed"] = False
+                elif case == "qualified_without_packaged":
+                    target["status"]["packaged"] = False
+                elif case == "executionVerified_without_frozen":
+                    target["status"]["adaptation"] = "in-progress"
+                    target["status"]["executionVerified"] = True
+                with self.assertRaises(hubcore.HubError):
+                    hubcore.validate_registry(broken)
+        # A guide-only row can never carry an execution claim, and an
+        # unverified script can never claim guest evidence.
+        guide = json.loads(json.dumps(REGISTRY))
+        row = next(e for e in guide["skills"] if e["plannedRuntime"]["scriptRuntime"] == "none")
+        row["plannedRuntime"]["execution"] = {"os": "linux", "arch": "riscv64",
+                                              "evidence": "guest-verified"}
+        with self.assertRaises(hubcore.HubError):
+            hubcore.validate_registry(guide)
+        script = json.loads(json.dumps(REGISTRY))
+        row = next(e for e in script["skills"]
+                   if e["plannedRuntime"]["scriptRuntime"] != "none"
+                   and not e["status"]["executionVerified"])
+        row["plannedRuntime"]["execution"]["evidence"] = "guest-verified"
+        with self.assertRaisesRegex(hubcore.HubError, "executionVerified"):
+            hubcore.validate_registry(script)
 
     def test_pins_equal_review_baseline_document(self):
         pins = json.loads((REPO / "docs" / "UPSTREAM-PINS.json").read_bytes())["repositories"]
@@ -73,8 +148,10 @@ class TestRegistry(unittest.TestCase):
         coordinator admitted the 34 complete ordinary sources at the source
         freeze 4e1b3ff (2026-10-26): their own content is pinned by the actual
         Hub source commit, not by fabricated upstream/firstParty pin blocks.
-        These replace the obsolete planning-state assertions that required
-        sourcePinned=False (and awaiting-implementation) forever."""
+        # These replace the obsolete planning-state assertions that required
+        # sourcePinned=False (and awaiting-implementation) forever. After the
+        # signed-review admission these eight owned guides are packaged,
+        # reviewed and qualified; publication stays closed."""
         e = self.entries[sid]
         # Identity stays honest: no fabricated upstream or firstParty pin.
         self.assertEqual(e["source"], "F", sid)
@@ -84,9 +161,13 @@ class TestRegistry(unittest.TestCase):
         self.assertTrue(e["status"]["sourcePinned"], sid)
         self.assertTrue(e["status"]["licenseChecked"], sid)
         self.assertEqual(e["status"]["adaptation"], "frozen", sid)
-        # Approval gates stay closed until the real coordinator approval.
-        for pending in ("packaged", "reviewed", "qualified", "published",
-                        "executionVerified"):
+        # Signed-review admission: guide-only owned rows are packaged,
+        # reviewed and qualified; publication and any guest execution claim
+        # stay closed for every guide.
+        self.assertTrue(e["status"]["packaged"], sid)
+        self.assertTrue(e["status"]["reviewed"], sid)
+        self.assertTrue(e["status"]["qualified"], sid)
+        for pending in ("published", "executionVerified"):
             self.assertFalse(e["status"][pending], f"{sid} claims {pending}")
         self.assertTrue(e["notes"]["en"].strip() and e["notes"]["zh-Hans"].strip())
         # Stronger positives: the actual owned source files exist and bind the
@@ -144,26 +225,28 @@ class TestRegistry(unittest.TestCase):
                     sid, ("first-party", "No upstream sources were copied"))
 
     def test_synthetic_qualification_without_prerequisites_is_rejected(self):
-        # Negatives stay real: a row may not claim qualification stages it has
-        # not earned, no matter what the source files look like on disk.
-        for field in ("qualified", "published"):
+        # Negatives stay real even after admission: a row may not claim a
+        # stage above the one it actually holds, and held scripts cannot
+        # borrow the two verified guests' evidence.
+        for field, demote in (("qualified", "reviewed"), ("published", "qualified")):
             with self.subTest(field=field):
                 broken = json.loads(json.dumps(REGISTRY))
                 target = next(e for e in broken["skills"]
                               if e["id"] == "doc-coauthoring")
+                target["status"][demote] = False
                 target["status"][field] = True
                 with self.assertRaises(hubcore.HubError):
                     hubcore.validate_registry(broken)
         broken = json.loads(json.dumps(REGISTRY))
         target = next(e for e in broken["skills"]
-                      if e["plannedRuntime"]["scriptRuntime"] != "none")
+                      if e["id"] in EXPECTED_UNQUALIFIED_SCRIPT_IDS)
+        self.assertFalse(target["status"]["executionVerified"])
         target["plannedRuntime"]["execution"]["evidence"] = "guest-verified"
         with self.assertRaisesRegex(hubcore.HubError, "executionVerified"):
             hubcore.validate_registry(broken)
         broken = json.loads(json.dumps(REGISTRY))
         row = next(e for e in broken["skills"] if e["id"] == "doc-coauthoring")
-        row["status"]["licenseChecked"] = False
-        row["status"]["reviewed"] = True  # reviewed requires a completed license check
+        row["status"]["licenseChecked"] = False  # reviewed requires a completed license check
         with self.assertRaisesRegex(hubcore.HubError, "license check"):
             hubcore.validate_registry(broken)
 
@@ -188,9 +271,23 @@ class TestRegistry(unittest.TestCase):
         target["name"] = {"en": "Impeccable", "zh-Hans": "Impeccable"}
         hubcore.validate_registry(brand)  # kept-identical brand names stay legal
 
-    def test_execution_claims_stay_unproven(self):
+    def test_execution_claims_are_exact_and_minimal(self):
+        # 41 of 43 rows must keep unproven evidence; only the two genuine
+        # guest receipts may claim guest-verified, and only with
+        # executionVerified set. Guides carry no execution claim at all.
         for e in REGISTRY["skills"]:
-            self.assertEqual(e["plannedRuntime"]["execution"]["evidence"], "unproven", e["id"])
+            if e["id"] in EXPECTED_GUEST_EXEC_VERIFIED:
+                self.assertEqual(e["plannedRuntime"]["execution"]["evidence"],
+                                 "guest-verified", e["id"])
+                self.assertTrue(e["status"]["executionVerified"], e["id"])
+            else:
+                self.assertEqual(e["plannedRuntime"]["execution"]["evidence"],
+                                 "unproven", e["id"])
+                self.assertFalse(e["status"]["executionVerified"], e["id"])
+            if e["plannedRuntime"]["scriptRuntime"] == "none":
+                self.assertEqual(e["plannedRuntime"]["execution"],
+                                 {"os": None, "arch": "n/a", "evidence": "unproven"},
+                                 e["id"])
 
     def test_categories_and_tags_shape(self):
         self.assertEqual({c["id"] for c in REGISTRY["categories"]}, set(hubcore.CATEGORIES))

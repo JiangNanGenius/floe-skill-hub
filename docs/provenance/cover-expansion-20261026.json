@@ -1,0 +1,1198 @@
+{
+  "approval": "Project owner independently verified the hash and size of all 35 new source assets and visually reviewed each one before approving this presentation-only expansion. Covers imply no review, qualification, publication or install offer.",
+  "baselineHubSource": "ed8142969e08fb7ce9b9f53cc1a39d3849289ae8",
+  "encoding": {
+    "contentChanges": false,
+    "mode": "Native sips JPEG quality 78",
+    "originalPNGBytes": 65324541,
+    "rawPNGsPreserved": true,
+    "sameDimensions": true
+  },
+  "kind": "showcase-cover-expansion-provenance",
+  "mediaBudgetAfter": {
+    "allPass": true,
+    "existingObservedBytes": 11559544,
+    "fileLimit": 256,
+    "limitBytes": 33554432,
+    "newWebBytes": 7012015,
+    "newWebFiles": 35,
+    "note": "Only 34 JPEG web derivatives and one official rendered PNG enter media. Raw generated PNGs, rejected upstream diagrams, source PDF and evidence do not enter media.",
+    "perFileLimitBytes": 4194304,
+    "projectedBytes": 18571559,
+    "projectedFiles": 46,
+    "remainingBytes": 14982873
+  },
+  "notes": "Asset paths are repository-relative. The 34 raw PNG originals (65,324,541 bytes combined) are intentionally NOT vendored into this repository; their SHA-256 values above key them for future verification. Web JPEGs are same-dimension re-encodings with no crop or content change.",
+  "officialThemeCover": {
+    "asset": {
+      "bytes": 79382,
+      "height": 1280,
+      "mime": "image/png",
+      "sha256": "e96edd50eaaf562852a119009643b91fd0f1b1d148d6254952b41b7806af56e9",
+      "width": 990
+    },
+    "cover": {
+      "alt": {
+        "en": "Ocean Depths theme with color palette and typography samples.",
+        "zh-Hans": "Ocean Depths 主题的配色与字体样例。"
+      },
+      "caption": {
+        "en": "Ocean Depths palette and type sample from the upstream showcase.",
+        "zh-Hans": "上游样例中的 Ocean Depths 配色与字体。"
+      },
+      "credit": {
+        "en": "Theme Factory official example by anthropics/skills · Apache-2.0.",
+        "zh-Hans": "anthropics/skills 的 Theme Factory 官方样例 · Apache-2.0。"
+      },
+      "kind": "example-output",
+      "path": "showcase/media/covers/theme-factory.png"
+    },
+    "id": "theme-factory",
+    "licenseNotices": "showcase/licenses/theme-factory/",
+    "source": {
+      "bytes": 124310,
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "path": "skills/theme-factory/theme-showcase.pdf",
+      "repository": "https://github.com/anthropics/skills",
+      "retrieval": "fetched verbatim at the pinned commit; PDF sidecar sha recorded above",
+      "sha256": "3e126eca9fe99088051f7cb984c97cedb31c7d9e09ce0ba5d61bd01e70a0d253",
+      "url": "https://raw.githubusercontent.com/anthropics/skills/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/theme-factory/theme-showcase.pdf"
+    }
+  },
+  "originalAIIllustrationCovers": [
+    {
+      "cover": {
+        "alt": {
+          "en": "Linked bibliographic cards are arranged in a compact file.",
+          "zh-Hans": "相互关联的引用卡片整齐放入索引盒。"
+        },
+        "caption": {
+          "en": "Concept illustration for citation management.",
+          "zh-Hans": "引用管理用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/citation-management.jpg"
+      },
+      "id": "citation-management",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: An elegant compact index-card file with three ivory bibliographic cards, each containing abstract paragraph strokes and a small cyan linking ring binding them to one reference sheet. One satin metal paper clip suggests reliable attribution, no readable citations or names. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1964720,
+        "height": 1254,
+        "sha256": "c74765a5e8d932d39b74daff8d2123bd19166a4b88f5263f30e8e4d4a4e86438",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 212881,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "06421ec4d313ccd5713ebf405c67eeea1392ad1ccc4ba4d03ec6d1cf9c6bfa71",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A pen unfolds paper into an outline and developed chapters.",
+          "zh-Hans": "笔尖展开纸带，形成提纲与完整章节。"
+        },
+        "caption": {
+          "en": "Concept illustration for long-form content creation.",
+          "zh-Hans": "长文创作用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/content-production.jpg"
+      },
+      "id": "content-production",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A graceful ribbon of ivory paper unfolds from a graphite writing pen into three upright chapter leaves of increasing completeness; small cyan chapter tabs organize them. Abstract paragraph strokes imply developing an outline into a long manuscript. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1823933,
+        "height": 1254,
+        "sha256": "7dd7edb8347c74178ea5834ca0b98936df74796f003620dcaabff3907ff43ded",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 183471,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "21fd990093e93eba9e7f3822facd8a27c83f12dbb738018057b99d766f005238",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A draft is revised with editing marks and a precision pencil.",
+          "zh-Hans": "用校订标记与细笔修正文稿。"
+        },
+        "caption": {
+          "en": "Concept illustration for copy editing.",
+          "zh-Hans": "文案校订用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/copy-editing.jpg"
+      },
+      "id": "copy-editing",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: An ivory draft page with abstract text strokes shows two restrained violet editing marks, one short crossed-out stroke and a clean cyan replacement stroke. A satin-metal precision editing pencil and small eraser rest beside the page. Clearly communicate careful text revision. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1922300,
+        "height": 1254,
+        "sha256": "4806421bf5ca51031a5c5da6d6126294b54722f7251d00f8164ddb65965b7f56",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 193849,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "4bff3bc1bf2bad625c3acb1505e454211687462048116f54e53b9a25f6b4506b",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A pencil shapes a headline beneath a small spotlight.",
+          "zh-Hans": "铅笔在小聚光灯下写出醒目的标题。"
+        },
+        "caption": {
+          "en": "Concept illustration for website copywriting.",
+          "zh-Hans": "网站文案用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/copywriting.jpg"
+      },
+      "id": "copywriting",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A sharp graphite pencil writes three confident embossed headline strokes on a single ivory advertising card; a tiny matte violet spotlight illuminates the headline, and a cyan rounded blank call-to-action tab sits below. Physical paper composition, not an app or browser screenshot. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 2326321,
+        "height": 1254,
+        "sha256": "4666bbabfb08f5d4deb7505950130ad38b2ead1482b7104c06b2af7a114b2d98",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 296918,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "9c6c39edac30aa1d6b7b70b89934af5bc59282ed78ea4a42ff3737cde073c000",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A desk lamp illuminates linked source papers and research notes.",
+          "zh-Hans": "台灯照亮来源文献与相互对应的研究笔记。"
+        },
+        "caption": {
+          "en": "Concept illustration for deep research.",
+          "zh-Hans": "深度研究用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/deep-research.jpg"
+      },
+      "id": "deep-research",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A focused graphite desk lamp illuminates a curated small stack of ivory source papers and one open research notebook. Three slender cyan bookmarks connect selected source passages to a concise note card, without arrows or a technical flowchart. A magnifying glass rests aside. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1887482,
+        "height": 1254,
+        "sha256": "831cbd63cd425aa72e2af06bdb798f5baa194f0733170a576f70fdeb87c0ce8a",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 214905,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "22c0b54972d3355d0dd7e1158450ac54bf6b5264941b9106278bac42378f7fcb",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A reading lens focuses on a highlighted passage in an open book.",
+          "zh-Hans": "阅读镜聚焦展开书页中的高亮段落。"
+        },
+        "caption": {
+          "en": "Concept illustration for close reading.",
+          "zh-Hans": "深度阅读用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/deepread.jpg"
+      },
+      "id": "deepread",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A single thick open ivory book with one cyan bookmark, a slim reading lens held over one short highlighted passage and a small graphite note card tucked alongside. Quiet close reading, tactile pages, no actual text. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1902294,
+        "height": 1254,
+        "sha256": "68cbee27e246ef4bdc2abd3834cc3efb3ca65cb967de576d435d01c2cbe2119c",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 207550,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "b855bf04e37f4f699860978ff2381c1d2333dbbc23398f1a9d3d935cc46a23fe",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "Two pens frame a shared manuscript and outline.",
+          "zh-Hans": "两支笔围绕共同修订的文稿与提纲。"
+        },
+        "caption": {
+          "en": "Concept illustration for document collaboration.",
+          "zh-Hans": "文档协作用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/doc-coauthoring.jpg"
+      },
+      "id": "doc-coauthoring",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: Two complementary graphite fountain pens with cyan and violet nibs rest on opposite sides of a shared ivory manuscript sheet. Three small chapter tabs and a tidy folded outline beside the page suggest agreeing an outline and revising together. Abstract text strokes only. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1935381,
+        "height": 1254,
+        "sha256": "6c3f747bedeed5ae14b62faf95c55a867f89e96e37bce8dac2ab3ab755065934",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 212992,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "222de4af4f0271ed6125c7704125ff330e31800b6abccca766ffc6259d2b2187",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A draft letter rests in an open envelope beside a pen.",
+          "zh-Hans": "起草好的信纸放在开口信封中，旁边是一支笔。"
+        },
+        "caption": {
+          "en": "Concept illustration for email drafting.",
+          "zh-Hans": "邮件起草用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/floe-email-drafting.jpg"
+      },
+      "id": "floe-email-drafting",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A premium ivory open envelope holds one neatly composed letter with only abstract grey paragraph strokes. A slim graphite pen rests across the foreground and a small cyan folded corner marks the draft. Warm purposeful email drafting, no send arrow or service logo. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1838674,
+        "height": 1254,
+        "sha256": "974d0af2836134c59802920befbfd2f1396f18b6688e0cf6bde21843fef7817a",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 178357,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "5ce7d248f1fd46e33c2aa42530f720634a3dd18b42a97d186995867461ac229d",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A megaphone distributes concise announcement cards.",
+          "zh-Hans": "扩音器把简洁公告传向消息卡片。"
+        },
+        "caption": {
+          "en": "Concept illustration for internal communications.",
+          "zh-Hans": "内部沟通用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/internal-comms.jpg"
+      },
+      "id": "internal-comms",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A sculptural ivory megaphone sits beside three neatly stacked announcement cards held by one satin-metal clip. One short cyan sound ribbon reaches two small blank message cards. Calm organized communication, no social media logos. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1803585,
+        "height": 1254,
+        "sha256": "e3687f2528e4c8aff8b2ff049007739058bbcc355f222f8a8c8aea508384c903",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 167527,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "ef6d2a680385b5625d2ff3512a96cdbd00cc541177ccc183dbdd0aa718cdf5c4",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "Tabbed reference volumes surround a comparative review notebook.",
+          "zh-Hans": "带标签的参考书围绕记录对照内容的综述笔记。"
+        },
+        "caption": {
+          "en": "Concept illustration for literature review.",
+          "zh-Hans": "文献综述用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/literature-review.jpg"
+      },
+      "id": "literature-review",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: Four slim ivory academic volumes stand in a compact fan behind an open comparative review notebook. Different restrained cyan and violet page tabs align across sources; a small orderly table of abstract cells on the notebook represents synthesis, no axes or numbers. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1963262,
+        "height": 1254,
+        "sha256": "959c23bd09f42b0884b55fcf9c0c97b940912ea46c344e44cc028971058e0e8f",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 220540,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "d46d1889b9b6d6ef0ede5a6359024111249ecee3127414462109c904a6eca3d7",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "Highlighted source passages connect to a concise summary card.",
+          "zh-Hans": "来源材料中的重点对应到一张简洁摘要卡。"
+        },
+        "caption": {
+          "en": "Concept illustration for research summarization.",
+          "zh-Hans": "研究摘要用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/research-summarizer.jpg"
+      },
+      "id": "research-summarizer",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A broad layered stack of ivory research sheets narrows into one small elegant summary card in the foreground. Three short cyan highlighted strokes on the summary echo matching passages in the source sheets; a graphite binder clip keeps the sources together. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1877937,
+        "height": 1254,
+        "sha256": "0e173c2f5c565c3e00c53872a0ff309e2b13e2b2bace2ddf245906f367f677ff",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 207911,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "33121cfa08f9ccbed9a08c40f8741988a3aae2a45c33e246e77807a330c84616",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A balance scale weighs a research claim against evidence blocks.",
+          "zh-Hans": "天平将研究文稿与证据块作对照。"
+        },
+        "caption": {
+          "en": "Concept illustration for evidence assessment.",
+          "zh-Hans": "证据评估用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/scientific-critical-thinking.jpg"
+      },
+      "id": "scientific-critical-thinking",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A small precise satin-metal balance scale holds an ivory research paper on one pan and three solid evidence blocks on the other. A single cyan magnifying lens rests below. The balanced scene suggests examining whether evidence supports a conclusion, no equations or actual findings. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1779541,
+        "height": 1254,
+        "sha256": "0569207bb3e659c4803390f653ed6af28f08cdb79c1c892d7ae437a4990d2406",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 176258,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "ca739bde123a5fd61547242c4dde9082bb9435f562f74c314c71925e3b3a212c",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "Conceptual scatter, uncertainty and bar plots are printed on paper.",
+          "zh-Hans": "纸面展示散点、不确定性带与柱形图的概念图形。"
+        },
+        "caption": {
+          "en": "Concept illustration for scientific visualization.",
+          "zh-Hans": "数据可视化用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/scientific-visualization.jpg"
+      },
+      "id": "scientific-visualization",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: Three beautifully printed ivory scientific plot sheets fan out: one abstract scatter pattern, one smooth cyan curve with a shaded violet uncertainty band, one restrained bar chart. A graphite technical pen rests alongside. Charts are conceptual with no numbers or claims. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1992592,
+        "height": 1254,
+        "sha256": "2436e3e95a06139cc35b7f6230ce69b6a12e63926c1961419f957ef9a042cea4",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 216813,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "0ce436b83b135053cdeb2bf31ca2824a83d741da83e9a2f0a04ffad20dab715f",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "Varied editorial cards stand behind a content calendar.",
+          "zh-Hans": "不同版式的内容卡片排列在排期日历后。"
+        },
+        "caption": {
+          "en": "Concept illustration for social content planning.",
+          "zh-Hans": "社媒内容用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/social-content.jpg"
+      },
+      "id": "social-content",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: Three tangible portrait-format editorial cards fan outward, each showing a different abstract picture layout and just a few text strokes. A small graphite desk calendar with blank cyan and violet tiles sits beneath them. Communicate planning varied social posts, no platform logos or follower counts. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1952086,
+        "height": 1254,
+        "sha256": "abb0a2c07599bf11d4acfa2e016887e9873b017654036b0babad39630e7c08e3",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 209656,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "42ff4fc40e8e683bd58df3a138d7fa2e6aa31b2230af41821b4d583212aa15bf",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A caliper examines a distribution model beside sample points.",
+          "zh-Hans": "卡尺检查分布模型，旁边是概念样本点。"
+        },
+        "caption": {
+          "en": "Concept illustration for statistical analysis.",
+          "zh-Hans": "统计分析用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/statistical-analysis.jpg"
+      },
+      "id": "statistical-analysis",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A satin graphite caliper measures a sculptural blue-violet bell-curve silhouette standing on an ivory analysis card. A few cyan sample pegs and a simple fitted curve on a separate small plate communicate statistical inference; no numeric axes or actual results. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1914037,
+        "height": 1254,
+        "sha256": "66e5aaef5ad3abf513a8badc906757b263c085218703c1b1bbfe945c6eaec005",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 200257,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "336561719a0a34d309881f3a97dbf8e59d74805af1b23dbf715b9eb22023a77d",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "Integral and equals symbols stand above a mathematics notebook.",
+          "zh-Hans": "积分与等号符号立在数学笔记本上方。"
+        },
+        "caption": {
+          "en": "Concept illustration for symbolic mathematics.",
+          "zh-Hans": "符号数学用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/sympy.jpg"
+      },
+      "id": "sympy",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: Sculptural satin-metal integral and equals symbols stand above an ivory mathematics notebook, with a simple graphite curve sketched on its page and a cyan pencil. Use only these recognizable mathematical symbols, no complex equations or solved results. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1831582,
+        "height": 1254,
+        "sha256": "b78ca61653b721cc2a8511df8f13b86104e7d08d4af9b7afbb7a03add51b2727",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 182776,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "7390e329aca59aa7d3e3db972d03eae3bbeb9da57af6597d0e5cf83cb14e0b2b",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A ruler and checklist align a technical manuscript.",
+          "zh-Hans": "标尺与检查清单对照技术文稿。"
+        },
+        "caption": {
+          "en": "Concept illustration for technical writing review.",
+          "zh-Hans": "技术写作检查用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/writing-guidelines.jpg"
+      },
+      "id": "writing-guidelines",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: An ivory technical-writing manuscript stands beside a solid checklist card, with an elegant graphite ruler aligned to its paragraph strokes and two small cyan ticks. Emphasize consistent clear writing rather than numbers or code. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1939455,
+        "height": 1254,
+        "sha256": "9ea694572bc87f35446e92775910f47416177f72e0349eb7f3d638bac8343570",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 206686,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "2c037a14616f7dcc4f1461973e90cd18bd16499f8b244ec144286659a639a648",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "Concentric paper ribbons form a violet and cyan generative sculpture.",
+          "zh-Hans": "紫青色同心纸带组成有韵律的生成艺术雕塑。"
+        },
+        "caption": {
+          "en": "Concept illustration for generative art.",
+          "zh-Hans": "生成艺术用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/algorithmic-art.jpg"
+      },
+      "id": "algorithmic-art",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A beautiful physical generative sculpture made from many fine concentric violet and cyan paper ribbons twists into a precise organic wave above a matte graphite plinth. Strong clear rhythm, mathematically inspired, not a technology grid or sphere. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1889595,
+        "height": 1254,
+        "sha256": "26235200764c2b486ce3ad73a29e59bbdd9d5234159528115c8f5ed04a1eb88c",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 239266,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "c05feebb2da1f9aa18efd925f4a92c63d8fbd3bd317be4a00d97b1775a7572cf",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "Abstract poster layouts with a set square and drawing pencil.",
+          "zh-Hans": "抽象海报版式旁放着三角尺和绘图铅笔。"
+        },
+        "caption": {
+          "en": "Concept illustration for graphic layout design.",
+          "zh-Hans": "平面视觉设计用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/canvas-design.jpg"
+      },
+      "id": "canvas-design",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A small premium graphic-design workbench: two upright ivory poster sheets show a bold abstract circle, a clean rectangle and a few short heading strokes. A graphite set square and cyan pencil lie below. Clear intentional poster composition, no actual brand text. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 2000712,
+        "height": 1254,
+        "sha256": "19da123b2cad3a96c599ab4eafc2040c7765589c3c6975dafecbf3828012c9e4",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 212339,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "3adf045145c641ea9a4f226c72b0c839d6a216010e95c142b6884a1329250ad7",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A tactile kit of interface components and a spacing ruler.",
+          "zh-Hans": "界面组件与间距尺组成可复用的设计套件。"
+        },
+        "caption": {
+          "en": "Concept illustration for ui design systems.",
+          "zh-Hans": "UI设计系统用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/ui-design-system.jpg"
+      },
+      "id": "ui-design-system",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A deliberate tactile kit of modular interface component tiles: one rounded button-like block, three selection circles, a pair of small content cards and a cyan spacing ruler arranged on an ivory blueprint board. Physical product-design blocks, not a live software screenshot, no labels. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1953909,
+        "height": 1254,
+        "sha256": "2db0a33845634682948bc31d3c8b99467de35ec17deaa4d1b59ed94a4d15ba89",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 202082,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "2610a517c38323e7a18e1250c2be3a2e1641eb889ba191440514712d04ae41c0",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "Conversation cards surround a user research notebook and magnifying lens.",
+          "zh-Hans": "访谈卡片围绕用户研究笔记与放大镜。"
+        },
+        "caption": {
+          "en": "Concept illustration for user experience research.",
+          "zh-Hans": "用户体验研究用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/ux-researcher-designer.jpg"
+      },
+      "id": "ux-researcher-designer",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: Three elegant small conversation cards with abstract strokes and cyan speech tails surround an ivory insight notebook. Two violet sticky notes are sorted beside a simple graphite user silhouette token and magnifying lens. Communicate listening, observing and organizing user findings. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1965144,
+        "height": 1254,
+        "sha256": "3ca17efb9576c0a8432e38ed42345e9f9c6eb60be66fc4f8d20bf9c3e596d32d",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 205572,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "6e831bafd3549762f89d2f442fd78e51eb041dcba1bbff1edf17aec75026d5c6",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A smooth cyan ribbon passes through a tuned modular component arch.",
+          "zh-Hans": "青色流线穿过经过调优的模块组件拱架。"
+        },
+        "caption": {
+          "en": "Concept illustration for react best practices.",
+          "zh-Hans": "React最佳实践用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/react-best-practices.jpg"
+      },
+      "id": "react-best-practices",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: Three compact modular graphite component blocks form a clean stable arch around a central ivory component tile. A cyan airflow ribbon moves smoothly through the arch and a small graphite tuning wrench rests below. Suggest well-structured performant software components without logos or fake code. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 2017809,
+        "height": 1254,
+        "sha256": "05bcdcbdd918a36413c6c3d7eb31deecfe2c0e82a3440ca4ee3fb4914f6a8bfa",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 229552,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "ffee785c85f226843d67923ebaaa301a3225e3c3a709b5873e6043f87ef44636",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A cyan module fits into a matching component assembly.",
+          "zh-Hans": "青色模块与对应的组件结构相互组合。"
+        },
+        "caption": {
+          "en": "Concept illustration for component composition.",
+          "zh-Hans": "组件组合用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/composition-patterns.jpg"
+      },
+      "id": "composition-patterns",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: Four tactile graphite and ivory component modules fit cleanly into one coherent architectural assembly, like precision interlocking building blocks. One cyan module is lifted slightly to reveal the matching socket. Clear modular composition, no puzzle-piece cliché, no logos, no software screenshot. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1966041,
+        "height": 1254,
+        "sha256": "432f4995dac3dd0719f60af834065f5499506d0bd7771d0b429fdb336fbb697b",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 201383,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "6876322060f00dab505a095875261ffc76dd5d462b3b2a47addd4bc18e1b4ea2",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "Layout guides, a set square and checklist review a page composition.",
+          "zh-Hans": "版式参考线、三角尺与清单用于检查网页布局。"
+        },
+        "caption": {
+          "en": "Concept illustration for web design review.",
+          "zh-Hans": "网页设计检查用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/web-design-guidelines.jpg"
+      },
+      "id": "web-design-guidelines",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: An upright ivory page-shaped design board carries a few carefully aligned abstract layout blocks and cyan spacing guides. A graphite set square and concise checklist with two violet ticks rest beside it. Physical design review, no browser chrome or actual website screenshot. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1852791,
+        "height": 1254,
+        "sha256": "4281d4f649330bd3094d9ff9161f02796883b1cb262908c29e319ac681b61595",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 182484,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "1cbc8a3cde52126ae35269be9d5bf56c64381a21248c5cf5dbda39b62dc7cc0f",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A pointer tests a conceptual browser card beside a check token.",
+          "zh-Hans": "指针检查抽象网页卡片，旁边放着检查标记。"
+        },
+        "caption": {
+          "en": "Concept illustration for web application testing.",
+          "zh-Hans": "Web应用测试用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/webapp-testing.jpg"
+      },
+      "id": "webapp-testing",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A tangible upright ivory browser-window-shaped card shows only a small abstract input field, rounded button and content blocks. A large satin-metal pointer shape touches the button while one cyan check token rests in front. Clearly conceptual web interaction testing, not an actual interface screenshot. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1748917,
+        "height": 1254,
+        "sha256": "61bf5d5376a916f8728f8b3d0b22a7be0634e4783010a10ca08c25a466e66e50",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 155073,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "4089ac0c9f81756ca53e98fadd926ae1bb04f11b2802ed28a47ad80be7a9709e",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A highlighted keyboard focus and accessibility figure represent inclusive interaction.",
+          "zh-Hans": "键盘焦点与可访问性人形标记表示包容的交互方式。"
+        },
+        "caption": {
+          "en": "Concept illustration for accessibility review.",
+          "zh-Hans": "可访问性检查用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/a11y-audit.jpg"
+      },
+      "id": "a11y-audit",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A tactile ivory keyboard section with three large graphite keys stands beside a small printed page with high-contrast abstract strokes. A cyan focus outline frames one key; a simple satin-metal accessibility human figure is embossed on a small card. Inclusive keyboard access and readability, no labels. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1974836,
+        "height": 1254,
+        "sha256": "53a5d1e69cfbed598d7f0e31bb58f9080bd9bddcaa5e68de65a925542327eec3",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 222675,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "db9bbd0a3a491234d01cdc777f859a99b5afa924944968a3f19b56402affee5b",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A magnifying glass isolates one component of a mechanical assembly.",
+          "zh-Hans": "放大镜从机械结构中定位一个待检查部件。"
+        },
+        "caption": {
+          "en": "Concept illustration for systematic debugging.",
+          "zh-Hans": "系统化调试用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/systematic-debugging.jpg"
+      },
+      "id": "systematic-debugging",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A premium graphite mechanical assembly has one small violet component lifted out for inspection by a magnifying glass. A cyan precision screwdriver and one small ivory evidence note card sit nearby. A concrete metaphor for reproducing and isolating software faults, no bugs, no fake logs. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 2013713,
+        "height": 1254,
+        "sha256": "48d7ffdb4ea8ce11e5edaca4aeaba4a66dd7de3968c06eb9e0e8928d1f23f3a5",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 250243,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "65ca1ebb5acb4736ce1e8856253535d64d8029df6ebaf80c079ecfb7e4e4535f",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "Failing and passing test tiles accompany a component and wrench.",
+          "zh-Hans": "失败与通过测试卡片围绕组件与扳手。"
+        },
+        "caption": {
+          "en": "Concept illustration for test-driven development.",
+          "zh-Hans": "测试驱动开发用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/test-driven-development.jpg"
+      },
+      "id": "test-driven-development",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: Three tactile test tiles stand in a compact progression: a muted coral tile with a small cross, a cyan tile with a check, and an ivory tile beside a tiny graphite wrench. All arranged around one solid component cube. Represent failing test, implementation and passing test without words or diagram arrows. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1858032,
+        "height": 1254,
+        "sha256": "f989b5df932b7d9806b111db2c746b4ccb3d43d9a4904033baf0da1b9c8603bf",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 166925,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "3462535c0fb316e8ec9baee4cab9d539051dd7cad8561edcc93676336d3d1ccb",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A pencil reviews a highlighted change on abstract code sheets.",
+          "zh-Hans": "铅笔检查抽象代码页上高亮的一处改动。"
+        },
+        "caption": {
+          "en": "Concept illustration for code review.",
+          "zh-Hans": "代码评审用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/requesting-code-review.jpg"
+      },
+      "id": "requesting-code-review",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: Two ivory change sheets lie slightly offset, containing only abstract code-like short strokes without readable code. A graphite review pencil points to one restrained cyan highlighted segment; a small violet comment tab and satin-metal clip suggest focused peer review. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1834936,
+        "height": 1254,
+        "sha256": "162b243e20802021c6c7832b9cb5ff15cd797792f29e461dd00159cb204c9ed5",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 176442,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "a925c45cb7ab26808ef4f4a0978f47b4de1849a490d104ad8bca90cc96751a22",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A planning tray holds a roadmap, priority cards and decision notebook.",
+          "zh-Hans": "规划托盘里放着路线图、优先级卡片与决策笔记。"
+        },
+        "caption": {
+          "en": "Concept illustration for product planning toolkit.",
+          "zh-Hans": "产品经理工具箱用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/product-manager-toolkit.jpg"
+      },
+      "id": "product-manager-toolkit",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A premium graphite desk tray holds three distinct ivory product-planning tools: a compact roadmap strip of three cyan milestones, a small priority board of violet and cyan cards, and a clean decision notebook. No text or numbers, calm tangible product planning. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1942192,
+        "height": 1254,
+        "sha256": "2d420e57884f43d0b52aa962e7793e7f3714a0ea0f4fa7890ae354fc0b61a751",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 194079,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "be62d02fda99b3860bc8c57967431a3fa6d5b4dc7719547e2e90e7b767f223b5",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A notebook, hypothesis cards and magnified evidence token suggest product experiments.",
+          "zh-Hans": "笔记、假设卡片与放大的证据标记表示产品探索实验。"
+        },
+        "caption": {
+          "en": "Concept illustration for product discovery.",
+          "zh-Hans": "产品探索用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/product-discovery.jpg"
+      },
+      "id": "product-discovery",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: An ivory opportunity notebook opens beside three small translucent violet hypothesis cards. A graphite magnifying lens focuses on one cyan evidence token, with two tiny blank experiment sample containers beside it. Communicate exploring product opportunities and testing assumptions, not chemistry. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1915241,
+        "height": 1254,
+        "sha256": "0f839ffaec95144258ab5bdcba4a6913246a0a875837e7ab4ab586b40d6d96a9",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 200578,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "9f691bd6d3dc30304b310ff98ee8ade8d5a27139efb8a240820c1012cdd49d6d",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A source folder connects to a structured requirements booklet.",
+          "zh-Hans": "源码文件夹连接到结构清楚的需求说明册。"
+        },
+        "caption": {
+          "en": "Concept illustration for code-to-requirements documentation.",
+          "zh-Hans": "代码转需求说明用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/code-to-prd.jpg"
+      },
+      "id": "code-to-prd",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A neat graphite source-code folder containing abstract indented line patterns unfolds toward a crisp ivory specification booklet with chapter tabs, a few clean section strokes and one simple component sketch. A cyan paper ribbon joins the two, no arrows or legible code. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1810158,
+        "height": 1254,
+        "sha256": "b691d0ae528515223566155d8e5f745c7374be98f5031f37a3e76901a682245a",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 179239,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "ff41159ea494929647c07637a65db5ce4f5cce39117ace01b520eab670cc376e",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "A microphone and conversation cards accompany an action-item notebook.",
+          "zh-Hans": "麦克风与讨论卡片旁放着行动项笔记。"
+        },
+        "caption": {
+          "en": "Concept illustration for meeting minutes.",
+          "zh-Hans": "会议纪要用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/meetings.jpg"
+      },
+      "id": "meetings",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: A small elegant graphite tabletop microphone sits next to an ivory meeting notebook with three short cyan action-item ticks and abstract paragraph strokes. Two violet conversation cards lean behind the notebook. Clearly capture discussion becoming organized minutes, no names or dates. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1930999,
+        "height": 1254,
+        "sha256": "bc56686a7b9d3617fde9756f9798f884f3c0d2eb7818bdc3cbf1699b786d3089",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 208939,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "c451c8ba711eaaf596b1d8712785f3be0d0481aa12f7db34f008d5268597527d",
+        "width": 1254
+      }
+    },
+    {
+      "cover": {
+        "alt": {
+          "en": "Grouped folders and papers sit in a tray beside a recovery arrow.",
+          "zh-Hans": "分类文件夹与纸张放入托盘，旁边是恢复箭头。"
+        },
+        "caption": {
+          "en": "Concept illustration for file organization.",
+          "zh-Hans": "文件整理用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/floe-file-organizer.jpg"
+      },
+      "id": "floe-file-organizer",
+      "prompt": "Use case: stylized-concept. Asset type: square raster skill-store cover. Create a refined editorial 3D illustration: Three refined ivory and deep-indigo file folders sit neatly in a matte graphite sorting tray. A small loose stack of mixed paper sheets has been grouped into two cyan-tabbed folders; one tiny curved satin-metal recovery arrow token lies beside the tray. Clear file organization, no labels or filenames. Center the complete main object group within the middle 65% of a square canvas, ample outer negative space, recognizable at small thumbnail size and safe square crop. Seamless near-black deep-indigo background, tactile matte ivory paper and satin graphite, restrained blue-violet and cyan accents, soft sculptural studio light. Sophisticated simplified shapes, smooth subtle materials, avoid excessive grain. No readable words, numbers, user data, brands, logos, watermarks, screenshots, actual runtime results, decorative frame, technology grid, generic glowing node network or glass spheres. Exactly one standalone image, no collage.",
+      "rawPng": {
+        "bytes": 1994334,
+        "height": 1254,
+        "sha256": "0525a1104c3491c24ff15c7785faf93690666ef699b92119a1f06faa865828bc",
+        "width": 1254
+      },
+      "webAsset": {
+        "bytes": 216415,
+        "height": 1254,
+        "mime": "image/jpeg",
+        "sha256": "a5e0f254f013a22c1cbb611fc7f47f4bc267e65e4f321e8aec8f19ff02eeaa8e",
+        "width": 1254
+      }
+    }
+  ],
+  "preservedUnchangedCovers": [
+    "exploratory-data-analysis",
+    "floe-invoice-organizer",
+    "floe-network",
+    "floe-office",
+    "floe-pdf",
+    "floe-video",
+    "impeccable",
+    "markitdown"
+  ],
+  "recordedAt": "2026-10-26",
+  "schemaVersion": 1
+}

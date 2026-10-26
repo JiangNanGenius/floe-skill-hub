@@ -27,6 +27,7 @@ import unittest
 HERE = pathlib.Path(__file__).resolve()
 sys.path.insert(0, str(HERE.parents[2] / "scripts"))
 import hubcore
+import fixture_status
 import build_catalog
 
 REPO = HERE.parents[2]
@@ -69,7 +70,8 @@ def synthetic_registry():
     CLI walk its qualified branch. It never claims real review or publication,
     and the repository registry file stays untouched.
     """
-    reg = json.loads((REPO / "catalog" / "skills.json").read_bytes())
+    reg = fixture_status.stage_unadmitted_fixture(
+        json.loads((REPO / "catalog" / "skills.json").read_bytes()))
     for entry in reg["skills"]:
         if entry["id"] == "floe-pdf":
             entry["versionTarget"] = QUALIFIED_VERSION

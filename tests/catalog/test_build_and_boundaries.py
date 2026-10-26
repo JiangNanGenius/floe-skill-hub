@@ -19,6 +19,20 @@ REPO = HERE.parents[2]
 FIXTURES = HERE.parents[0] / "fixtures"
 FAKE_COMMIT = "554dc4b2f6a2b3e0d6a1f6d6a1f6d6a1f6d6a1f6"[:40].ljust(40, "0")
 OFFICIAL = hubcore.PRODUCTION_KEY_ID
+# Real public trust for the signed-review epoch: preview/release builds verify
+# the actual 43 .sig sidecars against public-key.json, never an empty map.
+TRUST = build_catalog.load_trust(REPO)
+
+
+def demote_to_candidate_fixture(view):
+    """Explicit fixture staging for synthetic production feeds: the feed
+    contract binds reviewed status to a review binding and qualified status
+    to package+review. A hand-built feed that carries NO real bindings must
+    therefore present the row as an unbound candidate on purpose; the genuine
+    signed-review rows are exercised by the real preview/release builds."""
+    view["status"] = dict(view["status"], packaged=False, reviewed=False,
+                          qualified=False)
+    return view
 
 
 def qualified_builtin(entry, channel="ios"):
@@ -64,6 +78,8 @@ def production_catalog(overrides=None):
         view = hubcore.catalog_entry(row, package=None, review=None, install_offer="none")
         if row["id"] in hubcore.RESERVED_BUILTIN_IDS:
             view = qualified_builtin(view)
+        else:
+            view = demote_to_candidate_fixture(view)
         if overrides and view["id"] in overrides:
             overrides[view["id"]](view)
         entries.append(view)
@@ -75,30 +91,64 @@ class TestPreviewBuild(unittest.TestCase):
         self.registry = json.loads((REPO / "catalog" / "skills.json").read_bytes())
 
     def test_deterministic_bytes(self):
-        first = build_catalog.build(self.registry, "preview", FAKE_COMMIT, REPO, REPO, {})
-        second = build_catalog.build(self.registry, "preview", FAKE_COMMIT, REPO, REPO, {})
+        first = build_catalog.build(self.registry, "preview", FAKE_COMMIT, REPO, REPO, TRUST)
+        second = build_catalog.build(self.registry, "preview", FAKE_COMMIT, REPO, REPO, TRUST)
         self.assertEqual(first, second)
         self.assertIn("catalog.json", first)
         self.assertIn("android/catalog.json", first)
 
     def test_preview_describes_43_with_no_offers(self):
-        feeds = build_catalog.build(self.registry, "preview", FAKE_COMMIT, REPO, REPO, {})
+        feeds = build_catalog.build(self.registry, "preview", FAKE_COMMIT, REPO, REPO, TRUST)
         ios = json.loads(feeds["catalog.json"])
         android = json.loads(feeds["android/catalog.json"])
         self.assertEqual(len(ios["entries"]), 43)
-        self.assertEqual(len(android["entries"]), 39)  # builtins stay iOS until the mainline lane confirms
+        self.assertEqual(len(android["entries"]), 39)  # the four builtins are iOS-only
         self.assertTrue(all(e["installOffer"] == "none" for e in ios["entries"]))
-        self.assertEqual(ios["counts"]["qualified"], 0)
+        self.assertEqual(ios["counts"]["packaged"], 43)
+        self.assertEqual(ios["counts"]["reviewed"], 43)
+        self.assertEqual(ios["counts"]["qualified"], 34)  # status carried from admission
+        self.assertEqual(android["counts"]["qualified"], 30)  # 34 minus 4 iOS-only builtins
         self.assertEqual(ios["counts"]["offerQualified"], 0)
+        self.assertEqual(android["counts"]["offerQualified"], 0)
+        # Every packaged+reviewed row is bound to a real archive AND a
+        # trust-verified signed review; preview just never advertises offers.
+        for feed in (ios, android):
+            for e in feed["entries"]:
+                if e["status"]["packaged"]:
+                    self.assertIsNotNone(e["package"], e["id"])
+                    self.assertIsNotNone(e["review"], e["id"])
+                    self.assertEqual(e["review"]["keyID"], OFFICIAL, e["id"])
 
-    def test_release_mode_refuses_until_qualified_content_exists(self):
-        with self.assertRaises(hubcore.HubError):
-            build_catalog.build(self.registry, "release", FAKE_COMMIT, REPO, REPO, {})
+    def test_release_build_offers_exactly_the_admitted_entries(self):
+        # Positive current truth: a release build over the integrated tree
+        # carries only the admitted rows, each with real package+review
+        # bindings verified against public-key.json trust.
+        feeds = build_catalog.build(self.registry, "release", FAKE_COMMIT, REPO, REPO, TRUST)
+        ios = json.loads(feeds["catalog.json"])
+        android = json.loads(feeds["android/catalog.json"])
+        self.assertEqual(ios["counts"]["total"], 34)
+        self.assertEqual(android["counts"]["total"], 30)
+        for feed in (ios, android):
+            self.assertEqual(feed["counts"]["offerQualified"], feed["counts"]["total"])
+            for e in feed["entries"]:
+                self.assertEqual(e["installOffer"], "qualified", e["id"])
+                self.assertIsNotNone(e["package"], e["id"])
+                self.assertIsNotNone(e["review"], e["id"])
+                hubcore.validate_catalog(feed, channel=feed["channel"])
+
+    def test_release_mode_refuses_when_nothing_is_admitted(self):
+        # The fail-closed refusal stays meaningful as an explicit fixture:
+        # the same tree with every real admission stripped must refuse.
+        pre_admission = copy.deepcopy(self.registry)
+        for e in pre_admission["skills"]:
+            e["status"] = dict(e["status"], qualified=False)
+        with self.assertRaisesRegex(hubcore.HubError, "refuses to emit an empty catalog"):
+            build_catalog.build(pre_admission, "release", FAKE_COMMIT, REPO, REPO, TRUST)
 
     def test_production_requires_commit_and_schema3(self):
         with self.assertRaises(hubcore.HubError):
             hubcore.build_catalog({"publisher": "x"}, "ios", "production", [], None)
-        feeds = build_catalog.build(self.registry, "preview", FAKE_COMMIT, REPO, REPO, {})
+        feeds = build_catalog.build(self.registry, "preview", FAKE_COMMIT, REPO, REPO, TRUST)
         self.assertEqual(json.loads(feeds["catalog.json"])["schemaVersion"], 3)
 
     def test_old_clients_fail_closed_on_schema3(self):
@@ -122,6 +172,8 @@ class TestQualifiedFeed(unittest.TestCase):
             view = hubcore.catalog_entry(row)
             if row["id"] in hubcore.RESERVED_BUILTIN_IDS:
                 view = qualified_builtin(view)
+            else:
+                view = demote_to_candidate_fixture(view)
             entries.append(view)
         feed = hubcore.build_catalog(registry, "ios", "production", entries, FAKE_COMMIT)
         hubcore.validate_catalog(feed, channel="ios")
@@ -136,7 +188,12 @@ class TestQualifiedFeed(unittest.TestCase):
 
     def test_unqualified_candidate_never_offers_install(self):
         registry = json.loads((REPO / "catalog" / "skills.json").read_bytes())
-        entries = [hubcore.catalog_entry(e) for e in registry["skills"]]
+        # Explicit fixture: rows staged without bindings must also carry no
+        # qualified claim, or the feed validator refuses them (see the
+        # negative test just below).
+        entries = [demote_to_candidate_fixture(hubcore.catalog_entry(e))
+                   for e in registry["skills"]
+                   if e["id"] not in hubcore.RESERVED_BUILTIN_IDS]
         feed = hubcore.build_catalog(registry, "ios", "production", entries, FAKE_COMMIT)
         self.assertTrue(all(e["installOffer"] == "none" for e in feed["entries"]))
 
@@ -269,8 +326,12 @@ class TestImmutability(unittest.TestCase):
 
 class TestFixtureBoundary(unittest.TestCase):
     def test_fixture_files_stay_under_tests_catalog_fixtures(self):
+        # packages/** and reviews/** are now canonical admitted data (signed
+        # review epoch); what must NOT exist before the coordinator's
+        # publication run are the production channel feeds and their sigs.
         for production in (REPO / "catalog.json", REPO / "catalog.sig",
-                           REPO / "android", REPO / "packages", REPO / "reviews"):
+                           REPO / "android" / "catalog.json",
+                           REPO / "android" / "catalog.sig"):
             self.assertFalse(production.exists(), f"production path claimed: {production}")
 
     def test_fixture_identity_is_unmistakable(self):

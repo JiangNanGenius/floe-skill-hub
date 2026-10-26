@@ -149,7 +149,21 @@ commit.
 
 The legacy `skill-hub/` pipeline in the App repository and its workflow are
 untouched and keep their own key handling. This bridge shares ONLY the key
-encoding and envelope shape. All 43 registry entries remain unqualified in
-the repository today; using this bridge to sign anything requires the
-content lanes and the repository owner to advance actual review, packaging,
-guest qualification and the launch gate first.
+encoding and envelope shape. The bridge has now run for real in reviews mode:
+the first production signing run (workflow run 40316068787) signed exactly the
+43 canonical review records staged at source revision
+`0d590bc3d4e17f7559aef2dcdb508d92417488b5` under the official trust key
+`official-2026-09` with tooling pinned at
+`647d8a7e59c8020d297a01a8c42382bcde46fb2c`; the signed pair
+`signing-receipt.json(+.sig)` is retained unmodified under
+`docs/provenance/review-signing-run-40316068787/` and every record and
+signature in this repository re-verifies against `public-key.json`. With
+those signatures verified, the registry admits 34 qualified entries — the 32
+guide-only rows holding static-content-reviewed approvals plus the 2 rows
+(citation-management, sympy) holding genuine guest receipts, which alone carry
+`executionVerified`; the other 9 scripted rows, including all nine mandatory
+deep adaptations, stay unqualified and unproven. No production channel feed
+has been signed or published: the unchanged catalog-mode launch gate still
+requires at least 40 unique qualified iOS offers and all nine mandatory deep
+IDs in both feeds, and today's admitted state is honestly refused by that
+gate.

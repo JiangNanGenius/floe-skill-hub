@@ -316,7 +316,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/doc-coauthoring.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "Two pens frame a shared manuscript and outline.",
+          "zh-Hans": "两支笔围绕共同修订的文稿与提纲。"
+        },
+        "caption": {
+          "en": "Concept illustration for document collaboration.",
+          "zh-Hans": "文档协作用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "internal-comms": {
@@ -360,7 +375,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/internal-comms.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "A megaphone distributes concise announcement cards.",
+          "zh-Hans": "扩音器把简洁公告传向消息卡片。"
+        },
+        "caption": {
+          "en": "Concept illustration for internal communications.",
+          "zh-Hans": "内部沟通用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "writing-guidelines": {
@@ -404,7 +434,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/writing-guidelines.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "A ruler and checklist align a technical manuscript.",
+          "zh-Hans": "标尺与检查清单对照技术文稿。"
+        },
+        "caption": {
+          "en": "Concept illustration for technical writing review.",
+          "zh-Hans": "技术写作检查用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "copywriting": {
@@ -448,7 +493,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/copywriting.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "A pencil shapes a headline beneath a small spotlight.",
+          "zh-Hans": "铅笔在小聚光灯下写出醒目的标题。"
+        },
+        "caption": {
+          "en": "Concept illustration for website copywriting.",
+          "zh-Hans": "网站文案用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "copy-editing": {
@@ -492,7 +552,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/copy-editing.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "A draft is revised with editing marks and a precision pencil.",
+          "zh-Hans": "用校订标记与细笔修正文稿。"
+        },
+        "caption": {
+          "en": "Concept illustration for copy editing.",
+          "zh-Hans": "文案校订用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "content-production": {
@@ -536,7 +611,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/content-production.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "A pen unfolds paper into an outline and developed chapters.",
+          "zh-Hans": "笔尖展开纸带，形成提纲与完整章节。"
+        },
+        "caption": {
+          "en": "Concept illustration for long-form content creation.",
+          "zh-Hans": "长文创作用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "social-content": {
@@ -580,7 +670,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/social-content.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "Varied editorial cards stand behind a content calendar.",
+          "zh-Hans": "不同版式的内容卡片排列在排期日历后。"
+        },
+        "caption": {
+          "en": "Concept illustration for social content planning.",
+          "zh-Hans": "社媒内容用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "floe-email-drafting": {
@@ -624,7 +729,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/floe-email-drafting.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "A draft letter rests in an open envelope beside a pen.",
+          "zh-Hans": "起草好的信纸放在开口信封中，旁边是一支笔。"
+        },
+        "caption": {
+          "en": "Concept illustration for email drafting.",
+          "zh-Hans": "邮件起草用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "deep-research": {
@@ -668,7 +788,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/deep-research.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "A desk lamp illuminates linked source papers and research notes.",
+          "zh-Hans": "台灯照亮来源文献与相互对应的研究笔记。"
+        },
+        "caption": {
+          "en": "Concept illustration for deep research.",
+          "zh-Hans": "深度研究用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "deepread": {
@@ -712,7 +847,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/deepread.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "A reading lens focuses on a highlighted passage in an open book.",
+          "zh-Hans": "阅读镜聚焦展开书页中的高亮段落。"
+        },
+        "caption": {
+          "en": "Concept illustration for close reading.",
+          "zh-Hans": "深度阅读用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "literature-review": {
@@ -756,7 +906,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/literature-review.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "Tabbed reference volumes surround a comparative review notebook.",
+          "zh-Hans": "带标签的参考书围绕记录对照内容的综述笔记。"
+        },
+        "caption": {
+          "en": "Concept illustration for literature review.",
+          "zh-Hans": "文献综述用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "citation-management": {
@@ -800,7 +965,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/citation-management.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "Linked bibliographic cards are arranged in a compact file.",
+          "zh-Hans": "相互关联的引用卡片整齐放入索引盒。"
+        },
+        "caption": {
+          "en": "Concept illustration for citation management.",
+          "zh-Hans": "引用管理用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "scientific-critical-thinking": {
@@ -844,7 +1024,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/scientific-critical-thinking.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "A balance scale weighs a research claim against evidence blocks.",
+          "zh-Hans": "天平将研究文稿与证据块作对照。"
+        },
+        "caption": {
+          "en": "Concept illustration for evidence assessment.",
+          "zh-Hans": "证据评估用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "research-summarizer": {
@@ -888,7 +1083,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/research-summarizer.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "Highlighted source passages connect to a concise summary card.",
+          "zh-Hans": "来源材料中的重点对应到一张简洁摘要卡。"
+        },
+        "caption": {
+          "en": "Concept illustration for research summarization.",
+          "zh-Hans": "研究摘要用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "exploratory-data-analysis": {
@@ -991,7 +1201,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/statistical-analysis.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "A caliper examines a distribution model beside sample points.",
+          "zh-Hans": "卡尺检查分布模型，旁边是概念样本点。"
+        },
+        "caption": {
+          "en": "Concept illustration for statistical analysis.",
+          "zh-Hans": "统计分析用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "scientific-visualization": {
@@ -1035,7 +1260,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/scientific-visualization.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "Conceptual scatter, uncertainty and bar plots are printed on paper.",
+          "zh-Hans": "纸面展示散点、不确定性带与柱形图的概念图形。"
+        },
+        "caption": {
+          "en": "Concept illustration for scientific visualization.",
+          "zh-Hans": "数据可视化用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "markitdown": {
@@ -1138,7 +1378,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/sympy.jpg",
+        "kind": "illustration",
+        "alt": {
+          "en": "Integral and equals symbols stand above a mathematics notebook.",
+          "zh-Hans": "积分与等号符号立在数学笔记本上方。"
+        },
+        "caption": {
+          "en": "Concept illustration for symbolic mathematics.",
+          "zh-Hans": "符号数学用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        }
+      },
       "gallery": []
     },
     "impeccable": {
@@ -1258,7 +1513,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "Concentric paper ribbons form a violet and cyan generative sculpture.",
+          "zh-Hans": "紫青色同心纸带组成有韵律的生成艺术雕塑。"
+        },
+        "caption": {
+          "en": "Concept illustration for generative art.",
+          "zh-Hans": "生成艺术用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/algorithmic-art.jpg"
+      },
       "gallery": []
     },
     "canvas-design": {
@@ -1302,7 +1572,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "Abstract poster layouts with a set square and drawing pencil.",
+          "zh-Hans": "抽象海报版式旁放着三角尺和绘图铅笔。"
+        },
+        "caption": {
+          "en": "Concept illustration for graphic layout design.",
+          "zh-Hans": "平面视觉设计用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/canvas-design.jpg"
+      },
       "gallery": []
     },
     "theme-factory": {
@@ -1346,7 +1631,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "path": "showcase/media/covers/theme-factory.png",
+        "kind": "example-output",
+        "alt": {
+          "en": "Ocean Depths theme with color palette and typography samples.",
+          "zh-Hans": "Ocean Depths 主题的配色与字体样例。"
+        },
+        "caption": {
+          "en": "Ocean Depths palette and type sample from the upstream showcase.",
+          "zh-Hans": "上游样例中的 Ocean Depths 配色与字体。"
+        },
+        "credit": {
+          "en": "Theme Factory official example by anthropics/skills · Apache-2.0.",
+          "zh-Hans": "anthropics/skills 的 Theme Factory 官方样例 · Apache-2.0。"
+        }
+      },
       "gallery": []
     },
     "ui-design-system": {
@@ -1390,7 +1690,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "A tactile kit of interface components and a spacing ruler.",
+          "zh-Hans": "界面组件与间距尺组成可复用的设计套件。"
+        },
+        "caption": {
+          "en": "Concept illustration for ui design systems.",
+          "zh-Hans": "UI设计系统用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/ui-design-system.jpg"
+      },
       "gallery": []
     },
     "ux-researcher-designer": {
@@ -1434,7 +1749,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "Conversation cards surround a user research notebook and magnifying lens.",
+          "zh-Hans": "访谈卡片围绕用户研究笔记与放大镜。"
+        },
+        "caption": {
+          "en": "Concept illustration for user experience research.",
+          "zh-Hans": "用户体验研究用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/ux-researcher-designer.jpg"
+      },
       "gallery": []
     },
     "react-best-practices": {
@@ -1478,7 +1808,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "A smooth cyan ribbon passes through a tuned modular component arch.",
+          "zh-Hans": "青色流线穿过经过调优的模块组件拱架。"
+        },
+        "caption": {
+          "en": "Concept illustration for react best practices.",
+          "zh-Hans": "React最佳实践用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/react-best-practices.jpg"
+      },
       "gallery": []
     },
     "composition-patterns": {
@@ -1522,7 +1867,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "A cyan module fits into a matching component assembly.",
+          "zh-Hans": "青色模块与对应的组件结构相互组合。"
+        },
+        "caption": {
+          "en": "Concept illustration for component composition.",
+          "zh-Hans": "组件组合用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/composition-patterns.jpg"
+      },
       "gallery": []
     },
     "web-design-guidelines": {
@@ -1566,7 +1926,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "Layout guides, a set square and checklist review a page composition.",
+          "zh-Hans": "版式参考线、三角尺与清单用于检查网页布局。"
+        },
+        "caption": {
+          "en": "Concept illustration for web design review.",
+          "zh-Hans": "网页设计检查用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/web-design-guidelines.jpg"
+      },
       "gallery": []
     },
     "webapp-testing": {
@@ -1610,7 +1985,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "A pointer tests a conceptual browser card beside a check token.",
+          "zh-Hans": "指针检查抽象网页卡片，旁边放着检查标记。"
+        },
+        "caption": {
+          "en": "Concept illustration for web application testing.",
+          "zh-Hans": "Web应用测试用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/webapp-testing.jpg"
+      },
       "gallery": []
     },
     "a11y-audit": {
@@ -1654,7 +2044,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "A highlighted keyboard focus and accessibility figure represent inclusive interaction.",
+          "zh-Hans": "键盘焦点与可访问性人形标记表示包容的交互方式。"
+        },
+        "caption": {
+          "en": "Concept illustration for accessibility review.",
+          "zh-Hans": "可访问性检查用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/a11y-audit.jpg"
+      },
       "gallery": []
     },
     "systematic-debugging": {
@@ -1698,7 +2103,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "A magnifying glass isolates one component of a mechanical assembly.",
+          "zh-Hans": "放大镜从机械结构中定位一个待检查部件。"
+        },
+        "caption": {
+          "en": "Concept illustration for systematic debugging.",
+          "zh-Hans": "系统化调试用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/systematic-debugging.jpg"
+      },
       "gallery": []
     },
     "test-driven-development": {
@@ -1742,7 +2162,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "Failing and passing test tiles accompany a component and wrench.",
+          "zh-Hans": "失败与通过测试卡片围绕组件与扳手。"
+        },
+        "caption": {
+          "en": "Concept illustration for test-driven development.",
+          "zh-Hans": "测试驱动开发用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/test-driven-development.jpg"
+      },
       "gallery": []
     },
     "requesting-code-review": {
@@ -1786,7 +2221,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "A pencil reviews a highlighted change on abstract code sheets.",
+          "zh-Hans": "铅笔检查抽象代码页上高亮的一处改动。"
+        },
+        "caption": {
+          "en": "Concept illustration for code review.",
+          "zh-Hans": "代码评审用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/requesting-code-review.jpg"
+      },
       "gallery": []
     },
     "product-manager-toolkit": {
@@ -1830,7 +2280,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "A planning tray holds a roadmap, priority cards and decision notebook.",
+          "zh-Hans": "规划托盘里放着路线图、优先级卡片与决策笔记。"
+        },
+        "caption": {
+          "en": "Concept illustration for product planning toolkit.",
+          "zh-Hans": "产品经理工具箱用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/product-manager-toolkit.jpg"
+      },
       "gallery": []
     },
     "product-discovery": {
@@ -1874,7 +2339,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "A notebook, hypothesis cards and magnified evidence token suggest product experiments.",
+          "zh-Hans": "笔记、假设卡片与放大的证据标记表示产品探索实验。"
+        },
+        "caption": {
+          "en": "Concept illustration for product discovery.",
+          "zh-Hans": "产品探索用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/product-discovery.jpg"
+      },
       "gallery": []
     },
     "code-to-prd": {
@@ -1918,7 +2398,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "A source folder connects to a structured requirements booklet.",
+          "zh-Hans": "源码文件夹连接到结构清楚的需求说明册。"
+        },
+        "caption": {
+          "en": "Concept illustration for code-to-requirements documentation.",
+          "zh-Hans": "代码转需求说明用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/code-to-prd.jpg"
+      },
       "gallery": []
     },
     "meetings": {
@@ -1962,7 +2457,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "A microphone and conversation cards accompany an action-item notebook.",
+          "zh-Hans": "麦克风与讨论卡片旁放着行动项笔记。"
+        },
+        "caption": {
+          "en": "Concept illustration for meeting minutes.",
+          "zh-Hans": "会议纪要用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/meetings.jpg"
+      },
       "gallery": []
     },
     "floe-file-organizer": {
@@ -2006,7 +2516,22 @@
           }
         }
       ],
-      "cover": null,
+      "cover": {
+        "kind": "illustration",
+        "alt": {
+          "en": "Grouped folders and papers sit in a tray beside a recovery arrow.",
+          "zh-Hans": "分类文件夹与纸张放入托盘，旁边是恢复箭头。"
+        },
+        "caption": {
+          "en": "Concept illustration for file organization.",
+          "zh-Hans": "文件整理用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "path": "showcase/media/covers/floe-file-organizer.jpg"
+      },
       "gallery": []
     },
     "floe-invoice-organizer": {

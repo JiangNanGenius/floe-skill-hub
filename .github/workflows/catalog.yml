@@ -67,14 +67,83 @@ jobs:
         run: python3 scripts/check_catalog.py
       - name: Behaviour tests
         run: python3 -m unittest discover -s tests/catalog -t tests/catalog -v
-      - name: Release mode must still refuse with zero qualified entries
+      - name: Admission follows the unchanged launch gate (read-only, in-memory)
         run: |
-          # the CI checkout IS the frozen fetch of github.sha, so --source-snapshot .
-          # is the honest audited-source binding for this refusal probe
-          if python3 scripts/build_catalog.py --mode release --source-commit "${{ github.sha }}" --source-snapshot . >/dev/null 2>&1; then
-            echo "release mode must fail closed until the coordinator qualifies content" >&2
-            exit 1
-          fi
+          # Check the current admission set without freezing today's counts.
+          # Incomplete admission must fail at the precise unchanged gate;
+          # complete admission may pass this in-memory check, never publish.
+          # An explicit zero-qualified fixture must always refuse release.
+          python3 - <<'PY'
+          import json, pathlib, sys
+          from types import SimpleNamespace
+          sys.path.insert(0, "scripts")
+          sys.path.insert(0, "tests/catalog")
+          import hubcore, build_catalog, sign_publication, runtime_dependency
+          import fixture_status
+          root = pathlib.Path(".")
+          registry = hubcore.validate_registry(
+              json.loads((root / "catalog" / "skills.json").read_bytes()))
+          trust = build_catalog.load_trust(root)
+          outputs = build_catalog.build(registry, "release", "${{ github.sha }}",
+                                        root, root, trust)
+          ios = json.loads(outputs["catalog.json"])
+          android = json.loads(outputs["android/catalog.json"])
+          expected = {
+              channel: {entry["id"] for entry in registry["skills"]
+                        if entry["status"]["qualified"]
+                        and channel in entry["plannedRuntime"]["installPlatforms"]}
+              for channel in ("ios", "android")
+          }
+          for channel, feed in (("ios", ios), ("android", android)):
+              ids = [entry["id"] for entry in feed["entries"]]
+              if set(ids) != expected[channel] or len(ids) != len(expected[channel]):
+                  raise SystemExit(f"{channel}: release offers must match qualified registry rows")
+              if feed["counts"]["total"] != len(ids):
+                  raise SystemExit(f"{channel}: release counts disagree with actual offers")
+          expected_refusal = None
+          if len(expected["ios"]) < sign_publication.MIN_QUALIFIED_UNIQUE:
+              expected_refusal = (
+                  f"launch gate: at least {sign_publication.MIN_QUALIFIED_UNIQUE} unique "
+                  f"qualified iOS offers are required, feed carries {len(expected['ios'])}")
+          else:
+              for channel, label in (("ios", "iOS"), ("android", "Android")):
+                  missing = sign_publication.MANDATORY_DEEP_IDS - expected[channel]
+                  if missing:
+                      expected_refusal = (
+                          "launch gate: pinned mandatory deep adaptations are missing "
+                          f"from the {label} feed: " + ", ".join(sorted(missing)))
+                      break
+          args = SimpleNamespace(data=str(root), source_commit="${{ github.sha }}")
+          try:
+              sign_publication.enforce_launch_gate(
+                  hubcore, runtime_dependency, args, registry, outputs)
+          except sign_publication.SigningError as error:
+              reason = str(error)
+              if reason != expected_refusal:
+                  raise SystemExit(f"launch gate refused for an unexpected reason: {reason}")
+              print(f"launch gate refuses incomplete admission as required: {reason}")
+          else:
+              if expected_refusal is not None:
+                  raise SystemExit(f"launch gate failed to refuse: {expected_refusal}")
+              print("complete admission passed the unchanged launch gate; no publication performed")
+          stripped = fixture_status.stage_unadmitted_fixture(registry)
+          try:
+              build_catalog.build(stripped, "release", "${{ github.sha }}",
+                                  root, root, trust)
+          except hubcore.HubError as error:
+              reason = str(error)
+              if "refuses to emit an empty catalog" not in reason:
+                  raise SystemExit(f"empty-catalog refusal changed: {reason}")
+              print(f"explicit zero-qualified fixture still fails closed: {reason}")
+          else:
+              raise SystemExit("a zero-qualified fixture registry must never build "
+                               "a release catalog")
+          # nothing above wrote catalog.json/catalog.sig anywhere
+          for forbidden in ("catalog.json", "catalog.sig",
+                           "android/catalog.json", "android/catalog.sig"):
+              if (root / forbidden).exists():
+                  raise SystemExit(f"probe must not create live publication path: {forbidden}")
+          PY
       - name: Clean up regenerable build output
         if: always()
         run: rm -rf .build

@@ -27,6 +27,7 @@ import unittest
 HERE = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(HERE / "scripts"))
 import hubcore  # noqa: E402
+import fixture_status  # noqa: E402
 
 OFFICIAL_ORIGIN = "https://github.com/JiangNanGenius/floe-skill-hub.git"
 KEY_ID = hubcore.PRODUCTION_KEY_ID
@@ -62,7 +63,11 @@ REAL_REGISTRY = json.loads((HERE / "catalog" / "skills.json").read_bytes())
 
 
 def base_registry():
-    return copy.deepcopy(REAL_REGISTRY)
+    # Temp-tree bridge fixtures stage only their own synthetic qualified rows;
+    # every copied real row is explicitly demoted to the unadmitted fixture
+    # state (see tests/catalog/fixture_status.py). The repository registry is
+    # never touched and no gate is weakened.
+    return fixture_status.stage_unadmitted_fixture(REAL_REGISTRY)
 
 
 def _git(where, *args):
