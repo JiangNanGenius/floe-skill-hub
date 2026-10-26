@@ -363,7 +363,10 @@ DEPENDENCIES_SCHEMA = {
         "schemaVersion": {
             "type": "integer",
             "const": dependency_declaration.SCHEMA_VERSION,
-            "description": "Parser compatibility version only; exactly 1. Not the "
+            "description": "Parser compatibility version only; the literal JSON "
+                           "integer 1 (the authoritative native decoder also parses "
+                           "integral numbers such as 1.0; authors must write the "
+                           "integer — documented safe-authoring subset). Not the "
                            "Skill package version (floe.json id/version stays the "
                            "single package authority).",
         },
@@ -380,7 +383,12 @@ DEPENDENCIES_SCHEMA = {
                 "required": ["id", "target", "requirements"],
                 "properties": {
                     "id": {"type": "string", "pattern": dependency_declaration.PROFILE_ID.pattern,
-                           "description": "Unique profile slug (SkillIdentifier grammar)."},
+                           "description": "Unique profile slug (ASCII SkillIdentifier "
+                                          "grammar: lowercase/digit/'-', letter start, no "
+                                          "--/trailing dash; the authoritative native "
+                                          "decoder also parses Unicode lowercase letter "
+                                          "and numeral ids — authors must not rely on "
+                                          "that, documented safe-authoring subset)."},
                     "target": {
                         "type": "object",
                         "additionalProperties": False,
@@ -408,33 +416,45 @@ DEPENDENCIES_SCHEMA = {
                     "description": "PyPI distribution name; extras, ranges, URLs, paths "
                                    "and VCS references are rejected."},
         "pipVersion": {"type": "string",
-                       "pattern": f"^{dependency_declaration.PIP_VERSION.pattern}$",
+                       "pattern": f"^(?=.*[0-9]){dependency_declaration.PIP_VERSION.pattern}$",
                        "description": "One exact PEP 440 version tail ([A-Za-z0-9.*+!_-]*, "
-                                      "epoch/local markers verbatim, no operators/ranges)."},
+                                      "epoch/local markers verbatim, no operators/ranges) "
+                                      "carrying at least one ASCII digit: floating aliases "
+                                      "(latest, stable) are refused by the native decoder."},
         "aptName": {"type": "string", "pattern": f"^{dependency_declaration.APT_NAME.pattern}$",
                     "description": "Debian source package identity."},
         "aptVersion": {"type": "string",
-                       "pattern": f"^(?:[0-9]+:)?{dependency_declaration.APT_VERSION_BODY.pattern}$",
-                       "description": "Exact Debian version, epoch preserved; "
+                       "pattern": (f"^(?:[0-9]+:)?(?=[A-Za-z0-9+~:.+-]*[0-9])"
+                                   f"{dependency_declaration.APT_VERSION_BODY.pattern}$"),
+                       "description": "Exact Debian version, epoch preserved; the body AFTER "
+                                      "the epoch carries at least one ASCII digit ('latest', "
+                                      "'1:latest' are refused by the native decoder); "
                                       "+dfsg/-rev/+tilde/repack suffixes stay part of the pin."},
         "fontVersion": {"type": "string",
-                        "pattern": f"^(?:[0-9]+:)?{dependency_declaration.APT_VERSION_BODY.pattern}$",
+                        "pattern": (f"^(?:[0-9]+:)?(?=[A-Za-z0-9+~:.+-]*[0-9])"
+                                    f"{dependency_declaration.APT_VERSION_BODY.pattern}$"),
                         "description": "Same exact Debian version class as the apt kind."},
         "npmName": {"type": "string", "pattern": f"^{dependency_declaration.NPM_NAME.pattern}$",
                     "description": "npm name, optionally @scope/ scoped."},
         "npmVersion": {"type": "string", "maxLength": 64,
                        "pattern": r"^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$",
                        "description": "Exact semver X.Y.Z with optional prerelease tail; "
-                                      "'+' build metadata is rejected, matching the native decoder."},
+                                      "'+' build metadata is rejected, matching the native "
+                                      "decoder. This document and the producer gate also "
+                                      "refuse a leading-dash core that the native split() "
+                                      "happens to tolerate (documented safe-authoring subset)."},
         "fontIdentity": {"type": "string",
-                         "pattern": f"^{dependency_declaration.FONT_IDENTITY.pattern}$",
-                         "description": "Exactly one Debian font package identity "
-                                        "(fonts- prefix)."},
-        "lockfile": {"type": "string",
-                     "pattern": r"^references/[A-Za-z0-9._/-]{1,255}\.txt$",
-                     "not": {"pattern": r"\.\."},
-                     "description": "Package-local lock reference (pip kind only). Its bytes "
-                                    "are covered by the package contentDigest."},
+                         "pattern": dependency_declaration.FONT_IDENTITY_PATTERN,
+                         "description": "Exactly one Debian font package identity: the "
+                                        "fonts- prefix over the WHOLE Debian identity "
+                                        "grammar (total <= 128 bytes, prefix included)."},
+        "lockfile": {"type": "string", "maxLength": 256,
+                     "pattern": r"^references/(?:[A-Za-z0-9._-]+/)*[A-Za-z0-9._-]+\.txt$",
+                     "not": {"pattern": r"(^|/)\.{1,2}(/|$)"},
+                     "description": "Package-local lock reference (pip kind only): ASCII "
+                                    "path segments, no empty/./.. segments, total <= 256 "
+                                    "bytes, .txt suffix. Its bytes are covered by the "
+                                    "package contentDigest."},
         "componentDescriptorPath": {"const": dependency_declaration.COMPONENT_DESCRIPTOR_REL,
                                     "description": "The frozen runtime-component descriptor "
                                                    "path; identity/version/digest come only from "
@@ -444,8 +464,12 @@ DEPENDENCIES_SCHEMA = {
         "purpose": {"type": "string", "minLength": 1,
                     "maxLength": dependency_declaration.MAX_PURPOSE_BYTES,
                     "description": "1-200 bytes of model-safe text; no leading/trailing "
-                                   "whitespace and no control characters (native decoder "
-                                   "rules beyond this document)."},
+                                   "whitespace and no control characters. This machine "
+                                   "document is an approximation: the producer gate (and "
+                                   "the authoritative native decoder) bound UTF-8 BYTES "
+                                   "(maxLength counts characters here), refuse Unicode "
+                                   "categories Cc and Cf (Foundation controlCharacters, "
+                                   "probe-verified) and refuse edge whitespace."},
         "required": {"type": "boolean",
                      "description": "true gates that skill's dependency-aware exec.shell "
                                     "invocation until the requirement is verified ready."},

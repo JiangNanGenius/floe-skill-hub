@@ -13,7 +13,7 @@
     "schemaVersion": {
       "type": "integer",
       "const": 1,
-      "description": "Parser compatibility version only; exactly 1. Not the Skill package version (floe.json id/version stays the single package authority)."
+      "description": "Parser compatibility version only; the literal JSON integer 1 (the authoritative native decoder also parses integral numbers such as 1.0; authors must write the integer — documented safe-authoring subset). Not the Skill package version (floe.json id/version stays the single package authority)."
     },
     "profiles": {
       "type": "array",
@@ -32,7 +32,7 @@
           "id": {
             "type": "string",
             "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
-            "description": "Unique profile slug (SkillIdentifier grammar)."
+            "description": "Unique profile slug (ASCII SkillIdentifier grammar: lowercase/digit/'-', letter start, no --/trailing dash; the authoritative native decoder also parses Unicode lowercase letter and numeral ids — authors must not rely on that, documented safe-authoring subset)."
           },
           "target": {
             "type": "object",
@@ -233,8 +233,8 @@
     },
     "pipVersion": {
       "type": "string",
-      "pattern": "^[A-Za-z0-9][A-Za-z0-9.*+!_-]{0,127}$",
-      "description": "One exact PEP 440 version tail ([A-Za-z0-9.*+!_-]*, epoch/local markers verbatim, no operators/ranges)."
+      "pattern": "^(?=.*[0-9])[A-Za-z0-9][A-Za-z0-9.*+!_-]{0,127}$",
+      "description": "One exact PEP 440 version tail ([A-Za-z0-9.*+!_-]*, epoch/local markers verbatim, no operators/ranges) carrying at least one ASCII digit: floating aliases (latest, stable) are refused by the native decoder."
     },
     "aptName": {
       "type": "string",
@@ -243,12 +243,12 @@
     },
     "aptVersion": {
       "type": "string",
-      "pattern": "^(?:[0-9]+:)?[A-Za-z0-9][A-Za-z0-9+~:.+-]{0,127}$",
-      "description": "Exact Debian version, epoch preserved; +dfsg/-rev/+tilde/repack suffixes stay part of the pin."
+      "pattern": "^(?:[0-9]+:)?(?=[A-Za-z0-9+~:.+-]*[0-9])[A-Za-z0-9][A-Za-z0-9+~:.+-]{0,127}$",
+      "description": "Exact Debian version, epoch preserved; the body AFTER the epoch carries at least one ASCII digit ('latest', '1:latest' are refused by the native decoder); +dfsg/-rev/+tilde/repack suffixes stay part of the pin."
     },
     "fontVersion": {
       "type": "string",
-      "pattern": "^(?:[0-9]+:)?[A-Za-z0-9][A-Za-z0-9+~:.+-]{0,127}$",
+      "pattern": "^(?:[0-9]+:)?(?=[A-Za-z0-9+~:.+-]*[0-9])[A-Za-z0-9][A-Za-z0-9+~:.+-]{0,127}$",
       "description": "Same exact Debian version class as the apt kind."
     },
     "npmName": {
@@ -260,20 +260,21 @@
       "type": "string",
       "maxLength": 64,
       "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$",
-      "description": "Exact semver X.Y.Z with optional prerelease tail; '+' build metadata is rejected, matching the native decoder."
+      "description": "Exact semver X.Y.Z with optional prerelease tail; '+' build metadata is rejected, matching the native decoder. This document and the producer gate also refuse a leading-dash core that the native split() happens to tolerate (documented safe-authoring subset)."
     },
     "fontIdentity": {
       "type": "string",
-      "pattern": "^fonts-[a-z0-9][a-z0-9+._-]{0,127}$",
-      "description": "Exactly one Debian font package identity (fonts- prefix)."
+      "pattern": "^(?=fonts\\-)[a-z0-9][a-z0-9+._-]{0,127}$",
+      "description": "Exactly one Debian font package identity: the fonts- prefix over the WHOLE Debian identity grammar (total <= 128 bytes, prefix included)."
     },
     "lockfile": {
       "type": "string",
-      "pattern": "^references/[A-Za-z0-9._/-]{1,255}\\.txt$",
+      "maxLength": 256,
+      "pattern": "^references/(?:[A-Za-z0-9._-]+/)*[A-Za-z0-9._-]+\\.txt$",
       "not": {
-        "pattern": "\\.\\."
+        "pattern": "(^|/)\\.{1,2}(/|$)"
       },
-      "description": "Package-local lock reference (pip kind only). Its bytes are covered by the package contentDigest."
+      "description": "Package-local lock reference (pip kind only): ASCII path segments, no empty/./.. segments, total <= 256 bytes, .txt suffix. Its bytes are covered by the package contentDigest."
     },
     "componentDescriptorPath": {
       "const": "references/engine-dependency.json",
@@ -283,7 +284,7 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 200,
-      "description": "1-200 bytes of model-safe text; no leading/trailing whitespace and no control characters (native decoder rules beyond this document)."
+      "description": "1-200 bytes of model-safe text; no leading/trailing whitespace and no control characters. This machine document is an approximation: the producer gate (and the authoritative native decoder) bound UTF-8 BYTES (maxLength counts characters here), refuse Unicode categories Cc and Cf (Foundation controlCharacters, probe-verified) and refuse edge whitespace."
     },
     "required": {
       "type": "boolean",
