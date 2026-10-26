@@ -203,6 +203,7 @@ class BridgeFixture(unittest.TestCase):
         scripts = tooling / "scripts"
         scripts.mkdir(parents=True)
         for name in ("hubcore.py", "build_catalog.py", "runtime_dependency.py",
+                     "dependency_declaration.py", "publication_immutability.py",
                      "sign_publication.py"):
             shutil.copy(HERE / "scripts" / name, scripts / name)
         (tooling / "public-key.json").write_bytes(hubcore.encoded(

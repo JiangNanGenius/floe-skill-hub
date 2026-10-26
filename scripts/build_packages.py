@@ -16,6 +16,7 @@ import pathlib
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import dependency_declaration
 import hubcore
 import runtime_dependency
 
@@ -54,6 +55,13 @@ def build_one(skill_id, entry, check, root=None):
     runtime_blob = files.get(runtime_dependency.EMBEDDED_DESCRIPTOR_REL)
     if runtime_blob is not None:
         runtime_dependency.bind_package_descriptor(runtime_blob, root, skill_id)
+    # Author-contract preflight: a staged references/dependencies.json must
+    # strict-decode exactly like the frozen native decoder (mirror), cross-
+    # validate against this package's file set, and — because a declaration
+    # needs the new native provisioning behavior — the entry's
+    # minimumAppVersion must already be raised to the first capable build.
+    # Packages without a declaration are untouched by this gate.
+    dependency_declaration.assert_declaration_gates(entry, files, skill_id)
     data = hubcore.make_zip(files)
     written = []
     for channel in entry["plannedRuntime"]["installPlatforms"]:

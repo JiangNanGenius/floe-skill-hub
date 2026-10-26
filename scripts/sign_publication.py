@@ -7,7 +7,8 @@ operates on a SEPARATE clean immutable data checkout S/X (``--data``) that
 must be an exact Git snapshot of the official Hub repository
 ``JiangNanGenius/floe-skill-hub`` at the claimed 40-hex commit. It never
 executes, imports, installs or hooks anything from the data checkout: all
-code comes from T (``hubcore``/``build_catalog``/``runtime_dependency``),
+code comes from T (``hubcore``/``build_catalog``/``runtime_dependency``/
+``dependency_declaration``/``publication_immutability``),
 and every Git invocation uses argument lists only (no shell), with system
 and global Git config removed, an empty hooks path, optional locks off,
 inherited Git environment redirects stripped and replacement refs disabled
@@ -76,11 +77,28 @@ Modes (fixed; there is no arbitrary script/command input):
                 ``references/engine-dependency.json`` with the builder-
                 validated frozen descriptor and raw engine bytes staged in
                 the output (omitting the descriptor cannot bypass H6);
-              * a held-back (not yet admitted) mandatory ID no longer blocks
-                unrelated qualified offers. The retired batch rule survives
-                ONLY as informational complete-selection coverage metadata
-                in the gate summary; it can never claim completeness for a
-                partial feed. There is no option that disables any gate.
+               * a held-back (not yet admitted) mandatory ID no longer blocks
+                 unrelated qualified offers. The retired batch rule survives
+                 ONLY as informational complete-selection coverage metadata
+                 in the gate summary; it can never claim completeness for a
+                 partial feed. There is no option that disables any gate.
+            BEFORE any signing, the bridge additionally enforces
+            publication-history immutability through the trusted-T
+            ``publication_immutability`` module: the cumulative publication
+            ledger at T (exactly ``catalog/publication-ledger.json``) plus
+            the current publication independently resolved by the workflow
+            and supplied through mandatory ``--published-y`` form the
+            verified baseline, with every
+            ledger row re-verified against the signed feed bytes at its
+            pinned publication commit. The baseline is read ONLY from T,
+            never from the data checkout X (whose registry, ledger and reviews
+            are caller-replaceable), and a candidate feed reusing an already
+            published ``(channel, id, version)`` with a different
+            ``contentDigest`` is refused even though this bridge could sign
+            the new bytes. Production history without a ledger, a ledger row
+            that fails verification, or a stale ledger that does not cover
+            the currently published offers fail closed; there is no
+            first-publication downgrade once history exists.
            The two canonical channel feeds are then signed with the
            production identity and written together with EXACTLY the
            feed-referenced package archives and signed review records
@@ -851,7 +869,8 @@ def stage_referenced_inputs(hubcore, args, outputs, trust, files):
 
 
 def run_catalog_mode(args, hubcore, build_catalog, runtime_dependency,
-                     tooling_info, data_info, out_root):
+                     tooling_info, data_info, out_root, publication_immutability,
+                     tooling_root):
     registry_path = pathlib.Path(args.data) / "catalog" / "skills.json"
     if not registry_path.is_file():
         raise SigningError("data snapshot has no catalog/skills.json")
@@ -874,6 +893,46 @@ def run_catalog_mode(args, hubcore, build_catalog, runtime_dependency,
                                       pathlib.Path(args.data), trust)
     except hubcore.HubError as error:
         raise SigningError(f"trusted release builder refused: {error}") from None
+
+    # Publication-history immutability, enforced here in the ACTUAL trusted
+    # signer path (never only in a CLI wrapper): the baseline comes from the
+    # trusted tooling root T — the verified cumulative ledger plus the
+    # currently published feed pairs — and never from the caller's data
+    # checkout X. A candidate offer reusing an already-published
+    # (channel, id, version) with a different contentDigest is refused BEFORE
+    # any signature is produced, even though this bridge could sign the new
+    # bytes.
+    try:
+        # The baseline ledger must live INSIDE the trusted tooling root: a
+        # ledger supplied from the data checkout X (or anywhere else) is
+        # caller-replaceable and could omit historical rows, which the
+        # coverage rule alone cannot detect for versions already removed from
+        # the latest feed.
+        ledger_override = getattr(args, "publication_ledger", None)
+        ledger_path = (pathlib.Path(ledger_override).resolve() if ledger_override
+                       else (tooling_root / publication_immutability.LEDGER_REL).resolve())
+        canonical_ledger = (tooling_root / publication_immutability.LEDGER_REL).resolve()
+        if ledger_path != canonical_ledger:
+            raise SigningError(
+                "the publication ledger must use its canonical path inside the trusted tooling "
+                "root; refusing an alternate or caller-supplied baseline input")
+        published_y = getattr(args, "published_y", None)
+        has_history = ledger_path.is_file() or any(
+            (tooling_root / rel).exists()
+            for _channel, feed, signature in publication_immutability.FEED_PAIRS
+            for rel in (feed, signature))
+        if has_history and published_y is None:
+            raise SigningError(
+                "catalog signing with publication history requires --published-y "
+                "resolved independently from the live publication ref; the frozen "
+                "tooling tree cannot stand in for the current published baseline")
+        baseline_provenance = {}
+        baseline = publication_immutability.build_validated_baseline(
+            tooling_root, ledger_path, published_y,
+            baseline_provenance)
+        publication_immutability.assert_immutable_publication(outputs, baseline)
+    except hubcore.HubError as error:
+        raise SigningError(f"publication immutability gate refused: {error}") from None
 
     gate = enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs)
 
@@ -906,6 +965,7 @@ def run_catalog_mode(args, hubcore, build_catalog, runtime_dependency,
         "toolingTree": tooling_info["tree"],
         "keyID": hubcore.PRODUCTION_KEY_ID,
         "launchGate": gate,
+        "publicationBaseline": baseline_provenance,
         "signedFeeds": sorted(signatures),
         "outputs": [{"path": name, "sha256": hubcore.sha256_hex(files[name]),
                      "size": len(files[name])} for name in sorted(files)],
@@ -938,6 +998,16 @@ def main():
                         help="fresh output directory outside the data and tooling roots")
     parser.add_argument("--tooling", default=None,
                         help="trusted tooling root (defaults to this script's checkout)")
+    parser.add_argument("--publication-ledger", default=None,
+                        help="canonical cumulative publication ledger inside the trusted tooling "
+                             "root (default <tooling>/catalog/publication-ledger.json); "
+                             "an alternate path is refused")
+    parser.add_argument("--published-y", default=None,
+                        help="independently resolved 40-hex publication commit Y that "
+                             "carries the current published feeds; the immutability "
+                             "baseline is then anchored to that pin instead of the "
+                             "tooling working tree, so an older tooling checkout can "
+                             "never hide already-published history")
     args = parser.parse_args()
 
     if not COMMIT_RE.fullmatch(args.source_commit):
@@ -949,7 +1019,8 @@ def main():
         _die("--tooling is not a real directory")
     tooling_scripts = pathlib.Path(
         os.path.realpath(str(tooling_root / "scripts")))
-    for required_module in ("hubcore.py", "build_catalog.py", "runtime_dependency.py"):
+    for required_module in ("hubcore.py", "build_catalog.py", "runtime_dependency.py",
+                            "dependency_declaration.py", "publication_immutability.py"):
         if not (tooling_scripts / required_module).is_file():
             _die(f"trusted tooling is incomplete: scripts/{required_module} is missing")
 
@@ -965,12 +1036,16 @@ def main():
     sys.path = [str(tooling_scripts)] + [
         p for p in sys.path
         if p and not _is_under(pathlib.Path(os.path.realpath(p)), data_real)]
-    for name in ("hubcore", "build_catalog", "runtime_dependency"):
+    for name in ("hubcore", "build_catalog", "runtime_dependency",
+                 "dependency_declaration", "publication_immutability"):
         sys.modules.pop(name, None)
     import hubcore  # noqa: E402  (trusted T import, path-scrubbed above)
     import build_catalog  # noqa: E402
     import runtime_dependency  # noqa: E402
-    for module in (hubcore, build_catalog, runtime_dependency):
+    import dependency_declaration  # noqa: E402
+    import publication_immutability  # noqa: E402
+    for module in (hubcore, build_catalog, runtime_dependency,
+                   dependency_declaration, publication_immutability):
         module_file = pathlib.Path(module.__file__).resolve()
         if not _is_under(module_file, pathlib.Path(str(tooling_scripts))):
             _die(f"imported module resolves outside trusted tooling: {module.__name__}")
@@ -985,7 +1060,8 @@ def main():
                          tooling_info, data_info, out_root)
     else:
         run_catalog_mode(args, hubcore, build_catalog, runtime_dependency,
-                         tooling_info, data_info, out_root)
+                         tooling_info, data_info, out_root,
+                         publication_immutability, tooling_root)
 
 
 if __name__ == "__main__":

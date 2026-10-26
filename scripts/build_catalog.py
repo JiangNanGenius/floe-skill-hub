@@ -47,7 +47,9 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
+import dependency_declaration
 import hubcore
+import publication_immutability
 import runtime_dependency
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
@@ -124,6 +126,11 @@ def bind_package(entry, packages_root):
     runtime_blob = files.get(runtime_dependency.EMBEDDED_DESCRIPTOR_REL)
     if runtime_blob is not None:
         runtime_dependency.bind_package_descriptor(runtime_blob, packages_root, entry["id"])
+    # Re-run the author-contract preflight on the exact frozen bytes this
+    # release would publish (never trust the producer's earlier pass): a
+    # declaration must still mirror the native decoder and the entry must
+    # carry the raised minimumAppVersion for the new native behavior.
+    dependency_declaration.assert_declaration_gates(entry, files, entry["id"])
     return bindings, manifest, files
 
 
@@ -261,6 +268,16 @@ def main():
                              "read ONLY from this snapshot, so the claimed X honestly binds "
                              "the payload inputs instead of the mutable candidate tree")
     parser.add_argument("--check", action="store_true")
+    parser.add_argument("--publication-ledger", default=None,
+                        help="cumulative publication ledger (default "
+                             "catalog/publication-ledger.json under the tooling "
+                             "root); mandatory once production history exists")
+    parser.add_argument("--published-y", default=None,
+                        help="independently resolved 40-hex publication commit Y "
+                             "carrying the current published feeds; the immutability "
+                             "baseline is then read from that pin instead of the "
+                             "tooling working tree, so a stale tooling checkout can "
+                             "never hide published history")
     parser.add_argument("--sign-env", default=None,
                         help="environment variable holding the base64 raw Ed25519 "
                              "production key; only honored for a real publication run "
@@ -291,6 +308,20 @@ def main():
     except hubcore.HubError as error:
         raise SystemExit(f"configured public trust is invalid: {error}")
     outputs = build(registry, args.mode, commit, inputs_root, inputs_root, public_keys)
+    if args.mode == "release":
+        # Publication-boundary immutability: refuse any candidate offer that
+        # reuses an already-published (id, version) with a different package
+        # contentDigest, even re-signable bytes. The baseline is cumulative
+        # and anchored to the signed published bytes at their pinned
+        # publication commits, read from the TOOLING root (REPO) — never from
+        # the caller's data snapshot X, never from the candidate
+        # registry/ledger and never from a caller-supplied review. Production
+        # history with a missing or stale ledger fails closed; only a genuine
+        # first publication (no verified history anywhere) passes an empty
+        # baseline.
+        baseline = publication_immutability.build_validated_baseline(
+            REPO, args.publication_ledger, args.published_y)
+        publication_immutability.assert_immutable_publication(outputs, baseline)
     if args.sign_env:
         value = os.environ.get(args.sign_env)
         if not value:
