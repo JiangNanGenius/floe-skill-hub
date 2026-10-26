@@ -1020,8 +1020,8 @@
         "zh-Hans": "文献综述"
       },
       "notes": {
-        "en": "Native search/fetch and offline-first DOI processing replace paid upstream CLIs; optional online verification declares network access. Registration and metadata availability remain distinct. Actual guest and App qualification is pending.",
-        "zh-Hans": "原生检索、抓取与离线优先 DOI 处理替代上游付费 CLI；可选在线核验已声明网络权限。注册状态与元数据可用性分别记录，仍待实际客体与 App 验收。"
+        "en": "Pure-standard-library workflows and real DOI checks are qualified in Linux/riscv64. Optional online verification uses the declared network capability; registration and metadata availability remain distinct from claim support. App-specific native PDF export was not exercised in this qualification.",
+        "zh-Hans": "纯标准库流程及真实 DOI 核验已完成 Linux/riscv64 运行鉴定。可选在线核验使用已声明的网络能力；注册状态、元数据可用性与论据支持分别记录。本轮未验证 App 原生 PDF 导出。"
       },
       "planNumber": 15,
       "plannedRuntime": {
