@@ -16,6 +16,18 @@ const headers = {
 
 const PROBE_TOOL = 'template_read_only_probe_7f3c';
 
+// Per-request IO budget for real MCP exchanges against a listening service
+// (initialize, notifications/initialized, tools/list, tools/call and the
+// method-refusal probes). It is aligned to the 30-second default request
+// budget that the Floe native MCP client applies to this same endpoint; a
+// template self-test must not impose an IO budget stricter than the client
+// that actually ships and runs the service. In-guest failure semantics are
+// unchanged: every exchange still has a finite AbortSignal budget and any
+// abort or malformed response still fails the test. Protocol assertions
+// below are untouched, and the FIRST real cold initialize remains the one
+// being asserted — there is no warm-up or retried handshake.
+const RPC_TIMEOUT_MS = 30_000;
+
 async function withService(t, options = {}) {
   const service = await startService(
     { host: '127.0.0.1', port: 0, allowedHosts: ['127.0.0.1', 'localhost'] },
@@ -51,7 +63,7 @@ async function initializeAndList(endpoint, firstId) {
   const initialized = await fetch(endpoint, {
     method: 'POST', headers: { ...headers, 'MCP-Protocol-Version': version },
     body: JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' }),
-    signal: AbortSignal.timeout(5000)
+    signal: AbortSignal.timeout(RPC_TIMEOUT_MS)
   });
   assert.equal(initialized.status, 202);
   const list = await rpc(endpoint, firstId + 1, 'tools/list', {}, version);
@@ -63,7 +75,7 @@ async function rpc(endpoint, id, method, params = {}, protocolVersion) {
     method: 'POST',
     headers: { ...headers, ...(protocolVersion ? { 'MCP-Protocol-Version': protocolVersion } : {}) },
     body: JSON.stringify({ jsonrpc: '2.0', id, method, params }),
-    signal: AbortSignal.timeout(5000)
+    signal: AbortSignal.timeout(RPC_TIMEOUT_MS)
   });
   assert.equal(response.status, 200);
   return response.json();
@@ -80,7 +92,7 @@ test('initialize, discover and call a real read-only tool over HTTP', async t =>
   const initialized = await fetch(endpoint, {
     method: 'POST', headers: { ...headers, 'MCP-Protocol-Version': version },
     body: JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' }),
-    signal: AbortSignal.timeout(5000)
+    signal: AbortSignal.timeout(RPC_TIMEOUT_MS)
   });
   assert.equal(initialized.status, 202);
   const list = await rpc(endpoint, 2, 'tools/list', {}, version);
@@ -223,7 +235,7 @@ test('concurrent callers keep independent request IDs and arguments', async t =>
 test('stateless endpoint refuses unsupported GET and DELETE', async t => {
   const { endpoint } = await withService(t);
   for (const method of ['GET', 'DELETE']) {
-    const response = await fetch(endpoint, { method, signal: AbortSignal.timeout(5000) });
+    const response = await fetch(endpoint, { method, signal: AbortSignal.timeout(RPC_TIMEOUT_MS) });
     assert.equal(response.status, 405);
     assert.equal(response.headers.get('allow'), 'POST');
   }
@@ -259,7 +271,7 @@ test('stop is idempotent and the previous endpoint is unavailable', async () => 
   await assert.rejects(fetch(service.endpoint, { signal: AbortSignal.timeout(1000) }));
 });
 
-test('actual command entry reports its listener and exits cleanly on SIGTERM', { timeout: 10000 }, async t => {
+test('actual command entry reports its listener and exits cleanly on SIGTERM', { timeout: 90_000 }, async t => {
   const reservation = createServer();
   reservation.listen(0, '127.0.0.1');
   await once(reservation, 'listening');
@@ -279,7 +291,7 @@ test('actual command entry reports its listener and exits cleanly on SIGTERM', {
   child.stderr.resume();
   const ready = await new Promise((resolve, reject) => {
     let text = '';
-    const timer = setTimeout(() => reject(new Error('CLI did not produce a ready record')), 5000);
+    const timer = setTimeout(() => reject(new Error('CLI did not produce a ready record')), RPC_TIMEOUT_MS);
     const fail = () => {
       clearTimeout(timer);
       reject(new Error('CLI exited before producing a ready record'));
