@@ -61,15 +61,50 @@
 
 
 
+## 1.1.0 local change record (private candidate, job-c988e0c9de8a459d, 2026-10-27)
+
+First-party changes only; the upstream pin (anthropics/skills@dbd4588), Apache-2.0
+notices, OFL files, numeric contract, PRNG, buildOps and canonical digest paths are
+untouched. The 1.0.0 published bytes stay immutable; this tree is versioned 1.1.0.
+
+1. assets/viewer-ui.js — slider-listener closure bug fixed: 1.0.0 bound every
+   slider's `input` listener to the function-scoped loop variables, so each
+   slider wrote the LAST slider's override and value display (host-proven;
+   adopted from the art-native-state lane proposal, with the unused `step` IIFE
+   parameter dropped). Each listener now receives its own `input`/`val`
+   elements. Restore flows dispatch no slider events, so 1.0.0 artwork output
+   is unchanged by this fix.
+2. assets/floegart.js — render lifecycle (HYPOTHESIS, not a proven fix):
+   renderToCanvas now forces a fresh backing-store reallocation (width/height
+   -> 0 -> declared size) before replaying ops for EVERY render including the
+   first. The shipped <canvas> has no size attributes, so in 1.0.0 the initial
+   render grew a fresh 300x150 store while every next/prev render re-assigned
+   the same 1200x1200 values and reused the existing store — an asymmetric
+   raster lifecycle, and the Art37 draw-state probe proved both renders emit
+   identical inputs/ops/transcripts (divergence localized BELOW the Canvas2D
+   API). Device verdict remains the unchanged strict restored==initial pixel
+   assert in the App qualification test; host WebKit shows the emitted canvas
+   PNG digest is identical to 1.0.0 (draw-preserving: initial
+   79ff95a5…, next 382b7860…).
+3. assets/viewer-ui.js — Download PNG honesty + delivery: the click still
+   dispatches the data-URL anchor inside the gesture, but the page now reports
+   what actually happened: exact bytes staged on window.__artExport (name,
+   size, byte length, SHA-256) and, when the app installs the `floeExport`
+   WKScriptMessageHandler bridge, bounded base64 chunk delivery through it.
+   A status line is never presented as a delivered file (SKILL.md Export
+   section restated to the same rule).
+4. floe.json version 1.1.0; floegart.js VERSION "1.1.0"; generate_art.py
+   packageVersion "1.1.0".
+
 ## File inventory (sha256 per file, this checkout; PROVENANCE.md self-hash intentionally omitted)
 
-- `SKILL.md` sha256 `9cbcb0f133ddb9ae4af8a05bf25346b32c9fcb436d15fc70840b6492693cd3b4` (6338 bytes)
-- `assets/floegart.js` sha256 `36b65129eb0559a6e9dcd6cd9c7bdd345c07264a16c55f4df5e3721653516139` (8755 bytes)
+- `SKILL.md` sha256 `bc794a64b905e6f2d42c6dc12c71481871fd7716e949d95424ebbcaf3c8b2728` (6662 bytes)
+- `assets/floegart.js` sha256 `80d6f365f3d4662c08a7fc9102bd2a88140f20ac83dc40916ceb5b0194191c94` (9829 bytes)
 - `assets/shell-template.html` sha256 `78cb58692a53058cb1c4e3172eddaf6be7854b7933df1869cc2e19d6ce0bcdd5` (6562 bytes)
-- `assets/viewer-ui.js` sha256 `a45eee7fa1495fc54dbc98d7bafbb9efca3226bce1beb145cb2977d6f83444e1` (4636 bytes)
-- `floe.json` sha256 `8e61c2c7f7b50f8214b53d5cc82e56eee8345a2f2cc48442370763b9b7176d38` (220 bytes)
+- `assets/viewer-ui.js` sha256 `72c268d399e85c236fd639e98422a6c517a5100ce34ec03c933f50b95192531c` (8376 bytes)
+- `floe.json` sha256 `b7e0b98b114b52cb44184c8c7d8491a7b23666f586b7d5ef911636a1a75086f6` (220 bytes)
 - `references/licenses/LICENSE-NOTE.md` sha256 `2dd4360d16a7ce888a996cbf38bec1b75932efa9f0c1ff15c409bcb9563840d3` (1961 bytes)
 - `references/licenses/UPSTREAM-LICENSE.txt` sha256 `bc6b3af2f331cbc7fb0da1344efb2cbe5877a31498b4d70dbc7000f3405a1362` (11345 bytes)
 - `references/numeric-contract.md` sha256 `da176a0c7822d1fc26524242c92b460f53c201494eb35f4ca5a0fb2843774786` (2711 bytes)
-- `scripts/generate_art.py` sha256 `3a9f96e1e0e44ed66da84c8279658a74242b4e13b204f966a2bb6f4c0ba5de0f` (16802 bytes)
+- `scripts/generate_art.py` sha256 `88c978da3b6367c8936d66bb17e0584b85a766a35ffb28f6b9320c001f8ff854` (16802 bytes)
 - `scripts/prng_parity.js` sha256 `35d8d2e8809344d343b51723b65f14c533a4f4d29c71aaf0220f8696e4db42e9` (2507 bytes)

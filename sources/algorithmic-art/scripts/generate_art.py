@@ -340,7 +340,7 @@ def main():
                        sort_keys=True, ensure_ascii=False, indent=1) + "\n").encode("utf-8")
     provenance = {
         "generator": {"tool": "algorithmic-art/generate_art.py", "core": "floegart.js",
-                      "coreSha256": core_sha, "uiSha256": ui_sha, "packageVersion": "1.0.0"},
+                      "coreSha256": core_sha, "uiSha256": ui_sha, "packageVersion": "1.1.0"},
         "upstream": "anthropics/skills@dbd4588f9e1033efb41dad4bef2f7947c8993d44 skills/algorithmic-art "
                     "(workflow derivation only; this artifact runs no p5.js and loads no CDN)",
         "inputs": {"overrides": overrides},

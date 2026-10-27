@@ -39,7 +39,11 @@ Guarantees checked before any byte is written:
     preview, never the declared full-size raster. The HTML offers an in-page
     "Export PNG" at the declared pixel size using the loaded fonts; engines with
     canvas limits (iOS WKWebView caps very large canvases) must fail with an
-    actionable message — the page never silently downscales.
+    actionable message — the page never silently downscales. On success the
+    raster is staged (window.__posterExport: name, size, byte length, SHA-256)
+    and delivered through the app export bridge when installed; the status
+    line states which happened. A status line is never a file: only bytes that
+    exist in the workspace and pass scripts/verify_png.py may be published.
 
 Exit codes: 0 success, 2 invalid spec, 3 output guard (use --overwrite), 4 unsupported.
 """
@@ -77,7 +81,20 @@ EXPORT_JS = r"""
   var svg = document.getElementById("art");
   var btn = document.getElementById("export-png");
   var status = document.getElementById("export-status");
+  var MAX_STAGED_BYTES = 33554432;   /* 32 MiB: cap for keeping bytes staged in page memory */
+  var CHUNK_B64 = 786432;            /* base64 chars per bridge message (multiple of 4) */
   function say(m) { status.textContent = m; }
+  function hexDigest(buf) {
+    var v = new Uint8Array(buf), s = "", j;
+    for (j = 0; j < v.length; j++) { if (v[j] < 16) s += "0"; s += v[j].toString(16); }
+    return s;
+  }
+  function sha256(bytes) {
+    if (window.crypto && window.crypto.subtle && window.crypto.subtle.digest) {
+      return window.crypto.subtle.digest("SHA-256", bytes).then(hexDigest, function () { return null; });
+    }
+    return Promise.resolve(null);
+  }
   btn.addEventListener("click", function () {
     say("Rasterizing " + W + "x" + H + " with the page's loaded fonts...");
     var faces = document.getElementById("faces").textContent;
@@ -101,11 +118,13 @@ EXPORT_JS = r"""
         c.getContext("2d").drawImage(img, 0, 0, W, H);
         var url = c.toDataURL("image/png");
         if (!url || url === "data:,") { throw new Error("empty data url"); }
+        var name = PREFIX + "-" + W + "x" + H + ".png";
         var a = document.createElement("a");
-        a.download = PREFIX + "-" + W + "x" + H + ".png";
+        a.download = name;
         a.href = url;
-        a.click();
+        a.click();  /* dispatched inside the user gesture: a real browser save works here */
         say("Exported " + W + "x" + H + " PNG (artwork only, fonts as loaded on this page).");
+        stage(name, url);
       } catch (err) {
         say("FAILED: canvas export blocked (" + err.name + "). This engine does not allow the" +
             " full-size raster; deliver SVG/HTML or a clearly-labeled viewport preview instead.");
@@ -117,6 +136,52 @@ EXPORT_JS = r"""
     };
     img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(xml);
   });
+  /* Honest delivery: the raster is staged with length + SHA-256 on
+     window.__posterExport for an app/automation read-back, and delivered
+     through the app export bridge message handler when one is installed.
+     An engine that saves no click downloads leaves NO file; the page then
+     says exactly that, because a status line is not a published file. */
+  function stage(name, dataURL) {
+    var base = "Exported " + W + "x" + H + " PNG (artwork only, fonts as loaded on this page)";
+    var b64 = dataURL.slice(dataURL.indexOf(",") + 1);
+    var bin = atob(b64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    sha256(bytes).then(function (sha) {
+      window.__posterExport = {
+        schema: "floe.poster-export/1", state: "staged", name: name,
+        width: W, height: H, bytes: bytes.length, sha256: sha,
+        dataURL: bytes.length <= MAX_STAGED_BYTES ? dataURL : null,
+        stagedAt: Date.now()
+      };
+      var bridge = window.webkit && window.webkit.messageHandlers
+        && window.webkit.messageHandlers.floeExport;
+      if (bridge && bridge.postMessage) {
+        var count = Math.ceil(b64.length / CHUNK_B64);
+        try {
+          for (var k = 0; k < count; k++) {
+            bridge.postMessage({
+              kind: "floe.export", v: 1, name: name, index: k, count: count,
+              totalBytes: bytes.length, sha256: sha || "", encoding: "base64",
+              data: b64.slice(k * CHUNK_B64, (k + 1) * CHUNK_B64)
+            });
+          }
+          say(base + " \u2014 Delivered " + bytes.length + " B to the app export bridge" +
+              (sha ? " (sha256 " + sha.slice(0, 16) + "\u2026)" : "") +
+              ". Verify the saved file before publishing; this status text is not the file.");
+        } catch (err) {
+          say(base + " \u2014 bridge delivery failed (" + err.name + "); " + bytes.length +
+              " B remain staged in-page only.");
+        }
+        return;
+      }
+      say(base + " \u2014 staged " + bytes.length + " B in-page" +
+          (sha ? " (sha256 " + sha.slice(0, 16) + "\u2026)" : "") +
+          ". This engine saves no click downloads: if no file appeared in the workspace," +
+          " the PNG was NOT delivered \u2014 check it with scripts/verify_png.py and" +
+          " otherwise deliver SVG/HTML.");
+    });
+  }
 })();
 """
 
@@ -559,8 +624,10 @@ def main():
                    "fonts; use the html artifact for font-portable rendering)",
             "html": "self-contained: inline SVG + base64 @font-face for used faces + license "
                     "notices + declared-size PNG export (engine-canvas-limited; fails with an "
-                    "actionable message, never downscales); CJK renders through the DEVICE "
-                    "fallback stack declared here, which is not embedded anywhere",
+                    "actionable message, never downscales; on success stages the raster with "
+                    "byte length + SHA-256 and uses the app export bridge when installed); CJK "
+                    "renders through the DEVICE fallback stack declared here, which is not "
+                    "embedded anywhere",
             "browser.screenshot": "viewport-bounded PREVIEW only; never claim it as the declared "
                                   "full-size raster; record its real pixel dimensions",
             "pdf": "png_to_pdf.py wraps an existing verified PNG; page geometry follows the "

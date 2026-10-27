@@ -18,10 +18,13 @@ sparse typography.
   are task-workspace relative and belong to the current task.
 - Rendering and pixel export use the app's own surfaces: `exec.localService`
   (runtime `static`, serves the HTML from the workspace over a token loopback),
-  `browser.navigate`, `browser.screenshot` (viewport preview). Full-size raster
-  is the HTML artifact's own declared-size Export button — supported browser
-  behavior, no new native API. Do not download renderers
-  (no Playwright/Chromium — unsupported in the guest).
+  `browser.navigate`, `browser.screenshot` (viewport preview) and
+  `browser.exportFile` (commits the page-staged full-size raster as a real
+  workspace file). The HTML artifact's own declared-size Export button
+  rasterizes and stages the exact bytes; `browser.exportFile` reads that
+  staged raster back through a fixed native script — no download-engine
+  behavior is required, and no page can write a file by itself. Do not
+  download renderers (no Playwright/Chromium — unsupported in the guest).
 - Never claim PNG/PDF output from an unrendered file. SVG/HTML are sources;
   PNG exists only after a real capture; PDF only after `png_to_pdf.py` wraps a
   verified PNG. `image.svgDocument` is XML inspect/edit only — it does not rasterize.
@@ -125,17 +128,34 @@ when revising your own output). Every glyph is accounted for — see font rules.
    3508×4961 is near the limit) must show an actionable `FAILED:` status —
    accept that as the honest "full-resolution raster unsupported" result and
    deliver SVG/HTML instead. Never substitute a downscaled image silently.
-3. Viewport preview PNG: `browser.screenshot` writes a workspace capture
+3. PNG delivery (never confuse raster with delivery): the click stages the
+   exact raster in-page (`window.__posterExport`: name, W×H, byte length,
+   SHA-256) because the engine saves no click downloads. Commit it with
+   `browser.exportFile`: `path` is a NEW workspace-relative `.png` and
+   `expectedWidth`/`expectedHeight` are the declared pixels; native re-reads
+   the staged bytes from that exact tab and document through a fixed script,
+   verifies length, checksum and PNG structure, and never overwrites. Then
+   run `exec.shell: python3 scripts/verify_png.py <committed file>
+   --expect-size WxH --pixel-digest`; its exit 0 with matching expectations
+   plus the `browser.exportFile` receipt is the only "PNG delivered" proof
+   available. If the page staged nothing (a `FAILED:` line), or
+   `browser.exportFile` is unavailable in this App build or refuses, the PNG
+   was NOT delivered: report it as such and fall back to SVG/HTML plus a
+   labeled viewport preview. A page status line or script stdout is never a
+   published file.
+4. Viewport preview PNG: `browser.screenshot` writes a workspace capture
    artifact of what the viewport shows. It is viewport-BOUNDED: record its real
    pixel dimensions and label it a PREVIEW. A screenshot of the fit-to-view
    page is NOT the declared-size raster and its PDF page is not an A3 sheet.
-4. PDF (optional): `exec.shell: python3 scripts/png_to_pdf.py --input shot.png
+5. PDF (optional): `exec.shell: python3 scripts/png_to_pdf.py --input shot.png
    --output poster.pdf --dpi 300` — a containerizer for verified PNGs (8-bit
    RGB/RGBA/non-interlaced), page size derived from the PNG's actual pixels at
-   `--dpi`; it self-verifies the embedded raster. Only a full 3508×4961 PNG at
-   300 dpi is a 297×420 mm A3 page; state source, pixel size and dpi in every
-   geometry claim.
-5. Deliver: `workspace.publishOutput` for chosen files; keep the spec and SVG
+   `--dpi`; it self-verifies the embedded raster. Run it only on a file that
+   exists as real bytes (verify_png.py first for anything delivered by the
+   browser). Only a full 3508×4961 PNG at 300 dpi is a 297×420 mm A3 page;
+   state source, pixel size and dpi in every geometry claim.
+6. Deliver: `workspace.publishOutput` for chosen files and quote each receipt
+   (path, bytes, sha256 read back from the file); keep the spec and SVG
    (editable source) alongside rendered outputs.
 
 ## Multi-page option

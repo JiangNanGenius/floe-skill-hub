@@ -29,7 +29,9 @@ in the browser.
 - The guest has no browser: do not download Playwright/Chromium (unsupported on
   riscv64). Visual preview happens through the app: serve the artifact with
   `exec.localService` (`runtime=static`) and view it via `browser.navigate` on
-  the tokenized loopback URL; capture with `browser.screenshot`. Synthetic
+  the tokenized loopback URL; capture viewport previews with
+  `browser.screenshot` and commit the page-staged full-size raster with
+  `browser.exportFile`. Synthetic
   Node checks verify the numeric core only — they do NOT prove on-screen
   rendering; only a real App capture does.
 - Helper processes: run generation through `jobs.submit` + `exec.shell` when it
@@ -96,9 +98,20 @@ draw time, outside the digest path).
 ## Export honestly
 
 - PNG (full size, supported path): inside the artifact, **Download PNG**
-  exports the ACTUAL full-resolution canvas via canvas.toDataURL at the
-  declared pixel size (the filename carries the real WxH); in-app download
-  behavior is part of App acceptance. The exported image is artwork only.
+  rasterizes the ACTUAL full-resolution canvas via canvas.toDataURL at the
+  declared pixel size and stages the exact bytes in-page
+  (`window.__artExport`: name, WxH, byte length, SHA-256); the click alone
+  proves nothing landed because the engine saves no click downloads. Commit
+  the staged raster with `browser.exportFile`: `path` is a NEW
+  workspace-relative `.png` and `expectedWidth`/`expectedHeight` pin the
+  declared pixels; native re-reads the staged bytes from that exact tab and
+  document through a fixed script, verifies length, checksum and PNG
+  structure, and never overwrites an existing file. If `browser.exportFile`
+  is unavailable in this App build or refuses, the PNG was NOT delivered —
+  say so and deliver SVG/HTML instead. Only a `workspace.publishOutput`
+  receipt binding real bytes (path + bytes + sha256 read back from the
+  committed file) counts as a delivered PNG; never call a status line a
+  file. The exported image is artwork only.
 - Preview: `browser.screenshot` on the served view captures only what the
   viewport shows — the on-screen canvas is CSS-scaled — so label it with its
   real pixel dimensions as a PREVIEW; a viewport capture is not the full-size

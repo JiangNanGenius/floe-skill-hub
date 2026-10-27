@@ -51,9 +51,39 @@
   verification.
 
 
+## 1.1.0 local change record (private candidate, job-c988e0c9de8a459d, 2026-10-27)
+
+First-party changes only; the upstream workflow pin (anthropics/skills@dbd4588),
+Apache-2.0 notice, all bundled OFL fonts, the fonts.json advance/coverage registry,
+example specs and every generator guarantee (bounds, overlap, coverage, exit codes,
+determinism, no external resources) are untouched. The 1.1.0 tree closes the poster
+file-DELIVERY gap proven by the held qualification evidence: the in-page export
+rasterized real bytes but a data-URL click materializes no file in the app's
+WKWebView (zero download handoff in the browser layer at the frozen source).
+
+1. scripts/make_poster.py EXPORT_JS — after a successful full-size raster the page
+   stages the exact bytes (window.__posterExport: name, W×H, byte length, SHA-256
+   via WebCrypto when available), delivers them through the app `floeExport`
+   message bridge when installed (bounded base64 chunks + declared total/sha),
+   and always replaces the interim success line with the terminal delivery truth;
+   an engine that saves no click downloads is stated as NOT delivering a file.
+   Frozen test surface preserved: same `id="export-png"` button and
+   `Export PNG W×H` labels, same declared-size chrome line, success lines keep
+   the exact `Exported WxH PNG` prefix, failure lines keep the `FAILED` prefix,
+   no resource-bearing field references anything but inline data, bytes stay
+   deterministic across runs.
+2. scripts/verify_png.py — NEW stdlib-only full PNG integrity + content verifier
+   (signature, per-chunk CRC walk, IHDR sanity, IDAT inflate with exact
+   unfiltered-length + zip-bomb bounds, IEND/tail policy, file SHA-256, optional
+   decoded pixel SHA-256 and fail-closed expectations). SKILL.md now makes
+   verify-before-publish mandatory, so a page status can never become a receipt.
+3. SKILL.md Export section — delivery truth inserted (steps renumbered); the
+   publish step must quote workspace.publishOutput receipts bound to real bytes.
+4. floe.json version 1.1.0.
+
 ## File inventory (sha256 per file, this checkout; PROVENANCE.md self-hash intentionally omitted)
 
-- `SKILL.md` sha256 `70b1fb5fc58d8d9c038d25f72e14022e4e8cdf0d7c2ebe3b0be0b161535dce2a` (8918 bytes)
+- `SKILL.md` sha256 `530810d17b4dc076dfa81bad28d50044a7b67dea2304873695d705f31bb1b9e6` (9870 bytes)
 - `assets/examples/cjk-poster-spec.json` sha256 `6447888004d4660cd0c121cefde93c942cb5ada0f78f40fdbd536762eeb7c182` (1051 bytes)
 - `assets/examples/hero-spec.json` sha256 `801ef7a34147bd99312c1e6042507cdcc40f4c283736ccb6131546b1421fb2b4` (2082 bytes)
 - `assets/fonts/BigShoulders-Bold.ttf` sha256 `b43bcd198b9fdf717dd42aa61a34dba32e01aceaeae659d689afd0ca52c37ea2` (94528 bytes)
@@ -68,10 +98,11 @@
 - `assets/fonts/RedHatMono-OFL.txt` sha256 `435fbfb7e66988b2a06686a4cb966faec733f35d8fe100a1601573c27f3e0bb8` (4394 bytes)
 - `assets/fonts/RedHatMono-Regular.ttf` sha256 `452fe826871b37539f5212b20c87cf30f82f58dd2741f1c96edd1dcbdc0db6b4` (34488 bytes)
 - `assets/fonts/fonts.json` sha256 `6eed5d33896130b1064d19777077313deb47fe1c5c7d5b2a74f582aaa1a4d639` (38326 bytes)
-- `floe.json` sha256 `c6688a2d3c4dc71ca42e0e1414db62237712bab0a2cad92b1527654504864ece` (218 bytes)
+- `floe.json` sha256 `8b91a5361070769a9687aafa4752628b4aa925e597897b123b243c6a99fd8a42` (218 bytes)
 - `references/FONTS-LICENSE.md` sha256 `1e9223f6791c59da47a0784ab18749739cd320118bb759ac760a90cb8bbc3947` (4282 bytes)
 - `references/licenses/LICENSE-NOTE.md` sha256 `ae69a7920087302756eb14464c1c8d8af27fc968487df7b478bd72ee51124e87` (1739 bytes)
 - `references/licenses/UPSTREAM-LICENSE.txt` sha256 `bc6b3af2f331cbc7fb0da1344efb2cbe5877a31498b4d70dbc7000f3405a1362` (11345 bytes)
 - `references/poster-spec-format.md` sha256 `5867560d29dda339abe753f846a8bfcb341aff70ebefc5fb7697156251a9301a` (3875 bytes)
-- `scripts/make_poster.py` sha256 `ab91cfcfb6a539512c3370f505fefb6877404ec4ca4f39a8cf386bebaa536e23` (34631 bytes)
+- `scripts/make_poster.py` sha256 `26332e276835779a2c20cb70ba7a1c7cb643d945ef0a671510fb346e65d1b281` (38234 bytes)
 - `scripts/png_to_pdf.py` sha256 `69f63ea5e0a4df3ee9974a2da999cf47e5c598121272e340ce09c114384514a2` (9429 bytes)
+- `scripts/verify_png.py` sha256 `13a63e28f0bf2f8d66b68d8411837096445f5db82f519386d6d33b9b65b17614` (12713 bytes)

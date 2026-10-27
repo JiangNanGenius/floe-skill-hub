@@ -183,8 +183,23 @@
     return parts.join(",");
   }
 
-  /* Canvas 2D renderer (browser) */
+  /* Canvas 2D renderer (browser).
+   * 1.1.0 render-lifecycle change (HYPOTHESIS for the Art37 native 5-pixel
+   * initial-vs-restored difference, not a proven fix): the shipped element is
+   * <canvas> WITHOUT size attributes, so the FIRST render grew a fresh 300x150
+   * backing store (a reallocation), while every later render (next/prev restore)
+   * assigned the SAME 1200x1200 values and reused the existing backing store.
+   * The Art37 draw-state probe proved both renders emit identical inputs, ops
+   * and Canvas2D transcripts, localizing the divergence below the API — an
+   * asymmetric raster lifecycle is the remaining candidate. This sequence forces
+   * EVERY render (including the first) through one identical 0 -> size
+   * reallocation before replaying the ops, so initial and restored outputs share
+   * the same allocation/clear path. Emitted drawing calls, coordinates, styles
+   * and digests are byte-identical to 1.0.0 (draw-preserving); the strict
+   * restored == initial pixel assert is unchanged and remains the verdict. */
   function renderToCanvas(ctx, doc, width, height) {
+    ctx.canvas.width = 0;
+    ctx.canvas.height = 0;
     ctx.canvas.width = width;
     ctx.canvas.height = height;
     ctx.fillStyle = doc.palette[0];
@@ -207,7 +222,7 @@
   }
 
   return {
-    VERSION: "1.0.0",
+    VERSION: "1.1.0",
     PALETTES: PALETTES,
     ALGOS: ALGOS,
     mulberry32: mulberry32,
