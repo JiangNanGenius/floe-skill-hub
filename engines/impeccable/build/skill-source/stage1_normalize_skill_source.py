@@ -135,6 +135,15 @@ A page scan is a controlled data hand-off, not a browser session:
    document/viewport);
 2. `floe-impeccable snapshot-scan --snapshot <file> --identity <file> --out
    <file>` runs the pinned upstream rule core over it;
+
+   The launcher's default scan route has **no engine deadline**: it appends
+   `--no-timeout` (result `budget.timeoutMs` is null) unless you explicitly
+   choose a timeout flag. An explicit `--timeout-ms <n>` (including `0`, which
+   means an immediate typed timeout) always passes through untouched, and
+   `--no-timeout` with `--timeout-ms` is still refused. This policy covers the
+   engine deadline only; the existing caller/task wait and cancel controls are
+   unchanged. Hit-test, round and byte caps are unchanged and must never be
+   widened by the caller.
 3. when the rules need measurements the snapshot cannot answer, the engine
    returns `needs-facts` (exit 3) with the exact points; the native side answers
    from the same document and the scan is re-run with `--facts`;
@@ -369,6 +378,9 @@ def main() -> int:
             "resolved {{scripts_path}}/{{command_prefix}}/{{command_hint}} for the Floe launcher",
             "rewrote `impeccable <verb>` and `npx impeccable <verb>` to `floe-impeccable <verb>`",
             "inserted the Floe v1 engine surface, the snapshot-scan design flow and the coverage limits",
+            "documented the Floe default scan policy: the launcher appends `--no-timeout` to "
+            "`snapshot-scan` only when the caller chose no timeout flag; explicit timeout choices "
+            "(including `--timeout-ms 0`) and every cap are unchanged",
         ],
     })
 

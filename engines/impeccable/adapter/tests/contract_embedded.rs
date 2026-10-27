@@ -166,13 +166,78 @@ fn the_identity_contract_requires_the_native_binding_and_redaction() {
 
 #[test]
 fn the_probe_and_version_identify_the_floe_adapter() {
+    // Pinned literal: an unintended version bump must fail here, and the
+    // derived consistency test below must stay green (see Root review
+    // 2026-10-27: the shipped contract once carried a stale 1.0.0 probe
+    // example while the binary printed 1.1.0).
     let (code, stdout, _) = run(&["engine-probe"]);
     assert_eq!(code, 0);
-    assert_eq!(stdout, "impeccable-engine 0.1.17+floe.1.0.0\n");
+    assert_eq!(stdout, "impeccable-engine 0.1.17+floe.1.1.1\n");
 
     let (code, stdout, _) = run(&["--version"]);
     assert_eq!(code, 0);
-    assert_eq!(stdout, "0.1.17+floe.1.0.0\n");
+    assert_eq!(stdout, "0.1.17+floe.1.1.1\n");
+}
+
+#[test]
+fn the_contract_engine_probe_example_is_the_live_probe() {
+    // The contract's documented handshake and the binary's actual stdout are
+    // one identity: both must be derived from the same component version
+    // constant (the adapter crate version plus the contract's
+    // engine.upstreamEngineVersion). No hand-copied literal may sit between
+    // them: this test fails for any drift, including a stale example.
+    let contract: serde_json::Value =
+        serde_json::from_str(include_str!("../data/snapshot-contract.v1.json"))
+            .expect("the embedded contract must be valid JSON");
+
+    let (code, live_probe, _) = run(&["engine-probe"]);
+    assert_eq!(code, 0);
+    let (code, live_version, _) = run(&["--version"]);
+    assert_eq!(code, 0);
+    let live_version = live_version.trim_end_matches('\n');
+
+    let example = contract["verbs"]
+        .as_array()
+        .expect("verbs array")
+        .iter()
+        .find(|v| v["name"].as_str() == Some("engine-probe"))
+        .expect("the contract documents the engine-probe verb")["stdout"]
+        .as_str()
+        .expect("the engine-probe verb must document its stdout");
+    assert_eq!(
+        example, live_probe,
+        "the contract's engine-probe example must equal the live probe bytes"
+    );
+    assert_eq!(
+        live_probe,
+        format!("impeccable-engine {live_version}\n"),
+        "the launcher handshake format is exactly `impeccable-engine <componentVersion>\\n`"
+    );
+
+    let engine = &contract["engine"];
+    assert_eq!(
+        engine["engineId"].as_str().unwrap(),
+        format!("impeccable-{live_version}"),
+        "the contract engineId must equal the version the binary prints"
+    );
+    let adapter = live_version
+        .split_once("+floe.")
+        .expect("the component version is <engine>+floe.<adapter>")
+        .1;
+    assert_eq!(
+        engine["floeAdapterVersion"].as_str().unwrap(),
+        adapter,
+        "the contract floeAdapterVersion must equal the adapter part of the live version"
+    );
+    assert_eq!(
+        live_version,
+        format!(
+            "{}+floe.{}",
+            engine["upstreamEngineVersion"].as_str().unwrap(),
+            adapter
+        ),
+        "--version must be built from the contract's upstream engine version and the adapter version"
+    );
 }
 
 #[test]

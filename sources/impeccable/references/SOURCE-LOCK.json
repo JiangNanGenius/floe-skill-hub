@@ -4,7 +4,7 @@
     "engineDataReadBy": "IMPECCABLE_SKILL_DIR (runtime-set; launcher default)",
     "engineDataRoot": "references/engine-data",
     "launcher": "scripts/floe-impeccable.sh",
-    "packagedVersion": "1.0.0",
+    "packagedVersion": "1.1.1",
     "rootEntriesAllowed": [
       "SKILL.md",
       "floe.json",
@@ -22,12 +22,12 @@
   },
   "derivedFileCount": 49,
   "derivedFiles": {
-    "SKILL.md": "4273fc507461469374a192b824769dec8b07f512cdb5974e3c245d953c1100cc",
-    "floe.json": "daa6bd0201811659ff9b6cb8f3a321ff9c65d2ace671077b2d06b89c5520d017",
-    "references/MODIFICATIONS.json": "33daa7712dec26cae63e7dcc37e80348bb5cb4e6cf8847efb0ab632a87b7988d",
-    "references/MODIFICATIONS.md": "d53b9a3e95d2c253d14cf2ec037225b08b6f33da05d9f867892c1080206cda9b",
-    "references/PROVENANCE.md": "d07b12f260a7e891c107a2d01e52c15f85de38ad0211326638a0329a35bf3dea",
-    "references/engine-data/SKILL.md": "4273fc507461469374a192b824769dec8b07f512cdb5974e3c245d953c1100cc",
+    "SKILL.md": "120db48f5a37c762c7e2fdec4dc52756a31b0efc468388d3fd6425cec2d6ca3c",
+    "floe.json": "eab4527266d7bd163388494d955b17c684185662e9ed480ed833bb8975c43121",
+    "references/MODIFICATIONS.json": "c1de1519143dd601cb1f532db36367c0d91876c350f810ab2a15eb5a756cf1b7",
+    "references/MODIFICATIONS.md": "1457c3ebb55268ffceef1bfb0043a470e3aec2caf983f5e8280fead68041d968",
+    "references/PROVENANCE.md": "a0dacaf1101c391402138d55828611f33a51da292b1c23dc63457cd2dac3fdc2",
+    "references/engine-data/SKILL.md": "120db48f5a37c762c7e2fdec4dc52756a31b0efc468388d3fd6425cec2d6ca3c",
     "references/engine-data/VERSION": "bd270b0ddecef6c53cde260e7964048b1186147606e6643d2ccb8cf04e167bd1",
     "references/engine-data/reference/adapt.md": "a68906bd347dab63a36ede8f80e863c207bf9da2160478276405016e5a551709",
     "references/engine-data/reference/adapt.native.md": "70ab0d9c71f298f423ce7998220dc3f43151f5328def778218074bde7318d25c",
@@ -66,11 +66,11 @@
     "references/engine-data/reference/typeset.md": "4de4456add1d14f0bd819a7c39a2c982608fdd93ac9ef2f1a0cf697a3550ef23",
     "references/engine-data/reference/visualize.md": "33bfcf692b8035002d8f6381b7c47c606c3b20126adeffce6d49fce818e71765",
     "references/engine-data/scripts/command-metadata.json": "002db467b0c93c2361e3d07750e1b6cc3f5b56d14cbfc7561d7f03fcd076c740",
-    "references/engine-dependency.json": "cec4a7fade52f6383f74bc9e15972b911552b2672eada138d890e353899be50a",
+    "references/engine-dependency.json": "e7c7984a573b5ac9a1447bcc4285d9b1ba09458033f8468f5c86961965e57233",
     "references/licenses/LICENSE": "02bb8c3b4e70190e3986c0404ad2fd8d639b4f534252d82379cc1b502b6d1812",
     "references/licenses/LICENSE-NOTE.md": "7c9edf0e628c06c574b8923843c110da3ce3b81e46deff495ed581be75a922d2",
     "references/licenses/NOTICE.md": "c60a093c2845fd9fb82f9c6f742ece31f379f8190b535309d32d66c45ccffdcb",
-    "scripts/floe-impeccable.sh": "e1760fb8a6b75e63c33d26969ad799c4ae7143a88a582ae29cac5dcde4cb222f"
+    "scripts/floe-impeccable.sh": "227161bd43a09b05cb949e5750c1037ca34e06968f9ed3979052bbb1d3f8a1b8"
   },
   "notVendored": [
     "browser-bundle/",
@@ -88,21 +88,22 @@
     "maintenance normalizer and canonicalizer (hub tooling under engines/impeccable/build/skill-source/)"
   ],
   "pairing": {
-    "captureContractSha256": "baf2453164be6162703af9d671be16da152fa874db53ce95ad5b3516d40de4a3",
+    "captureContractSha256": "099cd85703a5ec7b7f8bd1d13e091421a09e4faf40a42240138cba9cbbc75bac",
     "engineArtifact": {
-      "bytes": 5579704,
+      "bytes": 5594368,
       "format": "static ELF64 little-endian RISC-V EXEC (musl, stripped)",
-      "hubPath": "engines/impeccable/dist/impeccable-0.1.17+floe.1.0.0/riscv64gc-unknown-linux-musl/floe-impeccable",
-      "sha256": "af8795bf9636e763541c58ef90ee889941e468f453ec6580c32a89a5a758b87b"
+      "hubPath": "engines/impeccable/dist/impeccable-0.1.17+floe.1.1.1/riscv64gc-unknown-linux-musl/floe-impeccable",
+      "sha256": "774333d30d6e54604342182e49853851c7e0ebfa9e92fc4216f4a68872d00a1a"
     },
-    "engineId": "impeccable-0.1.17+floe.1.0.0",
+    "engineId": "impeccable-0.1.17+floe.1.1.1",
     "engineLock": "engines/impeccable/ENGINE-LOCK.json",
     "rule": "the skill source, the engine artifact and the descriptor come from this one commit",
     "runtimeDescriptor": {
       "authority": "frozen managed runtime artifact descriptor v1 (engines/impeccable/runtime-dependency/)",
       "bytes": 563,
+      "minimumAppVersion": "1.7.60",
       "path": "references/engine-dependency.json",
-      "sha256": "cec4a7fade52f6383f74bc9e15972b911552b2672eada138d890e353899be50a"
+      "sha256": "e7c7984a573b5ac9a1447bcc4285d9b1ba09458033f8468f5c86961965e57233"
     },
     "skillVersionFile": "0.1.17"
   },
@@ -121,7 +122,7 @@
     "tree": "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72"
   },
   "vendoredVerbatim": {
-    "references/engine-dependency.json": "cec4a7fade52f6383f74bc9e15972b911552b2672eada138d890e353899be50a",
+    "references/engine-dependency.json": "e7c7984a573b5ac9a1447bcc4285d9b1ba09458033f8468f5c86961965e57233",
     "references/licenses/LICENSE": "02bb8c3b4e70190e3986c0404ad2fd8d639b4f534252d82379cc1b502b6d1812",
     "references/licenses/NOTICE.md": "c60a093c2845fd9fb82f9c6f742ece31f379f8190b535309d32d66c45ccffdcb"
   }

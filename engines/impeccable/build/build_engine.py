@@ -212,7 +212,21 @@ PATCH_EFFECTS = {
         ("crates/context/src/http.rs", ["no TLS stack", "agent_builder"],
          ["use ureq::rustls", "rustls::crypto", "webpki_roots::", "rustls_native_certs"]),
         ("crates/context/src/context_cli.rs", ["floe_updates_disabled"], []),
-    ],
+        ],
+    # Floe patch 0002 (rule-pass limiter + bounded optimizations). The
+    # cooperative checks must exist (typed propagation, no panic/unwind), the
+    # memos must be present, and no new panic path may appear: the release
+    # profile is panic=abort.
+    "0002-floe-rule-pass-limiter.patch": [
+        ("crates/foundation/src/browser/snapshot.rs",
+         ["pub enum PassTrip", "pub trait PassLimiter", "set_pass_limiter",
+          "cooperative_trip", "scroll_probe_seen", "attempted_over_cap"],
+         []),
+        ("crates/foundation/src/browser/dom.rs",
+         ["fn cooperative_trip", "fn note_element_done"], []),
+        ("crates/core/src/browser/driver.rs", ["cooperative_stop"], []),
+        ("crates/core/src/browser/page_checks.rs", ["points_memo", "points_for"], []),
+        ],
 }
 
 
@@ -578,6 +592,10 @@ def verify_binary(artifact: Path, target: str, receipt: dict, runner: list[str] 
             fail("a musl target artifact must be statically linked", **info)
 
     # Runtime probe: only when a runner for this architecture is available.
+    # When one is, the live handshake bytes must equal the contract identity
+    # the receipt already verified statically — a binary that self-describes
+    # with a stale version is never exported.
+    expected_probe = f"impeccable-engine {receipt['engineId'].removeprefix('impeccable-')}"
     probe_cmd = ([*runner, str(artifact)] if runner else None) if _can_run_locally(target) or runner else None
     if probe_cmd:
         try:
@@ -586,8 +604,12 @@ def verify_binary(artifact: Path, target: str, receipt: dict, runner: list[str] 
                 "command": probe_cmd + ["engine-probe"],
                 "exitCode": probe.returncode,
                 "stdout": probe.stdout.strip(),
+                "expectedStdout": expected_probe,
                 "stderr": probe.stderr.strip()[:500],
             }
+            if probe.returncode == 0 and probe.stdout.strip() != expected_probe:
+                fail("the live engine-probe disagrees with the verified contract identity",
+                     live=probe.stdout.strip(), expected=expected_probe)
         except subprocess.TimeoutExpired:
             info["probe"] = {"command": probe_cmd + ["engine-probe"], "timeout": True}
     else:
@@ -747,9 +769,16 @@ def main() -> int:
 
     package_json = json.loads((args.build_dir / "package.json").read_text(encoding="utf-8"))
     contract = json.loads((CONTRACT_SRC / "snapshot-contract.v1.json").read_text(encoding="utf-8"))
+    # The identity gate runs before anything compiles: the frozen contract's
+    # engine block and engine-probe example must equal what the binary will
+    # print, which is derived from this crate's Cargo.toml version.
+    adapter_version = crate_adapter_version(ADAPTER_SRC)
+    component_version = verify_contract_identity(contract, adapter_version, pin)
+    print(f"[identity] contract engine identity == live probe plan: {component_version}", flush=True)
     receipt = {
-        "engineId": f"impeccable-{pin['engineVersion']}+floe.{ADAPTER_VERSION}",
-        "adapterVersion": ADAPTER_VERSION,
+        "engineId": f"impeccable-{component_version}",
+        "componentVersion": component_version,
+        "adapterVersion": adapter_version,
         "contractVersion": contract["contractVersion"],
         "upstreamPackageVersion": package_json.get("version"),
         "pin": pin,
@@ -805,7 +834,58 @@ def main() -> int:
     return 0
 
 
-ADAPTER_VERSION = "1.0.0"
+def crate_adapter_version(crate_dir: Path) -> str:
+    """The one component version constant the shipped binary actually embeds.
+
+    The adapter prints `<upstreamEngineVersion>+floe.<CARGO_PKG_VERSION>` at
+    runtime (no FLOE_ADAPTER_VERSION override is set here), so the crate
+    manifest's version is the authoritative adapter identity. The receipt, the
+    contract identity gate and the dist directory name all derive from this
+    single read instead of a second hand-maintained constant — that duplication
+    is how the 1.0.0 probe example survived the 1.1.0 bump (Root review
+    2026-10-27).
+    """
+    cargo_toml = crate_dir / "Cargo.toml"
+    if not cargo_toml.is_file():
+        fail("missing adapter crate manifest", crate=str(crate_dir))
+    match = re.search(r'^version\s*=\s*"([^"]+)"\s*$',
+                      cargo_toml.read_text(encoding="utf-8"), re.MULTILINE)
+    if not match:
+        fail("no package version in the adapter crate manifest", crate=str(crate_dir))
+    return match.group(1)
+
+
+def verify_contract_identity(contract: dict, adapter_version: str, pin: dict) -> str:
+    """Refuse to embed a contract whose identity strings disagree with the
+    probe the binary will print. Returns the verified component version."""
+    problems: list[str] = []
+    engine = contract.get("engine", {})
+    upstream = engine.get("upstreamEngineVersion")
+    if upstream != pin["engineVersion"]:
+        problems.append(
+            f"contract engine.upstreamEngineVersion {upstream!r} != pin ENGINE_VERSION {pin['engineVersion']!r}")
+    component = f"{upstream}+floe.{adapter_version}"
+    expected = {
+        "engine.floeAdapterVersion": (engine.get("floeAdapterVersion"), adapter_version),
+        "engine.engineId": (engine.get("engineId"), f"impeccable-{component}"),
+    }
+    probe_verb = next((v for v in contract.get("verbs", [])
+                       if v.get("name") == "engine-probe"), None)
+    expected["verbs[engine-probe].stdout"] = (
+        probe_verb.get("stdout") if probe_verb else None,
+        f"impeccable-engine {component}\n",
+    )
+    for field, (actual, want) in expected.items():
+        if actual != want:
+            problems.append(f"{field} is {actual!r}, must be {want!r}")
+    if problems:
+        fail(
+            "the frozen contract's engine identity disagrees with the single "
+            "component version constant (crate Cargo.toml + pin ENGINE_VERSION); "
+            "run candidate-adapter/tools/sync_contract_identity.py --apply and re-hash",
+            problems=problems,
+        )
+    return component
 
 
 def run_tests(args, receipt: dict) -> None:

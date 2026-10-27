@@ -53,7 +53,8 @@ EXPECTED_TOP = {"SKILL.md", "floe.json", "references", "scripts"}
 EXPECTED_FILES = 50
 EXPECTED_REFS = 36
 EXPECTED_COMMANDS = 23
-DESCRIPTOR_SHA = "cec4a7fade52f6383f74bc9e15972b911552b2672eada138d890e353899be50a"
+EXPECTED_VERSION = "1.1.1"
+DESCRIPTOR_SHA = "e7c7984a573b5ac9a1447bcc4285d9b1ba09458033f8468f5c86961965e57233"
 DESCRIPTOR_BYTES = 563
 
 
@@ -157,7 +158,7 @@ def main() -> int:
     import hubcore  # isolated byte-identical copy of the authoritative helper
 
     manifest, front = hubcore.validate_package_files(files, require_notice=True)
-    if manifest["id"] != "impeccable" or manifest["version"] != "1.0.0":
+    if manifest["id"] != "impeccable" or manifest["version"] != EXPECTED_VERSION:
         fail("manifest identity")
     if front["name"] != "impeccable":
         fail("frontmatter name")
@@ -240,7 +241,7 @@ def main() -> int:
         fail(f"build_packages failed: {out.stdout}{out.stderr}")
     channel_shas = {}
     for channel in plan["installPlatforms"]:
-        rel = hubcore.package_path_for("impeccable", "1.0.0", channel)
+        rel = hubcore.package_path_for("impeccable", EXPECTED_VERSION, channel)
         arc = isolated / rel
         if not arc.is_file():
             fail(f"builder produced no archive at {rel}")

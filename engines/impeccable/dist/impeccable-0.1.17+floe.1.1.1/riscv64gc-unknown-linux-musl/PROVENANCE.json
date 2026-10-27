@@ -1,0 +1,123 @@
+{
+  "engineId": "impeccable-0.1.17+floe.1.1.1",
+  "binary": "floe-impeccable",
+  "target": "riscv64gc-unknown-linux-musl",
+  "upstream": {
+    "project": "pbakaus/impeccable",
+    "commit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
+    "tree": "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72",
+    "engineVersion": "0.1.17",
+    "packageVersion": "4.7.1",
+    "license": "Apache-2.0",
+    "pinAuthority": "floe-skill-hub docs/UPSTREAM-PINS.json"
+  },
+  "floe": {
+    "adapterVersion": "1.1.1",
+    "adapterCrate": "crates/floe-impeccable",
+    "adapterSources": {
+      "build.rs": "909400be713a65cd40ab99f5d00a4af4a6b6aa512ce8e33f99804a1b56a52f2f",
+      "src/contract.rs": "56752f9c77dd6e563bea0b791f781db1fab9bb4dc575930ef6bd081bbbaf64aa",
+      "src/coverage.rs": "1f47e8865283ad6bdc2b6c9a0849b18cbe3c2311a80fd4bd6b796751cd3a4242",
+      "src/error.rs": "d7dea38cfb43d86fe51e97066a6c2af96fbeb23a559e591a120c31d8f6d89b94",
+      "src/facts.rs": "c27e3fbf324fb9e38c57f160714aa5d3c8516bb504dac44a734a9131b3a63114",
+      "src/identity.rs": "cb2cebf1b5b8765ea2991ad411fe8c9f8cf96bb8ab90cc14c35a604126da417f",
+      "src/main.rs": "6584ca51dd10858232401e31aa9a2e63fa542b1ca36141cd71fea6670a75b57e",
+      "src/passthrough.rs": "bc2da101aebfb329a1dae7567a06e611a1b20f37ce3b310124647ab34fe965d0",
+      "src/scan.rs": "cfae0b73a05f277cd209425d3fea6a512392a2be5ba568d42ff57fd0c6288b8b",
+      "src/signal.rs": "7e9120625509679149cad3e18f1fd4cf2ef150929e3811a82943866c50e4b1cd",
+      "tests/contract_embedded.rs": "84f9b8abee48257d52b382a6144f11ed83e4c92cbc67db95d4725e0675d7533a",
+      "tests/rule_pass_limiter.rs": "22cbb1556d2260c3755032b30a2e11ed9edf7d440d7b7d76db18ee33ac6e4624",
+      "tests/snapshot_scan.rs": "85c979dfe87282f0c2a8b1005453d795779c162a99a578187c1afdd534b575d5"
+    },
+    "contractFiles": {
+      "SNAPSHOT-CONTRACT.md": "0e56b31448e7c7957f3684c1a8f82fc83c2a032a06a958260d635c0cc736bcc5",
+      "fixtures/config-default.v1.json": "be9906f3696a8a1e79da1e38d8e438d43ab4c32d8acbafc2c321d59283487456",
+      "fixtures/facts-hit-tests.v1.json": "64c5cce236dfd9ba1396b65bbd560c42a8dc70cdc6c20330a73978faa2612560",
+      "fixtures/facts-shown-on-scroll.v1.json": "a6759293094c07e0d42dcb455f5d9f855ed8426961460592a74b89cb340de55a",
+      "fixtures/identity-needs.v1.json": "bbcc122bd96c86c395c50a23c47db6d4bd7f7de7da99a83f35ee58a5fa38c08b",
+      "fixtures/identity-positive.v1.json": "5b9c223a793cb12ccf5cf8e1e0efed35720fd7c5f0ffc038a6fbaefc75c98d9d",
+      "fixtures/invalid/facts-bits-mismatch.v1.json": "f5610801c8a8cd6d0acc286a8f57cf255ae306017df173d3d23efe5afe762ea1",
+      "fixtures/invalid/facts-other-tab.v1.json": "23da0c5bdb2ecedbeb9be3a3031b0d4f1ae62011f7a3c15569ab983fa76f6c8f",
+      "fixtures/invalid/facts-stale-capture.v1.json": "67f2161549d616d2979d91693056ad6b981237c714fa7025066e6b8bc76f69ec",
+      "fixtures/invalid/identity-fenced.v1.json": "53450a1a0ec4ebf53032734cd1f1514eaed7a847c1121c30421718aade57d261",
+      "fixtures/invalid/identity-mismatch.v1.json": "204e7d04a6b97c5e8c9046e87830d3a7671c3aece409c332eae8a855f2deb633",
+      "fixtures/invalid/identity-missing-session-binding.v1.json": "c65ac3f53cb8247a795f2d6f80c82eb6a44d3a16ebf997c2ff38a135cf5eca1b",
+      "fixtures/invalid/identity-model-declared-trust.v1.json": "b31eae8e347dc1da2e03626e5c71029cb0fb16184febe3760e6931c39cba8490",
+      "fixtures/invalid/identity-redaction-not-applied.v1.json": "877ef30872338a47fd7399eb361503c8a342f192f93b3028b0a88bae64903dd9",
+      "fixtures/invalid/snapshot-bad-version.v1.json": "04d631c41d31a6874cc0562cb83cad5bcaace6b6ed6201edfe4e74f9090238be",
+      "fixtures/invalid/snapshot-style-column-mismatch.v1.json": "fb81a64a79c7b7234d4b2b7ff55320416e8818ef991ae00fd558dc657289d082",
+      "fixtures/invalid/snapshot-truncated.v1.json": "94695f564b3a419d490e223b2012871dea1342d6395f05744907a18eb0028414",
+      "fixtures/snapshot-needs-hit-tests.v1.json": "4c9fec636a1c0d8a8bc593d963501dbd51aca147cba1e9e25fbd93179944127d",
+      "fixtures/snapshot-positive.v1.json": "2c1fae27ef9135c2e70ba11cce028ddf48c46942f86483362830930821287de1",
+      "producer/NATIVE-PRODUCER.md": "85a08494ce8a8aa6caa31142e49015d860e5a222bd8cf688e60f6dfe33d9b611",
+      "producer/capture-limits.v1.json": "9d87ebb75cc14bedf783f1dbe0ddb8137a4422e36de2e957e0148b4ecfc1e821",
+      "producer/facts.schema.v1.json": "b681b550d1f7fb31303db0f0b78c633ae3cb2b11e4f303aa583e77fe92762a8f",
+      "producer/identity.schema.v1.json": "568933906c53398437ef884710e356f141d0f98baab1253805656614515ee907",
+      "producer/pseudo-props.v1.json": "a8893e759b862f23e97762d5e0743cfd67fc5463a08496e63889d1e7d57e70c1",
+      "producer/result.schema.v1.json": "821b01ca565ad19d9d8fec666e7b028ffc367bd994237f727be73c6b1e177e63",
+      "producer/snapshot.schema.v1.json": "a0463585e7b167175d22482fcf4085131eeea38484efa9e73602f78d6402ff94",
+      "producer/state-pseudos.v1.json": "537fff1d492181b2aa1878952c00acef64fcb3670b451d4624cd8fd3412b8fe1",
+      "producer/style-props.v1.json": "6bcf54a6df96cf37e5be3f1f76948dd1d8913d611c9a705a7fdf50e309a53f95",
+      "snapshot-contract.v1.json": "099cd85703a5ec7b7f8bd1d13e091421a09e4faf40a42240138cba9cbbc75bac"
+    },
+    "patches": [
+      {
+        "patch": "0001-floe-context-network-and-updater-trim.patch",
+        "sha256": "77b9d37cf2814b53fa1b5f2761a5c5f13a641cdc630a2e8d1d8c736943b8a74c"
+      },
+      {
+        "patch": "0002-floe-rule-pass-limiter.patch",
+        "sha256": "15fd69f33b8e84269de26f0fb6792174b0f50d52ecf972a7e4719c6e746b143e"
+      }
+    ],
+    "contractVersion": 1,
+    "license": "MPL-2.0 (Floe-authored adapter files)"
+  },
+  "toolchain": {
+    "command": [
+      "cargo",
+      "build",
+      "--package",
+      "floe-impeccable",
+      "--profile",
+      "release",
+      "--target",
+      "riscv64gc-unknown-linux-musl"
+    ],
+    "target": "riscv64gc-unknown-linux-musl",
+    "profile": "release",
+    "toolchain": "1.98.1",
+    "jobs": 2,
+    "rustflags": "-C target-feature=+crt-static -C link-self-contained=no --remap-path-prefix=<build-tree>=/build --remap-path-prefix=<cargo-target-dir>=/target --remap-path-prefix=<home>/.cargo/registry=/registry --remap-path-prefix=<home>/.rustup=/rustup --remap-path-prefix=<home>=/home",
+    "pathRemapping": "private absolute paths are remapped to /build, /target, /registry, /rustup and /home",
+    "pathRemappingSkipped": [],
+    "crossToolchain": {
+      "zig": "0.17.0",
+      "zigPython": "<zig-venv>/bin/python",
+      "zigTarget": "riscv64-linux-musl",
+      "role": "C compiler and linker driver; the engine graph is pure Rust after patch 0001, so no C or assembly is compiled and the link uses the Rust self-contained musl runtime"
+    },
+    "elapsedSeconds": 79.03,
+    "exitCode": 0,
+    "log": "<log-dir>/cargo-build-riscv64gc-unknown-linux-musl-release.log",
+    "logSha256": "47cceb6e09d59f88917186e5a70a8132c1982063fc8e5bdf3b63270d548841fa",
+    "warnings": 2
+  },
+  "artifact": {
+    "path": "<cargo-target-dir>/riscv64gc-unknown-linux-musl/release/floe-impeccable",
+    "bytes": 5594368,
+    "sha256": "774333d30d6e54604342182e49853851c7e0ebfa9e92fc4216f4a68872d00a1a",
+    "format": "ELF",
+    "elfClass": "ELF64",
+    "endian": "little",
+    "elfMachine": "RISC-V",
+    "elfType": "EXEC",
+    "static": true,
+    "dynamic": false,
+    "probe": {
+      "command": null,
+      "note": "no runner for this architecture on this host; runtime verification is recorded as pending"
+    }
+  },
+  "notVendored": "the full upstream source tree is never committed; it is exported from the pinned commit at build time"
+}

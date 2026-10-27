@@ -667,5 +667,5 @@ fn the_engine_identity_travels_with_every_result() {
     assert_eq!(engine["upstreamEngineVersion"], json!("0.1.17"));
     assert_eq!(engine["targetTriple"].as_str().unwrap().len() > 5, true);
     assert_eq!(engine["upstreamCommit"].as_str().unwrap().len(), 40);
-    assert_eq!(engine["engineId"], json!("impeccable-0.1.17+floe.1.0.0"));
+    assert_eq!(engine["engineId"], json!("impeccable-0.1.17+floe.1.1.1"));
 }

@@ -42,12 +42,15 @@ from pathlib import Path
 CANONICAL_TOP = ("SKILL.md", "floe.json", "references", "assets", "scripts", "agents")
 PIN_COMMIT = "4fc2f83e1c8710dba772bfd4523d0efab57737b6"
 PIN_TREE = "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72"
-ENGINE_ID = "impeccable-0.1.17+floe.1.0.0"
-ENGINE_SHA = "af8795bf9636e763541c58ef90ee889941e468f453ec6580c32a89a5a758b87b"
-ENGINE_BYTES = 5_579_704
-CONTRACT_SHA = "baf2453164be6162703af9d671be16da152fa874db53ce95ad5b3516d40de4a3"
-DESCRIPTOR_SHA = "cec4a7fade52f6383f74bc9e15972b911552b2672eada138d890e353899be50a"
+PACKAGED_VERSION = "1.1.1"
+ENGINE_COMPONENT_VERSION = "0.1.17+floe.1.1.1"
+ENGINE_ID = "impeccable-" + ENGINE_COMPONENT_VERSION
+ENGINE_SHA = "774333d30d6e54604342182e49853851c7e0ebfa9e92fc4216f4a68872d00a1a"
+ENGINE_BYTES = 5_594_368
+CONTRACT_SHA = "099cd85703a5ec7b7f8bd1d13e091421a09e4faf40a42240138cba9cbbc75bac"
+DESCRIPTOR_SHA = "e7c7984a573b5ac9a1447bcc4285d9b1ba09458033f8468f5c86961965e57233"
 DESCRIPTOR_BYTES = 563
+MINIMUM_APP_VERSION = "1.7.60"
 EXPECTED_REFS = 36
 EXPECTED_COMMANDS = 23
 
@@ -213,7 +216,17 @@ def main() -> int:
     descriptor_bytes = args.descriptor.read_bytes()
     require(len(descriptor_bytes) == DESCRIPTOR_BYTES
             and sha256_bytes(descriptor_bytes) == DESCRIPTOR_SHA,
-            "descriptor.v1.json bytes drifted from the frozen v1 descriptor")
+            "descriptor.v1.json bytes drifted from the frozen 1.1.1 v1 descriptor")
+    descriptor_value = json.loads(descriptor_bytes)
+    require(descriptor_value["componentVersion"] == ENGINE_COMPONENT_VERSION
+            and descriptor_value["minimumAppVersion"] == MINIMUM_APP_VERSION
+            and descriptor_value["artifact"]["path"]
+                == f"engines/impeccable/dist/impeccable-{ENGINE_COMPONENT_VERSION}/"
+                   "riscv64gc-unknown-linux-musl/floe-impeccable"
+            and descriptor_value["artifact"]["sha256"] == ENGINE_SHA
+            and descriptor_value["artifact"]["size"] == ENGINE_BYTES
+            and descriptor_value["captureContract"]["sha256"] == CONTRACT_SHA,
+            "descriptor v1 cross-fields drifted from the 1.1.1 identity constants")
     engine_lock = json.loads(args.engine_lock.read_text(encoding="utf-8"))
 
     out = args.out
@@ -296,7 +309,7 @@ def main() -> int:
 
     # ---------------- floe.json (canonical bytes) ----------------
     manifest = {
-        "schemaVersion": 1, "id": "impeccable", "version": "1.0.0",
+        "schemaVersion": 1, "id": "impeccable", "version": PACKAGED_VERSION,
         "capabilities": ["browser.interact", "browser.observe", "execution.remote",
                           "workspace.read", "workspace.write"],
         "tools": ["exec.shell"], "platforms": ["ios"], "scriptRuntime": "remote",
@@ -333,6 +346,51 @@ def main() -> int:
                    "#                         Hub layout); an explicit value always wins")
     require(launcher.count(old_comment) == 1, "launcher header comment block drifted")
     launcher = launcher.replace(old_comment, new_comment)
+    # Floe default scan policy (user policy, 2026-10-27): the raw engine CLI keeps
+    # its frozen 120000 ms default; the product launcher appends `--no-timeout` to
+    # `snapshot-scan` ONLY when the caller chose no timeout flag. Explicit choices
+    # (`--timeout-ms` including 0, the `--timeout-ms=` form, `--no-timeout`) pass
+    # through untouched, the engine keeps refusing their mutual exclusion, and the
+    # hit-test/round/byte caps are unchanged.
+    old_bullet = "#   * the upstream engine-probe handshake is kept for untrusted candidates\n"
+    new_bullet = (old_bullet
+        + "#   * `snapshot-scan` gets `--no-timeout` by default unless the caller\n"
+        + "#     chose a timeout flag; explicit choices always pass through untouched\n"
+        + "#     (see \"Floe default scan policy\" below);\n")
+    require(launcher.count(old_bullet) == 1, "launcher probe-handshake bullet drifted")
+    launcher = launcher.replace(old_bullet, new_bullet)
+    policy_block = (
+        "# Floe default scan policy (user policy, 2026-10-27): an ordinary Impeccable\n"
+        "# design scan has NO engine deadline. This policy is about the engine\n"
+        "# deadline only; existing caller/task wait and cancel controls are what\n"
+        "# bound a scan run and stay unchanged. The raw engine CLI keeps its frozen\n"
+        "# 120000 ms default unchanged; this launcher, the skill's normal scan route,\n"
+        "# appends `--no-timeout` ONLY when the caller asked for `snapshot-scan` and\n"
+        "# chose no timeout flag at all. Every explicit caller choice passes through\n"
+        "# untouched and wins: `--timeout-ms 0` stays an immediate typed timeout, an\n"
+        "# explicit finite `--timeout-ms <n>` stays that finite budget, an explicit\n"
+        "# `--no-timeout` stays as given, and the engine's mutual-exclusion refusal of\n"
+        "# `--no-timeout` together with `--timeout-ms` is never bypassed here. Hit-test,\n"
+        "# round and byte caps are untouched by this policy; only the wall-clock\n"
+        "# deadline is removed, and the result then reports `budget.timeoutMs: null`.\n"
+        "# An engine build that predates `--no-timeout` fails closed on the appended\n"
+        "# flag (typed argument error) \u2014 there is no silent fallback to an old binary.\n"
+        'if [ "${1:-}" = "snapshot-scan" ]; then\n'
+        "  floe_has_timeout=0\n"
+        '  for floe_arg in "$@"; do\n'
+        '    case "$floe_arg" in\n'
+        "      --timeout-ms|--timeout-ms=*|--no-timeout) floe_has_timeout=1; break ;;\n"
+        "    esac\n"
+        "  done\n"
+        '  if [ "$floe_has_timeout" = 0 ]; then set -- "$@" --no-timeout; fi\n'
+        "fi\n")
+    detect_anchor = ('export IMPECCABLE_SKILL_DIR IMPECCABLE_SELF\n\n'
+                     'case "$(uname -s 2>/dev/null || echo unknown)" in\n')
+    require(launcher.count(detect_anchor) == 1, "launcher os-detect anchor drifted")
+    launcher = launcher.replace(
+        detect_anchor,
+        'export IMPECCABLE_SKILL_DIR IMPECCABLE_SELF\n\n' + policy_block + "\n"
+        + 'case "$(uname -s 2>/dev/null || echo unknown)" in\n')
     (out / "scripts" / "floe-impeccable.sh").write_text(launcher, encoding="utf-8")
 
     # ---------------- references: licenses, descriptor ----------------
@@ -379,7 +437,13 @@ this package.
                       "change": "IMPECCABLE_SKILL_DIR default moved to the canonical read-only data root "
                                 "references/engine-data, with explicit-value override first and a "
                                 "dev-checkout fallback; comments updated; resolution order, digest gate and "
-                                "no-download behaviour unchanged"},
+                                "no-download behaviour unchanged. The snapshot-scan default route now "
+                                "appends `--no-timeout` ONLY when the caller chose no timeout flag "
+                                "(explicit `--timeout-ms` including 0, the `--timeout-ms=` form and "
+                                "explicit `--no-timeout` pass through untouched; the engine still refuses "
+                                "the mutual exclusion; the raw CLI default 120000 ms and every "
+                                "hit-test/round/byte cap are unchanged; pre-1.1.1 engines fail closed "
+                                "on the appended flag)"},
         "movedOut": ["LICENSE/NOTICE.md (package root) -> references/licenses/",
                       "README.md -> references/PROVENANCE.md",
                       "SOURCE-LOCK.json / MODIFICATIONS.json / MODIFICATIONS.md -> references/",
@@ -387,8 +451,11 @@ this package.
                       "(engines/impeccable/build/skill-source/), never inside the installed package"],
         "descriptor": {"path": "references/engine-dependency.json", "bytes": DESCRIPTOR_BYTES,
                         "sha256": DESCRIPTOR_SHA,
-                        "authority": "frozen managed runtime artifact descriptor v1 "
-                                     "(engines/impeccable/runtime-dependency/, coordinator 2026-10-26)"},
+                        "componentVersion": ENGINE_COMPONENT_VERSION,
+                        "minimumAppVersion": MINIMUM_APP_VERSION,
+                        "authority": "frozen managed runtime artifact descriptor v1 for "
+                                     "0.1.17+floe.1.1.1 (engines/impeccable/runtime-dependency/, "
+                                     "Root engine111 public-source acceptance 2026-10-27)"},
     }
 
     # ---------------- MODIFICATIONS.json / .md ----------------
@@ -424,9 +491,12 @@ exact public regeneration command; nothing here was hand-edited):
    to `references/engine-data/reference/*.md` (the actual installed paths),
    annotates links to excluded references, inserts the installed-layout
    mapping, replaces the launcher sentence with the managed-provisioning truth,
-   mirrors the normalized corpus under `references/engine-data/` (the read-only
-   skill dir the unchanged binary expects), and moves all audit data below
-   `references/`. `MODIFICATIONS.json` records every count and digest.
+   applies the Floe default scan policy to the launcher (`snapshot-scan` appends
+   `--no-timeout` only when the caller chose no timeout flag; explicit timeout
+   choices pass through untouched), mirrors the normalized corpus under
+   `references/engine-data/` (the read-only skill dir the unchanged binary
+   expects), and moves all audit data below `references/`. `MODIFICATIONS.json`
+   records every count and digest.
 
 Engine: `floe-impeccable` static riscv64 ELF, sha256 `{ENGINE_SHA}`,
 {ENGINE_BYTES} bytes — **never inside this package**. The binding is the frozen
@@ -434,11 +504,18 @@ managed runtime artifact descriptor `references/engine-dependency.json`
 (sha256 `{DESCRIPTOR_SHA}`, {DESCRIPTOR_BYTES} bytes, seven fields, no URLs, no
 commands). Capture contract digest: `{CONTRACT_SHA}`.
 
-Verified boundaries: the artifact is verified under reference riscv64 emulation
-and on host parity only (see `engines/impeccable/HANDOFF.md` in the hub); the
-Floe TinyEMU guest run, the native probe, App acceptance and publication are
-pending and owned by the release owner. This package is staged candidate
-content: no review, qualification or publication claim.
+Verified boundaries: exactly ONE observed 1.1.1 engine binary exists — no
+two-build byte-equality is claimed for it (the build recipe documents the
+toolchain and flag requirements for a byte-stable rebuild without asserting
+one). What IS deterministic here is the skill source and the canonical package
+bytes: two fresh runs of this pinned two-stage pipeline produce byte-identical
+output. Component qualification to date covers reference riscv64 emulation and
+host parity, the contract read-back against the shipped binary and selected
+TinyEMU guest legs accepted by the release owner; the full native matrix (real
+WebKit capture loop, launcher default route, cooperative cancellation), App
+acceptance and publication remain pending and owned by the release owner. This
+package is regenerated candidate content: no review, qualification or
+publication claim.
 """
     (out / "references" / "PROVENANCE.md").write_text(provenance, encoding="utf-8")
 
@@ -462,6 +539,11 @@ Stage 2 (canonicalize) changed, per file counts in `canonicalization`:
   default `IMPECCABLE_SKILL_DIR` is now the engine-data root (explicit value
   wins; dev-checkout fallback). Resolution, digest gate and no-download
   behaviour are unchanged ({sha256_file(args.launcher)} was the parent bytes).
+  The same transform applies the Floe default scan policy: `snapshot-scan`
+  gains `--no-timeout` only when the caller chose no timeout flag; explicit
+  `--timeout-ms` (including `0`), the `--timeout-ms=` form and explicit
+  `--no-timeout` pass through, the engine keeps refusing the mutual exclusion,
+  and the raw CLI default and all caps are unchanged.
 - Moved below `references/`: upstream `LICENSE`, `NOTICE.md`, the source lock,
   the modification record, a Floe license note, and the new
   `PROVENANCE.md`. The maintenance normalizer left the installed package.
@@ -504,12 +586,12 @@ design (live, live-setup, hooks, component-review, doctor) and one command
             "engineLock": "engines/impeccable/ENGINE-LOCK.json",
             "engineId": engine_lock.get("engineId", ENGINE_ID),
             "engineArtifact": {
-                "hubPath": ("engines/impeccable/dist/impeccable-0.1.17+floe.1.0.0/"
-                            "riscv64gc-unknown-linux-musl/floe-impeccable"),
+                "hubPath": descriptor_value["artifact"]["path"],
                 "sha256": ENGINE_SHA, "bytes": ENGINE_BYTES,
                 "format": "static ELF64 little-endian RISC-V EXEC (musl, stripped)"},
             "runtimeDescriptor": {"path": "references/engine-dependency.json",
                                    "sha256": DESCRIPTOR_SHA, "bytes": DESCRIPTOR_BYTES,
+                                   "minimumAppVersion": MINIMUM_APP_VERSION,
                                    "authority": "frozen managed runtime artifact descriptor v1 "
                                                 "(engines/impeccable/runtime-dependency/)"},
             "captureContractSha256": CONTRACT_SHA,
@@ -521,7 +603,7 @@ design (live, live-setup, hooks, component-review, doctor) and one command
             "engineDataRoot": "references/engine-data",
             "engineDataReadBy": "IMPECCABLE_SKILL_DIR (runtime-set; launcher default)",
             "launcher": "scripts/floe-impeccable.sh",
-            "packagedVersion": "1.0.0",
+            "packagedVersion": PACKAGED_VERSION,
             "containsNativeBinary": False,
         },
         "notVendored": list(stage1_lock["notVendored"])

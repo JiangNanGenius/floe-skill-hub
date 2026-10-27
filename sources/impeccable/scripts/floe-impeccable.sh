@@ -20,6 +20,9 @@
 #     default is off: hashing a multi-megabyte binary on an emulated guest costs
 #     real time on every invocation;
 #   * the upstream engine-probe handshake is kept for untrusted candidates
+#   * `snapshot-scan` gets `--no-timeout` by default unless the caller
+#     chose a timeout flag; explicit choices always pass through untouched
+#     (see "Floe default scan policy" below);
 #     (a binary found on PATH), so a same-named binary from another tool is
 #     never exec'd blindly.
 #
@@ -49,6 +52,31 @@ if [ -z "${IMPECCABLE_SKILL_DIR:-}" ]; then
 fi
 : "${IMPECCABLE_SELF:=$0}"
 export IMPECCABLE_SKILL_DIR IMPECCABLE_SELF
+
+# Floe default scan policy (user policy, 2026-10-27): an ordinary Impeccable
+# design scan has NO engine deadline. This policy is about the engine
+# deadline only; existing caller/task wait and cancel controls are what
+# bound a scan run and stay unchanged. The raw engine CLI keeps its frozen
+# 120000 ms default unchanged; this launcher, the skill's normal scan route,
+# appends `--no-timeout` ONLY when the caller asked for `snapshot-scan` and
+# chose no timeout flag at all. Every explicit caller choice passes through
+# untouched and wins: `--timeout-ms 0` stays an immediate typed timeout, an
+# explicit finite `--timeout-ms <n>` stays that finite budget, an explicit
+# `--no-timeout` stays as given, and the engine's mutual-exclusion refusal of
+# `--no-timeout` together with `--timeout-ms` is never bypassed here. Hit-test,
+# round and byte caps are untouched by this policy; only the wall-clock
+# deadline is removed, and the result then reports `budget.timeoutMs: null`.
+# An engine build that predates `--no-timeout` fails closed on the appended
+# flag (typed argument error) — there is no silent fallback to an old binary.
+if [ "${1:-}" = "snapshot-scan" ]; then
+  floe_has_timeout=0
+  for floe_arg in "$@"; do
+    case "$floe_arg" in
+      --timeout-ms|--timeout-ms=*|--no-timeout) floe_has_timeout=1; break ;;
+    esac
+  done
+  if [ "$floe_has_timeout" = 0 ]; then set -- "$@" --no-timeout; fi
+fi
 
 case "$(uname -s 2>/dev/null || echo unknown)" in
   Darwin) os=darwin ;;

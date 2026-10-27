@@ -15,8 +15,8 @@
     "upstreamCommit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
     "upstreamTree": "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72",
     "pinAuthority": "floe-skill-hub docs/UPSTREAM-PINS.json (reviewBaselineDate 2026-10-26)",
-    "floeAdapterVersion": "1.0.0",
-    "engineId": "impeccable-0.1.17+floe.1.0.0",
+    "floeAdapterVersion": "1.1.1",
+    "engineId": "impeccable-0.1.17+floe.1.1.1",
     "targetTriple": "riscv64gc-unknown-linux-musl",
     "abi": "static ELF, no dynamic loader dependency"
   },
@@ -239,7 +239,7 @@
     {
       "name": "engine-probe",
       "purpose": "launcher handshake",
-      "stdout": "impeccable-engine 0.1.17+floe.1.0.0\n",
+      "stdout": "impeccable-engine 0.1.17+floe.1.1.1\n",
       "exit": 0
     },
     {
@@ -266,7 +266,8 @@
         "--max-rounds <n> (default 4)",
         "--max-hit-tests <n> (default 4096 per round, 16384 total)",
         "--max-snapshot-bytes <n> (default 48 MiB, hard floor 1 MiB)",
-        "--timeout-ms <n> (default 120000; cancellation leaves an explicit failed result)",
+        "--timeout-ms <n> (default 120000; explicit per-invocation deadline; 0 is an IMMEDIATE deadline, never unlimited; mutually exclusive with --no-timeout)",
+        "--no-timeout (explicit unlimited duration per the 2026-10-26 caller-policy; result budget.timeoutMs is JSON null; cooperative cancellation still honored)",
         "--strict-schema (reject unknown snapshot fields; default on for v1)"
       ],
       "exit": {

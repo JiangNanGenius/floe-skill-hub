@@ -105,6 +105,13 @@
           "items": {
             "type": "string"
           }
+        },
+        "timeoutMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "effective hit-test deadline in milliseconds for this invocation: integer for an explicit --timeout-ms <n> (0 = immediate deadline) or the frozen 120000 default; JSON null only under the explicit --no-timeout caller policy (no deadline at all). Never a synthetic huge value."
         }
       }
     },

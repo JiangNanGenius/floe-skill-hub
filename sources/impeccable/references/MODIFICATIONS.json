@@ -612,10 +612,12 @@
   ],
   "canonicalization": {
     "descriptor": {
-      "authority": "frozen managed runtime artifact descriptor v1 (engines/impeccable/runtime-dependency/, coordinator 2026-10-26)",
+      "authority": "frozen managed runtime artifact descriptor v1 for 0.1.17+floe.1.1.1 (engines/impeccable/runtime-dependency/, Root engine111 public-source acceptance 2026-10-27)",
       "bytes": 563,
+      "componentVersion": "0.1.17+floe.1.1.1",
+      "minimumAppVersion": "1.7.60",
       "path": "references/engine-dependency.json",
-      "sha256": "cec4a7fade52f6383f74bc9e15972b911552b2672eada138d890e353899be50a"
+      "sha256": "e7c7984a573b5ac9a1447bcc4285d9b1ba09458033f8468f5c86961965e57233"
     },
     "engineDataMirror": {
       "commands": 23,
@@ -843,8 +845,8 @@
       "normalized": "name + description scalars only; allowed-tools/Bash/argument-hint/user-invocable/license fields removed (Floe grants come from floe.json and the runtime; the upstream license is preserved under references/licenses/)"
     },
     "launcher": {
-      "canonicalSha256": "e1760fb8a6b75e63c33d26969ad799c4ae7143a88a582ae29cac5dcde4cb222f",
-      "change": "IMPECCABLE_SKILL_DIR default moved to the canonical read-only data root references/engine-data, with explicit-value override first and a dev-checkout fallback; comments updated; resolution order, digest gate and no-download behaviour unchanged",
+      "canonicalSha256": "227161bd43a09b05cb949e5750c1037ca34e06968f9ed3979052bbb1d3f8a1b8",
+      "change": "IMPECCABLE_SKILL_DIR default moved to the canonical read-only data root references/engine-data, with explicit-value override first and a dev-checkout fallback; comments updated; resolution order, digest gate and no-download behaviour unchanged. The snapshot-scan default route now appends `--no-timeout` ONLY when the caller chose no timeout flag (explicit `--timeout-ms` including 0, the `--timeout-ms=` form and explicit `--no-timeout` pass through untouched; the engine still refuses the mutual exclusion; the raw CLI default 120000 ms and every hit-test/round/byte cap are unchanged; pre-1.1.1 engines fail closed on the appended flag)",
       "parentSha256": "b317617bb9f473a4d80b3477543d015f8d7d2645f63f0998acbce43bcbf58cc4"
     },
     "movedOut": [
@@ -947,10 +949,11 @@
     "changes": [
       "resolved {{scripts_path}}/{{command_prefix}}/{{command_hint}} for the Floe launcher",
       "rewrote `impeccable <verb>` and `npx impeccable <verb>` to `floe-impeccable <verb>`",
-      "inserted the Floe v1 engine surface, the snapshot-scan design flow and the coverage limits"
+      "inserted the Floe v1 engine surface, the snapshot-scan design flow and the coverage limits",
+      "documented the Floe default scan policy: the launcher appends `--no-timeout` to `snapshot-scan` only when the caller chose no timeout flag; explicit timeout choices (including `--timeout-ms 0`) and every cap are unchanged"
     ],
     "file": "skill/SKILL.md",
-    "floeSha256": "34ff8c715a51aaf397496bf0a3e330b1d2d619e0ad5fd65d1bfa2c76ba9874b7",
+    "floeSha256": "8ddb1c177566abf9901d5d5b225804d023cc9a011d3c5aba7183eccc1e51d9a6",
     "invocationsRewritten": {
       "backticked": 4,
       "launcher": 4,
@@ -974,7 +977,7 @@
   },
   "stage1Output": {
     "commandMetadataSha256": "002db467b0c93c2361e3d07750e1b6cc3f5b56d14cbfc7561d7f03fcd076c740",
-    "skillMdSha256": "34ff8c715a51aaf397496bf0a3e330b1d2d619e0ad5fd65d1bfa2c76ba9874b7",
+    "skillMdSha256": "8ddb1c177566abf9901d5d5b225804d023cc9a011d3c5aba7183eccc1e51d9a6",
     "versionSha256": "bd270b0ddecef6c53cde260e7964048b1186147606e6643d2ccb8cf04e167bd1"
   },
   "upstreamLicense": "Apache-2.0 (LICENSE and NOTICE.md copied verbatim)"

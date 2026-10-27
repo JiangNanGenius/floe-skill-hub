@@ -85,7 +85,7 @@ Binary: `floe-impeccable` (Floe adapter over the pinned engine crates).
 
 | Verb | Purpose |
 | --- | --- |
-| `engine-probe` | launcher handshake; prints `impeccable-engine 0.1.17+floe.1.0.0` |
+| `engine-probe` | launcher handshake; prints `impeccable-engine 0.1.17+floe.1.1.1` |
 | `contract` | prints `snapshot-contract.v1.json` |
 | `snapshot-schema` | prints the producer-facing capture contract (columns, limits, shapes) |
 | `snapshot-scan` | runs the rule pass over a snapshot, answers Needs from supplied facts, writes the result |
@@ -94,7 +94,18 @@ Binary: `floe-impeccable` (Floe adapter over the pinned engine crates).
 `snapshot-scan` flags: `--snapshot <path>` (required), `--identity <path>`, `--facts <path>`
 (repeatable), `--config <path>`, `--out <path>`, `--max-rounds <n>` (default 4),
 `--max-hit-tests <n>` (4096/round, 16384 total), `--max-snapshot-bytes <n>` (48 MiB),
-`--timeout-ms <n>` (120000), `--strict-schema` (on by default in v1).
+`--timeout-ms <n>` (120000), `--no-timeout`, `--strict-schema` (on by default in v1).
+
+Duration policy (2026-10-26): `--timeout-ms <n>` is an explicit per-invocation
+deadline in milliseconds; `--timeout-ms 0` is an **immediate** deadline, never
+unlimited. `--no-timeout` is the explicit caller-policy flag for an unlimited
+duration; it is mutually exclusive with an explicit `--timeout-ms`, and
+cooperative cancellation is still honored. The result document reports the
+existing `budget.timeoutMs` key as JSON **null** under `--no-timeout` (actual
+effective: no deadline); an explicit `--timeout-ms <n>` reports the integer
+`n`; no flag reports the frozen default `120000`. The key never carries a
+stale value, never `0` unless requested, and never a synthetic huge cap. No
+new top-level result keys exist.
 
 Exit codes — **3 and 4 are never a clean scan**:
 

@@ -1,5 +1,5 @@
 {
-  "engineId": "impeccable-0.1.17+floe.1.0.0",
+  "engineId": "impeccable-0.1.17+floe.1.1.1",
   "status": "candidate-build-not-qualified",
   "upstream": {
     "project": "pbakaus/impeccable",
@@ -26,14 +26,16 @@
     }
   },
   "floe": {
-    "adapterVersion": "1.0.0",
+    "adapterVersion": "1.1.1",
     "contractVersion": 1,
     "adapterCrate": "crates/floe-impeccable",
     "adapterSourceOfTruth": "engines/impeccable/adapter",
     "license": "MPL-2.0 for Floe-authored adapter files; upstream crates keep Apache-2.0",
     "patches": [
-      "patches/0001-floe-context-network-and-updater-trim.patch"
-    ]
+      "patches/0001-floe-context-network-and-updater-trim.patch",
+      "patches/0002-floe-rule-pass-limiter.patch"
+    ],
+    "identityGate": "the adapter crate Cargo.toml version is the single component version constant; build/build_engine.py derives the receipt, dist directory name and the contract engine identity from it and refuses to compile on any drift (Root contract review 2026-10-27: the 1.1.0 contract carried a stale 1.0.0 engine-probe example)"
   },
   "vendoring": "the full upstream source tree is never committed to this repository; build_engine.py exports it from the pinned commit into task scratch, applies the tracked patches and stages the tracked adapter crate",
   "toolchain": {
@@ -87,5 +89,13 @@
     "impeccable-detect",
     "impeccable-html",
     "impeccable-context"
-  ]
+  ],
+  "component": {
+    "componentID": "impeccable-engine",
+    "componentVersion": "0.1.17+floe.1.1.1",
+    "artifactSha256": "774333d30d6e54604342182e49853851c7e0ebfa9e92fc4216f4a68872d00a1a",
+    "artifactBytes": 5594368,
+    "captureContractSha256": "099cd85703a5ec7b7f8bd1d13e091421a09e4faf40a42240138cba9cbbc75bac",
+    "evidence": "see the 1.1.1 candidate package SHA256SUMS.txt and the Floe private engine111 acceptance records"
+  }
 }

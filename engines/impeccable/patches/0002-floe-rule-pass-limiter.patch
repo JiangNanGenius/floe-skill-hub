@@ -1,0 +1,407 @@
+diff --git a/crates/foundation/src/browser/dom.rs b/crates/foundation/src/browser/dom.rs
+--- a/crates/foundation/src/browser/dom.rs
++++ b/crates/foundation/src/browser/dom.rs
+@@ -266,6 +266,20 @@
+     fn shown_when_scrolled_to(&self, _el: ElId) -> Option<bool> {
+         None
+     }
++
++    // ── cooperative run limiter ───────────────────────────────────────
++    //
++    /// A typed stop reason when the embedding adapter installed a
++    /// [`super::snapshot::PassLimiter`] and it has tripped (cancellation,
++    /// deadline, or the unique-miss admission cap). Default: no limiter, so
++    /// every check answers `None` and the pass runs to completion. Partial
++    /// results after a trip are the caller's to discard.
++    fn cooperative_trip(&self) -> Option<super::snapshot::PassTrip> {
++        None
++    }
++
++    /// Driver-loop progress the limiter telemetry reports. Default: ignored.
++    fn note_element_done(&self, _n: usize) {}
+ 
+     // ── image load state ──────────────────────────────────────────────
+     //
+diff --git a/crates/foundation/src/browser/snapshot.rs b/crates/foundation/src/browser/snapshot.rs
+--- a/crates/foundation/src/browser/snapshot.rs
++++ b/crates/foundation/src/browser/snapshot.rs
+@@ -656,6 +656,25 @@
+     Rect::from_xywh(v[0], v[1], v[2], v[3])
+ }
+ 
++/// Why a rule pass stopped early. Typed propagation only — the release
++/// profile is `panic = "abort"`, so no abort path may rely on unwinding.
++#[derive(Clone, Copy, PartialEq, Eq, Debug)]
++pub enum PassTrip {
++    Cancelled,
++    Deadline,
++    HitTestBudget,
++}
++
++/// A cooperative run limiter the embedding adapter installs for one pass.
++/// Checked at per-element, page-pass and expensive-inner-loop boundaries.
++pub trait PassLimiter {
++    fn cancelled(&self) -> bool;
++    fn deadline_exceeded(&self) -> bool;
++    /// Trip when unique misses would EXCEED this cap (matches the adapter's
++    /// post-hoc `pending > maxHitTestsPerRound` semantics exactly).
++    fn max_unique_misses(&self) -> Option<usize>;
++}
++
+ /// [`Dom`] over a [`Snapshot`], with per-run memo tables, a fact table for
+ /// hit tests, and the record of what the run could not answer.
+ pub struct SnapshotDom {
+@@ -669,6 +688,12 @@
+     unknown_props: RefCell<Vec<String>>,
+     shown_on_scroll: RefCell<HashMap<ElId, bool>>,
+     scroll_probes: RefCell<Vec<ElId>>,
++    scroll_probe_seen: RefCell<HashSet<ElId>>,
++    limiter: RefCell<Option<Box<dyn PassLimiter>>>,
++    trip: std::cell::Cell<Option<PassTrip>>,
++    all_els: RefCell<Option<Vec<ElId>>>,
++    elements_done: std::cell::Cell<usize>,
++    attempted_over_cap: std::cell::Cell<usize>,
+ }
+ 
+ impl SnapshotDom {
+@@ -695,6 +720,12 @@
+             unknown_props: RefCell::new(Vec::new()),
+             shown_on_scroll: RefCell::new(HashMap::new()),
+             scroll_probes: RefCell::new(Vec::new()),
++            scroll_probe_seen: RefCell::new(HashSet::new()),
++            limiter: RefCell::new(None),
++            trip: std::cell::Cell::new(None),
++            all_els: RefCell::new(None),
++            elements_done: std::cell::Cell::new(0),
++            attempted_over_cap: std::cell::Cell::new(0),
+         };
+         let inline: Vec<HitTest> = dom.snap.hits.clone();
+         dom.add_hits(&inline);
+@@ -727,9 +758,12 @@
+             }
+         }
+         self.scroll_probes.borrow_mut().clear();
++        self.scroll_probe_seen.borrow_mut().clear();
+         // Answers may change what a later run asks; forget the misses.
+         self.misses.borrow_mut().clear();
+         self.missed_keys.borrow_mut().clear();
++        // Facts can change what a later run asks; drop the all-element memo.
++        self.all_els.borrow_mut().take();
+     }
+ 
+     /// The questions the runs so far could not answer (drained).
+@@ -744,7 +778,58 @@
+     /// [`Self::take_needs`]: only the URL engine's hidden-text step answers
+     /// them, and a consumer that answers hit tests alone never sees them.
+     pub fn take_scroll_probes(&self) -> Vec<ElId> {
++        self.scroll_probe_seen.borrow_mut().clear();
+         std::mem::take(&mut *self.scroll_probes.borrow_mut())
++    }
++
++    /// Install (or clear) the cooperative run limiter, resetting trip and
++    /// progress state. Called once per run by the embedding adapter.
++    pub fn set_pass_limiter(&self, limiter: Option<Box<dyn PassLimiter>>) {
++        *self.limiter.borrow_mut() = limiter;
++        self.trip.set(None);
++        self.elements_done.set(0);
++        self.attempted_over_cap.set(0);
++    }
++
++    /// Drain the typed stop reason recorded during the pass, if any.
++    pub fn take_pass_trip(&self) -> Option<PassTrip> {
++        self.trip.take()
++    }
++
++    /// Unique miss points stored so far (the honest stored count).
++    pub fn misses_recorded(&self) -> usize {
++        self.missed_keys.borrow().len()
++    }
++
++    /// Elements the driver loop fully processed before any trip.
++    pub fn elements_done(&self) -> usize {
++        self.elements_done.get()
++    }
++
++    /// Unique miss attempts prevented by the admission cap (never stored).
++    pub fn attempted_over_cap(&self) -> usize {
++        self.attempted_over_cap.get()
++    }
++
++    /// One cooperative check: a recorded trip wins, else cancel, else the
++    /// deadline. The first trip sticks until [`Self::take_pass_trip`].
++    pub fn cooperative_trip(&self) -> Option<PassTrip> {
++        if let Some(t) = self.trip.get() {
++            return Some(t);
++        }
++        let limiter = self.limiter.borrow();
++        let limiter = limiter.as_ref()?;
++        if limiter.cancelled() {
++            self.trip.set(Some(PassTrip::Cancelled));
++        } else if limiter.deadline_exceeded() {
++            self.trip.set(Some(PassTrip::Deadline));
++        }
++        self.trip.get()
++    }
++
++    /// Driver-loop progress; the adapter reads it for failure telemetry.
++    pub fn note_element_done(&self, n: usize) {
++        self.elements_done.set(n);
+     }
+ 
+     /// Whether anything is pending.
+@@ -768,9 +853,27 @@
+         if let Some(v) = self.hits.borrow().get(&k) {
+             return Some(v.clone());
+         }
+-        if self.missed_keys.borrow_mut().insert(k) {
+-            self.misses.borrow_mut().push([x, y]);
+-        }
++        // A repeat of an already-recorded miss never counts and never trips.
++        if self.missed_keys.borrow().contains(&k) {
++            return None;
++        }
++        // Early unique-miss admission: a NEW key at the cap trips BEFORE any
++        // insertion. Stored uniques can reach exactly the cap; the next new
++        // point is prevented and counted honestly. This matches the adapter's
++        // post-hoc `pending > max` refusal on the same input, caught early.
++        if let Some(limiter) = self.limiter.borrow().as_ref() {
++            if let Some(max) = limiter.max_unique_misses() {
++                let len = self.missed_keys.borrow().len();
++                if len >= max {
++                    self.attempted_over_cap.set(self.attempted_over_cap.get() + 1);
++                    self.trip.set(Some(PassTrip::HitTestBudget));
++                    eprintln!("[debug-gate] TRIP len={len} max={max}");
++                    return None;
++                }
++            }
++        }
++        self.missed_keys.borrow_mut().insert(k);
++        self.misses.borrow_mut().push([x, y]);
+         None
+     }
+ 
+@@ -802,8 +905,25 @@
+         self.snap.body
+     }
+     fn query_all(&self, root: Option<ElId>, selector: &str) -> Result<Vec<ElId>, SelectorError> {
+-        let mut out = Vec::new();
+-        self.snap.descendants(root, &mut out);
++        // The all-element list is a pure function of the immutable snapshot
++        // tree: memoize it for the run (invalidated by `add_facts`), so the
++        // ~85 full-tree query sites each filter instead of re-walking.
++        let out = match root {
++            None => {
++                let mut cache = self.all_els.borrow_mut();
++                if cache.is_none() {
++                    let mut v = Vec::new();
++                    self.snap.descendants(None, &mut v);
++                    *cache = Some(v);
++                }
++                cache.as_ref().expect("just filled").clone()
++            }
++            Some(_) => {
++                let mut v = Vec::new();
++                self.snap.descendants(root, &mut v);
++                v
++            }
++        };
+         let scope = root;
+         self.with_selector(selector, |sel| {
+             out.into_iter()
+@@ -851,11 +971,19 @@
+         if let Some(shown) = self.shown_on_scroll.borrow().get(&el) {
+             return Some(*shown);
+         }
+-        let mut pending = self.scroll_probes.borrow_mut();
+-        if !pending.contains(&el) {
+-            pending.push(el);
++        // Vec keeps first-asked order (the contract this list documents); the
++        // side set keeps membership O(1) — with thousands of offscreen probes
++        // the linear `contains` is the quadratic this pair removes.
++        if self.scroll_probe_seen.borrow_mut().insert(el) {
++            self.scroll_probes.borrow_mut().push(el);
+         }
+         None
++    }
++    fn cooperative_trip(&self) -> Option<PassTrip> {
++        SnapshotDom::cooperative_trip(self)
++    }
++    fn note_element_done(&self, n: usize) {
++        SnapshotDom::note_element_done(self, n)
+     }
+     fn running_animation_properties(&self, el: ElId) -> Option<Vec<String>> {
+         if !self.snap.animations_recorded || !self.valid(el) {
+diff --git a/crates/core/src/browser/driver.rs b/crates/core/src/browser/driver.rs
+--- a/crates/core/src/browser/driver.rs
++++ b/crates/core/src/browser/driver.rs
+@@ -2809,10 +2809,19 @@
+     // Product mockups the page declares are not content (decision 1 of round
+     // 13), and boxes labelled as a screenshot report as advisory (r13-t5).
+     let mockups = super::hidden_mockup::HiddenMockups::scan(dom);
++    let mut done: usize = 0;
+     for el in dom.query_all(None, "*").unwrap_or_default() {
++        // Cooperative limiter: a typed trip (cancel/deadline/admission cap)
++        // stops the pass early; the adapter discards these partial results
++        // and maps the trip to a truthful failure document.
++        if dom.cooperative_trip().is_some() {
++            return CollectResult { groups, page_level };
++        }
+         if !element_is_scanned(dom, el) {
+             continue;
+         }
++        done += 1;
++        dom.note_element_done(done);
+ 
+         let mut findings: Vec<BrowserFinding> = Vec::new();
+         findings.extend(hits(ec::check_element_borders_dom(dom, el)));
+@@ -2975,25 +2984,47 @@
+         }
+     };
+ 
++    macro_rules! cooperative_stop {
++        () => {
++            if dom.cooperative_trip().is_some() {
++                return CollectResult { groups, page_level };
++            }
++        };
++    }
++
++    cooperative_stop!();
+     page_pass(
+         &mut groups,
+         &mut page_level,
+         check_browser_design_system_sources(dom, design_system.as_ref(), &mut design_seen),
+     );
++    cooperative_stop!();
+     page_pass(&mut groups, &mut page_level, pc::check_typography(dom));
++    cooperative_stop!();
+     el_pass(&mut groups, tc::check_kicker_above_heading_dom(dom, design_system.as_ref()));
++    cooperative_stop!();
+     page_pass(&mut groups, &mut page_level, hits(tc::check_numbered_section_labels_dom(dom)));
++    cooperative_stop!();
+     page_pass(&mut groups, &mut page_level, hits(tc::check_repeated_container_text_dom(dom)));
++    cooperative_stop!();
+     page_pass(&mut groups, &mut page_level, hits(tc::check_em_dash_overuse_dom(dom)));
+ 
++    cooperative_stop!();
+     el_pass(&mut groups, pc::check_layout(dom));
++    cooperative_stop!();
+     el_pass(&mut groups, pc::check_heading_rhythm_dom(dom));
++    cooperative_stop!();
+     el_pass(&mut groups, pc::check_edge_flush_cards_dom(dom));
++    cooperative_stop!();
+     el_pass(&mut groups, pc::check_text_occlusion_dom(dom));
++    cooperative_stop!();
+     el_pass(&mut groups, pc::check_first_viewport_column_overflow_dom(dom));
+ 
++    cooperative_stop!();
+     page_pass(&mut groups, &mut page_level, q::check_page_quality_dom_in(dom, Some(&mockups)));
++    cooperative_stop!();
+     page_pass(&mut groups, &mut page_level, q::check_page_overflow_dom(dom));
++    cooperative_stop!();
+     page_pass(&mut groups, &mut page_level, hits(pc::check_cream_palette(dom)));
+     // The stylesheet-text forms go last among the built-in passes because
+     // they defer to what the element forms above have already read.
+diff --git a/crates/core/src/browser/page_checks.rs b/crates/core/src/browser/page_checks.rs
+--- a/crates/core/src/browser/page_checks.rs
++++ b/crates/core/src/browser/page_checks.rs
+@@ -4589,6 +4589,19 @@
+         v
+     };
+ 
++    // The probe grid for one victim is a pure function of the immutable DOM
++    // and the victim's own rect (every call site passes the text_els rect),
++    // so it is memoized per element for the run: identical points, identical
++    // order, computed once.
++    let mut points_memo: std::collections::HashMap<ElId, Vec<(f64, f64)>> =
++        std::collections::HashMap::new();
++    let mut points_for = |el: ElId, rect: &Rect| -> Vec<(f64, f64)> {
++        points_memo
++            .entry(el)
++            .or_insert_with(|| occlusion_points_on_lines(dom, el, rect, vw, vh))
++            .clone()
++    };
++
+     struct TextEl {
+         el: ElId,
+         rect: Rect,
+@@ -4664,6 +4677,9 @@
+         )
+     };
+     for victim in &text_els {
++        if dom.cooperative_trip().is_some() {
++            return findings;
++        }
+         let el = victim.el;
+         let rect = &victim.rect;
+         let text = &victim.text;
+@@ -4693,7 +4709,10 @@
+                 let mut asked = 0usize;
+                 let in_layer = |t: &&TextEl| (t.el == layer || dom.contains(layer, t.el)) && !sr_only(t.el, &t.rect);
+                 for t in text_els.iter().filter(in_layer) {
+-                    for (x, y) in occlusion_points_on_lines(dom, t.el, &t.rect, vw, vh) {
++                    if dom.cooperative_trip().is_some() {
++                        return false;
++                    }
++                    for (x, y) in points_for(t.el, &t.rect) {
+                         asked += 1;
+                         match dom.element_from_point(x, y) {
+                             Some(a)
+@@ -4717,7 +4736,7 @@
+         let mut occluded = 0usize;
+         let mut occluder_el: Option<ElId> = None;
+         let mut occluder_kind = "";
+-        for (x, y) in occlusion_points_on_lines(dom, el, rect, vw, vh) {
++        for (x, y) in points_for(el, rect) {
+             total += 1;
+             let Some(top) = dom.element_from_point(x, y) else { continue };
+             if top == el || dom.contains(el, top) || dom.contains(top, el) {
+@@ -4898,6 +4917,9 @@
+         cards.push(Card { el, rect: cr });
+     }
+     for victim in &text_els {
++        if dom.cooperative_trip().is_some() {
++            return findings;
++        }
+         let el = victim.el;
+         let rect = &victim.rect;
+         let text = &victim.text;
+@@ -4905,7 +4927,7 @@
+             continue;
+         }
+         // Nor does text in a curtain layer the page covers wherever a probe
+-        // asked: none of it is on screen to overhang a card.
++        // was asked: none of it is on screen to overhang a card.
+         if curtain_layer(dom, el).is_some_and(|layer| curtains.get(&layer) == Some(&true)) {
+             continue;
+         }
+diff --git a/crates/core/src/browser/text_collectors.rs b/crates/core/src/browser/text_collectors.rs
+--- a/crates/core/src/browser/text_collectors.rs
++++ b/crates/core/src/browser/text_collectors.rs
+@@ -818,6 +818,9 @@
+ ) -> Vec<RuleHit> {
+     let mut findings = Vec::new();
+     let mut containers: Vec<ElId> = Vec::new();
++    // Membership side set for the owned_by_inner ancestry walk below: an
++    // order-independent duplicate of `containers` (every push inserts too).
++    let mut container_set: std::collections::HashSet<ElId> = std::collections::HashSet::new();
+     for el in dom.query_all(None, "*").unwrap_or_default() {
+         if !REPEATED_TEXT_CONTAINER_TAGS.contains(&tag_lower(dom, el).as_str()) {
+             continue;
+@@ -830,6 +833,7 @@
+             continue;
+         }
+         containers.push(el);
++        container_set.insert(el);
+     }
+ 
+     for &container in &containers {
+@@ -849,7 +853,7 @@
+                 if a == container {
+                     break;
+                 }
+-                if containers.contains(&a) {
++                if container_set.contains(&a) {
+                     owned_by_inner = true;
+                     break;
+                 }

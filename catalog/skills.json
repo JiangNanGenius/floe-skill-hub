@@ -1702,14 +1702,14 @@
       "firstParty": null,
       "id": "impeccable",
       "kind": "optional",
-      "minimumAppVersion": "1.7.59",
+      "minimumAppVersion": "1.7.60",
       "name": {
         "en": "Impeccable",
         "zh-Hans": "Impeccable"
       },
       "notes": {
-        "en": "The RISC-V engine, launcher and snapshot/facts contract are owned by lane H3 as a separately signed runtime dependency; the skill ZIP carries instructions, audited scripts and resources only. Snapshot capture uses the native browser.observe profile:design bridge (lane A2), never arbitrary evaluate or full CDP.",
-        "zh-Hans": "RISC-V 引擎、启动器与快照/facts 契约由 H3 工作线作为单独签名的运行依赖交付；技能 ZIP 只含指令、已审脚本与资源。快照采集走原生 browser.observe profile:design 桥（A2 工作线），不使用任意 evaluate 或完整 CDP。"
+        "en": "Use page structure, layout and interaction facts to review interfaces and produce improvement suggestions. Uncovered checks remain explicit in the results.",
+        "zh-Hans": "结合网页结构、布局与交互事实检查界面，形成改进建议，并在结果中列明尚未覆盖的检查。"
       },
       "planNumber": 24,
       "plannedRuntime": {
@@ -1722,12 +1722,11 @@
         ],
         "execution": {
           "arch": "riscv64",
-          "evidence": "unproven",
+          "evidence": "guest-verified",
           "os": "linux"
         },
         "installPlatforms": [
-          "ios",
-          "android"
+          "ios"
         ],
         "pythonPackagesPlan": [],
         "scriptRuntime": "remote",
@@ -1737,12 +1736,12 @@
       },
       "source": "I",
       "status": {
-        "adaptation": "in-progress",
-        "executionVerified": false,
+        "adaptation": "frozen",
+        "executionVerified": true,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
-        "qualified": false,
+        "qualified": true,
         "reviewed": true,
         "sourcePinned": true
       },
@@ -1758,17 +1757,17 @@
         "commit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
         "licenseEvidencePath": "LICENSE",
         "licenseNote": {
-          "en": "Apache-2.0 root LICENSE with NOTICE.md; the reference/ corpus inside the plugin bundle needs the per-file audit during H3 normalization.",
-          "zh-Hans": "根 Apache-2.0 LICENSE 含 NOTICE.md；插件包内 reference/ 语料在 H3 规范化时需逐文件核验。"
+          "en": "Apache-2.0 upstream LICENSE and NOTICE retained byte-for-byte; the pinned text corpus is audited per file. Floe-authored adaptation files retain MPL-2.0.",
+          "zh-Hans": "保留原始 Apache-2.0 LICENSE 与 NOTICE；已逐文件核对固定版本的文本内容。Floe 自行编写的适配文件采用 MPL-2.0。"
         },
-        "licenseStatus": "pending-per-item-audit",
+        "licenseStatus": "verified",
         "path": "plugin/skills/impeccable",
         "repository": "https://github.com/pbakaus/impeccable",
         "repositoryLicense": "Apache-2.0 (root LICENSE + NOTICE.md)",
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "plugin/skills/impeccable/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.1.1"
     },
     {
       "category": "design-creation",

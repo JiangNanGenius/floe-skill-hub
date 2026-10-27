@@ -3,7 +3,7 @@ name = "floe-impeccable"
 # The Floe adapter version. The upstream engine version it is built against is
 # carried in the embedded contract (`engine.upstreamEngineVersion`) and printed
 # by `--version` as `<engine>+floe.<adapter>`.
-version = "1.0.0"
+version = "1.1.1"
 edition = "2021"
 license = "MPL-2.0"
 publish = false

@@ -21,18 +21,28 @@ exact public regeneration command; nothing here was hand-edited):
    to `references/engine-data/reference/*.md` (the actual installed paths),
    annotates links to excluded references, inserts the installed-layout
    mapping, replaces the launcher sentence with the managed-provisioning truth,
-   mirrors the normalized corpus under `references/engine-data/` (the read-only
-   skill dir the unchanged binary expects), and moves all audit data below
-   `references/`. `MODIFICATIONS.json` records every count and digest.
+   applies the Floe default scan policy to the launcher (`snapshot-scan` appends
+   `--no-timeout` only when the caller chose no timeout flag; explicit timeout
+   choices pass through untouched), mirrors the normalized corpus under
+   `references/engine-data/` (the read-only skill dir the unchanged binary
+   expects), and moves all audit data below `references/`. `MODIFICATIONS.json`
+   records every count and digest.
 
-Engine: `floe-impeccable` static riscv64 ELF, sha256 `af8795bf9636e763541c58ef90ee889941e468f453ec6580c32a89a5a758b87b`,
-5579704 bytes — **never inside this package**. The binding is the frozen
+Engine: `floe-impeccable` static riscv64 ELF, sha256 `774333d30d6e54604342182e49853851c7e0ebfa9e92fc4216f4a68872d00a1a`,
+5594368 bytes — **never inside this package**. The binding is the frozen
 managed runtime artifact descriptor `references/engine-dependency.json`
-(sha256 `cec4a7fade52f6383f74bc9e15972b911552b2672eada138d890e353899be50a`, 563 bytes, seven fields, no URLs, no
-commands). Capture contract digest: `baf2453164be6162703af9d671be16da152fa874db53ce95ad5b3516d40de4a3`.
+(sha256 `e7c7984a573b5ac9a1447bcc4285d9b1ba09458033f8468f5c86961965e57233`, 563 bytes, seven fields, no URLs, no
+commands). Capture contract digest: `099cd85703a5ec7b7f8bd1d13e091421a09e4faf40a42240138cba9cbbc75bac`.
 
-Verified boundaries: the artifact is verified under reference riscv64 emulation
-and on host parity only (see `engines/impeccable/HANDOFF.md` in the hub); the
-Floe TinyEMU guest run, the native probe, App acceptance and publication are
-pending and owned by the release owner. This package is staged candidate
-content: no review, qualification or publication claim.
+Verified boundaries: exactly ONE observed 1.1.1 engine binary exists — no
+two-build byte-equality is claimed for it (the build recipe documents the
+toolchain and flag requirements for a byte-stable rebuild without asserting
+one). What IS deterministic here is the skill source and the canonical package
+bytes: two fresh runs of this pinned two-stage pipeline produce byte-identical
+output. Component qualification to date covers reference riscv64 emulation and
+host parity, the contract read-back against the shipped binary and selected
+TinyEMU guest legs accepted by the release owner; the full native matrix (real
+WebKit capture loop, launcher default route, cooperative cancellation), App
+acceptance and publication remain pending and owned by the release owner. This
+package is regenerated candidate content: no review, qualification or
+publication claim.

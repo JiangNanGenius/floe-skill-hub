@@ -1,6 +1,6 @@
 #!/bin/sh
 # Public regeneration driver for the canonical Floe Impeccable Hub package
-# (sources/impeccable, packaged version 1.0.0).
+# (sources/impeccable, packaged version 1.1.1).
 #
 #   sh <hub>/engines/impeccable/build/skill-source/run_pipeline.sh \
 #      <pinned-upstream-clone-dir> <hub-root> <new-empty-work-root>

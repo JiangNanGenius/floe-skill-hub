@@ -1,9 +1,9 @@
 # Canonical Impeccable skill-source regeneration — public maintenance tooling
 
 Committed maintenance tooling for the Hub package `sources/impeccable/`
-(skill `impeccable` 1.0.0, derived from `pbakaus/impeccable` commit
+(skill `impeccable` 1.1.1, derived from `pbakaus/impeccable` commit
 `4fc2f83e1c8710dba772bfd4523d0efab57737b6` / tree
-`1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72`, engine `0.1.17+floe.1.0.0`).
+`1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72`, engine `0.1.17+floe.1.1.1`).
 None of this code ships inside the installed package, and no tool here ever
 writes into the hub; the hub tree is read strictly read-only.
 

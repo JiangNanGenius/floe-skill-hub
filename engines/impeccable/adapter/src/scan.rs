@@ -14,7 +14,8 @@ use std::time::Instant;
 
 use serde_json::{json, Map, Value};
 
-use impeccable_core::browser::snapshot::{collect_findings_from_snapshot, SnapshotDom};
+use impeccable_core::browser::snapshot::{collect_findings_from_snapshot, PassTrip, SnapshotDom};
+use impeccable_core::browser::snapshot::PassLimiter;
 use impeccable_core::browser::BrowserConfig;
 
 use crate::contract;
@@ -36,6 +37,10 @@ pub struct ScanArgs {
     pub max_hit_tests_total: usize,
     pub max_snapshot_bytes: u64,
     pub timeout_ms: u64,
+    /// Explicit unlimited duration (user policy 2026-10-26). Mutually
+    /// exclusive with an explicit `--timeout-ms`. Absent flag = frozen
+    /// contract default (120000 ms).
+    pub no_timeout: bool,
     pub strict_schema: bool,
     pub round: u32,
     /// Test-only: run without an identity. The result then can never be clean,
@@ -57,6 +62,7 @@ impl Default for ScanArgs {
             max_hit_tests_total: budgets.max_hit_tests_total,
             max_snapshot_bytes: budgets.max_snapshot_bytes,
             timeout_ms: budgets.timeout_ms,
+            no_timeout: false,
             strict_schema: true,
             round: 1,
             allow_missing_identity: false,
@@ -76,7 +82,13 @@ pub const USAGE: &str = "Usage: floe-impeccable snapshot-scan --snapshot <path> 
   --max-hit-tests <n>        per-round hit-test budget
   --max-hit-tests-total <n>  total hit-test budget
   --max-snapshot-bytes <n>   snapshot size budget
-  --timeout-ms <n>           deadline for this invocation
+  --timeout-ms <n>           deadline for this invocation; 0 is an immediate
+                             deadline (NOT unlimited); mutually exclusive
+                             with --no-timeout
+  --no-timeout               explicit unlimited duration (user policy
+                             2026-10-26); the result reports the existing
+                             budget.timeoutMs key as JSON null; cooperative
+                             cancellation is still honored
   --strict-schema            enforce the v1 schema (default)
   --no-strict-schema         relax the schema gate (fixtures and debugging only)
   --allow-missing-identity   run an isolated synthetic snapshot; the verdict can never be clean
@@ -87,6 +99,7 @@ Exit: 0 clean, 2 findings, 3 needs-facts, 4 inconclusive coverage, 1 failure.
 /// Parse `snapshot-scan` arguments.
 pub fn parse_args(args: &[String]) -> Result<ScanArgs, EngineFailure> {
     let mut parsed = ScanArgs::default();
+    let mut explicit_timeout_flag_seen = false;
     let mut i = 0;
     let value = |i: &mut usize, flag: &str| -> Result<String, EngineFailure> {
         *i += 1;
@@ -115,7 +128,11 @@ pub fn parse_args(args: &[String]) -> Result<ScanArgs, EngineFailure> {
                 parsed.max_snapshot_bytes =
                     parse_u64(&value(&mut i, "--max-snapshot-bytes")?, "--max-snapshot-bytes")?
             }
-            "--timeout-ms" => parsed.timeout_ms = parse_u64(&value(&mut i, "--timeout-ms")?, "--timeout-ms")?,
+            "--timeout-ms" => {
+                explicit_timeout_flag_seen = true;
+                parsed.timeout_ms = parse_u64(&value(&mut i, "--timeout-ms")?, "--timeout-ms")?;
+            }
+            "--no-timeout" => parsed.no_timeout = true,
             "--strict-schema" => parsed.strict_schema = true,
             "--no-strict-schema" => parsed.strict_schema = false,
             "--allow-missing-identity" => parsed.allow_missing_identity = true,
@@ -134,6 +151,12 @@ pub fn parse_args(args: &[String]) -> Result<ScanArgs, EngineFailure> {
     }
     if parsed.round == 0 {
         return Err(EngineFailure::new(code::USAGE, "--round must be at least 1"));
+    }
+    if parsed.no_timeout && explicit_timeout_flag_seen {
+        return Err(EngineFailure::new(
+            code::USAGE,
+            "--no-timeout and --timeout-ms are mutually exclusive",
+        ));
     }
     Ok(parsed)
 }
@@ -158,7 +181,11 @@ pub struct ScanOutcome {
 
 pub fn run(args: ScanArgs) -> ScanOutcome {
     let started = Instant::now();
-    let deadline_ms = args.timeout_ms;
+    // Explicit --no-timeout means no deadline at all (the result document
+    // reports budget.timeoutMs as JSON null). Any other invocation keeps its
+    // integer deadline: --timeout-ms <n> exactly as given (0 = immediate),
+    // no flag = the frozen contract default.
+    let deadline_ms = if args.no_timeout { None } else { Some(args.timeout_ms) };
     let mut ctx = ScanContext::new(args, started, deadline_ms);
     match ctx.execute() {
         Ok(outcome) => outcome,
@@ -169,7 +196,7 @@ pub fn run(args: ScanArgs) -> ScanOutcome {
 struct ScanContext {
     args: ScanArgs,
     started: Instant,
-    deadline_ms: u64,
+    deadline_ms: Option<u64>,
     identity: Option<Identity>,
     identity_state: IdentityState,
     identity_mismatches: Vec<String>,
@@ -187,7 +214,7 @@ struct BudgetUse {
 }
 
 impl ScanContext {
-    fn new(args: ScanArgs, started: Instant, deadline_ms: u64) -> ScanContext {
+    fn new(args: ScanArgs, started: Instant, deadline_ms: Option<u64>) -> ScanContext {
         ScanContext {
             args,
             started,
@@ -214,12 +241,14 @@ impl ScanContext {
                 format!("cancelled during {phase} (signal {})", signal::received_signal()),
             ));
         }
-        if self.elapsed_ms() > self.deadline_ms {
-            return Err(EngineFailure::new(
-                code::TIMEOUT,
-                format!("{phase} exceeded the {} ms budget", self.deadline_ms),
-            )
-            .with_detail(json!({ "phase": phase, "elapsedMs": self.elapsed_ms() })));
+        if let Some(deadline_ms) = self.deadline_ms {
+            if self.elapsed_ms() > deadline_ms {
+                return Err(EngineFailure::new(
+                    code::TIMEOUT,
+                    format!("{phase} exceeded the {deadline_ms} ms budget"),
+                )
+                .with_detail(json!({ "phase": phase, "elapsedMs": self.elapsed_ms() })));
+            }
         }
         Ok(())
     }
@@ -257,8 +286,81 @@ impl ScanContext {
 
         let config = self.load_config()?;
 
+        // Early unique-miss admission for this pass: the per-round cap, plus
+        // what the total budget still admits after the answered facts. The
+        // limiter trips at the first NEW unique miss beyond the cap — exactly
+        // when the post-hoc `pending > max` check below would have refused the
+        // same input — but caught before the expensive work completes.
+        let answered: usize = accounting.iter().map(|a| a.answered).sum();
+        let admission = self
+            .args
+            .max_hit_tests_per_round
+            .min(self.args.max_hit_tests_total.saturating_sub(answered));
+        dom.set_pass_limiter(Some(Box::new(AdapterLimiter {
+            deadline: self
+                .deadline_ms
+                .map(|d| self.started + std::time::Duration::from_millis(d)),
+            admission,
+        })));
+
         // The rule pass.
         let run = collect_findings_from_snapshot(&dom, &config);
+
+        // A typed trip discards the partial pass and reports the truthful
+        // failure document; partial findings are never presented as a scan.
+        // The unique misses the pass stored were drained into the Needs the
+        // collector returns, so the honest counters come from there (reading
+        // the DOM after the drain would report zero stored). Checked before
+        // the phase checkpoint so an in-pass stop is reported with its stage
+        // counters, not shadowed by the checkpoint's plainer refusal.
+        let stored_misses = match &run {
+            Ok(_) => 0usize,
+            Err(needs) => needs.hit_tests.len(),
+        };
+        if let Some(trip) = dom.take_pass_trip() {
+            return Err(match trip {
+                PassTrip::Cancelled => EngineFailure::new(
+                    code::CANCELLED,
+                    format!("cancelled during rule pass (signal {})", signal::received_signal()),
+                )
+                .with_detail(json!({
+                    "phase": "rule pass",
+                    "elapsedMs": self.elapsed_ms(),
+                    "elementsDone": dom.elements_done(),
+                    "missesRecorded": stored_misses,
+                })),
+                // The deadline document keeps the checkpoint's exact shape
+                // ({phase, elapsedMs}): the frozen timeout golden records
+                // exactly these two keys.
+                PassTrip::Deadline => EngineFailure::new(
+                    code::TIMEOUT,
+                    format!(
+                        "rule pass exceeded the {} ms budget",
+                        self.deadline_ms.unwrap_or(0)
+                    ),
+                )
+                .with_detail(json!({
+                    "phase": "rule pass",
+                    "elapsedMs": self.elapsed_ms(),
+                })),
+                PassTrip::HitTestBudget => EngineFailure::new(
+                    code::BUDGET_EXCEEDED,
+                    "hit-test budget exceeded: maxHitTestsPerRound (admission stopped at the cap; a further unique point was attempted)"
+                )
+                .with_detail(json!({
+                    "asked": stored_misses + dom.attempted_over_cap(),
+                    "pending": stored_misses,
+                    "attemptedOverCap": dom.attempted_over_cap(),
+                    "maxPerRound": self.args.max_hit_tests_per_round,
+                    "maxTotal": self.args.max_hit_tests_total,
+                    "exceeded": ["maxHitTestsPerRound"],
+                    "elementsDone": dom.elements_done(),
+                    "phase": "rule pass",
+                })),
+            });
+        }
+        // A stop that arrived after the pass's last cooperative check is
+        // still reported here (plainer shape, no stage counters).
         self.checkpoint("rule pass")?;
 
         let scroll_probes = dom.take_scroll_probes();
@@ -592,7 +694,13 @@ impl ScanContext {
             "maxHitTestsPerRound": self.args.max_hit_tests_per_round,
             "maxHitTestsTotal": self.args.max_hit_tests_total,
             "maxSnapshotBytes": self.args.max_snapshot_bytes,
-            "timeoutMs": self.args.timeout_ms,
+            // Same existing key, three honest states: explicit --no-timeout →
+            // JSON null (actual effective: no deadline); explicit
+            // --timeout-ms <n> → integer n (0 = immediate deadline, never
+            // re-read as unlimited); no flag → the frozen default 120000.
+            // Never a stale 120000 under --no-timeout, never 0, never a
+            // synthetic huge cap. No new top-level result keys.
+            "timeoutMs": if self.args.no_timeout { Value::Null } else { json!(self.args.timeout_ms) },
             "elapsedMs": self.elapsed_ms(),
             "exceeded": self.budget.exceeded,
         })
@@ -769,6 +877,31 @@ fn count_findings(findings: &Value) -> Value {
         "elements": elements,
         "byRule": Value::Object(by_rule),
     })
+}
+
+/// The cooperative limiter the adapter installs for the rule pass: the live
+/// cancel flag, the effective deadline (None under --no-timeout), and the
+/// unique-miss admission cap for this round.
+struct AdapterLimiter {
+    deadline: Option<Instant>,
+    admission: usize,
+}
+
+impl PassLimiter for AdapterLimiter {
+    fn cancelled(&self) -> bool {
+        signal::cancel_requested()
+    }
+
+    fn deadline_exceeded(&self) -> bool {
+        match self.deadline {
+            Some(deadline) => Instant::now() > deadline,
+            None => false,
+        }
+    }
+
+    fn max_unique_misses(&self) -> Option<usize> {
+        Some(self.admission)
+    }
 }
 
 /// Whether `key` appears as a top-level member of the snapshot object.

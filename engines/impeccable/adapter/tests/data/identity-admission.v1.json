@@ -1,0 +1,34 @@
+{
+  "taskId": "task-cap-admission-0001",
+  "sessionId": "session-cap-admission-0001",
+  "tabId": "tab-cap-admission-0001",
+  "documentId": "doc-cap-admission-0001",
+  "captureId": "cap-admission-0001",
+  "documentGeneration": 1,
+  "url": "https://admission.fixture.local/",
+  "hostname": "admission.fixture.local",
+  "viewport": {
+    "width": 980.0,
+    "height": 735.0
+  },
+  "scroll": {
+    "x": 0.0,
+    "y": 0.0
+  },
+  "capturedAtMs": 0,
+  "producerTrust": "native-fixed-script",
+  "producer": {
+    "name": "FloeWebkitDesignCapture",
+    "version": "0.0.0-fixture",
+    "engine": "WebKit",
+    "scriptDigest": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "redaction": {
+    "policy": "floe.impeccable.redaction.v1",
+    "applied": true,
+    "passwordInputs": 0,
+    "formValues": 0,
+    "credentialAttributes": [],
+    "textRuns": 0
+  }
+}
