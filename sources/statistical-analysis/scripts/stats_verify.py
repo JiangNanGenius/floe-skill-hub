@@ -490,9 +490,12 @@ def main() -> int:
                          "reproducibility_records", "assumption_screens"):
                 results.append({"name": name, "status": f"skipped ({layer_status} layer)"})
 
+
+    # Single package authority: report the version actually shipped in floe.json
+    _floe = json.loads((Path(__file__).resolve().parents[1] / "floe.json").read_text(encoding="utf-8"))
     report = {
         "verifier": "stats_verify.py",
-        "package": "statistical-analysis 1.0.0 (Floe adaptation)",
+        "package": f"{_floe['id']} {_floe['version']} (Floe adaptation)",
         "python": sys.version.split()[0],
         "ok": not failures,
         "layer_required": bool(args.require_layer),

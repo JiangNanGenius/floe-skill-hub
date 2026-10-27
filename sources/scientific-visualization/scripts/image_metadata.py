@@ -4,6 +4,23 @@
 The tool is network-free. Pillow is loaded only for raster inputs and pypdf is
 loaded only for PDF inputs. A successful screen is not a journal-compliance
 claim.
+
+PNG density note: per the W3C PNG specification
+(https://www.w3.org/TR/png-3/#11pHYs) the pHYs chunk stores density as an
+INTEGER number of pixels per unit (unit byte 0 = unknown, 1 = metre). A metric
+pHYs PNG therefore represents only densities k * 0.0254 dpi; writers round a
+requested dpi to the nearest integer (matplotlib/Pillow write 300 dpi as
+pHYs 11811 px/m, which decodes to the raw value 299.9994 dpi). When screening
+a PNG whose decoded density is proven to be exactly such an integer-metric
+pHYs value, DPI thresholds are compared in that same integer domain so this
+encoding quantisation (at most half a step, 0.0127 dpi) is not reported as a
+real density shortfall. A min threshold binds the lower of the two axes and a
+max threshold the higher one. Proof requires a completed bounded scan to a
+whole IDAT/IEND chunk with exactly one CRC-valid pHYs; a truncated or
+budget-limited scan grants nothing. The reported dpi_x/dpi_y stay the raw
+decoded values; everything else — effective DPI at an explicit target width,
+non-PNG rasters, PNGs without proven integer-metric pHYs, absent/unknown-unit/
+invalid metadata — keeps the previous strict comparison behaviour.
 """
 
 from __future__ import annotations
@@ -11,9 +28,12 @@ from __future__ import annotations
 import argparse
 import math
 import re
+import struct
 import sys
 import warnings
 import xml.etree.ElementTree as ET
+import zlib
+from fractions import Fraction
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -47,6 +67,101 @@ LENGTH_RE = re.compile(
     r"^\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)"
     r"\s*(px|pt|pc|in|cm|mm)?\s*$"
 )
+
+# PNG pHYs density quantisation constants (exact rationals, no float drift).
+# W3C PNG 11.4.3.6: pHYs is pixels per unit, unit byte 0 = unknown, 1 = metre;
+# pixel counts are positive integers up to 2^31 - 1.
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+PNG_PHYS_LENGTH = 9
+PNG_MAX_PX_PER_UNIT = 2**31 - 1
+PNG_PHYS_SCAN_LIMIT_BYTES = 1 << 20
+PX_PER_METRE_PER_DPI = Fraction(5000, 127)   # 1 dpi = 1/0.0254 px/m exactly
+DPI_STEP_PER_PX_PER_METRE = Fraction(127, 5000)  # 1 px/m = 0.0254 dpi exactly
+
+
+def quantise_dpi_to_pixels_per_metre(dpi: float) -> int:
+    """Return the nearest integer pixels-per-metre for a DPI value.
+
+    The comparison is exact: ``dpi`` enters as its precise IEEE-754 rational
+    value. Ties round away from zero, matching the writer convention that
+    produced real pHYs PNGs (Pillow encodes ``int(dpi / 0.0254 + 0.5)`` and
+    matplotlib writes 300 dpi as pHYs 11811).
+    """
+    if not (math.isfinite(dpi) and dpi > 0):
+        raise CliError("DPI value must be finite and greater than zero")
+    return math.floor(Fraction(dpi) * PX_PER_METRE_PER_DPI + Fraction(1, 2))
+
+
+def png_phys_pixels_per_metre(path: Path) -> tuple[int, int] | None:
+    """Prove a PNG carries exactly one valid integer-metric pHYs chunk.
+
+    Reads only bounded chunk headers/data before the first IDAT (or IEND) and
+    verifies the pHYs CRC. Returns ``(px_x, px_y)`` only when the bounded scan
+    reaches a whole IDAT/IEND chunk and exactly one well-formed pHYs chunk
+    with length 9, unit byte 1 (metre) and both counts in 1..2^31-1 was seen.
+    Any other case — not a PNG, missing pHYs, unknown unit, zero/huge counts,
+    a duplicate later in the scan, truncated data, a chunk that does not fit
+    the scan budget or the file, or a CRC mismatch — returns None, which
+    leaves density screening on the previous strict path. Stopping early
+    never proves the absence of a later duplicate, so an incomplete bounded
+    scan grants nothing. This never raises.
+    """
+    try:
+        with path.open("rb") as handle:
+            if handle.read(8) != PNG_SIGNATURE:
+                return None
+            size = handle.seek(0, 2)
+            handle.seek(8)
+            scanned = 8
+            found: tuple[int, int] | None = None
+            while True:
+                if scanned + 8 > size:
+                    return None  # truncated before a complete next header
+                header = handle.read(8)
+                if len(header) != 8:
+                    return None
+                length = int.from_bytes(header[:4], "big")
+                kind = header[4:8]
+                chunk_bytes = 8 + length + 4
+                if kind in {b"IDAT", b"IEND"}:
+                    # pHYs is only defined before the first IDAT; only a whole
+                    # terminator chunk proves the pre-IDAT region was scanned.
+                    if scanned + chunk_bytes > size:
+                        return None
+                    return found
+                # A chunk that exceeds the bound (or the file) before a whole
+                # terminator leaves "exactly one pHYs" unproven, even if a
+                # reading was already seen: a later duplicate could be in the
+                # unexamined remainder.
+                if (
+                    scanned + chunk_bytes > PNG_PHYS_SCAN_LIMIT_BYTES
+                    or length > PNG_PHYS_SCAN_LIMIT_BYTES
+                    or scanned + chunk_bytes > size
+                ):
+                    return None
+                if kind == b"pHYs":
+                    if found is not None or length != PNG_PHYS_LENGTH:
+                        return None  # duplicate or malformed pHYs: unproven
+                    body = handle.read(length)
+                    crc = handle.read(4)
+                    if len(body) != length or len(crc) != 4:
+                        return None
+                    if zlib.crc32(kind + body) & 0xFFFFFFFF != int.from_bytes(crc, "big"):
+                        return None  # CRC mismatch: corrupt metadata, unproven
+                    px_x, px_y = struct.unpack(">II", body[0:8])
+                    if body[8] != 1:
+                        return None  # unit 0 (unknown) or reserved: unproven
+                    if not (1 <= px_x <= PNG_MAX_PX_PER_UNIT and 1 <= px_y <= PNG_MAX_PX_PER_UNIT):
+                        return None
+                    found = (px_x, px_y)
+                    scanned += chunk_bytes
+                    continue
+                # Any other pre-IDAT chunk: skip without buffering its body,
+                # but keep the whole scan bounded.
+                handle.seek(length + 4, 1)
+                scanned += chunk_bytes
+    except (OSError, ValueError, struct.error):
+        return None
 
 
 def _finite_number(value: Any) -> float | None:
@@ -122,8 +237,31 @@ def inspect_raster(path: Path, *, max_pixels: int) -> dict[str, Any]:
                     )
                 dpi_x, dpi_y = _dpi_pair(image.info.get("dpi"))
                 icc = image.info.get("icc_profile")
+                format_name = (image.format or path.suffix.lstrip(".")).upper()
+                density_provenance: dict[str, Any] | None = None
+                if (
+                    format_name == "PNG"
+                    and dpi_x is not None
+                    and dpi_y is not None
+                    and dpi_x > 0
+                    and dpi_y > 0
+                ):
+                    phys = png_phys_pixels_per_metre(path)
+                    if phys is not None:
+                        px_x, px_y = phys
+                        # Prove the decoded floats are exactly this integer
+                        # metric encoding (Pillow computes px * 0.0254).
+                        # Any mismatch (e.g. eXIf-linked density) leaves the
+                        # density unproven and screening stays strict.
+                        if float(dpi_x) == px_x * 0.0254 and float(dpi_y) == px_y * 0.0254:
+                            density_provenance = {
+                                "pixels_per_metre_x": px_x,
+                                "pixels_per_metre_y": px_y,
+                                "quantisation_step_dpi": float(DPI_STEP_PER_PX_PER_METRE),
+                                "source": "png_pHYs_integer_metre",
+                            }
                 metadata = {
-                    "format": (image.format or path.suffix.lstrip(".")).upper(),
+                    "format": format_name,
                     "kind": "raster",
                     "width_px": int(width),
                     "height_px": int(height),
@@ -135,6 +273,7 @@ def inspect_raster(path: Path, *, max_pixels: int) -> dict[str, Any]:
                     "frames": int(getattr(image, "n_frames", 1)),
                     "dpi_x": dpi_x,
                     "dpi_y": dpi_y,
+                    "density_provenance": density_provenance,
                     "width_mm_from_metadata": (
                         width / dpi_x * 25.4 if dpi_x and dpi_x > 0 else None
                     ),
@@ -580,12 +719,48 @@ def screen_metadata(
         effective_dpi = width_px / (target_width_mm / 25.4)
     actual_dpi = effective_dpi
     dpi_basis = "effective at target width"
+    quantised_phys: tuple[int, int] | None = None
     if actual_dpi is None and dpi_x and dpi_y:
         actual_dpi = min(float(dpi_x), float(dpi_y))
         dpi_basis = "embedded metadata"
+        provenance = metadata.get("density_provenance")
+        if isinstance(provenance, dict) and provenance.get("source") == "png_pHYs_integer_metre":
+            phys_x = provenance.get("pixels_per_metre_x")
+            phys_y = provenance.get("pixels_per_metre_y")
+            if (
+                isinstance(phys_x, int)
+                and isinstance(phys_y, int)
+                and 1 <= phys_x <= PNG_MAX_PX_PER_UNIT
+                and 1 <= phys_y <= PNG_MAX_PX_PER_UNIT
+            ):
+                quantised_phys = (phys_x, phys_y)
+                dpi_basis = (
+                    "embedded metadata (proven PNG integer-metric pHYs, "
+                    "quantised integer comparison)"
+                )
     if min_dpi is not None or max_dpi is not None:
+        quantised_bounds: dict[str, Any] = {}
         if actual_dpi is None:
             status = "unknown"
+        elif quantised_phys is not None:
+            # PNG density is stored as integer pixels per metre, so the
+            # representable densities are exactly the multiples of 0.0254 dpi.
+            # Compare the proven integers: a min threshold is satisfied only
+            # when BOTH axes are, so the lower axis binds it; a max threshold
+            # is broken by EITHER axis, so the higher axis binds it. Relief is
+            # exactly one half step (0.0127 dpi), never more; genuinely lower
+            # or higher integer densities still fail. Effective DPI at an
+            # explicit target width never takes this path.
+            lower_px, upper_px = min(quantised_phys), max(quantised_phys)
+            status = "pass"
+            if min_dpi is not None:
+                quantised_bounds["min"] = quantise_dpi_to_pixels_per_metre(min_dpi)
+                if lower_px < quantised_bounds["min"]:
+                    status = "fail"
+            if max_dpi is not None:
+                quantised_bounds["max"] = quantise_dpi_to_pixels_per_metre(max_dpi)
+                if upper_px > quantised_bounds["max"]:
+                    status = "fail"
         elif (
             min_dpi is not None
             and actual_dpi < min_dpi
@@ -600,16 +775,31 @@ def screen_metadata(
             status = "fail"
         else:
             status = "pass"
+        detail = (
+            f"DPI basis: {dpi_basis}. Metadata DPI is not a quality "
+            "measure; effective DPI depends on final physical size."
+        )
+        if quantised_phys is not None:
+            px_x, px_y = quantised_phys
+            detail = (
+                f"DPI basis: {dpi_basis}. Reported dpi_x/dpi_y stay the raw "
+                f"decoded values ({float(dpi_x)} / {float(dpi_y)}); the file "
+                f"carries pHYs x={px_x}, y={px_y} integer pixels per metre "
+                "(W3C PNG pHYs), so thresholds are compared in that exact "
+                f"integer domain (threshold px/m: {quantised_bounds}); a min "
+                "threshold binds the lower axis and a max threshold the higher "
+                "axis. Relief equals the encoding half step (0.0127 dpi), not "
+                "a quality tolerance; genuinely lower or higher densities "
+                "still fail. Metadata DPI is not a quality measure; effective "
+                "DPI depends on final physical size."
+            )
         checks.append(
             _check(
                 "dpi",
                 status,
                 actual=actual_dpi,
                 expected={"min": min_dpi, "max": max_dpi},
-                detail=(
-                    f"DPI basis: {dpi_basis}. Metadata DPI is not a quality "
-                    "measure; effective DPI depends on final physical size."
-                ),
+                detail=detail,
             )
         )
 

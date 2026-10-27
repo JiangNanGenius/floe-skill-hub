@@ -80,7 +80,7 @@ python3 scripts/style_presets.py --list
 python3 scripts/figure_export.py --demo outputs/export-smoke --manifest
 ```
 
-`image_metadata.py` reports dimensions, DPI/effective DPI, mode, alpha, ICC presence, compression and first-page PDF fonts (PDF dimensions include UserUnit and rotation, CropBox separate from MediaBox). It does not decode every raster frame or inspect all PDF pages. Matplotlib timestamps/backend versions vary, so identical inputs do not guarantee byte-identical outputs.
+`image_metadata.py` reports dimensions, DPI/effective DPI, mode, alpha, ICC presence, compression and first-page PDF fonts (PDF dimensions include UserUnit and rotation, CropBox separate from MediaBox). It does not decode every raster frame or inspect all PDF pages. PNG density is stored as integer pixels per metre, so a writer rounds 300 dpi to a value that reads back as 299.9994; when a PNG's density is proven from a completed bounded scan to the first IDAT/IEND with exactly one valid integer-metric pHYs, DPI thresholds are compared in the same integer domain (min thresholds bind the lower axis, max thresholds the higher; at most a 0.0127 dpi encoding half-step, never a quality tolerance) and the reported DPI stays the raw decoded value — everything else (effective DPI at a target width, other formats, unknown, invalid or only partially scanned metadata) remains strict. Matplotlib timestamps/backend versions vary, so identical inputs do not guarantee byte-identical outputs.
 
 ## Environment verification
 

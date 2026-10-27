@@ -1388,14 +1388,14 @@
       "firstParty": null,
       "id": "statistical-analysis",
       "kind": "optional",
-      "minimumAppVersion": "1.7.59",
+      "minimumAppVersion": "1.7.60",
       "name": {
         "en": "Statistical Analysis",
         "zh-Hans": "统计分析"
       },
       "notes": {
-        "en": "Source adaptation and host golden checks are complete for the explicitly declared dependency layer; unsupported upstream paths are documented. Actual RISC-V guest qualification is pending.",
-        "zh-Hans": "已完成所声明依赖层的源码适配与主机参考值检查，未支持的上游路径已注明，仍待实际 RISC-V 客体验收。"
+        "en": "Run statistical tests, effect-size and power analyses, with diagnostic plots and reproducible results.",
+        "zh-Hans": "运行统计检验、效应量与功效分析，输出诊断图及可复核结果。"
       },
       "planNumber": 20,
       "plannedRuntime": {
@@ -1406,7 +1406,7 @@
         ],
         "execution": {
           "arch": "riscv64",
-          "evidence": "unproven",
+          "evidence": "guest-verified",
           "os": "linux"
         },
         "installPlatforms": [
@@ -1417,7 +1417,8 @@
           "numpy==2.2.4",
           "scipy==1.15.3",
           "pandas==2.2.3",
-          "statsmodels==0.14.4"
+          "statsmodels==0.14.4",
+          "matplotlib==3.10.1"
         ],
         "scriptRuntime": "remote",
         "tools": [
@@ -1427,7 +1428,7 @@
       "source": "K",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": false,
+        "executionVerified": true,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
@@ -1455,7 +1456,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "skills/statistical-analysis/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.1.0"
     },
     {
       "category": "research-data",
@@ -1467,14 +1468,14 @@
       "firstParty": null,
       "id": "scientific-visualization",
       "kind": "optional",
-      "minimumAppVersion": "1.7.59",
+      "minimumAppVersion": "1.7.60",
       "name": {
         "en": "Scientific Visualization",
         "zh-Hans": "数据可视化"
       },
       "notes": {
-        "en": "Source adaptation and host golden checks are complete for the explicitly declared dependency layer; unsupported upstream paths are documented. Actual RISC-V guest qualification is pending.",
-        "zh-Hans": "已完成所声明依赖层的源码适配与主机参考值检查，未支持的上游路径已注明，仍待实际 RISC-V 客体验收。"
+        "en": "Create PNG, PDF and SVG charts with CJK text, and inspect size, fonts and resolution.",
+        "zh-Hans": "生成带中文字形的PNG、PDF及SVG图表，并检查尺寸、字体和分辨率。"
       },
       "planNumber": 21,
       "plannedRuntime": {
@@ -1485,7 +1486,7 @@
         ],
         "execution": {
           "arch": "riscv64",
-          "evidence": "unproven",
+          "evidence": "guest-verified",
           "os": "linux"
         },
         "installPlatforms": [
@@ -1506,7 +1507,7 @@
       "source": "K",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": false,
+        "executionVerified": true,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
@@ -1534,7 +1535,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "skills/scientific-visualization/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.1.0"
     },
     {
       "category": "office-documents",

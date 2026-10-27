@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "id": "debian13-riscv64",
+      "target": {
+        "os": "linux",
+        "architectures": ["riscv64"]
+      },
+      "requirements": [
+        {
+          "kind": "apt",
+          "name": "python3-numpy",
+          "version": "1:2.2.4+ds-1",
+          "purpose": "Array backend of the declared statistical layer.",
+          "required": true
+        },
+        {
+          "kind": "apt",
+          "name": "python3-scipy",
+          "version": "1.15.3-1",
+          "purpose": "Reference hypothesis tests and distributions: t, ANOVA, rank, chi-square, Fisher, correlation, Shapiro-Wilk, Levene.",
+          "required": true
+        },
+        {
+          "kind": "apt",
+          "name": "python3-pandas",
+          "version": "2.2.3+dfsg-9",
+          "purpose": "Tabular input handling for the adapted assumption-check module.",
+          "required": true
+        },
+        {
+          "kind": "apt",
+          "name": "python3-statsmodels",
+          "version": "0.14.4+dfsg-1",
+          "purpose": "OLS inference with HC3 robust errors, Tukey HSD and noncentral-t power analysis.",
+          "required": true
+        },
+        {
+          "kind": "apt",
+          "name": "python3-matplotlib",
+          "version": "3.10.1+dfsg1-4",
+          "purpose": "Headless Agg diagnostic PNGs (Q-Q, histogram, boxplot, scatter/residual) written by the assumption screens; the golden verifier exercises them.",
+          "required": true
+        }
+      ]
+    }
+  ]
+}
