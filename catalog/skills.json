@@ -1779,14 +1779,14 @@
       "firstParty": null,
       "id": "algorithmic-art",
       "kind": "optional",
-      "minimumAppVersion": "1.7.59",
+      "minimumAppVersion": "1.7.62",
       "name": {
         "en": "Algorithmic Art",
         "zh-Hans": "生成艺术"
       },
       "notes": {
-        "en": "1.1.0 restoration-r2 is guest- and native-qualified against the exact final archive (ZIP SHA-256 f83e0243f7342d8494e622efd01eb93c58b99e3243493cb35f94e249eec2bfae, content digest f36edd8bc5f09b2e9bd5701ab9c1317b4c2eeedb875593960b0268dcf378844e): the bundled python3-stdlib generator and the bundled Node PRNG parity check ran deterministically in the real Linux/riscv64 guest (parity 3, four byte-identical artifacts, honest negative-parameter exit 2), and native WebKit on iPadOS 27 Simulator held the strict zero-tolerance viewer contract — restored digest equal to the initial digest, restored resample identical, next seed honestly different — with the 1200x1200 delivered PNG (858,996 bytes, SHA-256 ccad8c49827d958dda126979a3f88e9e081a0970836e0795507345bdf276e0c7) committed via browser.exportFile, independently re-proved inside the guest by the pinned stdlib PNG verifier used as QA-only validation (this package itself ships no verifier), and published through workspace.publishOutput with byte-equal after-teardown read-back. The only member differing from the prior host-failed candidate is assets/viewer-ui.js (canvas 2D context now declared willReadFrequently); no postprocessing, tolerance or golden was changed. No download offer or catalog publication yet: browser.exportFile is not in any public App release, so App availability needs mainline integration and the catalog minimumAppVersion stays a mainline-owned external gate (PENDING). The retained 1.7.59 is a historical schema-legal floor only and is never a first-capable-version claim. Guest plus Simulator native qualification, not physical-device or Apple-published-build acceptance. iOS channel only; no Android evidence. Preview screenshots never stand in for full-resolution output.",
-        "zh-Hans": "1.1.0 restoration-r2已按最终确切归档完成客体与原生鉴定（ZIP SHA-256 f83e0243f7342d8494e622efd01eb93c58b99e3243493cb35f94e249eec2bfae，内容摘要 f36edd8bc5f09b2e9bd5701ab9c1317b4c2eeedb875593960b0268dcf378844e）：随附python3标准库生成器与随附Node PRNG一致性校验在真实Linux/riscv64客体中确定性运行（一致性3、四份产物逐字节一致、负参数如实退出2），iPadOS 27模拟器下的原生WebKit保持严格零容差查看器契约——恢复摘要等于初始摘要、恢复重采样逐字节一致、下一种子如实不同——1200x1200交付PNG（858,996字节，SHA-256 ccad8c49827d958dda126979a3f88e9e081a0970836e0795507345bdf276e0c7）经browser.exportFile提交，由固定stdlib PNG校验器在客体中独立复验（仅作QA校验；本包自身不随附校验器），并经workspace.publishOutput发布为run-owned输出快照，拆除后独立读回仍逐字节一致。与先前主机端失败候选相比仅assets/viewer-ui.js一个成员不同（canvas 2D上下文声明willReadFrequently）；后处理、容差与数值基准均未改动。尚无下载供给或目录发布：browser.exportFile未进入任何公开App版本，App可用性取决于主线集成，目录minimumAppVersion仍是主线负责的外部门槛（待定）。保留的1.7.59仅是schema合法的历史下限，绝非“首个可用版本”声明。此为客体加模拟器原生鉴定，不是真机或Apple发布构建验收。仅iOS渠道；无Android证明。预览截图绝不冒充原始分辨率产物。"
+        "en": "Create repeatable generative artwork and export full-size PNGs. Requires Floe 1.7.62 or later.",
+        "zh-Hans": "生成可重复的艺术作品并导出完整尺寸 PNG。需要 Floe 1.7.62 或更高版本。"
       },
       "planNumber": 25,
       "plannedRuntime": {
@@ -1829,7 +1829,7 @@
         "licenseChecked": true,
         "packaged": true,
         "published": false,
-        "qualified": false,
+        "qualified": true,
         "reviewed": true,
         "sourcePinned": true
       },
@@ -1866,14 +1866,14 @@
       "firstParty": null,
       "id": "canvas-design",
       "kind": "optional",
-      "minimumAppVersion": "1.7.59",
+      "minimumAppVersion": "1.7.62",
       "name": {
         "en": "Canvas Design",
         "zh-Hans": "平面视觉设计"
       },
       "notes": {
-        "en": "1.1.0 is guest- and native-qualified against the exact final archive (ZIP SHA-256 463afc46e303550819a4b57a3b0d7e71c542c3c824093bc90111aa4510bbaccd, content digest f7cdb4da7ba8311693e86e2d26c607c41f1fea95fac41d91fd8a60994395a7c9): bundled python3 stdlib generators ran in the real Linux/riscv64 guest with determinism and honest unsupported-embed refusal, and native WebKit on iPadOS 27 Simulator rendered the full-size CJK poster, delivered via browser.exportFile, re-verified byte-exactly by the bundled validator and published as a run-owned output byte-equal on independent after-teardown read-back. No download offer or catalog publication yet: browser.exportFile is not in any public App release, so App availability needs mainline integration and the catalog minimumAppVersion stays a mainline-owned external gate (PENDING). The retained 1.7.59 is a historical schema-legal floor only and is never a first-capable-version claim. Guest plus Simulator native qualification, not physical-device or Apple-published-build acceptance. iOS channel only; no Android evidence. Preview screenshots never stand in for full-resolution output.",
-        "zh-Hans": "1.1.0已按最终确切归档完成客体与原生鉴定（ZIP SHA-256 463afc46e303550819a4b57a3b0d7e71c542c3c824093bc90111aa4510bbaccd，内容摘要 f7cdb4da7ba8311693e86e2d26c607c41f1fea95fac41d91fd8a60994395a7c9）：随附python3标准库生成器在真实Linux/riscv64客体中确定性运行并对不支持的内嵌如实拒绝，iPadOS 27模拟器下的原生WebKit渲染出全尺寸CJK海报，经browser.exportFile交付、随附校验器逐字节复验，并由workspace.publishOutput发布为run-owned输出文件，拆除后独立读回仍逐字节一致。尚无下载供给或目录发布：browser.exportFile未进入任何公开App版本，App可用性取决于主线集成，目录minimumAppVersion仍是主线负责的外部门槛（待定）。保留的1.7.59仅是schema合法的历史下限，绝非“首个可用版本”声明。此为客体加模拟器原生鉴定，不是真机或Apple发布构建验收。仅iOS渠道；无Android证明。预览截图绝不冒充原始分辨率产物。"
+        "en": "Create posters and visual layouts and export full-size PNGs. Requires Floe 1.7.62 or later.",
+        "zh-Hans": "设计海报与视觉版式并导出完整尺寸 PNG。需要 Floe 1.7.62 或更高版本。"
       },
       "planNumber": 26,
       "plannedRuntime": {
@@ -1916,7 +1916,7 @@
         "licenseChecked": true,
         "packaged": true,
         "published": false,
-        "qualified": false,
+        "qualified": true,
         "reviewed": true,
         "sourcePinned": true
       },
