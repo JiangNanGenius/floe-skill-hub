@@ -250,6 +250,14 @@ jobs:
           # contract module-relative to itself, so a changed candidate must be
           # built from a staged copy carrying the candidate lock; the tracked
           # tree is read-only here.
+          # $RUNNER_TEMP/logs is the shared log directory for every later
+          # build/gate receipt, and the tee below is the first write into it:
+          # on a fresh runner the directory does not exist yet, so tee failed
+          # the whole pipefail pipeline even though staging itself succeeded
+          # (scheduled run 40462256034). Create it before the first log write;
+          # pipefail stays untouched, so a real staging failure still fails
+          # the step.
+          mkdir -p "$RUNNER_TEMP/logs"
           python3 "$ENGINE_DIR/workflows/tools/stage_candidate_engine.py" \
             --engine-dir "$ENGINE_DIR" \
             --candidate-lock "$RUNNER_TEMP/candidate-lock/ENGINE-LOCK.json" \
