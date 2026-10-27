@@ -49,8 +49,19 @@ Modes (fixed; there is no arbitrary script/command input):
             staging included) and then enforces the agreed launch gate BEFORE
             signing. The Root-approved staged opening (2026-10-27) changed
             ONLY the old batch-completeness rule (>=40 unique qualified iOS
-            offers plus all nine mandatory deep IDs present); per-item trust
-            is unchanged and still fully enforced:
+            offers plus all nine mandatory deep IDs present). The
+            2026-10-28 platform-admission amendment replaced the remaining
+            universal both-feeds forcing for actually-offered mandatory IDs
+            with the qualified registry row's explicit
+            plannedRuntime.installPlatforms as the authoritative channel set:
+            a both-channel plan still requires both feeds, an explicitly
+            single-platform plan is admitted on its declared channel alone,
+            and no channel may be invented for a mandatory slot. Every real
+            remote-script, frozen-plan, bound-review, manifest and (for
+            impeccable) full H6 check still runs on EACH offered channel;
+            Android native capability is never fabricated to satisfy an old
+            both-feeds rule. Per-item trust is unchanged and still fully
+            enforced:
               * a nonempty genuinely qualified set in BOTH feeds: each feed
                 must be EXACTLY the qualified, download-eligible registry rows
                 advertising that channel (no invented rows, no partial drop,
@@ -66,13 +77,17 @@ Modes (fixed; there is no arbitrary script/command input):
               * the nine pinned mandatory deep-adaptation IDs (constants in
                 this trusted tooling; registry deepAdaptation relabeling can
                 never satisfy the gate) keep their full per-offered contract:
-                whenever such an ID is offered it must be present and
-                qualified in BOTH feeds and ship with actual manifest
-                scriptRuntime remote, frozen adaptation,
-                status.executionVerified true and a guest-execution-qualified
-                review bound to linux/riscv64/guest-verified execution — a
-                guide-only replacement of a mandatory slot is refused, and a
-                mandatory slot can never be advertised on a single channel;
+                whenever such an ID is offered it is present and qualified on
+                EXACTLY its qualified plannedRuntime.installPlatforms (Root
+                platform-admission policy 2026-10-28): a both-channel plan
+                must still appear in BOTH feeds, an explicitly iOS-only (or
+                Android-only) qualified plan is admitted on its declared
+                channel only and no channel may be invented for it; in every
+                offered channel it ships with actual manifest scriptRuntime
+                remote, frozen adaptation, status.executionVerified true and
+                a guest-execution-qualified review bound to
+                linux/riscv64/guest-verified execution — a guide-only
+                replacement of a mandatory slot is refused;
                 impeccable must additionally retain its real embedded
                 ``references/engine-dependency.json`` with the builder-
                 validated frozen descriptor and raw engine bytes staged in
@@ -142,7 +157,12 @@ RECEIPT_SIG_REL = RECEIPT_REL + ".sig"
 # ONLY as informational complete-selection coverage metadata; they can never
 # gate a publication on and can never claim completeness for a partial feed.
 # Per-item trust (exact advertised qualified set, signatures, guest-execution
-# evidence, H6, both-channel presence for offered mandatory IDs) is unchanged.
+# evidence, H6, presence of an offered mandatory ID on exactly its qualified
+# plannedRuntime.installPlatforms channels with every hard check running on
+# EACH offered channel) is unchanged. The 2026-10-28 amendment removed only
+# the redundant UNIVERSAL both-feeds forcing that blocked an explicitly
+# iOS-only (or Android-only) qualified admission; a both-channel plan still
+# requires both feeds and no channel may ever be invented.
 COMPLETE_SELECTION_QUALIFIED_TARGET = 40
 IMPECCABLE_ID = "impeccable"
 # The nine mandatory deep adaptations are pinned HERE, in trusted tooling.
@@ -659,9 +679,14 @@ def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
         execution claim (no invented guest claim, no guide/script relabel);
       * the nine mandatory deep IDs stay pinned in this trusted tooling
         (registry relabeling can never satisfy the gate): whenever such an ID
-        is actually offered it must appear in BOTH feeds, ship as a real
-        remote-script package matching the frozen plannedRuntime contract,
-        and impeccable additionally carries the full H6 runtime binding;
+        is actually offered it ships as a real remote-script package matching
+        the frozen plannedRuntime contract, present on EXACTLY its qualified
+        plannedRuntime.installPlatforms channels (Root 2026-10-28: a
+        both-channel plan must appear in BOTH feeds; an explicitly
+        iOS-only/Android-only qualified plan is admitted on its declared
+        channel only, with no invented channel), with the remote-script and —
+        for impeccable — the full H6 runtime binding rechecked on EVERY
+        offered channel;
       * held-back (not yet admitted) mandatory IDs no longer block unrelated
         qualified offers;
       * the retired batch rule is reported ONLY as informational
@@ -728,31 +753,53 @@ def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
                 if record["execution"] != {"os": None, "arch": "n/a", "evidence": "unproven"}:
                     raise SigningError(f"{entry['id']}: guide-only package carries an "
                                        "invented guest claim")
-    # A pinned mandatory ID that is actually offered keeps its full contract:
-    # both-channel presence, real remote-script bytes, frozen plan and — for
-    # impeccable — the H6 runtime binding. A guide relabel can never satisfy a
-    # mandatory slot, and a mandatory slot can never ship on one channel only.
+    # A pinned mandatory ID that is actually offered keeps its full contract
+    # on EVERY channel where it is offered: real remote-script bytes, the
+    # frozen plan and — for impeccable — the H6 runtime binding are recomputed
+    # per channel from that channel's own feed entry (no assumed iOS
+    # representative). A guide relabel can never satisfy a mandatory slot.
+    # Channel eligibility itself is authoritative from the qualified registry
+    # row: plannedRuntime.installPlatforms is the explicit Root-reviewed
+    # platform admission (2026-10-28). The per-channel feed-equality checks
+    # above already force each feed to be EXACTLY the qualified rows
+    # advertising that channel, so a both-channel plan stays present in both
+    # feeds and an explicitly single-platform plan is admitted on its
+    # declared channel only — the checks below keep those mandatory-specific
+    # invariants explicit and fail-closed: never a dropped declared channel,
+    # never an injected unplanned channel, never a fabricated Android offer.
     ios_by_id = {e["id"]: e for e in ios_feed["entries"]}
     android_by_id = {e["id"]: e for e in android_feed["entries"]}
+    offered_by_channel = {"ios": ios_by_id, "android": android_by_id}
     offered_mandatory = sorted(MANDATORY_DEEP_IDS & (set(ios_ids) | set(android_ids)))
     for id_ in offered_mandatory:
-        if id_ not in ios_by_id or id_ not in android_by_id:
-            missing = "iOS" if id_ not in ios_by_id else "Android"
-            raise SigningError(f"launch gate: {id_}: an offered mandatory deep "
-                               f"adaptation is missing from the {missing} feed; a "
-                               "mandatory slot can never be advertised on a single "
-                               "channel")
-    for id_ in offered_mandatory:
-        entry = ios_by_id[id_]
-        if entry["runtime"]["scriptRuntime"] != "remote":
-            raise SigningError(f"{id_}: mandatory deep adaptations must ship as "
-                               "remote-script packages; a guide-only replacement "
-                               "can never satisfy the launch gate")
+        declared_channels = [channel for channel in ("ios", "android")
+                             if channel in entries_by_id[id_]
+                             ["plannedRuntime"]["installPlatforms"]]
+        for channel in declared_channels:
+            if id_ not in offered_by_channel[channel]:
+                raise SigningError(
+                    f"launch gate: {id_}: an offered mandatory deep adaptation is "
+                    f"missing from its declared {channel} feed; a mandatory slot "
+                    "can never ship on only part of its qualified planned channels")
+        for channel in ("ios", "android"):
+            if id_ in offered_by_channel[channel] and channel not in declared_channels:
+                raise SigningError(
+                    f"launch gate: {id_}: a mandatory offer on the unplanned "
+                    f"{channel} channel is never admissible; no channel may be "
+                    "invented or fabricated to satisfy a mandatory slot")
+        for channel in declared_channels:
+            entry = offered_by_channel[channel][id_]
+            if entry["runtime"]["scriptRuntime"] != "remote":
+                raise SigningError(f"{id_}: mandatory deep adaptations must ship as "
+                                   "remote-script packages; a guide-only replacement "
+                                   "can never satisfy the launch gate")
         if entries_by_id[id_]["plannedRuntime"]["scriptRuntime"] != "remote":
             raise SigningError(f"{id_}: plannedRuntime.scriptRuntime drifted away "
                                "from the frozen remote-script contract")
         if id_ == IMPECCABLE_ID:
-            _gate_impeccable_runtime(hubcore, runtime_dependency, args, entry, outputs)
+            for channel in declared_channels:
+                _gate_impeccable_runtime(hubcore, runtime_dependency, args,
+                                         offered_by_channel[channel][id_], outputs)
     # Informational complete-selection coverage ONLY: honest metadata about
     # how far this feed is from the retired 40 + all-nine launch batch, never
     # a blockade and never a completeness claim for a partial feed. The

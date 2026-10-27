@@ -23,7 +23,13 @@ the ACTUAL signed repository data whose expectations are DERIVED from the
 registry (so a future honest admission changes no test, only the counts), and
 a FROZEN initial-release fixture pinning the exact first-wave semantics.
 Held-back mandatory IDs no longer block the qualified set; every per-item
-trust refusal stays enforced.
+trust refusal stays enforced. The 2026-10-28 platform-admission amendment
+is exercised in a third shape: an actually-offered mandatory ID is admitted
+on EXACTLY its qualified plannedRuntime.installPlatforms channels (a valid
+iOS-only admission with the full guest/H6 chain publishes; a both-channel
+plan missing either channel and any injection into an unplanned channel
+stay refused), so the gate is never shown weakening remote-script, review,
+H6, signature, receipt or history checks for a declared platform.
 """
 import base64
 import copy
@@ -920,10 +926,23 @@ class CatalogModeTests(BridgeFixture):
                                            env_value=_env_value(TEST_SEED))
         self._expect_refused(out, "status.executionVerified true")
 
-    def test_offered_mandatory_single_channel_refused(self):
-        """Held-back mandatory IDs no longer block the qualified 34, but a
-        mandatory ID that IS offered must appear in BOTH feeds: an iOS-only
-        advertisement of markitdown is refused fail-closed."""
+    def test_offered_mandatory_declared_channel_only_publishes(self):
+        """Root platform-admission policy (2026-10-28): an actually-offered
+        mandatory ID is admitted on EXACTLY its qualified planned channels.
+
+        This scenario was the pre-amendment blanket refusal (markitdown
+        qualified with plannedRuntime.installPlatforms ["ios"] was refused as
+        "single channel" even though its plan explicitly declared only iOS).
+        Under Root's authorized policy it is now the sanctioned single-
+        platform admission shape and must publish — iOS 31 / Android 30,
+        markitdown bound to its real guest-execution-qualified review on the
+        one offered channel, and the Android feed gaining NO invented
+        markitdown row. The original negative is NOT deleted: a mandatory ID
+        whose plan declares BOTH channels can still never ship on one channel
+        (test_both_channel_mandatory_missing_channel_refused below plus the
+        key-free gate probe test_both_channel_mandatory_partial_feed_still_
+        refused).
+        """
         registry, qualified = self._incremental_catalog_registry()
         entries = {e["id"]: e for e in registry["skills"]}
         markitdown = entries["markitdown"]
@@ -933,13 +952,189 @@ class CatalogModeTests(BridgeFixture):
         markitdown["plannedRuntime"] = dict(markitdown["plannedRuntime"],
                                             installPlatforms=["ios"])
         qualified = set(qualified) | {"markitdown"}
-        data, commit, _ = self._stage_catalog_data("catalog-mandatory-single",
+        data, commit, _ = self._stage_catalog_data("catalog-mandatory-ios-only",
                                                    registry, qualified,
                                                    real_impeccable=False)
-        out = self.root / "out-catalog-mandatory-single"
+        out = self.root / "out-catalog-mandatory-ios-only"
+        proc = self._run_bridge("catalog", data, commit, out,
+                                env_value=_env_value(TEST_SEED))
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        trust = {KEY_ID: self.public_b64}
+        ios = json.loads((out / "catalog.json").read_bytes())
+        android = json.loads((out / "android/catalog.json").read_bytes())
+        for feed, sig in (("catalog.json", "catalog.sig"),
+                          ("android/catalog.json", "android/catalog.sig")):
+            payload = (out / feed).read_bytes()
+            self.assertEqual(hubcore.verify_envelope(payload, (out / sig).read_bytes(),
+                                                     trust), KEY_ID)
+        ios_ids = {e["id"] for e in ios["entries"]}
+        android_ids = {e["id"] for e in android["entries"]}
+        self.assertIn("markitdown", ios_ids)
+        self.assertNotIn("markitdown", android_ids)
+        self.assertEqual(len(ios_ids), 31)
+        self.assertEqual(len(android_ids), 30)
+        # the offered single channel keeps the FULL per-item contract: real
+        # remote-script bytes and its actually bound guest-execution review.
+        entry = next(e for e in ios["entries"] if e["id"] == "markitdown")
+        self.assertEqual(entry["runtime"]["scriptRuntime"], "remote")
+        record = json.loads((out / entry["review"]["path"]).read_bytes())
+        self.assertEqual(record["reviewStage"], "guest-execution-qualified")
+        self.assertEqual(record["execution"], {"os": "linux", "arch": "riscv64",
+                                               "evidence": "guest-verified"})
+        # only the declared channel's archive was staged
+        self.assertFalse((out / "android/packages/markitdown").exists())
+        receipt = self.verify_receipt(out, trust)
+        gate = receipt["launchGate"]
+        self.assertEqual(gate["policy"], "incremental-2026-10-27")
+        self.assertEqual(gate["iosQualified"], 31)
+        self.assertEqual(gate["androidQualified"], 30)
+        self.assertEqual(gate["mandatoryDeepOffered"], ["markitdown"])
+        coverage = gate["completeSelectionCoverage"]
+        self.assertEqual(coverage["mandatoryDeepOfferedCount"], 1)
+        self.assertFalse(coverage["mandatoryDeepAllPresent"])
+        self.assertFalse(coverage["complete"])
+        self.assertEqual(_git(data, "rev-parse", "HEAD").strip(), commit)
+
+    def test_both_channel_mandatory_missing_channel_refused(self):
+        """both planned => both required still: markitdown keeps its real
+        planned [ios, android] admission but the Android archive is withheld.
+        The bridge fails closed with zero output (the trusted builder refuses
+        the missing per-channel archive; the launch gate's declared-channel
+        presence rule stands behind it as defense in depth)."""
+        registry, qualified = self._incremental_catalog_registry()
+        entries = {e["id"]: e for e in registry["skills"]}
+        markitdown = entries["markitdown"]
+        self.assertEqual(markitdown["plannedRuntime"]["installPlatforms"],
+                         ["ios", "android"])
+        markitdown["status"] = dict(markitdown["status"], licenseChecked=True,
+                                    packaged=True, reviewed=True, qualified=True,
+                                    adaptation="frozen", executionVerified=True)
+        qualified = set(qualified) | {"markitdown"}
+        data = self._new_data("catalog-mandatory-both-partial")
+        self._stage_registry(data, registry)
+        for id_ in sorted(qualified):
+            entry = entries[id_]
+            scripted = entry["plannedRuntime"]["scriptRuntime"] != "none"
+            pkg = package_for(entry, scripted, real=False)
+            if id_ == "markitdown":
+                # stage ONLY the iOS archive: the declared Android channel is
+                # withheld, which the pre-amendment and post-amendment gates
+                # must both refuse for a both-channel plan.
+                rel = hubcore.package_path_for(entry["id"], entry["versionTarget"],
+                                               "ios")
+                target = data / rel
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(pkg["data"])
+            else:
+                self._stage_packages(data, entry, pkg)
+            self._stage_review(data, entry, review_record(entry, pkg, scripted),
+                               signed_with=self.key)
+        commit = _commit_all(data)
+        out = self.root / "out-catalog-mandatory-both-partial"
         self._last_proc = self._run_bridge("catalog", data, commit, out,
                                            env_value=_env_value(TEST_SEED))
-        self._expect_refused(out, "single channel")
+        self._expect_refused(out, "no archive at android/packages/markitdown")
+
+    def test_ios_only_impeccable_mandatory_publishes_with_full_h6(self):
+        """Root's authorized admission shape for the new Impeccable entry
+        (explicit qualified platforms [ios]): the COMPLETE unchanged H6 chain
+        — real sources/impeccable archive embedding the frozen runtime
+        descriptor, real engines tree staged from the frozen snapshot, the
+        embedded == frozen byte equality and the raw ELF size/hash
+        cross-check — runs on the single offered channel and publishes, while
+        the Android feed keeps every OTHER both-channel row and gains no
+        invented impeccable offer. Nothing is weakened: signatures, review
+        joins, receipts and history checks are the same code path."""
+        registry, qualified = self._standard_catalog_registry()
+        entries = {e["id"]: e for e in registry["skills"]}
+        entries["impeccable"]["plannedRuntime"] = dict(
+            entries["impeccable"]["plannedRuntime"], installPlatforms=["ios"])
+        data, commit, staged = self._stage_catalog_data(
+            "catalog-impeccable-ios-only", registry, qualified)
+        out = self.root / "out-catalog-impeccable-ios-only"
+        proc = self._run_bridge("catalog", data, commit, out,
+                                env_value=_env_value(TEST_SEED))
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        trust = {KEY_ID: self.public_b64}
+        ios = json.loads((out / "catalog.json").read_bytes())
+        android = json.loads((out / "android/catalog.json").read_bytes())
+        ios_ids = {e["id"] for e in ios["entries"]}
+        android_ids = {e["id"] for e in android["entries"]}
+        self.assertIn("impeccable", ios_ids)
+        self.assertNotIn("impeccable", android_ids)
+        self.assertEqual(len(ios_ids), 39)
+        self.assertEqual(len(android_ids), 38)
+        pkg = next(e for e in ios["entries"] if e["id"] == "impeccable")
+        self.assertEqual(pkg["package"]["contentDigest"],
+                         staged["impeccable"]["contentDigest"])
+        self.assertIn(b'"componentID":"impeccable-engine"',
+                      (out / pkg["package"]["path"]).read_bytes())
+        frozen_rel = "engines/impeccable/runtime-dependency/descriptor.v1.json"
+        self.assertEqual((out / frozen_rel).read_bytes(),
+                         (HERE / frozen_rel).read_bytes())
+        engine_rel = ("engines/impeccable/dist/impeccable-0.1.17+floe.1.0.0/"
+                      "riscv64gc-unknown-linux-musl/floe-impeccable")
+        self.assertEqual(hubcore.sha256_hex((out / engine_rel).read_bytes()),
+                         hashlib.sha256((HERE / engine_rel).read_bytes()).hexdigest())
+        self.assertFalse((out / "android/packages/impeccable").exists())
+        receipt = self.verify_receipt(out, trust)
+        self.assertEqual(receipt["launchGate"]["iosQualified"], 39)
+        self.assertEqual(receipt["launchGate"]["androidQualified"], 38)
+        self.assertEqual(receipt["launchGate"]["mandatoryDeepOffered"], sorted(MANDATORY))
+        self.assertEqual(_git(data, "rev-parse", "HEAD").strip(), commit)
+
+    def test_android_only_impeccable_mandatory_publishes(self):
+        """Explicit Android-only plan symmetry (a policy-shape proof only —
+        Root's entry plan is iOS-only, this is NOT a capability claim): the
+        generalized gate runs the real H6 binding against the ACTUAL offered
+        Android archive with no iOS representative and no KeyError."""
+        registry, qualified = self._standard_catalog_registry()
+        entries = {e["id"]: e for e in registry["skills"]}
+        entries["impeccable"]["plannedRuntime"] = dict(
+            entries["impeccable"]["plannedRuntime"], installPlatforms=["android"])
+        data, commit, _staged = self._stage_catalog_data(
+            "catalog-impeccable-android-plan", registry, qualified)
+        out = self.root / "out-catalog-impeccable-android-plan"
+        proc = self._run_bridge("catalog", data, commit, out,
+                                env_value=_env_value(TEST_SEED))
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        ios = json.loads((out / "catalog.json").read_bytes())
+        android = json.loads((out / "android/catalog.json").read_bytes())
+        self.assertNotIn("impeccable", {e["id"] for e in ios["entries"]})
+        self.assertIn("impeccable", {e["id"] for e in android["entries"]})
+        self.assertEqual(len(ios["entries"]), 38)
+        self.assertEqual(len(android["entries"]), 39)
+        frozen_rel = "engines/impeccable/runtime-dependency/descriptor.v1.json"
+        self.assertTrue((out / frozen_rel).is_file())
+        receipt = self.verify_receipt(out, {KEY_ID: self.public_b64})
+        self.assertEqual(receipt["launchGate"]["mandatoryDeepOffered"], sorted(MANDATORY))
+
+    def test_android_only_impeccable_h6_binds_actual_android_archive(self):
+        """The H6 binding follows the offered channel: an Android-only
+        impeccable plan whose only archive lacks the embedded runtime
+        descriptor is refused by the REAL mandatory runtime gate on the
+        Android entry (pre-amendment code would have died on the absent iOS
+        representative instead of proving the Android bytes) — no
+        single-channel bypass exists on any channel."""
+        registry, qualified = self._standard_catalog_registry()
+        entries = {e["id"]: e for e in registry["skills"]}
+        entries["impeccable"]["plannedRuntime"] = dict(
+            entries["impeccable"]["plannedRuntime"], installPlatforms=["android"])
+        data = self._new_data("catalog-impeccable-android-nodesc")
+        self._stage_registry(data, registry)
+        self._stage_engine_tree(data)
+        for id_ in sorted(qualified):
+            entry = entries[id_]
+            scripted = entry["plannedRuntime"]["scriptRuntime"] != "none"
+            pkg = package_for(entry, scripted, real=False)  # no descriptor
+            self._stage_packages(data, entry, pkg)
+            self._stage_review(data, entry, review_record(entry, pkg, scripted),
+                               signed_with=self.key)
+        commit = _commit_all(data)
+        out = self.root / "out-catalog-impeccable-android-nodesc"
+        self._last_proc = self._run_bridge("catalog", data, commit, out,
+                                            env_value=_env_value(TEST_SEED))
+        self._expect_refused(out, "mandatory runtime gate failed")
 
     def test_relabel_deep_flag_refused(self):
         registry, qualified = self._standard_catalog_registry()
@@ -1254,6 +1449,60 @@ class RealDataIncrementalGateTests(unittest.TestCase):
             feed["entries"][0]["status"]["published"] = False
         self._refused(self._tamper_ios_feed(hide),
                       "release offer requires feed status.published true")
+
+    def test_both_channel_mandatory_partial_feed_still_refused(self):
+        """both planned => both required stays true AT THE REAL GATE on the
+        REAL registry: markitdown's live plan declares both channels, so
+        dropping its row from the Android feed (while it stays offered on
+        iOS, making it an actually-offered mandatory ID) is refused —
+        exactly the original pre-amendment negative outcome, now enforced by
+        the authoritative per-channel feed-equality rule with the explicit
+        declared-channel presence rule standing behind it."""
+        feed = json.loads(self.outputs["android/catalog.json"])
+        feed["entries"] = [e for e in feed["entries"] if e["id"] != "markitdown"]
+        self._refused(dict(self.outputs,
+                           **{"android/catalog.json": hubcore.encoded(feed)}),
+                      "exactly the qualified rows advertising android")
+
+    def test_explicit_ios_only_mandatory_passes_then_injection_refused(self):
+        """The 2026-10-28 policy on REAL signed bytes: with markitdown's
+        registry row explicitly re-planned to iOS-only in a copied registry
+        (a mechanism probe of the same declared-channel code path Root's new
+        Impeccable entry will use — the real data itself is never mutated),
+        the actual builder plus the unchanged gate admit the iOS-36/Android-35
+        split (this exact build was refused as "single channel"
+        pre-amendment), the real production-signed guest review still binds
+        the offered channel, and any injection of that iOS-only ID back into
+        the Android feed is refused as an unplanned channel. The additive
+        shape (a held mandatory ID newly admitted on iOS growing the feed,
+        37 iOS / 36 Android for impeccable-like plans) is proven E2E by
+        test_ios_only_impeccable_mandatory_publishes_with_full_h6."""
+        changed = copy.deepcopy(self.registry)
+        for entry in changed["skills"]:
+            if entry["id"] == "markitdown":
+                entry["plannedRuntime"] = dict(entry["plannedRuntime"],
+                                               installPlatforms=["ios"])
+        changed = hubcore.validate_registry(changed)
+        outputs = self.build_catalog.build(changed, "release", self.SOURCE_X,
+                                           HERE, HERE, self.trust)
+        gate = self.sign_publication.enforce_launch_gate(
+            hubcore, self.runtime_dependency, self.args, changed, outputs)
+        self.assertIn("markitdown", gate["mandatoryDeepOffered"])
+        self.assertEqual(gate["iosQualified"], 36)
+        self.assertEqual(gate["androidQualified"], 35)
+        ios = json.loads(outputs["catalog.json"])
+        android = json.loads(outputs["android/catalog.json"])
+        self.assertIn("markitdown", {e["id"] for e in ios["entries"]})
+        self.assertNotIn("markitdown", {e["id"] for e in android["entries"]})
+        injected = dict(android, entries=android["entries"] + [
+            next(e for e in ios["entries"] if e["id"] == "markitdown")])
+        with self.assertRaises(self.sign_publication.SigningError) as ctx:
+            self.sign_publication.enforce_launch_gate(
+                hubcore, self.runtime_dependency, self.args, changed,
+                dict(outputs, **{"android/catalog.json":
+                                 hubcore.encoded(injected)}))
+        self.assertIn("exactly the qualified rows advertising android",
+                      str(ctx.exception))
 
 
 class FrozenInitialReleaseTests(unittest.TestCase):
