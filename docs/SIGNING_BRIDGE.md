@@ -76,8 +76,14 @@ staging included), then enforces the launch gate BEFORE signing. The
 Root-approved staged opening (2026-10-27, following the user's explicit
 request to gradually open skills that are still preparing) superseded ONLY
 the old batch-completeness rule (at least 40 unique qualified iOS offers
-plus all nine mandatory deep IDs present in both feeds). Per-item trust is
-unchanged and every gate below stays fully enforced:
+plus all nine mandatory deep IDs present in both feeds). The
+platform-admission amendment (2026-10-28) then replaced the remaining
+universal both-feeds forcing for actually-offered mandatory IDs with the
+qualified registry row's explicit `plannedRuntime.installPlatforms` as the
+authoritative channel set (both-channel plans still require both feeds;
+an explicitly single-platform plan is admitted on its declared channel
+alone; no channel may ever be invented). Per-item trust is unchanged on
+every offered channel and every gate below stays fully enforced:
 
 - a nonempty genuinely qualified advertised set in BOTH feeds: each feed
   must be EXACTLY the qualified, download-eligible registry rows whose
@@ -100,17 +106,27 @@ unchanged and every gate below stays fully enforced:
   `exploratory-data-analysis`, `impeccable`, `literature-review`,
   `markitdown`, `scientific-visualization`, `statistical-analysis`,
   `webapp-testing`. Whenever one of them is ACTUALLY offered it must be
-  present and qualified in BOTH feeds — a mandatory slot can never be
-  advertised on a single channel — and, because all nine are real
-  remote-script adaptations in the frozen contract, ship with the actual
-  manifest `scriptRuntime` remote, frozen adaptation,
+  present and qualified on EXACTLY the channels its qualified registry row
+  declares in `plannedRuntime.installPlatforms` (Root platform-admission
+  policy, 2026-10-28: a plan declaring both channels must still appear in
+  BOTH feeds — a mandatory slot can never ship on only part of its declared
+  channels — while an explicitly single-platform plan (e.g. the new iOS-only
+  Impeccable 1.1.1 entry) is admitted on its declared channel alone and can
+  never be blocked by a universal both-feeds forcing; inventing or
+  fabricating an extra channel for a mandatory ID is refused). In EVERY
+  offered channel it must, because all nine are real remote-script
+  adaptations in the frozen contract, ship with the actual manifest
+  `scriptRuntime` remote, frozen adaptation,
   `status.executionVerified` true and a genuinely bound
   guest-execution-qualified review. A guide-only replacement of a mandatory
   slot is refused;
-- `impeccable`, when offered, must retain its real embedded
-  `references/engine-dependency.json`; the builder-validated 563-byte
+- `impeccable`, when offered, must on EVERY offered channel retain its real
+  embedded `references/engine-dependency.json`; the builder-validated 563-byte
   frozen descriptor bytes and the raw static-ELF `riscv64` engine bytes
-  must be present in the output (omitting the descriptor cannot bypass H6);
+  must be present in the output (omitting the descriptor cannot bypass H6;
+  the per-channel checks bind the actual offered archive of each channel,
+  never an assumed iOS representative, so no single-channel bypass exists
+  on iOS-only, Android-only or both-channel plans);
 - a held-back (not yet admitted) mandatory ID no longer blocks unrelated
   qualified offers;
 - the retired 40/all-nine batch rule survives ONLY as informational
@@ -204,5 +220,7 @@ Both 30-entry feeds and signatures are included in this publication; App UI
 and runtime acceptance remain separate. Publication stays a coordinator-
 dispatched act through this bridge with the real key, and every per-item trust requirement
 (signatures, guest-execution evidence, exact advertised download-eligible
-sets, H6 whenever impeccable is offered, both-channel presence for offered
-mandatory IDs, empty-feed refusal) remains enforced unchanged.
+sets, H6 on every offered channel whenever impeccable is offered, presence
+of an offered mandatory ID on exactly its qualified planned channels with
+every hard check running on each offered channel, empty-feed refusal)
+remains enforced unchanged.
