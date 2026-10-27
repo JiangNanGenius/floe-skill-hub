@@ -983,7 +983,7 @@
       },
       {
        "file": "sources/markitdown/references/ADAPTATION-NOTES.md",
-       "sha256": "1ecf3bb0421137856a5be8a858e783689d109da089fff6f31f4559af51fe0a4e",
+       "sha256": "1da1953929cb86b27e98a8b764347bce6aa4406230923d17276f110ec1555a5e",
        "lineStart": 64,
        "lineEnd": 67
       }
@@ -1431,7 +1431,7 @@
      "evidence": [
       {
        "file": "sources/statistical-analysis/SKILL.md",
-       "sha256": "e64ad0cd3d701db35dca4e89b87f21f2f8c4c8eb7b4473a816924dce4b34524a",
+       "sha256": "02c2b2f0272da8928d50fb3a163be861609fd7ec6ce118ea2cb227ba179f0e67",
        "lineStart": 33,
        "lineEnd": 36
       }
@@ -1446,20 +1446,20 @@
      "evidence": [
       {
        "file": "sources/statistical-analysis/SKILL.md",
-       "sha256": "e64ad0cd3d701db35dca4e89b87f21f2f8c4c8eb7b4473a816924dce4b34524a",
+       "sha256": "02c2b2f0272da8928d50fb3a163be861609fd7ec6ce118ea2cb227ba179f0e67",
        "lineStart": 73,
        "lineEnd": 76
       },
       {
        "file": "sources/statistical-analysis/references/ADAPTATION-NOTES.md",
-       "sha256": "30f4a1172adf6ff61ac87a543d33750ff074505307155785802aa1c50d191e88",
-       "lineStart": 23,
-       "lineEnd": 26
+       "sha256": "e4a5648a19964c9270c6ca18cc2790ff6270ad6c5bd20d152491fa469c38e57b",
+       "lineStart": 37,
+       "lineEnd": 38
       }
      ],
      "notes": {
-      "en": "Optional diagnostic plots are written only when the environment provides matplotlib (declared by the scientific-visualization layer); numeric results never require it and requests are refused with an explicit message otherwise.",
-      "zh-Hans": "仅当环境提供 matplotlib（由 scientific-visualization 层声明）时才输出可选诊断图；数值结果从不依赖它，否则请求会以明确消息拒绝。"
+      "en": "Scientific Visualization is an optional companion for charting. This skill's numeric analysis and diagnostic plots work independently.",
+      "zh-Hans": "可搭配「科学可视化」制作图表；本技能的数值分析和诊断图也可以独立使用。"
      }
     }
    ]
