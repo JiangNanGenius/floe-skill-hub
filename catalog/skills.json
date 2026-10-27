@@ -1311,14 +1311,14 @@
       "firstParty": null,
       "id": "exploratory-data-analysis",
       "kind": "optional",
-      "minimumAppVersion": "1.7.59",
+      "minimumAppVersion": "1.7.60",
       "name": {
         "en": "EDA",
         "zh-Hans": "数据探索"
       },
       "notes": {
-        "en": "Source adaptation and host golden checks are complete for the explicitly declared dependency layer; unsupported upstream paths are documented. Actual RISC-V guest qualification is pending.",
-        "zh-Hans": "已完成所声明依赖层的源码适配与主机参考值检查，未支持的上游路径已注明，仍待实际 RISC-V 客体验收。"
+        "en": "Profile structured files with a standard-library core and optional NumPy/pandas checks.",
+        "zh-Hans": "用标准库分析结构化文件，并可结合NumPy/pandas进行交叉检查。"
       },
       "planNumber": 19,
       "plannedRuntime": {
@@ -1329,7 +1329,7 @@
         ],
         "execution": {
           "arch": "riscv64",
-          "evidence": "unproven",
+          "evidence": "guest-verified",
           "os": "linux"
         },
         "installPlatforms": [
@@ -1348,7 +1348,7 @@
       "source": "K",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": false,
+        "executionVerified": true,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
@@ -1376,7 +1376,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "skills/exploratory-data-analysis/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.1.0"
     },
     {
       "category": "research-data",
@@ -1546,14 +1546,14 @@
       "firstParty": null,
       "id": "markitdown",
       "kind": "optional",
-      "minimumAppVersion": "1.7.59",
+      "minimumAppVersion": "1.7.60",
       "name": {
         "en": "MarkItDown",
         "zh-Hans": "格式转 Markdown"
       },
       "notes": {
-        "en": "Native document services plus Floe guest extractors; Microsoft MarkItDown is not bundled. Scans and protected PDFs use the existing OCR/unlock flows. Actual guest and App qualification is pending.",
-        "zh-Hans": "复用原生文档服务与 Floe 客体提取脚本，不包含 Microsoft MarkItDown。扫描件及受保护 PDF 沿用 OCR、解锁流程，仍待实际客体与 App 验收。"
+        "en": "Convert supported files to Markdown, preserving tables and identifying cases that need native document or OCR tools.",
+        "zh-Hans": "把支持的文件转换为Markdown，保留表格，并明确指出需要原生文档或OCR工具处理的情况。"
       },
       "planNumber": 22,
       "plannedRuntime": {
@@ -1564,7 +1564,7 @@
         ],
         "execution": {
           "arch": "riscv64",
-          "evidence": "unproven",
+          "evidence": "guest-verified",
           "os": "linux"
         },
         "installPlatforms": [
@@ -1583,7 +1583,7 @@
       "source": "K",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": false,
+        "executionVerified": true,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
@@ -1612,7 +1612,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "skills/markitdown/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.1.0"
     },
     {
       "category": "research-data",

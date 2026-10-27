@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "id": "debian13-riscv64",
+      "target": {
+        "os": "linux",
+        "architectures": ["riscv64"]
+      },
+      "requirements": [
+        {
+          "kind": "apt",
+          "name": "python3-numpy",
+          "version": "1:2.2.4+ds-1",
+          "purpose": "Optional NPY/NPZ inspector backend and the numeric base of the pandas profile; the Debian 13 riscv64 guest base image already ships this exact build.",
+          "required": false
+        },
+        {
+          "kind": "apt",
+          "name": "python3-pandas",
+          "version": "2.2.3+dfsg-9",
+          "purpose": "Optional pandas tabular profile, cross-checked against the mandatory stdlib core; exact Debian 13 riscv64 build.",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

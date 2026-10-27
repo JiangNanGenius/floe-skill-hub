@@ -35,3 +35,10 @@ being advertised.
 - `scripts/sequence_inspector.py`, `scripts/image_inspector.py` — require Biopython 1.88 / tifffile 2026.9.20 / Pillow 12.3.0, none of which is in this release's declared dependency layer; shipping them would advertise unprovisioned capability. Formats stay reference-only and fail closed. (Debian trixie does package python3-biopython/python3-tifffile/python3-pil; a future release may add a separately reviewed optional layer.)
 - Upstream dependency pins numpy 2.5.3 / h5py 3.16.0 / biopython 1.88 / pillow 12.3.0 / tifffile 2026.9.20 / pandas 3.0.6 / polars 1.44.2 — replaced by the versions the resolved Debian 13 guest actually provides (numpy 2.2.4, pandas 2.2.3); h5py/biopython/tifffile/polars not declared at all.
 - Upstream `uv pip install` provisioning blocks — the Floe guest provisions through the existing environment/package flow; ad-hoc chat-time pip/uv is prohibited.
+
+## 1.1.0 — dependency v1 declaration sidecar (2026-10-27)
+
+- Added `references/dependencies.json` (schemaVersion 1, profile `debian13-riscv64`, architectures exactly riscv64): apt `python3-numpy=1:2.2.4+ds-1` (optional) and apt `python3-pandas=2.2.3+dfsg-9` (optional). Both stay optional because the mandatory profiler core is stdlib-only; `eda_verify.py --require-optional` is the readiness gate that turns absence into an honest failure. No pip requirements and no lockfile: these modules ship compiled, so the Debian apt identities are the honest provisioning route.
+- `floe.json` `pythonPackages` pins are unchanged and match these apt identities; only the package `version` moved 1.0.0 -> 1.1.0 because the file set changed.
+- Scripts and fixtures are byte-identical to the reviewed 1.0.0 staging.
+Pin provenance: every version above is copied from the Debian trixie main binary-riscv64 Packages index retrieved 2026-10-27 from deb.debian.org, whose bytes are bound by the GPG-verified trixie InRelease (signed with the Debian 13/trixie archive key 225629DF75B188BD); exact per-package Version/Filename/Size/SHA256 are recorded in the Hub-lane evidence packet (MANIFEST.json of the all-seven-dependencies staging), not in this file.

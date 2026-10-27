@@ -404,9 +404,12 @@ def main() -> int:
         record("batch_manifest", lambda: check_batch_manifest(tmp))
         record("source_preservation", lambda: check_source_preservation(fixture_digests))
 
+
+    # Single package authority: report the version actually shipped in floe.json
+    _floe = json.loads((Path(__file__).resolve().parents[1] / "floe.json").read_text(encoding="utf-8"))
     report = {
         "verifier": "md_verify.py",
-        "package": "markitdown 1.0.0 (Floe adaptation)",
+        "package": f"{_floe['id']} {_floe['version']} (Floe adaptation)",
         "python": sys.version.split()[0],
         "ok": not failures,
         "layer_required": bool(args.require_layer),

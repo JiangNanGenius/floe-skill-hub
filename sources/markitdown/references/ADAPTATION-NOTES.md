@@ -76,3 +76,11 @@ and paid/provider-specific services are prohibited for this release.
   Understanding, OpenAI-compatible captioning, Google Web Speech audio
   transcription, YouTube transcription — prohibited or unprovisionable in
   this release; every one is explicitly listed as NOT provided.
+
+## 1.1.0 — dependency v1 declaration sidecar (2026-10-27)
+
+- Added `references/dependencies.json` (schemaVersion 1, profile `debian13-riscv64`, architectures exactly riscv64): apt `python3-openpyxl=3.1.5+dfsg-2` and apt `python3-pdfminer=20221105+dfsg-1.1~deb13u1`, both `required: true` — the promised guest XLSX and extractable-text PDF routes fail closed without them (`md_verify.py --require-layer` is the readiness gate). No pip requirements and no lockfile: pdfminer's own runtime dependency python3-cryptography is compiled, which PyPI pure-wheel pip provisioning could not honestly satisfy; the Debian apt closure covers it.
+- Format honesty boundary is unchanged from 1.0.0 and is not altered by this sidecar: DOCX/HTML/RTF, protected PDFs and scans are native-service routes (document.convert, document.pdf.convert/unlock, image.ocr), never guest promises; PPTX/CSV/TSV/JSON/TXT remain stdlib guest paths.
+- Version correction carried by this bump: the live trixie riscv64 index ships python3-pdfminer at `20221105+dfsg-1.1~deb13u1` (the earlier audit shorthand `20221105+dfsg` is the base); `floe.json`'s `pdfminer.six==20221105` pin base still matches the guest identity after the harness base-name normalization.
+- `floe.json` pins unchanged except the package `version` 1.0.0 -> 1.1.0; scripts and fixtures byte-identical to the reviewed 1.0.0 staging.
+Pin provenance: every version above is copied from the Debian trixie main binary-riscv64 Packages index retrieved 2026-10-27 from deb.debian.org, whose bytes are bound by the GPG-verified trixie InRelease (signed with the Debian 13/trixie archive key 225629DF75B188BD); exact per-package Version/Filename/Size/SHA256 are recorded in the Hub-lane evidence packet (MANIFEST.json of the all-seven-dependencies staging), not in this file.

@@ -530,9 +530,12 @@ def main() -> int:
                 )
                 failures.append(f"{name}: {type(exc).__name__}: {exc}")
 
+
+    # Single package authority: report the version actually shipped in floe.json
+    _floe = json.loads((Path(__file__).resolve().parents[1] / "floe.json").read_text(encoding="utf-8"))
     report = {
         "verifier": "eda_verify.py",
-        "package": "exploratory-data-analysis 1.0.0 (Floe adaptation)",
+        "package": f"{_floe['id']} {_floe['version']} (Floe adaptation)",
         "python": sys.version.split()[0],
         "ok": not failures,
         "optional_layers_required": bool(args.require_optional),

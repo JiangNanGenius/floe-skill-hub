@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "id": "debian13-riscv64",
+      "target": {
+        "os": "linux",
+        "architectures": ["riscv64"]
+      },
+      "requirements": [
+        {
+          "kind": "apt",
+          "name": "python3-openpyxl",
+          "version": "3.1.5+dfsg-2",
+          "purpose": "XLSX workbook to Markdown table extraction, read-only and bounded with cached formula values.",
+          "required": true
+        },
+        {
+          "kind": "apt",
+          "name": "python3-pdfminer",
+          "version": "20221105+dfsg-1.1~deb13u1",
+          "purpose": "Extractable-text PDF to Markdown for bounded guest batches; encrypted PDFs route to the native unlock flow instead.",
+          "required": true
+        }
+      ]
+    }
+  ]
+}
