@@ -1860,35 +1860,47 @@
         "zh-Hans": "平面视觉设计"
       },
       "notes": {
-        "en": "Deterministic generators and reference-browser previews checked; raster export and actual task guest/App qualification remain pending. Preview screenshots never stand in for full-resolution output.",
-        "zh-Hans": "已检查确定性生成器与参考浏览器预览；完整像素导出及实际任务客体、App 验收仍待完成，预览截图不冒充原始分辨率产物。"
+        "en": "1.1.0 is guest- and native-qualified against the exact final archive (ZIP SHA-256 463afc46e303550819a4b57a3b0d7e71c542c3c824093bc90111aa4510bbaccd, content digest f7cdb4da7ba8311693e86e2d26c607c41f1fea95fac41d91fd8a60994395a7c9): bundled python3 stdlib generators ran in the real Linux/riscv64 guest with determinism and honest unsupported-embed refusal, and native WebKit on iPadOS 27 Simulator rendered the full-size CJK poster, delivered via browser.exportFile, re-verified byte-exactly by the bundled validator and published as a run-owned output byte-equal on independent after-teardown read-back. No download offer or catalog publication yet: browser.exportFile is not in any public App release, so App availability needs mainline integration and the catalog minimumAppVersion stays a mainline-owned external gate (PENDING). The retained 1.7.59 is a historical schema-legal floor only and is never a first-capable-version claim. Guest plus Simulator native qualification, not physical-device or Apple-published-build acceptance. iOS channel only; no Android evidence. Preview screenshots never stand in for full-resolution output.",
+        "zh-Hans": "1.1.0已按最终确切归档完成客体与原生鉴定（ZIP SHA-256 463afc46e303550819a4b57a3b0d7e71c542c3c824093bc90111aa4510bbaccd，内容摘要 f7cdb4da7ba8311693e86e2d26c607c41f1fea95fac41d91fd8a60994395a7c9）：随附python3标准库生成器在真实Linux/riscv64客体中确定性运行并对不支持的内嵌如实拒绝，iPadOS 27模拟器下的原生WebKit渲染出全尺寸CJK海报，经browser.exportFile交付、随附校验器逐字节复验，并由workspace.publishOutput发布为run-owned输出文件，拆除后独立读回仍逐字节一致。尚无下载供给或目录发布：browser.exportFile未进入任何公开App版本，App可用性取决于主线集成，目录minimumAppVersion仍是主线负责的外部门槛（待定）。保留的1.7.59仅是schema合法的历史下限，绝非“首个可用版本”声明。此为客体加模拟器原生鉴定，不是真机或Apple发布构建验收。仅iOS渠道；无Android证明。预览截图绝不冒充原始分辨率产物。"
       },
       "planNumber": 26,
       "plannedRuntime": {
         "capabilities": [
+          "browser.interact",
+          "browser.observe",
           "execution.remote",
           "workspace.read",
           "workspace.write"
         ],
         "execution": {
           "arch": "riscv64",
-          "evidence": "unproven",
+          "evidence": "guest-verified",
           "os": "linux"
         },
         "installPlatforms": [
-          "ios",
-          "android"
+          "ios"
         ],
         "pythonPackagesPlan": [],
         "scriptRuntime": "remote",
         "tools": [
-          "exec.shell"
+          "browser.click",
+          "browser.exportFile",
+          "browser.navigate",
+          "browser.observe",
+          "browser.screenshot",
+          "exec.localService",
+          "exec.shell",
+          "jobs.cancel",
+          "jobs.result",
+          "jobs.status",
+          "jobs.submit",
+          "workspace.publishOutput"
         ]
       },
       "source": "A",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": false,
+        "executionVerified": true,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
@@ -1917,7 +1929,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "skills/canvas-design/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.1.0"
     },
     {
       "category": "design-creation",
