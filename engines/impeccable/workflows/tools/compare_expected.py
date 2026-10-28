@@ -14,19 +14,35 @@ fields that moved, and the digest pair, and the workflow fails unless
 The recorded goldens carry the engine identity that produced them
 (`engine.upstreamEngineVersion` / `engine.upstreamCommit` /
 `engine.upstreamTree` / `engine.engineId`), so a legitimate newer engine
-version would otherwise always diff. The tool therefore authenticates the
-candidate result's exact four identity fields against the explicitly staged
-candidate lock FIRST: wrong or missing identity fails closed. The lock's
+version would otherwise always diff. The same embedded contract identity is
+also mirrored into `diagnostics.upstreamCommit` / `diagnostics.engineVersion`
+on every result that reaches scan diagnostics (`adapter/src/scan.rs`), so
+those two keys move with the same legitimate pin bump. The tool therefore
+authenticates the candidate result's four engine identity fields (always
+required) plus the diagnostics mirror against the explicitly staged candidate
+lock FIRST: wrong or missing identity fails closed. The lock's
 `engineId` — the component identity the engine-probe prints — must itself be
 the canonical `impeccable-<engineVersion>+floe.<adapterVersion>` form
 embedding that lock's own `upstream.engineVersion` (and agreeing with
 `floe.adapterVersion` when present); a non-canonical or version-disagreeing
-lock fails closed before any golden is read. The golden-old vs
-authenticated-new values of exactly those four keys are then recorded as
+lock fails closed before any golden is read.
+
+The diagnostics mirror is structural as well as authenticated: the two keys
+must BOTH exist when EITHER exists (one alone, or an explicit null, is a
+malformed result and fails closed), and they may be absent only when the
+golden is equally an early-refusal document without them. A golden that does
+carry the mirror must be self-coherent: its two non-null values must equal its
+OWN `engine.upstreamCommit` / `engine.upstreamEngineVersion`, so a stale or
+forged golden pair can never be silently excluded as a legitimate identity
+change. A presence disagreement between the golden and the candidate is
+structural drift, never an ignored identity change: the two fields stay in
+the behavioural diff and the case is review-blocking. The golden-old vs
+authenticated-new values of the validated keys are then recorded as
 `candidateIdentityChanges` review evidence and excluded from the behavioural
-diff. Nothing else under `engine.*` is ever excluded — target triple, ABI,
-runtimeExecution, adapter versions, coverage, findings, facts and ownership
-still diff exactly, and a real behavioural change still fails the gate.
+diff. Nothing else under `engine.*` or `diagnostics.*` is ever excluded —
+target triple, ABI, runtimeExecution, adapter versions, coverage, findings,
+facts, other diagnostics fields and ownership still diff exactly, and a real
+behavioural change still fails the gate.
 
   compare_expected.py --engine <binary> --contract <contract-dir> \
       --expected <expected/label> --out <comparison.json> \
@@ -54,21 +70,34 @@ VOLATILE = {
     "error.detail.elapsedMs",
 }
 
-# The exact engine identity keys carried in every recorded result document.
-# These — and only these — may differ between a golden and a legitimately
+# The exact identity keys that may differ between a golden and a legitimately
 # newer candidate, and only after the candidate's values are authenticated
-# against the explicitly staged candidate lock.
-IDENTITY_KEYS = (
+# against the explicitly staged candidate lock. The four engine keys exist on
+# every result; the diagnostics block mirrors the same embedded contract
+# identity only on documents that reached scan diagnostics, so its two keys
+# are validated structurally as well (both present or both absent).
+ENGINE_IDENTITY_KEYS = (
     "engine.upstreamEngineVersion",
     "engine.upstreamCommit",
     "engine.upstreamTree",
     "engine.engineId",
 )
+DIAGNOSTICS_IDENTITY_KEYS = (
+    "diagnostics.upstreamCommit",
+    "diagnostics.engineVersion",
+)
+IDENTITY_KEYS = ENGINE_IDENTITY_KEYS + DIAGNOSTICS_IDENTITY_KEYS
+# Every result document carries the engine block; only these four keys are
+# unconditionally required. The diagnostics mirror's presence is handled by
+# diagnostics_identity_presence().
+REQUIRED_IDENTITY_KEYS = ENGINE_IDENTITY_KEYS
 
 
 def load_lock_identity(path: Path) -> dict:
-    """The four candidate identity values the observed results must carry.
+    """The candidate identity values the observed results must carry.
 
+    The four engine fields and the two diagnostics mirror values are derived
+    from the lock's validated upstream pin and canonical component id.
     Shape-checked fail-closed: a lock without a usable identity is a hard
     error, never a silent pass."""
     import re
@@ -117,25 +146,94 @@ def load_lock_identity(path: Path) -> dict:
     return {"engine.upstreamEngineVersion": version,
             "engine.upstreamCommit": commit,
             "engine.upstreamTree": tree,
-            "engine.engineId": engine_id}
+            "engine.engineId": engine_id,
+            # the diagnostics block mirrors the same embedded contract identity
+            "diagnostics.upstreamCommit": commit,
+            "diagnostics.engineVersion": version}
 
 
-def authenticate_identity(case: str, observed_flat: dict, lock_identity: dict) -> None:
-    """Fail closed unless the candidate result carries EXACTLY the four
-    authenticated identity values of the staged candidate lock."""
-    for key, expected in lock_identity.items():
-        observed = observed_flat.get(key)
-        if observed is None:
+def diagnostics_identity_presence(case: str, flat: dict, side: str) -> bool:
+    """Whether this document carries the two-key diagnostics identity mirror.
+
+    The adapter writes both keys together, so one key alone is a malformed
+    document and fails closed; both absent is the early-refusal shape.
+    """
+    present = {key: key in flat for key in DIAGNOSTICS_IDENTITY_KEYS}
+    if any(present.values()) and not all(present.values()):
+        raise SystemExit(json.dumps({
+            "ok": False,
+            "error": f"the {side} result carries only one of the two diagnostics "
+                     "identity keys; they must both exist or both be absent",
+            "case": case, "present": present}, indent=2))
+    return all(present.values())
+
+
+def authenticate_golden_diagnostics(case: str, expected_flat: dict) -> None:
+    """Fail closed unless a golden's diagnostics mirror is self-coherent.
+
+    The mirror records the identity of the binary that produced the golden, so
+    both values must be non-null and equal the golden's OWN engine identity.
+    Comparing it only for shape would let a stale or forged golden pair be
+    excluded as a legitimate identity change; this check runs before any diff.
+    """
+    problems = []
+    for diagnostics_key, engine_key in (
+        ("diagnostics.upstreamCommit", "engine.upstreamCommit"),
+        ("diagnostics.engineVersion", "engine.upstreamEngineVersion"),
+    ):
+        mirror = expected_flat.get(diagnostics_key)
+        engine = expected_flat.get(engine_key)
+        if mirror is None:
+            problems.append(f"{diagnostics_key} is null")
+        elif mirror != engine:
+            problems.append(f"{diagnostics_key} is {mirror!r} but the golden's "
+                            f"{engine_key} is {engine!r}")
+    if problems:
+        raise SystemExit(json.dumps({
+            "ok": False,
+            "error": "golden result carries an incoherent diagnostics identity mirror",
+            "case": case, "problems": problems}, indent=2))
+
+
+def authenticate_identity(case: str, observed_flat: dict, lock_identity: dict) -> bool:
+    """Fail closed unless the candidate result carries EXACTLY the
+    authenticated identity values of the staged candidate lock.
+
+    The four engine keys are always required. The diagnostics mirror, when
+    present at all, must be complete and carry the lock's values; an explicit
+    null is a present-but-unusable value, never an absence. Returns whether
+    the document carries the diagnostics mirror."""
+    for key in REQUIRED_IDENTITY_KEYS:
+        expected = lock_identity[key]
+        if key not in observed_flat or observed_flat[key] is None:
             raise SystemExit(json.dumps({
                 "ok": False,
                 "error": "candidate result is missing an engine identity field",
                 "case": case, "field": key, "lockExpected": expected}, indent=2))
-        if observed != expected:
+        if observed_flat[key] != expected:
             raise SystemExit(json.dumps({
                 "ok": False,
                 "error": "candidate result engine identity does not match the staged candidate lock",
                 "case": case, "field": key,
-                "observed": observed, "lockExpected": expected}, indent=2))
+                "observed": observed_flat[key], "lockExpected": expected}, indent=2))
+    has_diagnostics = diagnostics_identity_presence(case, observed_flat, "candidate")
+    if has_diagnostics:
+        for key in DIAGNOSTICS_IDENTITY_KEYS:
+            expected = lock_identity[key]
+            observed = observed_flat[key]
+            if observed is None:
+                raise SystemExit(json.dumps({
+                    "ok": False,
+                    "error": "candidate result carries a null diagnostics identity field",
+                    "case": case, "field": key, "lockExpected": expected}, indent=2))
+            if observed != expected:
+                raise SystemExit(json.dumps({
+                    "ok": False,
+                    "error": "candidate result diagnostics identity does not match "
+                             "the staged candidate lock",
+                    "case": case, "field": key,
+                    "observed": observed, "lockExpected": expected}, indent=2))
+    return has_diagnostics
 
 
 def diff_documents(case: str, expected_doc: dict, observed_doc: dict,
@@ -147,13 +245,26 @@ def diff_documents(case: str, expected_doc: dict, observed_doc: dict,
     every other field still diffs exactly."""
     flat_expected = flatten(expected_doc)
     flat_observed = flatten(observed_doc)
-    authenticate_identity(case, flat_observed, lock_identity)
+    # Validate BOTH sides' diagnostics shape before authenticating: a golden
+    # with half a mirror is as structurally unusable as a candidate with one.
+    # A complete golden mirror must also agree with its OWN engine identity;
+    # only then may it be excluded as a legitimate identity move.
+    expected_diagnostics = diagnostics_identity_presence(case, flat_expected, "golden")
+    if expected_diagnostics:
+        authenticate_golden_diagnostics(case, flat_expected)
+    observed_diagnostics = authenticate_identity(case, flat_observed, lock_identity)
+    presence_agrees = expected_diagnostics == observed_diagnostics
+    # A presence disagreement is structural drift, not an identity exclusion:
+    # the diagnostics keys fall through to the strict diff below instead of
+    # being skipped as a legitimate identity move.
+    excluded_identity_keys = (set(IDENTITY_KEYS) if presence_agrees
+                              else set(ENGINE_IDENTITY_KEYS))
     diffs = []
     identity_changes = []
     for key in sorted(set(flat_expected) | set(flat_observed)):
         if key in VOLATILE:
             continue
-        if key in IDENTITY_KEYS:
+        if key in excluded_identity_keys:
             if flat_expected.get(key) != flat_observed.get(key):
                 identity_changes.append({
                     "case": case, "field": key,
@@ -181,6 +292,11 @@ def diff_documents(case: str, expected_doc: dict, observed_doc: dict,
         "differences": diffs[:40],
         "differenceCount": len(diffs),
         "candidateIdentityChanges": identity_changes,
+        "diagnosticsIdentityPresence": {
+            "golden": expected_diagnostics,
+            "candidate": observed_diagnostics,
+        },
+        "structuralDrift": not presence_agrees,
     }
     if diffs and case not in allow_changes:
         entry["state"] = "changed-unapproved"
@@ -330,8 +446,11 @@ def main() -> int:
                 "source": "the explicitly staged candidate lock",
                 "fields": sorted(IDENTITY_KEYS),
                 "changes": identity_changes,
-                "note": "exactly these four validated identity keys are excluded "
-                        "from the behavioural diff; nothing else under engine.* is",
+                "note": "these validated identity keys are excluded from the "
+                        "behavioural diff only when the diagnostics mirror's "
+                        "presence agrees on both sides; nothing else under "
+                        "engine.* or diagnostics.* is, and a presence mismatch "
+                        "is strict structural drift",
             },
             "cases": len(cases),
             "identical": sum(1 for c in comparison if c["state"] == "identical"),

@@ -25,6 +25,7 @@ strict comparator, never none and never a self-blessed one.
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import os
 import shutil
@@ -662,6 +663,133 @@ class TestBaselineRouting(ToolCase):
         self.assertEqual(sorted(out), ["baseline_route", "baseline_route_reason"])
         self.assertRegex(out["baseline_route"], r"^(historical|published)$")
         self.assertRegex(out["baseline_route_reason"], r"^[ -~]{1,240}$")
+
+
+class TestRealGoldenDiagnosticsIdentity(unittest.TestCase):
+    """The tracked riscv64 matrix mixes full result documents — whose
+    diagnostics block mirrors `engine.upstreamCommit` / `engineVersion` — with
+    early refusals that carry only `diagnostics.strictSchema`. A legitimate
+    candidate bump moves six authenticated identity values on the former and
+    four on the latter. A presence disagreement is structural drift and stays
+    in the strict diff: it is never ignored as an identity change."""
+
+    def setUp(self):
+        spec = importlib.util.spec_from_file_location(
+            "published_real_compare_expected", TOOLS_DIR / "compare_expected.py")
+        self.compare = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.compare)
+        self.tmp = Path(tempfile.mkdtemp(prefix="impeccable-real-diagnostics-"))
+        self.addCleanup(lambda: shutil.rmtree(self.tmp, ignore_errors=True))
+        lock = json.loads(TRACKED_LOCK.read_text(encoding="utf-8"))
+        lock["upstream"].update({"commit": "b" * 40, "tree": "c" * 40,
+                                 "engineVersion": "0.1.18"})
+        lock["engineId"] = f"impeccable-0.1.18+floe.{ADAPTER}"
+        path = self.tmp / "ENGINE-LOCK.json"
+        path.write_text(json.dumps(lock), encoding="utf-8")
+        self.lock_identity = self.compare.load_lock_identity(path)
+
+    def doc(self, name: str) -> dict:
+        return json.loads((TRACKED_GOLDENS / name).read_text(encoding="utf-8"))
+
+    def candidate_from(self, doc: dict, *, diagnostics: bool = True) -> dict:
+        candidate = json.loads(json.dumps(doc))
+        candidate["engine"].update({
+            "upstreamEngineVersion": "0.1.18",
+            "upstreamCommit": "b" * 40,
+            "upstreamTree": "c" * 40,
+            "engineId": f"impeccable-0.1.18+floe.{ADAPTER}",
+        })
+        if diagnostics:
+            candidate.setdefault("diagnostics", {}).update(
+                {"upstreamCommit": "b" * 40, "engineVersion": "0.1.18"})
+        return candidate
+
+    def test_full_metadata_case_moves_six_authenticated_fields(self):
+        golden = self.doc("positive-round2.result.v1.json")
+        entry = self.compare.diff_documents(
+            "positive-round2", golden, self.candidate_from(golden),
+            self.lock_identity, [])
+        self.assertEqual(entry["state"], "identical")
+        self.assertEqual(entry["differenceCount"], 0)
+        self.assertFalse(entry["structuralDrift"])
+        self.assertEqual(entry["diagnosticsIdentityPresence"],
+                         {"golden": True, "candidate": True})
+        self.assertEqual({c["field"] for c in entry["candidateIdentityChanges"]},
+                         set(self.compare.IDENTITY_KEYS))
+        self.assertEqual(len(entry["candidateIdentityChanges"]), 6)
+
+    def test_early_refusal_case_moves_only_the_four_engine_fields(self):
+        golden = self.doc("budget-bytes.result.v1.json")
+        entry = self.compare.diff_documents(
+            "budget-bytes", golden, self.candidate_from(golden, diagnostics=False),
+            self.lock_identity, [])
+        self.assertEqual(entry["state"], "identical")
+        self.assertEqual(entry["differenceCount"], 0)
+        self.assertFalse(entry["structuralDrift"])
+        self.assertEqual(entry["diagnosticsIdentityPresence"],
+                         {"golden": False, "candidate": False})
+        self.assertEqual({c["field"] for c in entry["candidateIdentityChanges"]},
+                         set(self.compare.ENGINE_IDENTITY_KEYS))
+        self.assertFalse(any(d["field"].startswith("diagnostics.")
+                             for d in entry["differences"]))
+
+    def test_presence_disagreement_is_structural_drift_never_ignored(self):
+        full_golden = self.doc("positive-round2.result.v1.json")
+        early_golden = self.doc("budget-bytes.result.v1.json")
+        # the SAME case, differing only in whether the diagnostics mirror exists
+        early_candidate = self.candidate_from(full_golden)
+        for key in ("upstreamCommit", "engineVersion"):
+            del early_candidate["diagnostics"][key]
+        full_candidate = self.candidate_from(early_golden)
+        full_candidate["diagnostics"].update(
+            {"upstreamCommit": "b" * 40, "engineVersion": "0.1.18"})
+        for label, golden, candidate, golden_present in (
+            ("full golden / early candidate", full_golden, early_candidate, True),
+            ("early golden / full candidate", early_golden, full_candidate, False),
+        ):
+            with self.subTest(label):
+                entry = self.compare.diff_documents(
+                    label, golden, candidate, self.lock_identity, [])
+                self.assertEqual(entry["state"], "changed-unapproved")
+                self.assertTrue(entry["structuralDrift"])
+                self.assertEqual(entry["diagnosticsIdentityPresence"],
+                                 {"golden": golden_present,
+                                  "candidate": not golden_present})
+                fields = {d["field"] for d in entry["differences"]}
+                self.assertIn("diagnostics.upstreamCommit", fields)
+                self.assertIn("diagnostics.engineVersion", fields)
+
+    def test_forged_real_diagnostics_value_fails_closed(self):
+        golden = self.doc("positive-round2.result.v1.json")
+        forged = self.candidate_from(golden)
+        forged["diagnostics"]["engineVersion"] = "9.9.9"
+        with self.assertRaises(SystemExit) as ctx:
+            self.compare.diff_documents("positive-round2", golden, forged,
+                                        self.lock_identity, [])
+        self.assertIn("diagnostics identity does not match", str(ctx.exception.code))
+
+    def test_incoherent_real_golden_mirror_fails_closed(self):
+        original = self.doc("positive-round2.result.v1.json")
+        candidate = self.candidate_from(original)
+        for label, mutate in (
+            ("commit mismatch",
+             lambda d: d["diagnostics"].update(upstreamCommit="f" * 40)),
+            ("version mismatch",
+             lambda d: d["diagnostics"].update(engineVersion="9.9.9")),
+            ("explicit null commit",
+             lambda d: d["diagnostics"].update(upstreamCommit=None)),
+            ("explicit null version",
+             lambda d: d["diagnostics"].update(engineVersion=None)),
+        ):
+            with self.subTest(label):
+                golden = json.loads(json.dumps(original))
+                mutate(golden)
+                with self.assertRaises(SystemExit) as ctx:
+                    self.compare.diff_documents("positive-round2", golden, candidate,
+                                                self.lock_identity, [])
+                self.assertEqual(
+                    json.loads(ctx.exception.code)["error"],
+                    "golden result carries an incoherent diagnostics identity mirror")
 
 
 if __name__ == "__main__":

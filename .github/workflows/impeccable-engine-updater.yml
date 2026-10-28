@@ -621,10 +621,10 @@ jobs:
           # version bump. Baseline and
           # candidate ran the same hosted emulated-riscv64 matrix with the
           # same adapter crate, so adapter-version, ABI, target, coverage,
-          # findings and facts fields must all diff byte-exact; only the four
-          # engine identity keys (authenticated against the staged candidate
-          # lock before anything else) may legitimately move, recorded as
-          # candidateIdentityChanges review evidence exactly as before.
+          # findings and facts fields must all diff byte-exact. The four
+          # engine identity keys and their paired diagnostic mirrors may move
+          # only after authentication; mirror presence changes stay structural
+          # drift. Identity changes are retained as review evidence.
           ENGINE="$(find "$RUNNER_TEMP/dist" -name floe-impeccable -type f | head -1)"
           python3 "$ENGINE_DIR/workflows/tools/compare_expected.py" \
             --engine "$ENGINE" \
@@ -653,9 +653,10 @@ jobs:
           # this comparator.
           ENGINE="$(find "$RUNNER_TEMP/dist" -name floe-impeccable -type f | head -1)"
           # The golden comparison authenticates the candidate result's exact
-          # engine identity against the staged candidate lock first; only
-          # those four identity keys are excluded from the behavioural diff
-          # and recorded as candidateIdentityChanges review evidence.
+          # engine identity and paired diagnostic mirrors against the staged
+          # candidate lock first. Only authenticated identity changes are
+          # excluded and recorded; all other fields and mirror presence stay
+          # in the strict behavioural diff.
           python3 "$ENGINE_DIR/workflows/tools/compare_expected.py" \
             --engine "$ENGINE" \
             --contract "$RUNNER_TEMP/candidate-engine/hub/engines/impeccable/contract" \

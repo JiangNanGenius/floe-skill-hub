@@ -293,6 +293,10 @@ class TestCandidateVersusPublishedBaselineDiff(unittest.TestCase):
             "targetTriple": "riscv64gc-unknown-linux-musl",
             "abi": "static ELF, no dynamic loader dependency",
             "runtimeExecution": "riscv64-linux",
+        }, "diagnostics": {
+            "strictSchema": True,
+            "upstreamCommit": base["upstream"]["commit"],
+            "engineVersion": base["upstream"]["engineVersion"],
         }, "findings": {"counts": {"total": 3, "byRule": {"tiny-text": 3}}},
             "coverage": {"passes": [{"id": "hit-test-fixpoint", "state": "covered"}]}}
 
@@ -305,7 +309,17 @@ class TestCandidateVersusPublishedBaselineDiff(unittest.TestCase):
             "upstreamTree": cand["upstream"]["tree"],
             "engineId": cand["engineId"],
         })
+        doc["diagnostics"].update({
+            "upstreamCommit": cand["upstream"]["commit"],
+            "engineVersion": cand["upstream"]["engineVersion"],
+        })
         doc["engine"].update(engine_over)
+        return doc
+
+    def early_doc(self) -> dict:
+        """The early-refusal shape: no diagnostics identity mirror."""
+        doc = self.baseline_doc()
+        del doc["diagnostics"]
         return doc
 
     def diff(self, expected, observed):
@@ -318,6 +332,104 @@ class TestCandidateVersusPublishedBaselineDiff(unittest.TestCase):
         self.assertEqual(entry["state"], "identical")
         changed = {c["field"] for c in entry["candidateIdentityChanges"]}
         self.assertEqual(changed, set(self.compare.IDENTITY_KEYS))
+        self.assertEqual(len(changed), 6)
+        self.assertFalse(entry["structuralDrift"])
+        self.assertEqual(entry["diagnosticsIdentityPresence"],
+                         {"golden": True, "candidate": True})
+
+    def test_early_refusal_documents_without_diagnostics_are_allowed(self):
+        # a candidate early-refusal document still carries the candidate engine
+        # identity, but no diagnostics mirror on either side
+        candidate = self.early_doc()
+        cand = self.candidate_lock()
+        candidate["engine"].update({
+            "upstreamEngineVersion": cand["upstream"]["engineVersion"],
+            "upstreamCommit": cand["upstream"]["commit"],
+            "upstreamTree": cand["upstream"]["tree"],
+            "engineId": cand["engineId"],
+        })
+        entry = self.diff(self.early_doc(), candidate)
+        self.assertEqual(entry["state"], "identical")
+        self.assertEqual({c["field"] for c in entry["candidateIdentityChanges"]},
+                         set(self.compare.ENGINE_IDENTITY_KEYS))
+        self.assertEqual(entry["diagnosticsIdentityPresence"],
+                         {"golden": False, "candidate": False})
+        self.assertFalse(any(d["field"].startswith("diagnostics.")
+                             for d in entry["differences"]))
+
+    def test_diagnostics_presence_disagreement_is_structural_drift(self):
+        full_golden = self.baseline_doc()
+        full_candidate = self.candidate_doc()
+        early_golden = self.early_doc()
+        early_candidate = self.early_doc()
+        cand = self.candidate_lock()
+        early_candidate["engine"].update({
+            "upstreamEngineVersion": cand["upstream"]["engineVersion"],
+            "upstreamCommit": cand["upstream"]["commit"],
+            "upstreamTree": cand["upstream"]["tree"],
+            "engineId": cand["engineId"],
+        })
+        for golden, candidate, golden_present in ((full_golden, early_candidate, True),
+                                                  (early_golden, full_candidate, False)):
+            entry = self.diff(golden, candidate)
+            self.assertEqual(entry["state"], "changed-unapproved")
+            self.assertTrue(entry["structuralDrift"])
+            self.assertEqual(entry["diagnosticsIdentityPresence"],
+                             {"golden": golden_present, "candidate": not golden_present})
+            fields = {d["field"] for d in entry["differences"]}
+            self.assertIn("diagnostics.upstreamCommit", fields)
+            self.assertIn("diagnostics.engineVersion", fields)
+            self.assertEqual({c["field"] for c in entry["candidateIdentityChanges"]},
+                             set(self.compare.ENGINE_IDENTITY_KEYS))
+
+    def test_diagnostics_forgery_null_and_incomplete_mirror_fail_closed(self):
+        forged = self.candidate_doc()
+        forged["diagnostics"]["upstreamCommit"] = "f" * 40
+        with self.assertRaises(SystemExit) as ctx:
+            self.diff(self.baseline_doc(), forged)
+        self.assertIn("diagnostics identity does not match", str(ctx.exception.code))
+
+        null = self.candidate_doc()
+        null["diagnostics"]["engineVersion"] = None
+        with self.assertRaises(SystemExit) as ctx:
+            self.diff(self.baseline_doc(), null)
+        self.assertIn("null diagnostics identity field", str(ctx.exception.code))
+
+        incomplete = self.candidate_doc()
+        del incomplete["diagnostics"]["engineVersion"]
+        with self.assertRaises(SystemExit) as ctx:
+            self.diff(self.baseline_doc(), incomplete)
+        self.assertIn("only one of the two diagnostics identity keys",
+                      str(ctx.exception.code))
+
+    def test_diagnostics_nonidentity_field_still_review_blocking(self):
+        observed = self.candidate_doc()
+        observed["diagnostics"]["strictSchema"] = False
+        entry = self.diff(self.baseline_doc(), observed)
+        self.assertEqual(entry["state"], "changed-unapproved")
+        self.assertFalse(entry["structuralDrift"])
+        self.assertEqual({d["field"] for d in entry["differences"]},
+                         {"diagnostics.strictSchema"})
+
+    def test_incoherent_golden_diagnostics_mirror_fails_closed(self):
+        for label, mutate in (
+            ("commit mismatch",
+             lambda d: d["diagnostics"].update(upstreamCommit="f" * 40)),
+            ("version mismatch",
+             lambda d: d["diagnostics"].update(engineVersion="9.9.9")),
+            ("explicit null commit",
+             lambda d: d["diagnostics"].update(upstreamCommit=None)),
+            ("explicit null version",
+             lambda d: d["diagnostics"].update(engineVersion=None)),
+        ):
+            with self.subTest(label):
+                golden = self.baseline_doc()
+                mutate(golden)
+                with self.assertRaises(SystemExit) as ctx:
+                    self.diff(golden, self.candidate_doc())
+                self.assertEqual(
+                    json.loads(ctx.exception.code)["error"],
+                    "golden result carries an incoherent diagnostics identity mirror")
 
     def test_adapter_version_drift_is_review_blocking(self):
         # never normalize adapter versions away
