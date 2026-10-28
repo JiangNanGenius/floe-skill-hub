@@ -434,10 +434,21 @@ def _find_stage_manifest(stage_root):
 
 
 def _apply_entries(apply_doc):
-    """Normalize the ordered exact write list from apply/manifest.json."""
+    """Normalize the ordered exact write list from apply/manifest.json.
+
+    Presence, not truthiness, marks the ordered list: the producer always
+    emits the canonical ``writes`` key, and a legitimate held-only stage
+    (every intended write byte-identical to base, zero eligible candidates)
+    carries an EMPTY list there. Only a manifest with no ordered list at
+    all, or a non-list under the first present canonical/alias key, is
+    malformed; an empty list must not be re-badged as a missing one.
+    """
     if isinstance(apply_doc, dict):
-        raw = (apply_doc.get("writes") or apply_doc.get("files")
-               or apply_doc.get("entries"))
+        raw = None
+        for key in ("writes", "files", "entries"):
+            if key in apply_doc:
+                raw = apply_doc[key]
+                break
     else:
         raw = apply_doc
     if not isinstance(raw, list):
@@ -1611,7 +1622,9 @@ def held_state_payload(out_dir, *, stage_root, today, control_state):
     """Held-only scan: actionable state on the control branch, no request."""
     stage = load_stage(stage_root)
     changed_ids, bumped, _pins = _stage_candidate_facts(stage)
-    if changed_ids:
+    if changed_ids or stage["candidates"]:
+        # a staged candidate tree is eligible-update authority even when
+        # the manifest facts claim zero change (facts are never authority)
         _hold("stage carries candidates; use the candidate request path")
     facts = stage["facts"]
     hold_reasons = list(facts.get("holdReasons") or [])

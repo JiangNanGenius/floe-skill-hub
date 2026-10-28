@@ -1832,5 +1832,241 @@ class TestCatalogRequestParser(unittest.TestCase):
             parser.parse_args(argv)
         self.assertEqual(caught.exception.code, 2)
 
+class TestHeldStateZeroWriteStage(unittest.TestCase):
+    """Actual held-state CLI over the real producer-shaped stage layout.
+
+    Positive: the genuine held-only cloud stage (tracker run 40641535335,
+    counts applyWrites=0/held=1) carries an EMPTY ordered writes list and
+    must yield an actionable control state through the same CLI invocation
+    the workflow runs. Negatives: a missing or non-list ordered write list,
+    eligible candidates behind zero-write facts, a staged candidate tree
+    against lying facts, a no-holds no-op scan, and manifest digest drift
+    must all still refuse with the strict fail-closed messages.
+    """
+
+    HOLD_REASONS = [{
+        "code": "held-engine-managed",
+        "detail": "engine-managed skill: corpus drift True, "
+                  "newer stable engine release True",
+        "id": "impeccable",
+        "repair": "sources/impeccable is regenerated only by the pinned "
+                  "two-stage engines/impeccable pipeline; engine updates "
+                  "run through .github/workflows/impeccable-engine-updater.yml; "
+                  "this tracker reports signals and holds, it never "
+                  "constructs an impeccable candidate",
+    }]
+
+    def _stage(self, tmp, *, writes="empty", facts_overrides=None,
+               apply_overrides=None, with_held_record=True,
+               candidate_tree=False, apply_files=None):
+        stage = pathlib.Path(tmp) / "stage"
+        stage.mkdir()
+        (stage / "apply").mkdir()
+        manifest_writes = []
+        if writes == "entries":
+            for rel, data in sorted((apply_files or {}).items()):
+                target = stage / "apply" / "files" / rel
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
+                manifest_writes.append({"path": rel,
+                                        "sha256": hubcore.sha256_hex(data),
+                                        "bytes": len(data)})
+        apply_doc = {"schemaVersion": 1,
+                     "generatedFromPlanSha256": "e3f50a69282c935901d445a20d4"
+                     "af165c24da87a3f43161c6619848895111d0b",
+                     "today": TODAY, "pinsHelper": "advance_pins:v1",
+                     "acceptedIds": [], "deletions": [],
+                     "skippedByteIdenticalNoops":
+                         ["catalog/skills.json", "docs/UPSTREAM-PINS.json"],
+                     "reviewRecords": "new unsigned records only",
+                     "ordering": "apply writes and deletions, then rebuild "
+                                 "feeds, then CI gates, then staging commit"}
+        if writes == "empty":
+            apply_doc["writes"] = []
+        elif writes == "entries":
+            apply_doc["writes"] = manifest_writes
+        elif writes == "legacy-files-alias":
+            apply_doc["files"] = [{"path": rel,
+                                   "sha256": hubcore.sha256_hex(data)}
+                                  for rel, data in sorted(
+                                      (apply_files or {}).items())]
+            for rel, data in sorted((apply_files or {}).items()):
+                target = stage / "apply" / "files" / rel
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
+        elif writes == "missing":
+            pass
+        elif writes == "nonlist":
+            apply_doc["writes"] = {}
+        elif writes == "null":
+            apply_doc["writes"] = None
+        elif writes == "bad-digest":
+            apply_doc["writes"] = [{"path": "catalog/skills.json",
+                                    "sha256": "f" * 64}]
+            target = stage / "apply" / "files" / "catalog/skills.json"
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(b"{\"skills\":[]}\n")
+        else:
+            raise AssertionError(f"unknown writes shape {writes!r}")
+        apply_doc.update(apply_overrides or {})
+        (stage / "apply" / "manifest.json").write_bytes(
+            hubcore.encoded(apply_doc))
+        facts = {"changedSkillIds": [], "bumpedVersions": {},
+                 "heldSkillIds": ["impeccable"] if with_held_record else [],
+                 "holdReasons": list(self.HOLD_REASONS)
+                 if with_held_record else [],
+                 "pinAdvances": {}, "acceptedIds": [],
+                 "reviewStageCounts": {"prior-proof-reuse": 0,
+                                       "static-content-reviewed": 0},
+                 "executableSubsetUnchanged": {}, "engineSignals": []}
+        if candidate_tree:
+            base = stage / "candidates" / GUIDE_ID / "1.0.1"
+            (base / "tree" / "SKILL.md").parent.mkdir(parents=True)
+            (base / "tree" / "SKILL.md").write_bytes(b"# drift\n")
+            (base / "package.zip").write_bytes(b"PK\x03\x04fixture")
+            (base / "candidate.json").write_bytes(hubcore.encoded({
+                "tier": 1, "proposedVersion": "1.0.1",
+                "proposedReview": {"id": GUIDE_ID}}))
+            facts["changedSkillIds"] = []  # lying facts: tree exists anyway
+        facts.update(facts_overrides or {})
+        (stage / "staging-manifest.json").write_bytes(hubcore.encoded({
+            "reportKind": "floe-skill-hub-upstream-stage", "reportVersion": 1,
+            "today": TODAY,
+            "inputs": {"pinsSha256": "687750b17d080d5ebea0d95fa84a30951e86"
+                                     "b725c778864834ee36df0792297a",
+                       "policySha256": "abe51ebb49c09f5bc6a230117c90fb408b78"
+                                       "dbb7d301cceac186dc764eda51e9",
+                       "registrySha256": "8b1d933ad7eff40d7e1f306c30598eb14e"
+                                         "b0cb290aafdda25361ae27abc91935"},
+            "planSha256": apply_doc["generatedFromPlanSha256"],
+            "stageRoot": str(stage), "candidates": [],
+            "heldIds": ["impeccable"] if with_held_record else [],
+            "candidateFacts": facts,
+            "boundary": "stage wrote only under the stage root",
+            "counts": {"staged": 1 if candidate_tree else 0,
+                       "held": 1 if with_held_record else 0,
+                       "applyWrites": len(apply_doc.get("writes", [])
+                                          if isinstance(
+                                              apply_doc.get("writes"), list)
+                                          else []),
+                       "applyDeletions": 0}}))
+        if with_held_record:
+            held_dir = stage / "held"
+            held_dir.mkdir()
+            (held_dir / "impeccable.json").write_bytes(hubcore.encoded({
+                "id": "impeccable", "tier": "engine-managed",
+                "upstream": {"repository": "https://github.com/pbakaus/"
+                                           "impeccable"},
+                "publishedVersionIntact": True}))
+        return stage
+
+    def _run_cli(self, stage, tmp, state_doc="{}"):
+        control = pathlib.Path(tmp) / "control"
+        state_file = pathlib.Path(tmp) / "current-state.json"
+        state_file.write_text(state_doc)
+        proc = subprocess.run(
+            [sys.executable, str(REPO / "scripts" / "automatic_publication.py"),
+             "held-state", "--stage-root", str(stage), "--out", str(control),
+             "--today", TODAY, "--state-file", str(state_file)],
+            capture_output=True, text=True,
+            env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
+        return proc, control
+
+    def test_cli_accepts_producer_shaped_zero_write_held_stage(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = self._stage(tmp, writes="empty")
+            proc, control = self._run_cli(stage, tmp)
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            summary = json.loads(proc.stdout)
+            self.assertEqual(summary["status"], "held-state-built")
+            self.assertEqual(summary["holdCount"], 1)
+            files = sorted(p.name for p in control.iterdir())
+            self.assertEqual(files, ["control-changes.json", "state.json"])
+            state = json.loads((control / "state.json").read_bytes())
+            self.assertEqual(state["pipelineStage"], "held")
+            self.assertEqual(state["lastCheckUTC"], TODAY)
+            self.assertEqual(state["holdReasons"], self.HOLD_REASONS)
+            self.assertEqual(state["integrationGaps"], [])
+            self.assertIsNone(state["openRequestId"])
+            changes = json.loads((control / "control-changes.json").read_bytes())
+            self.assertEqual(changes["mirror"], ["state.json"])
+            self.assertTrue(changes["closeOpenRequest"])
+
+    def test_cli_preserves_prior_open_request_and_processed_ids(self):
+        prior = {"openRequestId": "req-abc", "processedRequestIds": ["req-old"]}
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = self._stage(tmp, writes="empty")
+            proc, control = self._run_cli(stage, tmp, state_doc=json.dumps(prior))
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            state = json.loads((control / "state.json").read_bytes())
+            self.assertEqual(state["openRequestId"], "req-abc")
+            self.assertEqual(state["processedRequestIds"], ["req-old"])
+            self.assertEqual(state["pipelineStage"], "held")
+            changes = json.loads((control / "control-changes.json").read_bytes())
+            self.assertFalse(changes["closeOpenRequest"])
+
+    def test_cli_legacy_files_alias_nonempty_still_accepted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = self._stage(tmp, writes="legacy-files-alias",
+                                apply_files={"catalog/skills.json":
+                                             b"{\"skills\":[]}\n"})
+            proc, _ = self._run_cli(stage, tmp)
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            self.assertEqual(json.loads(proc.stdout)["holdCount"], 1)
+
+    def test_cli_missing_ordered_list_key_refuses(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = self._stage(tmp, writes="missing")
+            proc, control = self._run_cli(stage, tmp)
+            self.assertEqual(proc.returncode, 2)
+            self.assertIn("apply/manifest.json carries no ordered write list",
+                          proc.stderr)
+            self.assertTrue(proc.stderr.startswith(
+                "automatic-publication: refusing: "))
+            self.assertFalse(control.exists())
+
+    def test_cli_non_list_and_null_writes_refuse(self):
+        for shape in ("nonlist", "null"):
+            with self.subTest(shape=shape), tempfile.TemporaryDirectory() as tmp:
+                stage = self._stage(tmp, writes=shape)
+                proc, _ = self._run_cli(stage, tmp)
+                self.assertEqual(proc.returncode, 2)
+                self.assertIn("carries no ordered write list", proc.stderr)
+
+    def test_cli_facts_drift_with_candidates_refuses(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = self._stage(tmp, writes="empty", facts_overrides={
+                "changedSkillIds": [GUIDE_ID],
+                "bumpedVersions": {GUIDE_ID: {"from": "1.0.0",
+                                              "to": "1.0.1"}}})
+            proc, _ = self._run_cli(stage, tmp)
+            self.assertEqual(proc.returncode, 2)
+            self.assertIn("stage carries candidates; use the candidate "
+                          "request path", proc.stderr)
+
+    def test_cli_candidate_tree_with_lying_facts_refuses(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = self._stage(tmp, writes="empty", candidate_tree=True)
+            proc, _ = self._run_cli(stage, tmp)
+            self.assertEqual(proc.returncode, 2)
+            self.assertIn("stage carries candidates; use the candidate "
+                          "request path", proc.stderr)
+
+    def test_cli_zero_write_without_holds_refuses_noop(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = self._stage(tmp, writes="empty", with_held_record=False)
+            proc, _ = self._run_cli(stage, tmp)
+            self.assertEqual(proc.returncode, 2)
+            self.assertIn("nothing staged to hold; this is a no-op scan",
+                          proc.stderr)
+
+    def test_cli_digest_drift_gate_still_enforced(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = self._stage(tmp, writes="bad-digest")
+            proc, _ = self._run_cli(stage, tmp)
+            self.assertEqual(proc.returncode, 2)
+            self.assertIn("drifted from its manifest digest", proc.stderr)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

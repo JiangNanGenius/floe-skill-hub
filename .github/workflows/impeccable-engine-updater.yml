@@ -702,7 +702,9 @@ jobs:
         with:
           name: impeccable-engine-candidate-failure-logs
           path: |
-            ${{ runner.temp }}/logs/*.json
+            ${{ runner.temp }}/dist/**
+            ${{ runner.temp }}/logs/**
+            ${{ runner.temp }}/candidate-lock/ENGINE-LOCK.json
             ${{ runner.temp }}/expected-baseline/**
           if-no-files-found: ignore
           retention-days: 14
