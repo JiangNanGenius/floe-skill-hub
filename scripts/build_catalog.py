@@ -22,6 +22,21 @@ Release offer policy: the four App-provided builtin ids (floe-pdf, floe-office,
            reviews. Each admitted offer carries status.published=true in the
            FEED only (a deep-copied status block); the source registry object
            is never mutated and its candidate rows keep published=false.
+Android portable-guide projection: a production Android feed entry may carry
+minimumAppVersion="0.0.0" ONLY for the frozen known-reviewed portable-guide
+ids (ANDROID_PORTABLE_GUIDE_IDS below) when the ACTUAL bound package manifest
+re-declared from the exact frozen archive bytes proves instruction-only,
+linux-declared, script-free, tool-free, dependency-free content under the
+basic workspace capability ceiling, joined to a static-content review with an
+empty unproven execution claim. iOS entries are never touched; registries and
+archives never change; feeds built over the reviewed original ios-only
+manifest baseline rebuild byte-identical through this code. "0.0.0" is a
+content-floor SENTINEL: a valid strict semantic version accepted unchanged by
+hubcore.validate_catalog and the published schema, below every possible
+client version, so it honestly means "no SDK-specific content floor for this
+instruction-only package" — never a claim that any old App build supports
+the Hub UI or the installed behavior. An entry whose floor already is the
+sentinel is never re-projected.
 Source semantics: --source-commit is the audited source revision X signed
 into the feed as provenance. The immutable publication revision Y that will
 contain the emitted feed/ZIP/review bytes is resolved externally by the
@@ -161,6 +176,153 @@ def bind_review(entry, reviews_root, public_keys, package_binding=None, manifest
     return {"path": review_path, "sha256": hubcore.sha256_hex(record_bytes), "keyID": key_id}
 
 
+# ---------------------------------------------------------------------------
+# Android portable-guide floor projection (server feed policy only)
+# ---------------------------------------------------------------------------
+#
+# Root decision (2026-10-28, the user's Android fast path; final revision the
+# same day): the Android marketing version domain (0.1.0-alpha.x) must never
+# inherit the iOS 1.7.59 content floor for known-reviewed, instruction-only
+# portable guides that carry no App-SDK-specific code, tools or dependencies.
+# The projection encodes that as the valid string floor "0.0.0" — a content-
+# floor sentinel every client version clears — NOT null: the unchanged
+# hubcore.validate_catalog clause "packaged entries require
+# minimumAppVersion" and the native schema-3 decoder both reject a null floor,
+# and neither the validator nor the schema is relaxed for this. The waiver is
+# pinned by EXACT literal ids here, in trusted tooling — the same pattern as
+# sign_publication's MANDATORY_DEEP_IDS — never by a registry relabel, a
+# candidate-supplied allow flag or the planned runtime; a new or unrecognized
+# curated id can never inherit the waiver automatically. Eligibility is
+# evaluated ONLY against the actual bound frozen package and review that
+# bind_package/bind_review joined for this exact feed build (re-hashed here so
+# a mid-run byte disagreement fails closed); every other case — scripted
+# packages, non-empty tools or pythonPackages, capabilities beyond the basic
+# ceiling, an ios-only manifest, a wrong review stage, a guest execution
+# claim, a missing binding — keeps the registry floor byte-unchanged. The iOS
+# feed never enters this path, licenses and the permission policy do not move,
+# and tools/capability/discovery enforcement stays in the unchanged
+# join/install validators that already governed these entries. An entry
+# already carrying the sentinel floor is never re-projected.
+ANDROID_PORTABLE_GUIDE_IDS = frozenset({
+    "a11y-audit", "code-to-prd", "composition-patterns", "content-production",
+    "copy-editing", "copywriting", "deep-research", "deepread",
+    "doc-coauthoring", "floe-email-drafting", "floe-file-organizer",
+    "floe-invoice-organizer", "internal-comms", "meetings", "product-discovery",
+    "product-manager-toolkit", "react-best-practices", "requesting-code-review",
+    "research-summarizer", "scientific-critical-thinking", "social-content",
+    "systematic-debugging", "test-driven-development", "theme-factory",
+    "ui-design-system", "ux-researcher-designer", "web-design-guidelines",
+    "writing-guidelines",
+})
+ANDROID_PORTABLE_GUIDE_CAPABILITY_CEILING = frozenset(
+    {"workspace.read", "workspace.write"})
+ANDROID_PORTABLE_GUIDE_REVIEW_STAGE = "static-content-reviewed"
+ANDROID_PORTABLE_GUIDE_EXECUTION = {"os": None, "arch": "n/a", "evidence": "unproven"}
+# The projected floor: a strict X.Y.Z string (passes require_version, the
+# unchanged validator clause for packaged entries and the published schema
+# unchanged) whose value is deliberately below every possible client version,
+# so it asserts "no SDK-specific content floor for this instruction-only
+# guide" and nothing about any old build's Hub UI or installer support.
+ANDROID_PORTABLE_GUIDE_CONTENT_FLOOR = "0.0.0"
+
+
+def android_portable_guide_eligible(manifest, review_record):
+    """True only when the bound facts prove portable instruction-only content.
+
+    Pure over the given dicts (mutates nothing): the manifest must declare the
+    linux platform with scriptRuntime "none", no tools, no pythonPackages and
+    capabilities inside the basic workspace ceiling, and the review record
+    must be static-content-reviewed carrying the empty unproven execution
+    claim. Any absent or extra feature returns False and the caller keeps the
+    registry floor unchanged.
+    """
+    if manifest.get("scriptRuntime") != "none":
+        return False
+    if "linux" not in (manifest.get("platforms") or []):
+        return False
+    if manifest.get("tools") or manifest.get("pythonPackages"):
+        return False
+    if not set(manifest.get("capabilities") or []) <= ANDROID_PORTABLE_GUIDE_CAPABILITY_CEILING:
+        return False
+    if review_record.get("reviewStage") != ANDROID_PORTABLE_GUIDE_REVIEW_STAGE:
+        return False
+    if review_record.get("execution") != ANDROID_PORTABLE_GUIDE_EXECUTION:
+        return False
+    return True
+
+
+def _rebound_portable_guide_facts(entry, packages_root, reviews_root):
+    """Re-read and re-gate the exact bound bytes behind one feed entry.
+
+    bind_package/bind_review validated these paths earlier in the same run;
+    the re-hash proves the projection sees the identical immutable bytes, and
+    the author-contract, review-shape and archive-join gates re-run on those
+    bytes before any floor may be waived. Any disagreement raises fail closed.
+    """
+    package = entry["package"]
+    try:
+        data = (packages_root / package["path"]).read_bytes()
+    except OSError as error:
+        raise hubcore.HubError(
+            f"{entry['id']}: projection cannot read the bound archive: {error}") from None
+    if len(data) != package["size"] or hubcore.sha256_hex(data) != package["sha256"]:
+        raise hubcore.HubError(f"{entry['id']}: bound archive bytes drifted during the feed build")
+    files = hubcore.check_archive_bytes(data)
+    if hubcore.content_digest(files) != package["contentDigest"]:
+        raise hubcore.HubError(
+            f"{entry['id']}: bound archive contentDigest drifted during the feed build")
+    manifest, _ = hubcore.validate_package_files(files)
+    if manifest["id"] != entry["id"] or manifest["version"] != entry["version"]:
+        raise hubcore.HubError(f"{entry['id']}: projection archive identity drift")
+    review = entry["review"]
+    try:
+        record_bytes = (reviews_root / review["path"]).read_bytes()
+    except OSError as error:
+        raise hubcore.HubError(
+            f"{entry['id']}: projection cannot read the bound review: {error}") from None
+    if hubcore.sha256_hex(record_bytes) != review["sha256"]:
+        raise hubcore.HubError(f"{entry['id']}: bound review bytes drifted during the feed build")
+    record = json.loads(record_bytes)
+    if hubcore.encoded(record) != record_bytes:
+        raise hubcore.HubError(f"{entry['id']}: review record must be canonical bytes")
+    hubcore.validate_review(record)
+    hubcore.join_review(record, manifest, package, entry["id"])
+    return manifest, record
+
+
+def project_android_portable_guide_feed(feed, packages_root, reviews_root):
+    """Return a projected copy of the validated Android feed, or None.
+
+    Pure: `feed` and every nested structure stay untouched. None (keep the
+    caller's exact bytes) is returned when no entry's floor is genuinely
+    waivable, so the reviewed original ios-only-manifest publication
+    rebuilds byte-identical through this code path. When a projection
+    does occur, only the eligible Android entry's minimumAppVersion becomes
+    the content-floor sentinel "0.0.0" — a valid strict X.Y.Z string the
+    unchanged validator and schema accept — and the caller re-runs the FULL
+    unchanged hubcore.validate_catalog over the projected bytes. An entry
+    already carrying the sentinel is never re-projected; nothing else about
+    archive, review, version, status or offers moves.
+    """
+    entries = []
+    changed = False
+    for entry in feed["entries"]:
+        if (entry["id"] in ANDROID_PORTABLE_GUIDE_IDS and entry["package"] is not None
+                and entry["review"] is not None
+                and entry["minimumAppVersion"] not in
+                (None, ANDROID_PORTABLE_GUIDE_CONTENT_FLOOR)):
+            manifest, record = _rebound_portable_guide_facts(entry, packages_root,
+                                                             reviews_root)
+            if android_portable_guide_eligible(manifest, record):
+                entry = dict(entry,
+                             minimumAppVersion=ANDROID_PORTABLE_GUIDE_CONTENT_FLOOR)
+                changed = True
+        entries.append(entry)
+    if not changed:
+        return None
+    return dict(feed, entries=entries)
+
+
 def build(registry, mode, source_commit, packages_root, reviews_root, public_keys):
     out = {}
     for channel in ("ios", "android"):
@@ -248,6 +410,20 @@ def build(registry, mode, source_commit, packages_root, reviews_root, public_key
                                      source_commit)
         catalog_bytes = hubcore.encoded(feed)
         hubcore.validate_catalog(json.loads(catalog_bytes), channel=channel)
+        if channel == "android":
+            # The floor-retaining feed above validated in full; projecting the
+            # Android content floor re-gates the exact bound package/review
+            # bytes per entry first, and returns None (caller's bytes kept)
+            # unless a frozen portable guide genuinely qualifies. The sentinel
+            # floor is a valid non-null version string, so the FINAL projected
+            # bytes are put back through the same unchanged validate_catalog
+            # — nothing is published that the current validator or schema
+            # would reject. The iOS feed never reaches this call.
+            projected = project_android_portable_guide_feed(feed, packages_root,
+                                                            reviews_root)
+            if projected is not None:
+                catalog_bytes = hubcore.encoded(projected)
+                hubcore.validate_catalog(json.loads(catalog_bytes), channel=channel)
         prefix = "" if channel == "ios" else "android/"
         out[prefix + "catalog.json"] = catalog_bytes
     return out
