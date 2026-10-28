@@ -394,7 +394,7 @@
         "documents"
       ],
       "upstream": null,
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "writing-communication",
@@ -465,7 +465,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "skills/internal-comms/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "writing-communication",
@@ -522,7 +522,7 @@
         "review"
       ],
       "upstream": null,
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "writing-communication",
@@ -593,7 +593,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "marketing-skill/skills/copywriting/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "writing-communication",
@@ -664,7 +664,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "marketing-skill/skills/copy-editing/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "writing-communication",
@@ -735,7 +735,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "marketing-skill/skills/content-production/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "writing-communication",
@@ -805,7 +805,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "marketing-skill/skills/social-content/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "writing-communication",
@@ -859,7 +859,7 @@
         "workflow"
       ],
       "upstream": null,
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "research-data",
@@ -931,7 +931,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "research/deep-research/skills/deep-research/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "research-data",
@@ -1002,7 +1002,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "research/deepread/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "research-data",
@@ -1228,7 +1228,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "skills/scientific-critical-thinking/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "research-data",
@@ -1299,7 +1299,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "product-team/research-summarizer/skills/research-summarizer/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "research-data",
@@ -2013,7 +2013,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "skills/theme-factory/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "design-creation",
@@ -2084,7 +2084,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "product-team/skills/ui-design-system/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "product-requirements",
@@ -2155,7 +2155,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "product-team/skills/ux-researcher-designer/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "web-development",
@@ -2212,7 +2212,7 @@
         "examples"
       ],
       "upstream": null,
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "web-development",
@@ -2269,7 +2269,7 @@
         "frontend"
       ],
       "upstream": null,
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "web-development",
@@ -2326,7 +2326,7 @@
         "checklist"
       ],
       "upstream": null,
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "web-development",
@@ -2474,7 +2474,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "engineering-team/a11y-audit/skills/a11y-audit/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "web-development",
@@ -2544,7 +2544,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "skills/systematic-debugging/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "web-development",
@@ -2614,7 +2614,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "skills/test-driven-development/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "web-development",
@@ -2683,7 +2683,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "skills/requesting-code-review/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "product-requirements",
@@ -2754,7 +2754,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "product-team/skills/product-manager-toolkit/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "product-requirements",
@@ -2825,7 +2825,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "product-team/skills/product-discovery/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "product-requirements",
@@ -2896,7 +2896,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "product-team/code-to-prd/skills/code-to-prd/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "productivity-organization",
@@ -2967,7 +2967,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "productivity/meetings/skills/meetings/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "productivity-organization",
@@ -3026,7 +3026,7 @@
         "recoverable"
       ],
       "upstream": null,
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "office-documents",
@@ -3084,7 +3084,7 @@
         "archive"
       ],
       "upstream": null,
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     }
   ]
 }

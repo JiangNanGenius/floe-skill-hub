@@ -1,1 +1,1 @@
-{"capabilities":["workspace.read","workspace.write"],"id":"internal-comms","platforms":["ios"],"pythonPackages":[],"schemaVersion":1,"scriptRuntime":"none","tools":[],"version":"1.0.0"}
+{"capabilities":["workspace.read","workspace.write"],"id":"internal-comms","platforms":["ios","linux"],"pythonPackages":[],"schemaVersion":1,"scriptRuntime":"none","tools":[],"version":"1.0.1"}

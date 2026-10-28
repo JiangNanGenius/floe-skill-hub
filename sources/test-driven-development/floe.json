@@ -1,1 +1,1 @@
-{"capabilities":["workspace.read"],"id":"test-driven-development","platforms":["ios"],"pythonPackages":[],"schemaVersion":1,"scriptRuntime":"none","tools":[],"version":"1.0.0"}
+{"capabilities":["workspace.read"],"id":"test-driven-development","platforms":["ios","linux"],"pythonPackages":[],"schemaVersion":1,"scriptRuntime":"none","tools":[],"version":"1.0.1"}

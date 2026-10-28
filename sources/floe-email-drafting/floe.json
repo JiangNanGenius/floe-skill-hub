@@ -1,1 +1,1 @@
-{"capabilities":[],"id":"floe-email-drafting","platforms":["ios"],"pythonPackages":[],"schemaVersion":1,"scriptRuntime":"none","tools":[],"version":"1.0.0"}
+{"capabilities":[],"id":"floe-email-drafting","platforms":["ios","linux"],"pythonPackages":[],"schemaVersion":1,"scriptRuntime":"none","tools":[],"version":"1.0.1"}
