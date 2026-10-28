@@ -16,8 +16,13 @@ The recorded goldens carry the engine identity that produced them
 `engine.upstreamTree` / `engine.engineId`), so a legitimate newer engine
 version would otherwise always diff. The tool therefore authenticates the
 candidate result's exact four identity fields against the explicitly staged
-candidate lock FIRST: wrong or missing identity fails closed. The golden-old
-vs authenticated-new values of exactly those four keys are then recorded as
+candidate lock FIRST: wrong or missing identity fails closed. The lock's
+`engineId` — the component identity the engine-probe prints — must itself be
+the canonical `impeccable-<engineVersion>+floe.<adapterVersion>` form
+embedding that lock's own `upstream.engineVersion` (and agreeing with
+`floe.adapterVersion` when present); a non-canonical or version-disagreeing
+lock fails closed before any golden is read. The golden-old vs
+authenticated-new values of exactly those four keys are then recorded as
 `candidateIdentityChanges` review evidence and excluded from the behavioural
 diff. Nothing else under `engine.*` is ever excluded — target triple, ABI,
 runtimeExecution, adapter versions, coverage, findings, facts and ownership
@@ -75,6 +80,7 @@ def load_lock_identity(path: Path) -> dict:
     engine_id = lock.get("engineId")
     hex40 = re.compile(r"[0-9a-f]{40}")
     semver = re.compile(r"[0-9]+\.[0-9]+\.[0-9]+")
+    component_id = re.compile(r"impeccable-([0-9]+\.[0-9]+\.[0-9]+)\+floe\.([0-9]+\.[0-9]+\.[0-9]+)")
     problems = []
     if not isinstance(commit, str) or not hex40.fullmatch(commit):
         problems.append(f"upstream.commit is not a 40-hex sha: {commit!r}")
@@ -84,6 +90,26 @@ def load_lock_identity(path: Path) -> dict:
         problems.append(f"upstream.engineVersion is not dotted-semver: {version!r}")
     if not isinstance(engine_id, str) or not engine_id:
         problems.append(f"engineId is missing: {engine_id!r}")
+    else:
+        # The engineId carries the full component identity the live
+        # engine-probe prints (`impeccable-engine <engineId-minus-prefix>`),
+        # so it must be the canonical `impeccable-<version>+floe.<adapter>`
+        # form embedding THIS candidate's version — never an unchecked or
+        # stale string. The build identity gate enforces the same shape from
+        # the crate Cargo.toml; a lock that disagrees here fails closed.
+        match = component_id.fullmatch(engine_id)
+        if not match:
+            problems.append("engineId is not the canonical component identity "
+                            "'impeccable-<engineVersion>+floe.<adapterVersion>': "
+                            f"{engine_id!r}")
+        else:
+            if isinstance(version, str) and match.group(1) != version:
+                problems.append(f"engineId embeds version {match.group(1)!r} but "
+                                f"upstream.engineVersion is {version!r}")
+            floe_adapter = (lock.get("floe") or {}).get("adapterVersion")
+            if floe_adapter is not None and floe_adapter != match.group(2):
+                problems.append(f"engineId embeds adapter version {match.group(2)!r} but "
+                                f"floe.adapterVersion is {floe_adapter!r}")
     if problems:
         raise SystemExit(json.dumps({"ok": False,
                                      "error": "candidate lock identity is unusable",

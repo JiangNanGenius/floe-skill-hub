@@ -759,11 +759,19 @@ class TestRootReviewCopySync(unittest.TestCase):
         self.assertNotIn("vars.FLOE_IMPECCABLE_UPDATE_PRS", build_job)
 
 
+# The adapter crate Cargo.toml version is the single component version constant
+# the staged identity projection derives from; keep the synthetic candidate in
+# the canonical `impeccable-<version>+floe.<crate>` form the stager authenticates.
+ADAPTER_CRATE_VERSION = re.search(
+    r'^version\s*=\s*"([^"]+)"\s*$',
+    (ENGINE_DIR / "adapter" / "Cargo.toml").read_text(encoding="utf-8"),
+    re.MULTILINE).group(1)
+
 CANDIDATE_IDENTITY = {
     "commit": "b" * 40,
     "tree": "c" * 40,
     "version": "0.1.18",
-    "engineId": "impeccable-0.1.18+floe.1.0.0",
+    "engineId": f"impeccable-0.1.18+floe.{ADAPTER_CRATE_VERSION}",
 }
 
 
@@ -835,9 +843,20 @@ class TestStageCandidateEngine(unittest.TestCase):
             "engine.upstreamEngineVersion", "engine.engineId",
             "provenance.upstreamCommit", "provenance.upstreamTree",
             "provenance.engineVersionFile",
+            # the engine-probe verb's documented stdout is part of the same
+            # projected identity set (hosted run 40622397082 failed precisely
+            # because the projection missed it)
+            "verbs",
         }, changed)
         self.assertEqual(staged["engine"]["upstreamCommit"], CANDIDATE_IDENTITY["commit"])
         self.assertEqual(staged["provenance"]["upstreamTree"], CANDIDATE_IDENTITY["tree"])
+        probe = next(v for v in staged["verbs"] if v.get("name") == "engine-probe")
+        self.assertEqual(
+            probe["stdout"],
+            f"impeccable-engine {CANDIDATE_IDENTITY['version']}+floe.{ADAPTER_CRATE_VERSION}\n")
+        # the component version constant is the crate's own, not a caller string
+        self.assertEqual(staged["engine"]["floeAdapterVersion"], ADAPTER_CRATE_VERSION)
+        self.assertEqual(staged["engine"]["engineId"], CANDIDATE_IDENTITY["engineId"])
         # schemas, fixtures, coverage, expected goldens: untouched bytes
         for rel in ("producer/snapshot.schema.v1.json", "fixtures/snapshot-positive.v1.json"):
             self.assertEqual((ENGINE_DIR / "contract" / rel).read_bytes(),
@@ -902,6 +921,105 @@ class TestStageCandidateEngine(unittest.TestCase):
         (src / "evil-link").symlink_to(HUB_ROOT / "LICENSE")
         with self.assertRaises(SystemExit):
             stage.copy_tree(src, self.root / "dst")
+
+
+class TestCandidateIdentityProjection(unittest.TestCase):
+    """Hosted preflight run 40622397082: the staged contract must carry the
+    COMPLETE candidate identity — including the engine-probe verb's stdout and
+    floeAdapterVersion derived from the crate Cargo.toml component version —
+    so the UNCHANGED build_engine identity gate passes, while a candidate lock
+    whose identity shape or version disagrees is refused before anything is
+    written, and a 0.1.17 candidate keeps producing value-identical bytes."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        self.candidate_lock = self.root / "ENGINE-LOCK.json"
+        write_candidate_lock(self.candidate_lock)
+        self.out = self.root / "staged" / "hub"
+
+    def staged_contract(self):
+        return json.loads((self.out / "engines" / "impeccable" / "contract"
+                           / "snapshot-contract.v1.json").read_text(encoding="utf-8"))
+
+    def test_probe_identity_projected_and_receipt_hashes_match(self):
+        proc = run_stage(ENGINE_DIR, self.candidate_lock, self.out)
+        self.assertEqual(proc.returncode, 0, proc.stderr + proc.stdout)
+        receipt = json.loads(proc.stdout)
+        self.assertTrue(receipt["ok"])
+        self.assertEqual(receipt["identitySelfCheck"], "passed")
+        self.assertEqual(receipt["adapterVersion"], ADAPTER_CRATE_VERSION)
+        self.assertEqual(receipt["componentVersion"],
+                         f"{CANDIDATE_IDENTITY['version']}+floe.{ADAPTER_CRATE_VERSION}")
+        fields = {c["field"]: c for c in receipt["contractChanges"]}
+        probe_change = fields["verbs[engine-probe].stdout"]
+        self.assertEqual(probe_change["before"], "impeccable-engine 0.1.17+floe.1.1.1\n")
+        self.assertEqual(probe_change["after"],
+                         f"impeccable-engine {CANDIDATE_IDENTITY['version']}"
+                         f"+floe.{ADAPTER_CRATE_VERSION}\n")
+        self.assertEqual(fields["engine.floeAdapterVersion"]["after"], ADAPTER_CRATE_VERSION)
+        staged_bytes = (self.out / "engines" / "impeccable" / "contract"
+                        / "snapshot-contract.v1.json").read_bytes()
+        import hashlib
+        self.assertEqual(hashlib.sha256(staged_bytes).hexdigest(),
+                         receipt["stagedContractSha256"],
+                         "the receipt hash must match the rewritten bytes")
+
+    def test_staged_contract_passes_the_unchanged_identity_validator(self):
+        proc = run_stage(ENGINE_DIR, self.candidate_lock, self.out)
+        self.assertEqual(proc.returncode, 0, proc.stderr + proc.stdout)
+        builder = load_module(TRACKED_BUILDER, "build_engine_identity_probe")
+        staged_adapter = self.out / "engines" / "impeccable" / "adapter"
+        adapter_version = builder.crate_adapter_version(staged_adapter)
+        pin = {"commit": CANDIDATE_IDENTITY["commit"],
+               "tree": CANDIDATE_IDENTITY["tree"],
+               "engineVersion": CANDIDATE_IDENTITY["version"]}
+        component = builder.verify_contract_identity(self.staged_contract(),
+                                                     adapter_version, pin)
+        self.assertEqual(component,
+                         f"{CANDIDATE_IDENTITY['version']}+floe.{ADAPTER_CRATE_VERSION}")
+
+    def test_refuses_lock_identity_disagreeing_with_the_canonical_derivation(self):
+        cases = {
+            "wrong crate suffix": "impeccable-0.1.18+floe.9.9.9",
+            "wrong version part": "impeccable-0.9.9+floe.1.1.1",
+            "malformed shape": "impeccable-0.1.18",
+        }
+        for label, engine_id in cases.items():
+            with self.subTest(label):
+                doc = json.loads(self.candidate_lock.read_text(encoding="utf-8"))
+                doc["engineId"] = engine_id
+                self.candidate_lock.write_text(json.dumps(doc))
+                proc = run_stage(ENGINE_DIR, self.candidate_lock, self.out)
+                self.assertEqual(proc.returncode, 2, proc.stderr + proc.stdout)
+                self.assertFalse(self.out.exists(),
+                                 "a refused candidate must stage nothing")
+
+    def test_refuses_lock_floe_adapter_version_disagreeing_with_the_crate(self):
+        doc = json.loads(self.candidate_lock.read_text(encoding="utf-8"))
+        doc["floe"] = {"adapterVersion": "9.9.9"}
+        self.candidate_lock.write_text(json.dumps(doc))
+        proc = run_stage(ENGINE_DIR, self.candidate_lock, self.out)
+        self.assertEqual(proc.returncode, 2, proc.stderr + proc.stdout)
+        self.assertIn("floe.adapterVersion", json.loads(proc.stdout)["error"])
+        self.assertFalse(self.out.exists())
+
+    def test_published_0117_candidate_stages_value_identical_contract(self):
+        # Re-staging the currently published pin must reproduce the tracked
+        # contract values byte-for-byte in parsed form: full backward
+        # compatibility of the projection for the 0.1.17 data.
+        tracked_lock_copy = self.root / "tracked-lock.json"
+        tracked_lock_copy.write_bytes(TRACKED_LOCK.read_bytes())
+        proc = run_stage(ENGINE_DIR, tracked_lock_copy, self.out)
+        self.assertEqual(proc.returncode, 0, proc.stderr + proc.stdout)
+        receipt = json.loads(proc.stdout)
+        self.assertTrue(receipt["ok"])
+        self.assertEqual(self.staged_contract(),
+                         json.loads(TRACKED_CONTRACT.read_text(encoding="utf-8")))
+        self.assertEqual(receipt["trackedContractSha256"], receipt["stagedContractSha256"])
+        # and the frozen tracked contract/lock themselves stay untouched
+        self.assertEqual(TRACKED_LOCK.read_bytes(), tracked_lock_copy.read_bytes())
 
 
 class TestStagedBuilderIntegration(unittest.TestCase):
@@ -1185,6 +1303,8 @@ class TestToolCliPreflight(unittest.TestCase):
                                  "--adapter-data", "--stage", "--out"],
         "compare_expected.py": ["--engine", "--contract", "--expected", "--out",
                                 "--candidate-lock", "--build-tree", "--adapter-data"],
+        "verify_published_baseline.py": ["--engine-dir", "--lock", "--out"],
+        "export_expected.py": ["--stage", "--label", "--out"],
         "stage1_normalize_skill_source.py": ["--upstream", "--out", "--commit",
                                              "--tree", "--engine-lock"],
     }

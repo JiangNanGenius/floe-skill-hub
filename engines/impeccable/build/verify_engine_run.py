@@ -6,7 +6,13 @@ artifact *is*. This script proves what it *does*, by running it in an execution
 environment for its own architecture and checking the contract's observable
 behaviour:
 
-  * identity: `uname`, binary digest, `engine-probe`, `--version`;
+  * identity: `uname`, binary digest, `engine-probe`, `--version` — the
+    expected handshake and component version are derived strictly from the
+    trusted contract snapshot the run is authenticated against (never a
+    hardcoded literal, never a caller string), so the same script verifies a
+    published baseline against the tracked contract and a staged candidate
+    against the staged contract; a contract whose identity fields disagree
+    with each other is unusable evidence and fails the run before it starts;
   * the frozen contract: the `contract` verb prints bytes identical to the
     committed `snapshot-contract.v1.json`;
   * the Needs fixpoint: round 1 must come back `needs-facts` (exit 3) and never
@@ -38,12 +44,71 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 STAGE_MOUNT = "/verify"
+
+# The canonical component identity shape enforced by the build identity gate
+# (build_engine.verify_contract_identity) and the stager's own authentication:
+# engineId is `impeccable-<engineVersion>+floe.<adapterVersion>`, the probe
+# verb prints `impeccable-engine <that version>\n`, and `--version` prints
+# `<that version>`. Nothing here may drift from that single formula.
+ENGINE_ID_RE = re.compile(r"impeccable-([0-9]+\.[0-9]+\.[0-9]+)\+floe\.([0-9]+\.[0-9]+\.[0-9]+)")
+
+
+def contract_identity(contract_dir: Path) -> dict:
+    """Derive the runtime identity this contract requires the binary to show.
+
+    Strictly from the trusted snapshot the run authenticates against; the
+    identity fields must agree with each other or the contract itself is
+    unusable and the run fails closed before anything is staged or executed.
+    Behaviour, ABI, coverage and finding checks are unaffected — this only
+    replaces the historical hardcoded version strings, which went stale the
+    moment the published baseline moved to a new adapter crate version.
+    """
+    path = Path(contract_dir) / "snapshot-contract.v1.json"
+    if not path.is_file():
+        raise ValueError(f"no snapshot-contract.v1.json under the contract dir: {path}")
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    engine = doc.get("engine") or {}
+    engine_id = engine.get("engineId")
+    if not isinstance(engine_id, str):
+        raise ValueError(f"contract engine.engineId is missing or not a string: {engine_id!r}")
+    match = ENGINE_ID_RE.fullmatch(engine_id)
+    if not match:
+        raise ValueError("contract engine.engineId is not the canonical component identity "
+                         "'impeccable-<engineVersion>+floe.<adapterVersion>': "
+                         f"{engine_id!r}")
+    version, adapter = match.group(1), match.group(2)
+    component = f"{version}+floe.{adapter}"
+    problems = []
+    upstream = engine.get("upstreamEngineVersion")
+    if upstream is not None and upstream != version:
+        problems.append(f"contract engine.upstreamEngineVersion is {upstream!r} but "
+                        f"engineId embeds {version!r}")
+    floe_adapter = engine.get("floeAdapterVersion")
+    if floe_adapter is not None and floe_adapter != adapter:
+        problems.append(f"contract engine.floeAdapterVersion is {floe_adapter!r} but "
+                        f"engineId embeds floe.{adapter!r}")
+    probes = [verb for verb in (doc.get("verbs") or [])
+              if isinstance(verb, dict) and verb.get("name") == "engine-probe"]
+    if len(probes) != 1:
+        problems.append(f"the contract must carry exactly one engine-probe verb, found {len(probes)}")
+    else:
+        want_probe = f"impeccable-engine {component}\n"
+        if probes[0].get("stdout") != want_probe:
+            problems.append(f"contract verbs[engine-probe].stdout is "
+                            f"{probes[0].get('stdout')!r}, must be {want_probe!r}")
+    if problems:
+        raise ValueError("the contract's runtime identity is self-inconsistent: "
+                         + "; ".join(problems))
+    return {"engineId": engine_id,
+            "componentVersion": component,
+            "probeStdout": f"impeccable-engine {component}\n"}
 
 # name -> (argv builder key, expected exit, expectation)
 SCAN_CHECKS = [
@@ -81,6 +146,10 @@ def sha256_file(path: Path) -> str:
 
 def stage_inputs(args, stage: Path) -> dict:
     """Collect everything the runner needs into one mountable directory."""
+    # Derive the required runtime identity from the trusted contract BEFORE
+    # touching the stage: a contract that cannot authenticate its own identity
+    # is unusable evidence and must fail the run before anything executes.
+    identity = contract_identity(args.contract)
     if stage.exists():
         shutil.rmtree(stage)
     (stage / "bin").mkdir(parents=True)
@@ -121,6 +190,7 @@ def stage_inputs(args, stage: Path) -> dict:
         "binaryBytes": binary.stat().st_size,
         "parityCases": len(parity),
         "contractSnapshotSha256": sha256_file(args.contract / "snapshot-contract.v1.json"),
+        "identity": identity,
     }
 
 
@@ -304,11 +374,14 @@ def evaluate(args, stage: Path, staged: dict) -> dict:
           bool(binary_sha) and binary_sha[0] == staged["binarySha256Host"],
           {"inRunner": binary_sha[0] if binary_sha else None, "host": staged["binarySha256Host"]})
 
+    identity = staged["identity"]
     probe = read_out(stage, "probe", "stdout") or ""
-    check("engine-probe answers the handshake", probe.startswith("impeccable-engine 0.1.17+floe."), probe.strip())
+    check("engine-probe answers the handshake", probe == identity["probeStdout"],
+          {"printed": repr(probe), "expected": repr(identity["probeStdout"])})
     check("engine-probe exits 0", (read_out(stage, "probe", "exit") or "").strip() == "0")
     version = (read_out(stage, "version", "stdout") or "").strip()
-    check("--version prints engine+adapter", version == "0.1.17+floe.1.0.0", version)
+    check("--version prints engine+adapter", version == identity["componentVersion"],
+          {"printed": version, "expected": identity["componentVersion"]})
 
     contract_bytes = read_out(stage, "contract", "stdout") or ""
     contract_digest = hashlib.sha256(contract_bytes.encode("utf-8")).hexdigest()
@@ -500,7 +573,14 @@ def main() -> int:
             print(json.dumps({"ok": False, "error": "missing input", "path": str(path)}, indent=2))
             return 2
 
-    staged = stage_inputs(args, args.stage)
+    try:
+        staged = stage_inputs(args, args.stage)
+    except (ValueError, json.JSONDecodeError) as exc:
+        # The contract authenticates the runtime identity; an unusable or
+        # self-inconsistent contract fails closed before anything runs.
+        print(json.dumps({"ok": False, "error": "the contract runtime identity is unusable",
+                          "problem": str(exc)}, indent=2))
+        return 2
     print(f"[verify] staged {staged['parityCases']} parity cases; binary {staged['binarySha256Host'][:16]}…", flush=True)
     exit_code = run_stage(args, args.stage)
     report = evaluate(args, args.stage, staged)

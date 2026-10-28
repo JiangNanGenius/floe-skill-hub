@@ -187,7 +187,11 @@ jobs:
     needs: pin
     if: needs.pin.outputs.changed == 'true'
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    # raised from 90: the published-baseline route re-executes that baseline
+    # (pinned worktree plus a third emulated-riscv64 behaviour matrix) and
+    # runs the candidate-versus-baseline regression in the same hosted
+    # matrix; the historical route adds only the digest/identity routing steps
+    timeout-minutes: 120
     permissions:
       contents: read
     steps:
@@ -330,9 +334,323 @@ jobs:
             --stage "$RUNNER_TEMP/stage-host" \
             --out "$RUNNER_TEMP/logs/verify-host.json" --parity-limit 25
 
-      - name: Needs/facts fixpoint regression against the recorded goldens
+      - name: Verify the published baseline binary against the official lock
+        id: baseline
         run: |
           set -euo pipefail
+          # The comparison baseline is the already-qualified PUBLISHED engine,
+          # never the candidate's own output: the tracked dist artifact for the
+          # tracked lock identity must exist, its sha256/size must equal the
+          # lock's component digests, every SHA256SUMS.txt entry must verify,
+          # and the tracked contract must carry the same canonical identity
+          # before any baseline result is ever trusted.
+          python3 "$ENGINE_DIR/workflows/tools/verify_published_baseline.py" --verify-binary \
+            --engine-dir "$ENGINE_DIR" \
+            --lock "$ENGINE_DIR/ENGINE-LOCK.json" \
+            --out "$RUNNER_TEMP/logs/baseline-binary-verify.json"
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os, re, sys
+          receipt = json.load(open(os.environ["RUNNER_TEMP"] + "/logs/baseline-binary-verify.json"))
+          if not receipt.get("ok"):
+              sys.exit("the baseline binary receipt is not ok")
+          SHAPES = {
+              "engine_id": r"impeccable-[0-9]+\.[0-9]+\.[0-9]+\+floe\.[0-9]+\.[0-9]+\.[0-9]+",
+              "upstream_commit": r"[0-9a-f]{40}",
+              "upstream_tree": r"[0-9a-f]{40}",
+              "upstream_engine_version": r"[0-9]+\.[0-9]+\.[0-9]+",
+          }
+          VALUES = {
+              "engine_id": receipt["engineId"],
+              "upstream_commit": receipt["upstream"]["commit"],
+              "upstream_tree": receipt["upstream"]["tree"],
+              "upstream_engine_version": receipt["upstream"]["engineVersion"],
+          }
+          for key, shape in SHAPES.items():
+              value = VALUES[key]
+              if not isinstance(value, str) or not re.fullmatch(shape, value):
+                  sys.exit(f"refusing to emit output {key!r}: {value!r} does not match {shape}")
+          for key in SHAPES:
+              print(f"{key}={VALUES[key]}")
+          PY
+
+      - name: Route the Needs/facts comparison by authenticated baseline identity
+        id: route
+        run: |
+          set -euo pipefail
+          # Exactly one STRICT comparison runs below, selected by the identity
+          # of the digest-bound published baseline authenticated immediately
+          # above (the receipt is re-bound to the tracked lock again here, so a
+          # stale or forged receipt can never steer the route). The frozen
+          # committed goldens are the historical reference
+          # only when their recorded binary digest AND every recorded engine
+          # identity field equal that authenticated baseline; any mismatch
+          # routes to the fully verified published-baseline re-run, never to a
+          # skipped comparison, and a malformed or tampered frozen tree fails
+          # closed here instead of being routed around.
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import hashlib, json, os, re, sys
+          from pathlib import Path
+
+          def refuse(message):
+              print(f"refusing to route the Needs/facts comparison: {message}", file=sys.stderr)
+              sys.exit(2)
+
+          def load_json(path, what):
+              try:
+                  return json.loads(Path(path).read_text(encoding="utf-8"))
+              except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+                  refuse(f"{what} is unusable: {exc}")
+
+          runner_temp = Path(os.environ["RUNNER_TEMP"])
+          engine_dir = Path(os.environ["ENGINE_DIR"])
+          receipt = load_json(runner_temp / "logs" / "baseline-binary-verify.json",
+                              "the baseline binary receipt")
+          if not isinstance(receipt, dict) or receipt.get("ok") is not True \
+                  or receipt.get("mode") != "verify-binary":
+              refuse("the baseline binary receipt is not a successful binary verification")
+          engine_id = receipt.get("engineId")
+          if not isinstance(engine_id, str) or not re.fullmatch(
+                  r"impeccable-[0-9]+\.[0-9]+\.[0-9]+\+floe\.[0-9]+\.[0-9]+\.[0-9]+", engine_id):
+              refuse(f"the receipt engineId is not the canonical component identity: {engine_id!r}")
+          binary_sha = receipt.get("sha256")
+          if not isinstance(binary_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", binary_sha):
+              refuse(f"the receipt binary sha256 is not 64-hex: {binary_sha!r}")
+          adapter = receipt.get("adapterVersion")
+          if not isinstance(adapter, str) or not re.fullmatch(
+                  r"[0-9]+\.[0-9]+\.[0-9]+", adapter):
+              refuse(f"the receipt adapterVersion is not dotted-semver: {adapter!r}")
+          upstream = receipt.get("upstream")
+          if not isinstance(upstream, dict):
+              refuse("the receipt carries no upstream pin block")
+          for key in ("commit", "tree"):
+              if not isinstance(upstream.get(key), str) or not re.fullmatch(
+                      r"[0-9a-f]{40}", upstream[key]):
+                  refuse(f"the receipt upstream.{key} is not a 40-hex sha: {upstream.get(key)!r}")
+          version = upstream.get("engineVersion")
+          if not isinstance(version, str) or not re.fullmatch(
+                  r"[0-9]+\.[0-9]+\.[0-9]+", version):
+              refuse(f"the receipt upstream.engineVersion is not dotted-semver: {version!r}")
+
+          lock = load_json(engine_dir / "ENGINE-LOCK.json", "the tracked ENGINE-LOCK.json")
+          if not isinstance(lock, dict):
+              refuse("the tracked ENGINE-LOCK.json is not a JSON object")
+          lock_upstream = lock.get("upstream") if isinstance(lock.get("upstream"), dict) else {}
+          lock_floe = lock.get("floe") if isinstance(lock.get("floe"), dict) else {}
+          lock_component = lock.get("component") if isinstance(lock.get("component"), dict) else {}
+          agreement = {
+              "engineId": lock.get("engineId"),
+              "adapterVersion": lock_floe.get("adapterVersion"),
+              "sha256": lock_component.get("artifactSha256"),
+              "upstream.commit": lock_upstream.get("commit"),
+              "upstream.tree": lock_upstream.get("tree"),
+              "upstream.engineVersion": lock_upstream.get("engineVersion"),
+          }
+          authenticated = {
+              "engineId": engine_id,
+              "adapterVersion": adapter,
+              "sha256": binary_sha,
+              "upstream.commit": upstream["commit"],
+              "upstream.tree": upstream["tree"],
+              "upstream.engineVersion": version,
+          }
+          for field, expected in agreement.items():
+              if authenticated[field] != expected:
+                  refuse(f"the binary receipt disagrees with the tracked lock on {field}: "
+                         f"{authenticated[field]!r} != {expected!r}")
+
+          goldens = engine_dir / "contract" / "expected" / "riscv64-docker"
+          manifest = load_json(goldens / "MANIFEST.json",
+                               "the committed riscv64-docker goldens MANIFEST")
+          if not isinstance(manifest, dict) or manifest.get("kind") != "engine-observed goldens":
+              refuse("the committed goldens MANIFEST has an unexpected kind")
+          cases = manifest.get("cases")
+          if not isinstance(cases, dict) or not cases:
+              refuse("the committed goldens MANIFEST carries no cases")
+          golden_sha = manifest.get("engine")
+          golden_sha = golden_sha.get("sha256") if isinstance(golden_sha, dict) else None
+          if not isinstance(golden_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", golden_sha):
+              refuse(f"the committed goldens engine.sha256 is not 64-hex: {golden_sha!r}")
+
+          want = {
+              "engineId": engine_id,
+              "floeAdapterVersion": adapter,
+              "adapterCrateVersion": adapter,
+              "upstreamCommit": upstream["commit"],
+              "upstreamTree": upstream["tree"],
+              "upstreamEngineVersion": version,
+          }
+          problems = []
+          for case, entry in sorted(cases.items()):
+              entry = entry if isinstance(entry, dict) else {}
+              name = entry.get("file")
+              if not isinstance(name, str) or not name:
+                  refuse(f"case {case}: the committed MANIFEST names no result file")
+              try:
+                  raw = (goldens / name).read_bytes()
+              except OSError as exc:
+                  refuse(f"case {case}: the committed result file is unreadable: {exc}")
+              if entry.get("sha256") != hashlib.sha256(raw).hexdigest():
+                  refuse(f"case {case}: the committed result file drifted from the MANIFEST digest")
+              doc = load_json(goldens / name, f"case {case}: the committed result file")
+              observed = doc.get("engine") if isinstance(doc, dict) else None
+              observed = observed if isinstance(observed, dict) else {}
+              for field, expected in want.items():
+                  if observed.get(field) != expected:
+                      problems.append(f"case {case}: engine.{field} is "
+                                      f"{observed.get(field)!r}, not the authenticated "
+                                      f"baseline {expected!r}")
+          if golden_sha == binary_sha and not problems:
+              route = "historical"
+              reason = ("the committed goldens digest and every recorded engine identity "
+                        "equal the digest-bound published baseline")
+          else:
+              route = "published"
+              if golden_sha != binary_sha:
+                  reason = ("the committed goldens record a different binary digest than the "
+                            "digest-bound published baseline")
+              elif problems:
+                  reason = problems[0]
+              else:
+                  reason = "the committed identity differs from the digest-bound published baseline"
+          if not re.fullmatch(r"historical|published", route):
+              refuse(f"derived route {route!r} is not one of historical|published")
+          if not re.fullmatch(r"[ -~]{1,240}", reason):
+              reason = "the committed identity differs from the digest-bound published baseline"
+          print(f"baseline_route={route}")
+          print(f"baseline_route_reason={reason}")
+          print(f"authenticated published baseline digest: {binary_sha}", file=sys.stderr)
+          print(f"committed goldens digest: {golden_sha}", file=sys.stderr)
+          PY
+
+      - name: Record the Needs/facts comparison route
+        env:
+          BASELINE_ROUTE: ${{ steps.route.outputs.baseline_route }}
+          BASELINE_ROUTE_REASON: ${{ steps.route.outputs.baseline_route_reason }}
+        run: |
+          set -euo pipefail
+          # Re-assert the emitted route at its consumer boundary: exactly one
+          # of the two strict comparators below is selected by this value.
+          [[ "$BASELINE_ROUTE" =~ ^(historical|published)$ ]] || exit 2
+          {
+            echo '### Impeccable Needs/facts comparison route'
+            echo ''
+            echo "- route: \`$BASELINE_ROUTE\`"
+            echo "- reason: $BASELINE_ROUTE_REASON"
+            if [ "$BASELINE_ROUTE" = "historical" ]; then
+              echo '- reference: the frozen committed goldens (their recorded identity equals the digest-bound published baseline)'
+            else
+              echo '- reference: a temp record re-run from the digest-bound published baseline (the committed goldens hold a different identity)'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Check out the baseline's own pinned tree (temp worktree of the existing clone)
+        if: steps.route.outputs.baseline_route == 'published'
+        env:
+          BASELINE_COMMIT: ${{ steps.baseline.outputs.upstream_commit }}
+          BASELINE_TREE: ${{ steps.baseline.outputs.upstream_tree }}
+        run: |
+          set -euo pipefail
+          # The baseline matrix reads the upstream antipattern fixtures and
+          # oracle goldens, so the published engine is measured against its
+          # OWN pin, not the candidate's tree. Values arrive only through env
+          # mappings and are re-asserted here; nothing reaches shell text.
+          [[ "$BASELINE_COMMIT" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$BASELINE_TREE" =~ ^[0-9a-f]{40}$ ]]
+          git -C "$RUNNER_TEMP/upstream" worktree add --detach "$RUNNER_TEMP/upstream-baseline" "$BASELINE_COMMIT"
+          [[ "$(git -C "$RUNNER_TEMP/upstream-baseline" rev-parse HEAD)" == "$BASELINE_COMMIT" ]]
+          [[ "$(git -C "$RUNNER_TEMP/upstream-baseline" rev-parse 'HEAD^{tree}')" == "$BASELINE_TREE" ]]
+
+      - name: Behaviour matrix on the published baseline (emulated riscv64)
+        if: steps.route.outputs.baseline_route == 'published'
+        env:
+          BASELINE_ENGINE_ID: ${{ steps.baseline.outputs.engine_id }}
+        run: |
+          set -euo pipefail
+          # The digest-bound published binary re-runs the same behaviour matrix
+          # in the same hosted emulated-riscv64 environment as the candidate,
+          # authenticated against the tracked published contract. The fixed
+          # verifier derives the required probe handshake and --version from
+          # that contract itself, so no stale literal gates either engine.
+          [[ "$BASELINE_ENGINE_ID" =~ ^impeccable-[0-9]+\.[0-9]+\.[0-9]+\+floe\.[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          python3 "$ENGINE_DIR/build/verify_engine_run.py" \
+            --binary "$ENGINE_DIR/dist/$BASELINE_ENGINE_ID/riscv64gc-unknown-linux-musl/floe-impeccable" \
+            --build-tree "$RUNNER_TEMP/upstream-baseline" \
+            --contract "$ENGINE_DIR/contract" \
+            --adapter-data "$ENGINE_DIR/adapter/tests/data" \
+            --stage "$RUNNER_TEMP/stage-baseline" \
+            --out "$RUNNER_TEMP/logs/verify-baseline.json" \
+            --docker-platform linux/riscv64 --parity-limit 12
+
+      - name: Record the versioned baseline results (temp only; never committed, never blessed)
+        if: steps.route.outputs.baseline_route == 'published'
+        env:
+          BASELINE_ENGINE_ID: ${{ steps.baseline.outputs.engine_id }}
+        run: |
+          set -euo pipefail
+          [[ "$BASELINE_ENGINE_ID" =~ ^impeccable-[0-9]+\.[0-9]+\.[0-9]+\+floe\.[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          python3 "$ENGINE_DIR/build/export_expected.py" \
+            --stage "$RUNNER_TEMP/stage-baseline" \
+            --label "published-baseline-$BASELINE_ENGINE_ID" \
+            --out "$RUNNER_TEMP/expected-baseline/riscv64-docker" \
+            --runner "docker linux/riscv64 alpine:3.20 (published baseline re-run)" \
+            --evidence "$RUNNER_TEMP/logs/verify-baseline.json"
+
+      - name: Bind the recorded baseline tree to the official lock and binary
+        if: steps.route.outputs.baseline_route == 'published'
+        run: |
+          set -euo pipefail
+          # Fail closed unless the record was produced by the digest-verified
+          # published binary under a clean emulated-riscv64 behaviour matrix,
+          # carries every committed-matrix case, and every case shows exactly
+          # the published identity (upstream pin, engineId, floeAdapterVersion
+          # AND adapterCrateVersion, target triple and runtime execution).
+          # Candidate output can never satisfy this gate; nothing is blessed.
+          python3 "$ENGINE_DIR/workflows/tools/verify_published_baseline.py" --verify-record \
+            --engine-dir "$ENGINE_DIR" \
+            --lock "$ENGINE_DIR/ENGINE-LOCK.json" \
+            --receipt "$RUNNER_TEMP/logs/baseline-binary-verify.json" \
+            --record "$RUNNER_TEMP/expected-baseline/riscv64-docker" \
+            --out "$RUNNER_TEMP/logs/baseline-record-verify.json"
+
+      - name: Needs/facts fixpoint regression against the published baseline
+        if: steps.route.outputs.baseline_route == 'published'
+        run: |
+          set -euo pipefail
+          # Selected on the published route (the committed goldens hold a
+          # different recorded identity): the primary behavioural gate for a
+          # version bump. Baseline and
+          # candidate ran the same hosted emulated-riscv64 matrix with the
+          # same adapter crate, so adapter-version, ABI, target, coverage,
+          # findings and facts fields must all diff byte-exact; only the four
+          # engine identity keys (authenticated against the staged candidate
+          # lock before anything else) may legitimately move, recorded as
+          # candidateIdentityChanges review evidence exactly as before.
+          ENGINE="$(find "$RUNNER_TEMP/dist" -name floe-impeccable -type f | head -1)"
+          python3 "$ENGINE_DIR/workflows/tools/compare_expected.py" \
+            --engine "$ENGINE" \
+            --contract "$RUNNER_TEMP/candidate-engine/hub/engines/impeccable/contract" \
+            --expected "$RUNNER_TEMP/expected-baseline/riscv64-docker" \
+            --out "$RUNNER_TEMP/logs/golden-comparison-vs-baseline.json" \
+            --candidate-lock "$RUNNER_TEMP/candidate-lock/ENGINE-LOCK.json" \
+            --build-tree "$RUNNER_TEMP/build" \
+            --adapter-data "$RUNNER_TEMP/candidate-engine/hub/engines/impeccable/adapter/tests/data" \
+            --docker-platform linux/riscv64
+
+      - name: Needs/facts fixpoint regression against the recorded goldens
+        if: steps.route.outputs.baseline_route == 'historical'
+        run: |
+          set -euo pipefail
+          # Historical review gate against the FROZEN committed goldens. The
+          # route above selects it only when those goldens' recorded binary
+          # digest and every recorded engine identity equal the digest-bound
+          # published baseline, so this strict diff always compares the
+          # candidate with the current published engine. A frozen tree that
+          # records an older identity (the adapter-1.0.0 era) routes to the
+          # verified published-baseline regression instead of failing here on
+          # a known identity residual; re-recording those goldens stays a
+          # manual review decision taken from the reviewed `expected-baseline`
+          # artifact, never an automated blessing and never a relaxation of
+          # this comparator.
           ENGINE="$(find "$RUNNER_TEMP/dist" -name floe-impeccable -type f | head -1)"
           # The golden comparison authenticates the candidate result's exact
           # engine identity against the staged candidate lock first; only
@@ -374,6 +692,7 @@ jobs:
             ${{ runner.temp }}/logs/*.json
             ${{ runner.temp }}/sources-impeccable/**
             ${{ runner.temp }}/candidate-lock/ENGINE-LOCK.json
+            ${{ runner.temp }}/expected-baseline/**
           if-no-files-found: error
           retention-days: 14
 
@@ -384,6 +703,7 @@ jobs:
           name: impeccable-engine-candidate-failure-logs
           path: |
             ${{ runner.temp }}/logs/*.json
+            ${{ runner.temp }}/expected-baseline/**
           if-no-files-found: ignore
           retention-days: 14
 
@@ -460,7 +780,10 @@ jobs:
             echo '(from the staged candidate engine tree) with the dependency audit'
             echo '(no TLS/crypto in the graph), adapter suite on the host, contract'
             echo 'coherence, the behaviour matrix on emulated riscv64 and on the host,'
-            echo 'the Needs/facts golden comparison, and a stage 1 regeneration of the'
+            echo 'one routed Needs/facts fixpoint regression — against the frozen'
+            echo 'committed goldens only while their recorded identity equals the'
+            echo 'digest-bound published baseline, otherwise against a fresh re-run'
+            echo 'of that published baseline — and a stage 1 regeneration of the'
             echo 'derived skill source against the explicitly staged candidate lock.'
             echo 'See the `impeccable-engine-candidate` artifact for the receipts, the'
             echo 'built binary, the candidate-derived source and the staged lock.'
@@ -475,9 +798,15 @@ jobs:
             echo '3. bind the new digest-bound descriptor'
             echo '   (`engines/impeccable/runtime-dependency/descriptor.v1.json`) to the rebuilt'
             echo '   engine artifact;'
-            echo '4. review the golden comparison: engine identity changes appear as'
-            echo '   `candidateIdentityChanges` evidence; any real finding/coverage change stays'
-            echo '   review-blocking until the goldens are re-recorded and explicitly allowed;'
+            echo '4. review the routed Needs/facts comparison (the step summary names'
+            echo '   the route and its reason): engine identity changes appear as'
+            echo '   `candidateIdentityChanges` evidence and any real finding/coverage'
+            echo '   change stays review-blocking. On the `published` route the frozen'
+            echo '   committed goldens were not the reference because their recorded'
+            echo '   identity differs from the digest-bound published binary; re-record'
+            echo '   them from the reviewed `expected-baseline` artifact as a Root-owned'
+            echo '   review decision to move future runs back to the historical gate —'
+            echo '   never an automated blessing;'
             echo '5. run the engine in the real Floe Linux guest (TinyEMU; emulated execution is'
             echo '   not guest proof), record latency and peak memory, and complete the App-side'
             echo '   acceptance;'
