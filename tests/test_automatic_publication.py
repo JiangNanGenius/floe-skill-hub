@@ -26,6 +26,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 sys.dont_write_bytecode = True
 
@@ -170,6 +171,19 @@ class HubFixture(unittest.TestCase):
     """One disposable Hub clone with a published base B and a tracker stage."""
 
     def setUp(self):
+        # Fixture Git children must finish all writes before TemporaryDirectory
+        # cleanup. Inherit this policy in library-created clones/worktrees too,
+        # without changing any user's repository or global Git configuration.
+        offset = int(os.environ.get("GIT_CONFIG_COUNT", "0"))
+        git_env = {"GIT_CONFIG_COUNT": str(offset + 3)}
+        for index, (key, value) in enumerate((
+                ("gc.auto", "0"), ("maintenance.auto", "false"),
+                ("gc.autoDetach", "false")), start=offset):
+            git_env[f"GIT_CONFIG_KEY_{index}"] = key
+            git_env[f"GIT_CONFIG_VALUE_{index}"] = value
+        git_patch = mock.patch.dict(os.environ, git_env)
+        git_patch.start()
+        self.addCleanup(git_patch.stop)
         self.tmp = tempfile.TemporaryDirectory(prefix="floe-auto-pub-test-")
         self.tmpdir = pathlib.Path(self.tmp.name)
         self.root = self.tmpdir / "hub"

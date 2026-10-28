@@ -1,0 +1,170 @@
+# PR-only recovery path for an already completed Impeccable engine candidate.
+#
+# This workflow does NOT rebuild the engine. It takes the id of one completed,
+# successful `impeccable-engine-updater` run, proves that its candidate artifact
+# came from the engine inputs checked out now, and proposes only the tiny
+# `ENGINE-LOCK.json` pin move as a draft PR. The native build and every gate ran
+# in the original updater run; this path reuses that exact binary and proof.
+#
+# Safety posture:
+#   * the verification job is read-only (`contents: read`, `actions: read`);
+#   * only the separate PR job gets `contents: write` and `pull-requests:
+#     write`, and it receives only the tiny verified metadata payload artifact;
+#   * the workflow never approves, merges, signs, publishes or installs;
+#   * draft-PR creation requires the owner-managed repository variable
+#     FLOE_IMPECCABLE_UPDATE_PRS=enabled (the same switch as the updater) and
+#     the already approved repository setting that lets Actions create PRs;
+#   * no native rebuild, no new secret and no new repository setting.
+#
+# Dispatch is Root-owned:
+#   gh workflow run impeccable-engine-review.yml --repo JiangNanGenius/floe-skill-hub \
+#     -f candidate_run_id=<completed updater run id>
+#
+# The candidate run must be the original successful attempt on main of
+# `.github/workflows/impeccable-engine-updater.yml`. The verifier rejects any
+# other repository/path/branch, a skipped or failed build job, a missing gate,
+# a routed-comparison ambiguity, an expired or extra artifact, a digest or pin
+# mismatch, and any post-run drift of the protected engine inputs or of the
+# updater recipe above `open-update-pr:`.
+
+name: impeccable-engine-review
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_run_id:
+        description: "Completed successful impeccable-engine-updater run id to reuse"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: impeccable-engine-review
+  cancel-in-progress: false
+
+env:
+  # Never leave __pycache__ in the checkout: the write job's clean-tree check
+  # must see only its own ENGINE-LOCK proposal.
+  PYTHONDONTWRITEBYTECODE: "1"
+  ENGINE_DIR: engines/impeccable
+
+jobs:
+  verify-candidate:
+    name: Verify the completed candidate proof
+    if: vars.FLOE_IMPECCABLE_UPDATE_PRS == 'enabled'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0 (verified official tag -> commit)
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify the run, artifact and current engine inputs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          # The dispatch input is data: shape-check it here and pass it as a
+          # quoted argv value; nothing is interpolated into this script text.
+          [[ "$CANDIDATE_RUN_ID" =~ ^[1-9][0-9]{0,19}$ ]] || exit 2
+          [[ "$GITHUB_REF" == "refs/heads/main" ]] || exit 2
+          [[ "$REPOSITORY" == "JiangNanGenius/floe-skill-hub" ]] || exit 2
+          python3 "$ENGINE_DIR/workflows/tools/verify_candidate_reuse.py" \
+            --repository "$REPOSITORY" \
+            --run-id "$CANDIDATE_RUN_ID" \
+            --engine-dir "$ENGINE_DIR" \
+            --repo-root . \
+            --work-dir "$RUNNER_TEMP/candidate-reuse" \
+            --out "$RUNNER_TEMP/candidate-reuse.json"
+          cat "$RUNNER_TEMP/candidate-reuse.json"
+
+      - name: Upload the tiny verified metadata payload
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2 (verified official tag -> commit)
+        with:
+          name: impeccable-engine-review-payload
+          path: ${{ runner.temp }}/candidate-reuse.json
+          if-no-files-found: error
+          retention-days: 3
+
+  open-draft-pr:
+    name: Open the review-only draft PR
+    needs: verify-candidate
+    if: vars.FLOE_IMPECCABLE_UPDATE_PRS == 'enabled' && needs.verify-candidate.result == 'success'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      pr_url: ${{ steps.publish.outputs.pr_url }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0 (verified official tag -> commit)
+        with:
+          fetch-depth: 0
+
+      - name: Download the verified metadata payload
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0 (verified official tag -> commit)
+        with:
+          name: impeccable-engine-review-payload
+          path: ${{ runner.temp }}/review-payload
+
+      - name: Commit the verified lock and open the draft PR
+        id: publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          BASE_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_REF" == "refs/heads/main" ]] || exit 2
+          [[ "$REPOSITORY" == "JiangNanGenius/floe-skill-hub" ]] || exit 2
+          [[ "$BASE_BRANCH" =~ ^[A-Za-z0-9][A-Za-z0-9._/-]{0,99}$ ]] || exit 2
+          [[ "$BASE_BRANCH" != *".."* ]] || exit 2
+          python3 "$ENGINE_DIR/workflows/tools/open_review_pr.py" \
+            --metadata "$RUNNER_TEMP/review-payload/candidate-reuse.json" \
+            --engine-dir "$ENGINE_DIR" \
+            --repository "$REPOSITORY" \
+            --base "$BASE_BRANCH" \
+            --body-file "$RUNNER_TEMP/review-pr-body.md" \
+            --out "$RUNNER_TEMP/review-pr.json"
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os, re, sys
+          document = json.load(open(os.environ["RUNNER_TEMP"] + "/review-pr.json"))
+          if document.get("ok") is not True:
+              sys.exit("the PR helper did not report ok")
+          action = document.get("action")
+          if action not in ("created", "existing", "no-op"):
+              sys.exit(f"unexpected PR action: {action!r}")
+          print(f"action={action}")
+          url = document.get("prUrl")
+          if action == "no-op":
+              print("pr_url=")
+          else:
+              if not isinstance(url, str) or not re.fullmatch(
+                      r"https://github\.com/JiangNanGenius/floe-skill-hub/pull/[0-9]+", url):
+                  sys.exit(f"refusing to emit a non-canonical PR URL: {url!r}")
+              print(f"pr_url={url}")
+          PY
+
+      - name: Record the result
+        env:
+          PR_URL: ${{ steps.publish.outputs.pr_url }}
+          REVIEW_ACTION: ${{ steps.publish.outputs.action }}
+        run: |
+          set -euo pipefail
+          {
+            echo "### Impeccable engine review PR"
+            echo ""
+            echo "- action: \`$REVIEW_ACTION\`"
+            if [ -n "$PR_URL" ]; then
+              echo "- draft PR: $PR_URL"
+            else
+              echo "- no PR was needed; the current main already carries the verified pin"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

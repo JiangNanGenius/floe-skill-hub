@@ -86,6 +86,9 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  # Python steps must not leave __pycache__ in the checkout; the PR helper's
+  # clean-tree check treats any extra file as a HOLD.
+  PYTHONDONTWRITEBYTECODE: "1"
   RUST_TOOLCHAIN: "1.98.1"
   RUST_TARGET: riscv64gc-unknown-linux-musl
   ZIG_VERSION: "0.17.0"
@@ -707,19 +710,15 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    outputs:
+      pr_url: ${{ steps.publish.outputs.pr_url }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0 (verified official tag -> commit)
-
-      - name: Prepare the branch
-        id: branch
-        env:
-          CANDIDATE_VERSION: ${{ needs.pin.outputs.candidate_engine_version }}
-        run: |
-          set -euo pipefail
-          [[ "$CANDIDATE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
-          BRANCH="chore/impeccable-engine-$CANDIDATE_VERSION"
-          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
-          git checkout -B "$BRANCH"
+        with:
+          # The PR helper compares the branch against the default branch and
+          # may report an existing matching PR; a shallow checkout has no
+          # merge base for that comparison.
+          fetch-depth: 0
 
       - name: Stage the pin and lock update only
         env:
@@ -736,7 +735,8 @@ jobs:
             --upstream-repo pbakaus/impeccable
           git diff --stat
 
-      - name: Open the PR
+      - name: Commit, push and open the draft PR
+        id: publish
         env:
           GH_TOKEN: ${{ github.token }}
           CURRENT_VERSION: ${{ needs.pin.outputs.current_engine_version }}
@@ -746,6 +746,7 @@ jobs:
           CANDIDATE_TAG: ${{ needs.pin.outputs.candidate_tag }}
           DECISION_MODE: ${{ needs.pin.outputs.decision_mode }}
           DECISION_REASON: ${{ needs.pin.outputs.decision_reason }}
+          BASE_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           set -euo pipefail
           # Every interpolated value below is data passed through env and
@@ -756,10 +757,8 @@ jobs:
           [[ "$CANDIDATE_COMMIT" =~ ^[0-9a-f]{40}$ ]]
           [[ "$CANDIDATE_TAG" =~ ^engine-v[0-9]+\.[0-9]+\.[0-9]+$ ]]
           [[ "$DECISION_MODE" =~ ^(automatic|manual-review)$ ]]
-          git add "$ENGINE_DIR/ENGINE-LOCK.json"
-          git -c user.name "floe-skill-hub-bot" -c user.email "bot@users.noreply.github.com" \
-            commit -m "chore(impeccable): propose engine $CANDIDATE_VERSION" || exit 0
-          git push -u origin "$(git rev-parse --abbrev-ref HEAD)"
+          [[ "$BASE_BRANCH" =~ ^[A-Za-z0-9][A-Za-z0-9._/-]{0,99}$ ]]
+          [[ "$BASE_BRANCH" != *".."* ]]
           {
             echo 'Automated upstream engine check. **Draft: nothing here is published, signed,'
             echo 'merged or installed.**'
@@ -805,6 +804,30 @@ jobs:
             echo '6. only then let the release owner package, sign and publish. A failed gate'
             echo '   leaves the current pin and any installed engine untouched.'
           } > "$RUNNER_TEMP/pr-body.md"
-          gh pr create --draft \
-            --title "Impeccable engine $CANDIDATE_VERSION (review required)" \
-            --body-file "$RUNNER_TEMP/pr-body.md"
+          python3 "$ENGINE_DIR/workflows/tools/open_review_pr.py" \
+            --engine-dir "$ENGINE_DIR" \
+            --repository "$GITHUB_REPOSITORY" \
+            --base "$BASE_BRANCH" \
+            --body-file "$RUNNER_TEMP/pr-body.md" \
+            --out "$RUNNER_TEMP/pr.json" \
+            --lock-auto \
+            --candidate-commit "$CANDIDATE_COMMIT" \
+            --candidate-version "$CANDIDATE_VERSION"
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os, re, sys
+          document = json.load(open(os.environ["RUNNER_TEMP"] + "/pr.json"))
+          if document.get("ok") is not True:
+              sys.exit("the PR helper did not report ok")
+          action = document.get("action")
+          if action not in ("created", "existing", "no-op"):
+              sys.exit(f"unexpected PR action: {action!r}")
+          print(f"action={action}")
+          url = document.get("prUrl")
+          if action == "no-op":
+              print("pr_url=")
+          else:
+              if not isinstance(url, str) or not re.fullmatch(
+                      r"https://github\.com/JiangNanGenius/floe-skill-hub/pull/[0-9]+", url):
+                  sys.exit(f"refusing to emit a non-canonical PR URL: {url!r}")
+              print(f"pr_url={url}")
+          PY

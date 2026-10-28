@@ -17,6 +17,7 @@ on:
       - "docs/UPSTREAM-PINS.json"
       - ".github/workflows/catalog.yml"
       - ".github/workflows/skill-hub-*.yml"
+      - ".github/workflows/impeccable-*.yml"
       - "automation/workflows/floe-skill-hub-auto-publication.yml"
   pull_request:
     paths:
@@ -32,6 +33,7 @@ on:
       - "docs/UPSTREAM-PINS.json"
       - ".github/workflows/catalog.yml"
       - ".github/workflows/skill-hub-*.yml"
+      - ".github/workflows/impeccable-*.yml"
       - "automation/workflows/floe-skill-hub-auto-publication.yml"
   workflow_dispatch:
 

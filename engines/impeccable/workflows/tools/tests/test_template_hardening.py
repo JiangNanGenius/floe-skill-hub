@@ -736,10 +736,19 @@ class TestUpdaterIntegrationWiring(unittest.TestCase):
         self.assertIn('"decision_reason": r"[ -~]{1,240}"', self.text)
 
     def test_open_pr_still_draft_only(self):
-        self.assertIn("gh pr create --draft", self.text)
-        self.assertNotIn("gh pr merge", self.text)
-        self.assertNotIn("--auto", self.text)
-        self.assertNotIn("gh release", self.text)
+        # The commit/push/PR tail lives in the shared stdlib helper now; the
+        # workflow must call it and the helper must still create only a draft.
+        helper = (TOOLS_DIR / "open_review_pr.py").read_text(encoding="utf-8")
+        self.assertIn("open_review_pr.py", self.text)
+        self.assertIn('"pr", "create"', helper)
+        self.assertIn('"--draft"', helper)
+        self.assertIn("--set-upstream", helper)
+        self.assertNotIn("--force", helper)
+        for text in (self.text, helper):
+            self.assertNotIn("gh pr merge", text)
+            self.assertNotIn("--auto", text)
+            self.assertNotIn("gh release", text)
+            self.assertNotIn("gh pr review --approve", text)
 
 
 class TestRootReviewCopySync(unittest.TestCase):
