@@ -16,6 +16,8 @@ on:
       - "docs/LEGACY-COMPATIBILITY.md"
       - "docs/UPSTREAM-PINS.json"
       - ".github/workflows/catalog.yml"
+      - ".github/workflows/skill-hub-*.yml"
+      - "automation/workflows/floe-skill-hub-auto-publication.yml"
   pull_request:
     paths:
       - "catalog/**"
@@ -29,6 +31,8 @@ on:
       - "docs/LEGACY-COMPATIBILITY.md"
       - "docs/UPSTREAM-PINS.json"
       - ".github/workflows/catalog.yml"
+      - ".github/workflows/skill-hub-*.yml"
+      - "automation/workflows/floe-skill-hub-auto-publication.yml"
   workflow_dispatch:
 
 permissions:
@@ -168,8 +172,8 @@ jobs:
           if gate["builtinProvided"] != builtin_provided:
               raise SystemExit("gate builtinProvided disagrees with the registry")
           if coverage["mandatoryDeepAllPresent"] != (
-                  sign_publication.MANDATORY_DEEP_IDS <= expected["ios"]
-                  and sign_publication.MANDATORY_DEEP_IDS <= expected["android"]):
+                  sign_publication.MANDATORY_DEEP_IDS <=
+                  (expected["ios"] | expected["android"])):
               raise SystemExit("complete-selection coverage disagrees with the feeds")
           if coverage["complete"] != (coverage["meetsQualifiedTarget"]
                                       and coverage["mandatoryDeepAllPresent"]):

@@ -19,8 +19,7 @@ with neither set, the normal repository root is used in CI.
     FLOE_SKILL_HUB_WORKFLOW_TEST_TRUSTED_ROOT    root holding scripts/ + docs/
 """
 import argparse
-import atexit
-import importlib.util
+import hashlib
 import json
 import os
 import pathlib
@@ -1280,6 +1279,42 @@ class StructuralInvariants(unittest.TestCase):
         self.assertIn("emit-request", combined)
         self.assertIn("verify-candidate", combined)
 
+    def test_clean_base_scan_preview_is_a_real_base_temp_rebuild(self):
+        body = step_named(TRACKER, "track",
+                          "Existing full-repository gates").run
+        # the hosted clean-BASE failure 40638710180: preview --check compared
+        # preview bytes against the SIGNED release feed (impossible), and the
+        # source label was a fake all-ones sha instead of the live base
+        self.assertNotIn("--mode preview --check", TRACKER)
+        self.assertNotIn("1111111111111111111111111111111111111111", TRACKER)
+        self.assertIn('--source-commit "${LIVE_BASE:?}"', body)
+        self.assertIn('--out-root "$RUNNER_TEMP/preview-a"', body)
+        self.assertIn('--out-root "$RUNNER_TEMP/preview-b"', body)
+        self.assertIn('diff -r "$RUNNER_TEMP/preview-a" "$RUNNER_TEMP/preview-b"',
+                      body)
+        self.assertIn("LIVE_BASE: ${{ steps.livebase.outputs.live }}",
+                      TRACKER)
+        # the signed/schema/fixture/showcase gates stay mandatory
+        for required in ("gen_schemas.py\" --check", "make_fixture.py\" --check",
+                         "check_catalog.py", "validate_showcase.py"):
+            self.assertIn(required, body)
+        # the full repository suite is the mandatory source-push CI gate, not
+        # a 6-hourly scan rerun of an already-published BASE
+        self.assertNotIn("python3 -m unittest discover", TRACKER)
+
+    def test_audit_evidence_is_outside_the_checkout_and_never_silent(self):
+        collect = step_named(TRACKER, "track", "Collect bounded audit evidence")
+        self.assertIn("always()", collect.cond)
+        self.assertIn('AUDIT="$RUNNER_TEMP/audit"', collect.run)
+        self.assertIn("context.json", collect.run)
+        self.assertIn("not-recorded (a gate before the decision failed)",
+                      collect.run)
+        # payload staging never writes into the checkout again
+        self.assertNotIn("mkdir -p audit", TRACKER)
+        upload = step_named(TRACKER, "track", "Upload the audit payload")
+        self.assertEqual(upload.with_.get("path"), "${{ runner.temp }}/audit")
+        self.assertEqual(upload.with_.get("if-no-files-found"), "error")
+
     def test_rederive_and_actual_recover_cli_binding(self):
         combined = PUBLISHER + APP
         self.assertGreaterEqual(combined.count("rederive-candidate"), 5)
@@ -1716,11 +1751,173 @@ class FinalParserWireBinding(unittest.TestCase):
         # the removed draft helpers must not exist in the final parser
         self.assertNotIn("prove-x-tip", choices)
         self.assertNotIn("prove-h-tip", choices)
+        # emit-catalog-request REQUIRES the independently resolved live base
+        # (Root integration fix 2026-10-28, source edc8fba9): every YAML call
+        # site passes the freshly resolved live main, never a stale event SHA
+        self.assertIn("expected_base", required("emit-catalog-request"))
+        for body in (step_named(PUBLISHER, "advance-x",
+                                "Emit the catalog control payload").run,
+                     step_named(PUBLISHER, "recover-catalog",
+                                "Emit the catalog control payload").run):
+            self.assertIn('--expected-base "$LIVE_BASE"', body)
         # cas keeps the token strictly behind an environment-variable NAME
         self.assertIn("--token-env", opts("cas"))
         # rederive-candidate exposes no remote/url/only override
         for forbidden in ("--remote", "--url", "--only"):
             self.assertNotIn(forbidden, opts("rederive-candidate"))
+
+
+
+# ---------------------------------------------------------------------------
+# behaviour: clean-BASE gate + audit evidence on the ACTUAL published checkout
+# ---------------------------------------------------------------------------
+
+class _TrustedCheckout:
+    """Adapter for running an extracted step body against the real checkout."""
+
+    def __init__(self, path, base):
+        self.workspace = pathlib.Path(path)
+        self.base = base
+        self.root = self.workspace.parent
+
+    def origin_uri(self):
+        return ""
+
+
+@unittest.skipUnless(CORE and HAS_GIT, "trusted modules or git unavailable")
+class TrackerCleanBaseGateAndAudit(unittest.TestCase):
+    """Changed-boundary regression for the hosted 40638710180 failure: the
+    ACTUAL extracted clean-BASE gate body runs against the REAL published
+    checkout with a disposable runner temp — preview into temp twice, byte
+    determinism, real BASE provenance and untouched signed release bytes —
+    and the audit body is executed in its early-failure state to prove a real
+    bounded context artifact (never silent, never a fabricated success)."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory(prefix="floe-wf-cleanbase-")
+        self.root = pathlib.Path(self.tmp.name)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    REQUIRED_SIGNED = ("catalog.json", "catalog.sig",
+                       "android/catalog.json", "android/catalog.sig",
+                       "catalog/publication-ledger.json")
+
+    @classmethod
+    def _signed_artifacts(cls, checkout):
+        snapshot = {}
+        for rel in cls.REQUIRED_SIGNED:
+            path = pathlib.Path(checkout) / rel
+            # a missing published artifact fails the check outright: the
+            # preservation proof must never silently shrink to an empty set
+            if not path.is_file():
+                raise AssertionError(
+                    f"required published artifact is missing from the "
+                    f"checkout: {rel}")
+            stat = path.stat()
+            snapshot[rel] = (hashlib.sha256(path.read_bytes()).hexdigest(),
+                             stat.st_mtime_ns)
+        return snapshot
+
+    def test_clean_base_gate_rebuilds_preview_into_temp_without_touching_release(self):
+        base = _git(TRUSTED, "rev-parse", "HEAD").stdout.strip()
+        self.assertRegex(base, r"^[0-9a-f]{40}$")
+        step = step_named(TRACKER, "track", "Existing full-repository gates")
+        ctx = dict(default_ctx(), **{"steps.livebase.outputs.live": base})
+        fixture = _TrustedCheckout(TRUSTED, base)
+        before = self._signed_artifacts(TRUSTED)
+        work = self.root / "work"
+        work.mkdir()
+        # the step environment follows the CI layout (scrubbed HOME + fresh
+        # runner temp); forward the TEST interpreter's third-party
+        # site-packages explicitly so hosts that provide cryptography via the
+        # user site still run the real commands
+        site_paths = os.pathsep.join(
+            p for p in sys.path if p and "site-packages" in p)
+        step_obj, proc, env = run_extracted_step(
+            fixture, work, TRACKER, "track",
+            "Existing full-repository gates", ctx,
+            extra_env={"PYTHONPATH": site_paths} if site_paths else None)
+        self.assertEqual(proc.returncode, 0, proc.stdout[-12000:])
+        after = self._signed_artifacts(TRUSTED)
+        self.assertEqual(before, after,
+                         "the preview verification must never rewrite the "
+                         "published signed catalog/ledger bytes or mtimes")
+        preview = (self.root / "work" / "runner-temp")
+        a = preview / "preview-a"
+        b = preview / "preview-b"
+        self.assertTrue((a / "catalog.json").is_file())
+        self.assertEqual((a / "catalog.json").read_bytes(),
+                         (b / "catalog.json").read_bytes())
+        self.assertEqual((a / "android" / "catalog.json").read_bytes(),
+                         (b / "android" / "catalog.json").read_bytes())
+        # provenance: the preview feed is bound to the ACTUAL live BASE
+        feed = json.loads((a / "catalog.json").read_bytes())
+        self.assertEqual(feed.get("sourceCommit"), base)
+        # and the released feed still names its own published source
+        released = json.loads((pathlib.Path(TRUSTED) / "catalog.json").read_bytes())
+        self.assertNotEqual(released.get("sourceCommit"), base)
+
+    def test_early_failure_audit_body_writes_real_bounded_context(self):
+        fixture = RepoFixture("hub")
+        try:
+            work = pathlib.Path(fixture.root) / "audit-run"
+            work.mkdir()
+            runner_temp = work / "runner-temp"
+            runner_temp.mkdir()
+            ctx = dict(default_ctx(fixture),
+                       **{"steps.decide.outputs.action": "",
+                          "github.event.inputs.dry_run": "false"})
+            # 1) the REAL original hosted shape: the clean-BASE gate failed
+            #    BEFORE the upstream check, so there is not a single payload
+            #    file — the collector must still produce honest evidence
+            _, proc, _ = run_extracted_step(
+                fixture, work, TRACKER, "track",
+                "Collect bounded audit evidence", ctx,
+                extra_env={"LIVE_BASE": fixture.base})
+            self.assertEqual(proc.returncode, 0, proc.stdout[-6000:])
+            audit = runner_temp / "audit"
+            context = json.loads((audit / "context.json").read_bytes())
+            self.assertEqual(context["liveBase"], fixture.base)
+            self.assertIn("not-recorded", context["decision"])
+            self.assertEqual(context["payloadFiles"], [])
+            # nothing was staged inside the checkout
+            self.assertFalse((fixture.workspace / "audit").exists())
+            # 2) early gate failure after the upstream check: the real check
+            #    report is retained byte-exactly (never invented)
+            (runner_temp / "check.json").write_text(
+                json.dumps({"counts": {"drifted": 0, "error": 0}}))
+            _, proc, _ = run_extracted_step(
+                fixture, work, TRACKER, "track",
+                "Collect bounded audit evidence", ctx,
+                extra_env={"LIVE_BASE": fixture.base})
+            self.assertEqual(proc.returncode, 0, proc.stdout[-6000:])
+            context = json.loads((audit / "context.json").read_bytes())
+            self.assertEqual(context["payloadFiles"], ["check.json"])
+            self.assertEqual(
+                (audit / "payload" / "check.json").read_bytes(),
+                (runner_temp / "check.json").read_bytes())
+            # a candidate-shaped run records the real payload set
+            (runner_temp / "stage").mkdir()
+            (runner_temp / "stage" / "staging-manifest.json").write_text(
+                json.dumps({"candidateFacts": {"changedSkillIds": ["copywriting"]}}))
+            ctx = dict(default_ctx(fixture),
+                       **{"steps.decide.outputs.action": "candidate",
+                          "github.event.inputs.dry_run": "false"})
+            _, proc, _ = run_extracted_step(
+                fixture, work, TRACKER, "track",
+                "Collect bounded audit evidence", ctx,
+                extra_env={"LIVE_BASE": fixture.base})
+            self.assertEqual(proc.returncode, 0, proc.stdout[-6000:])
+            context = json.loads((audit / "context.json").read_bytes())
+            self.assertEqual(context["decision"], "candidate")
+            self.assertEqual(context["payloadFiles"],
+                             ["check.json", "staging-manifest.json"])
+            self.assertFalse((fixture.workspace / "audit").exists())
+        finally:
+            fixture.cleanup()
+
 
 
 

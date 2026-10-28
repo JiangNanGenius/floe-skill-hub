@@ -120,15 +120,34 @@ jobs:
 
       - name: Existing full-repository gates on the clean BASE (before any candidate)
         if: steps.livebase.outputs.action == 'live'
+        env:
+          LIVE_BASE: ${{ steps.livebase.outputs.live }}
         run: |
           set -euo pipefail
+          # schema + fixture + the SIGNED release gates stay mandatory and
+          # read-only: committed feeds, official signatures, the immutable
+          # ledger and showcase evidence are verified exactly as published.
+          # (The full repository test suite is the mandatory source-push CI
+          # gate that runs for every commit changing these files; re-running
+          # it on the 6h scan cadence would repeat unchanged CI against an
+          # already-published BASE without re-verifying anything new.)
           python3 "$TRUSTED/scripts/gen_schemas.py" --check
           python3 "$TRUSTED/scripts/make_fixture.py" --check
-          python3 "$TRUSTED/scripts/build_catalog.py" --mode preview --check \
-            --source-commit 1111111111111111111111111111111111111111
           python3 "$TRUSTED/scripts/check_catalog.py"
           python3 "$TRUSTED/showcase/scripts/validate_showcase.py"
-          python3 -m unittest discover -s "$TRUSTED/tests" -v
+          # Preview is verified as a DETERMINISTIC REBUILD from the real live
+          # BASE, built twice strictly under the runner temp outside the
+          # checkout. Preview bytes describe all 43 candidates and must equal
+          # each other run-to-run; comparing preview bytes against the
+          # signed release feed with --check can never legitimately hold and
+          # would reject every already-published release checkout.
+          python3 "$TRUSTED/scripts/build_catalog.py" --mode preview \
+            --source-commit "${LIVE_BASE:?}" \
+            --out-root "$RUNNER_TEMP/preview-a"
+          python3 "$TRUSTED/scripts/build_catalog.py" --mode preview \
+            --source-commit "${LIVE_BASE:?}" \
+            --out-root "$RUNNER_TEMP/preview-b"
+          diff -r "$RUNNER_TEMP/preview-a" "$RUNNER_TEMP/preview-b"
 
       - name: Grouped upstream check (tokenless public git reads only)
         if: steps.livebase.outputs.action == 'live'
@@ -613,27 +632,58 @@ jobs:
             -c gc.auto=0 push "$HUB_ORIGIN" "$NOOP_SHA:refs/heads/auto-state"
           git worktree remove --force "$CTRL" || true
 
-      - name: Stage audit files inside the workspace
+      - name: Collect bounded audit evidence under the runner temp
         if: always() && steps.livebase.outputs.action == 'live' && steps.decide.outputs.action != 'noop'
+        env:
+          LIVE_BASE: ${{ steps.livebase.outputs.live }}
+          DECISION: ${{ steps.decide.outputs.action }}
+          TODAY: ${{ steps.today.outputs.date }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
         run: |
           set -euo pipefail
-          mkdir -p audit
-          for f in "$RUNNER_TEMP/check.json" "$RUNNER_TEMP/plan.json" \
-                   "$RUNNER_TEMP/stage/staging-manifest.json" \
-                   "$RUNNER_TEMP/s-payload/changes.json" \
-                   "$RUNNER_TEMP/control/request.json" \
-                   "$RUNNER_TEMP/control/candidate-manifest.json" \
-                   "$RUNNER_TEMP/control/state.json"; do
-            if [ -f "$f" ]; then
-              cp "$f" audit/
+          # the audit payload lives OUTSIDE the checkout, under the runner
+          # temp; the checkout stays byte-clean for the tree gates above
+          AUDIT="$RUNNER_TEMP/audit"
+          rm -rf "$AUDIT"
+          mkdir -p "$AUDIT/payload"
+          for spec in "check.json:$RUNNER_TEMP/check.json" \
+                      "plan.json:$RUNNER_TEMP/plan.json" \
+                      "staging-manifest.json:$RUNNER_TEMP/stage/staging-manifest.json" \
+                      "changes.json:$RUNNER_TEMP/s-payload/changes.json" \
+                      "request.json:$RUNNER_TEMP/control/request.json" \
+                      "candidate-manifest.json:$RUNNER_TEMP/control/candidate-manifest.json" \
+                      "state.json:$RUNNER_TEMP/control/state.json"; do
+            name="${spec%%:*}"; src="${spec#*:}"
+            if [ -f "$src" ]; then
+              cp "$src" "$AUDIT/payload/$name"
             fi
           done
+          # concrete bounded context/failure evidence is ALWAYS written once
+          # a live BASE existed: exactly how far the run got and which real
+          # payload sources exist. A missing payload is honest absence — never
+          # a fabricated successful candidate.
+          python3 - "$AUDIT/context.json" <<'PY'
+          import json, os, pathlib, sys
+          out = pathlib.Path(sys.argv[1])
+          payload = sorted(p.name for p in (out.parent / "payload").iterdir())
+          doc = {
+              "attempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
+              "decision": os.environ.get("DECISION") or
+                          "not-recorded (a gate before the decision failed)",
+              "dryRun": os.environ.get("DRY_RUN") == "true",
+              "liveBase": os.environ.get("LIVE_BASE"),
+              "payloadFiles": payload,
+              "runId": os.environ.get("GITHUB_RUN_ID"),
+              "today": os.environ.get("TODAY"),
+          }
+          out.write_bytes(json.dumps(doc, indent=2, sort_keys=True).encode() + b"\n")
+          PY
       - name: Upload the audit payload
         if: always() && steps.livebase.outputs.action == 'live' && steps.decide.outputs.action != 'noop'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: upstream-tracker-audit-${{ github.run_id }}
-          path: audit
+          path: ${{ runner.temp }}/audit
           if-no-files-found: error
 
       - name: Failure checkpoint (bounded actionable state, main untouched)
