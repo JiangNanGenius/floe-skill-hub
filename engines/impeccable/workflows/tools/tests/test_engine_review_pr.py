@@ -996,7 +996,8 @@ class TestReviewWorkflowWiring(unittest.TestCase):
         self.assertEqual(self.review["jobs"]["open-draft-pr"]["permissions"],
                          {"contents": "write", "pull-requests": "write"})
         self.assertEqual(self.review["env"]["PYTHONDONTWRITEBYTECODE"], "1")
-        self.assertEqual(self.template["env"]["PYTHONDONTWRITEBYTECODE"], "1")
+        self.assertNotIn("PYTHONDONTWRITEBYTECODE", self.template["env"])
+        self.assertEqual(self.template["jobs"]["open-update-pr"]["env"]["PYTHONDONTWRITEBYTECODE"], "1")
         for job in self.review["jobs"].values():
             self.assertIn("FLOE_IMPECCABLE_UPDATE_PRS == 'enabled'", job["if"])
 

@@ -86,9 +86,6 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  # Python steps must not leave __pycache__ in the checkout; the PR helper's
-  # clean-tree check treats any extra file as a HOLD.
-  PYTHONDONTWRITEBYTECODE: "1"
   RUST_TOOLCHAIN: "1.98.1"
   RUST_TARGET: riscv64gc-unknown-linux-musl
   ZIG_VERSION: "0.17.0"
@@ -703,6 +700,9 @@ jobs:
           retention-days: 14
 
   open-update-pr:
+    env:
+      # Keep the native build recipe unchanged when reusing its exact proof.
+      PYTHONDONTWRITEBYTECODE: "1"
     name: Open the review-only update PR
     needs: [pin, build-and-verify]
     if: needs.pin.outputs.changed == 'true' && vars.FLOE_IMPECCABLE_UPDATE_PRS == 'enabled' && (inputs.open_pr == 'true' || github.event_name == 'schedule')
