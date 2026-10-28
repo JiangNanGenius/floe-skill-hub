@@ -1,0 +1,269 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/JiangNanGenius/floe-skill-hub/schema/upstream-update-policy.schema.json",
+  "title": "Floe Skill Hub upstream update policy (catalog/upstream-update-policy.json) — schemaVersion 1",
+  "description": "Declarative tracking policy consumed by scripts/upstream_updates.py (check/plan/stage). Unsigned source metadata, pretty JSON. The registry (catalog/skills.json) stays authoritative for pins/paths/licenses and docs/UPSTREAM-PINS.json stays the pin authority; this policy adds selection, per-skill layout correspondence, exclusions, engine/watch-only tracking and gate references. It never grants publication by itself: eligible candidates flow to the Root-owned signing/publishing pipeline and held candidates preserve the published version. Not emitted by scripts/gen_schemas.py (which derives the five hubcore-constant schemas); scripts/upstream_updates.py validate-policy enforces this contract fail-closed, and tests/test_upstream_updates.py pins the cross-coverage invariant against the live registry.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "policyId",
+    "updatedAt",
+    "description",
+    "executionModel",
+    "pinsAuthority",
+    "registryAuthority",
+    "repositories",
+    "engineTracking",
+    "selection",
+    "layoutDefaults",
+    "skills",
+    "versioning",
+    "gates"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "policyId": {
+      "const": "floe-skill-hub-upstream-update-policy"
+    },
+    "updatedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$"
+    },
+    "description": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["en", "zh-Hans"],
+      "properties": {
+        "en": {"type": "string", "minLength": 1},
+        "zh-Hans": {"type": "string", "minLength": 1}
+      }
+    },
+    "executionModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unattended",
+        "localDaemonsProhibited",
+        "noMacAppCodexOnlineDependency",
+        "eligibleUpdates",
+        "heldUpdates"
+      ],
+      "properties": {
+        "unattended": {
+          "const": "github-actions-only",
+          "description": "hard user requirement: all automatic tracking/updating runs unattended in GitHub Actions"
+        },
+        "localDaemonsProhibited": {"const": true},
+        "noMacAppCodexOnlineDependency": {"const": true},
+        "eligibleUpdates": {"type": "string", "minLength": 1},
+        "heldUpdates": {"type": "string", "minLength": 1}
+      }
+    },
+    "pinsAuthority": {
+      "const": "docs/UPSTREAM-PINS.json"
+    },
+    "registryAuthority": {
+      "const": "catalog/skills.json"
+    },
+    "repositories": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^https://github\\.com/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "trackedRef", "rootLicense"],
+        "properties": {
+          "role": {"enum": ["corpus", "engine", "watch-only"]},
+          "trackedRef": {
+            "type": "string",
+            "pattern": "^(HEAD|refs/(heads|tags)/[A-Za-z0-9._/-]+)$"
+          },
+          "rootLicense": {
+            "type": ["string", "null"],
+            "description": "repository-root license path watched for drift, or null when the repository publishes none"
+          },
+          "engineReleaseTagPattern": {"type": "string"},
+          "licenseNote": {"type": "string"}
+        }
+      }
+    },
+    "engineTracking": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "skillId",
+          "repository",
+          "corpusPath",
+          "engineLock",
+          "stableReleaseTagPattern",
+          "genericMergeProhibited",
+          "route",
+          "ownedPaths"
+        ],
+        "properties": {
+          "skillId": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"},
+          "repository": {"type": "string", "pattern": "^https://github\\.com/"},
+          "corpusPath": {"type": "string", "minLength": 1},
+          "engineLock": {"type": "string", "minLength": 1},
+          "stableReleaseTagPattern": {"type": "string", "minLength": 1},
+          "genericMergeProhibited": {"const": true},
+          "route": {"type": "string", "minLength": 1},
+          "ownedPaths": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tracked", "engineManaged", "watchOnly", "notTracked"],
+      "properties": {
+        "tracked": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"}
+        },
+        "engineManaged": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"}
+        },
+        "watchOnly": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "originalRepository", "originalPath", "reason"],
+            "properties": {
+              "id": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"},
+              "originalRepository": {"type": "string", "pattern": "^https://github\\.com/"},
+              "originalPath": {"type": "string", "minLength": 1},
+              "reason": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "notTracked": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["builtins", "firstParty", "note"],
+          "properties": {
+            "builtins": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"}
+            },
+            "firstParty": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"}
+            },
+            "note": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "layoutDefaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["licenseCarryRule", "floeOwnedDefaults", "floeOwnedNote"],
+      "properties": {
+        "licenseCarryRule": {"type": "string", "minLength": 1},
+        "floeOwnedDefaults": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "floeOwnedNote": {"type": "string", "minLength": 1}
+      }
+    },
+    "skills": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["relocations", "fileMappings", "excludedUpstream"],
+        "properties": {
+          "relocations": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["upstreamPrefix", "localPrefix"],
+              "properties": {
+                "upstreamPrefix": {"type": "string", "pattern": "^[^/].*/$"},
+                "localPrefix": {"type": "string", "pattern": "^[^/].*/$"}
+              }
+            }
+          },
+          "fileMappings": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["upstream", "local", "kind"],
+              "properties": {
+                "upstream": {"type": "string", "minLength": 1},
+                "local": {"type": "string", "minLength": 1},
+                "kind": {"enum": ["license", "asset", "doc"]}
+              }
+            }
+          },
+          "excludedUpstream": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1},
+            "description": "exact paths, trailing-slash directory prefixes, or single-segment '*' globs ('*' never crosses '/')"
+          },
+          "notes": {"type": "string"}
+        }
+      }
+    },
+    "versioning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bump", "rule"],
+      "properties": {
+        "bump": {"const": "patch"},
+        "rule": {"type": "string", "minLength": 1}
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageGates",
+        "upstreamEntryGates",
+        "driftHolds",
+        "editorialHolds",
+        "minimumAppVersion"
+      ],
+      "properties": {
+        "packageGates": {"type": "string", "minLength": 1},
+        "upstreamEntryGates": {"type": "string", "minLength": 1},
+        "driftHolds": {"type": "string", "minLength": 1},
+        "editorialHolds": {"type": "string", "minLength": 1},
+        "minimumAppVersion": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

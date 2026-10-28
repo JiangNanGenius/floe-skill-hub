@@ -44,6 +44,7 @@ HERE = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(HERE / "scripts"))
 sys.path.insert(0, str(HERE / "tests" / "catalog"))
 import fixture_status  # noqa: E402
+import admission_baseline as BASE  # noqa: E402
 import hubcore  # noqa: E402
 import publication_immutability as pi  # noqa: E402
 import sign_publication  # noqa: E402
@@ -573,18 +574,142 @@ class SignerApiTests(LedgerFixture):
 
 
 class RealRepositoryTests(unittest.TestCase):
-    """Read-only probes against the ACTUAL published repository history."""
+    """Read-only probes against the ACTUAL published repository history.
+
+    The reviewed 2026-10-28 cumulative baseline (12 rows / 6 pins /
+    39 iOS + 36 Android = 75 facts) is an EXPLICIT historical fact: it is
+    verified from the canonical ledger blob committed at the immutable pin
+    ``admission_baseline.REVIEWED_BASELINE_COMMIT`` (Root's reviewed branch
+    head), cryptographically anchored row-by-row to the signed feed bytes at
+    each publication pin. It is never re-read from whatever the live tree
+    happens to contain, because valid authorized appends (new immutable
+    versions per publication) legitimately GROW the live ledger. The live
+    ledger must pass the full cryptographic verification, must contain every
+    reviewed row unchanged (append-only over real history), and the live
+    cumulative baseline must still agree with every reviewed fact. No test
+    in this class compares the LIVE cumulative count to a fixed number, so
+    appending a valid publication never requires a manual baseline-count
+    patch; mutating or dropping any old fact still fails closed.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        # The ledger guardrail verifies signed feed bytes at their pinned
+        # publication commits. A CI checkout made with default fetch-depth 1
+        # cannot read those trusted objects yet (environment gap, never a
+        # content pass); complete the fetch so the SAME full verification
+        # runs everywhere. Fail-closed: a pin that still cannot be read
+        # raises out of this helper instead of skipping the guarantee. The
+        # live ledger's own pins are included so future append publications
+        # are trusted objects here too, never a false content failure.
+        live = BASE.load_ledger(HERE)["publications"]
+        BASE.ensure_pinned_commits_available(
+            HERE, commits=set(BASE.PUBLICATION_PINS)
+            | {row["publication"] for row in live})
+        cls.reviewed_rows = cls._verify_reviewed_blob()
+        cls.reviewed_facts = cls._facts_of(cls.reviewed_rows)
+
+    @staticmethod
+    def _facts_of(rows):
+        facts = {}
+        for row in rows:
+            for offer in row["offers"]:
+                facts[(row["channel"], offer["id"], offer["version"])] = \
+                    offer["contentDigest"]
+        return facts
+
+    @staticmethod
+    def _verify_reviewed_blob():
+        """Fully verify the historical ledger bytes at the immutable pin."""
+        blob = BASE.reviewed_ledger_blob(HERE)
+        if hashlib.sha256(blob).hexdigest() != BASE.REVIEWED_LEDGER_SHA256:
+            raise AssertionError(
+                "the reviewed baseline blob at "
+                f"{BASE.REVIEWED_BASELINE_COMMIT[:10]} is not the exact "
+                "bytes Root transcribed on 2026-10-28")
+        with tempfile.TemporaryDirectory(prefix="hub-reviewed-ledger-") as tmp:
+            path = pathlib.Path(tmp) / "publication-ledger.json"
+            path.write_bytes(blob)
+            # Every row is anchored to the signed feed bytes at ITS pinned
+            # publication commit (full crypto verification of real history).
+            # Being outside the tooling ledger path, the HEAD-ancestry
+            # append-only leg targets the live tree instead and is exercised
+            # directly against real history below.
+            return pi.verify_ledger(path, HERE)
+
+    def test_reviewed_baseline_is_immutable_at_the_pinned_commit(self):
+        # The transcribed 2026-10-28 reviewed baseline, verified as literal
+        # explicit expectations against the blob at the content-addressed
+        # commit — expected values come from admission_baseline literals,
+        # never from the live tree or the function under test.
+        rows = self.reviewed_rows
+        self.assertEqual(len(rows), BASE.REVIEWED_LEDGER_ROWS)
+        pins = sorted({row["publication"] for row in rows})
+        self.assertEqual(len(pins), BASE.REVIEWED_LEDGER_PINS)
+        self.assertEqual(pins, sorted(BASE.PUBLICATION_PINS))
+        facts = self.reviewed_facts
+        self.assertEqual(len(facts), BASE.CUMULATIVE_FACTS)  # 75
+        ios = {k for k in facts if k[0] == "ios"}
+        android = {k for k in facts if k[0] == "android"}
+        self.assertEqual(len(ios), 39)
+        self.assertEqual(len(android), 36)
+        self.assertEqual({k[1] for k in ios}, set(BASE.IOS_OPTIONAL_OFFER_IDS))
+        self.assertEqual({k[1] for k in android},
+                         set(BASE.ANDROID_OPTIONAL_OFFER_IDS))
 
     def test_bootstrap_ledger_covers_the_published_31_per_channel(self):
+        # Historical bootstrap fact (immutable): the first signed publication
+        # e02b3e94 carries exactly 31 packaged offers per channel, verified
+        # at the reviewed baseline blob (see test above for the full 75-fact
+        # literal identity). The LIVE cumulative baseline must still agree
+        # with every bootstrap fact after any number of valid appends.
+        boot = [row for row in self.reviewed_rows
+                if row["publication"] == BASE.BOOTSTRAP_PIN]
+        self.assertEqual(len(boot), 2)
+        for row in boot:
+            self.assertEqual(len(row["offers"]), BASE.BOOTSTRAP_OFFERS_PER_CHANNEL)
+        self.assertEqual({row["channel"] for row in boot}, {"ios", "android"})
         prov = {}
         baseline = pi.build_validated_baseline(HERE, provenance=prov)
-        ios = [k for k in baseline if k[0] == "ios"]
-        android = [k for k in baseline if k[0] == "android"]
-        self.assertEqual(len(ios), 31)
-        self.assertEqual(len(android), 31)
-        self.assertEqual(prov["publicationPins"],
-                         ["e02b3e9478c6ddc1261d5c987ac0ca5457beb916"])
-        self.assertEqual(prov["historicalFacts"], 62)
+        # every historical bootstrap fact survives unchanged in the live
+        # cumulative baseline (same (id,version) -> same contentDigest).
+        for row in boot:
+            for offer in row["offers"]:
+                self.assertEqual(baseline[(row["channel"], offer["id"],
+                                           offer["version"])],
+                                 offer["contentDigest"])
+
+    def test_current_ledger_verifies_and_preserves_every_reviewed_fact(self):
+        # Live truth check (no fixed cumulative count): the current ledger
+        # fully crypto-verifies row-by-row, retains every reviewed 2026-10-28
+        # row byte-for-byte, pins form a superset, every reviewed fact still
+        # maps to its exact digest, and the ACTUAL current feeds' packaged
+        # offers are all covered (feeds parsed independently here, not
+        # derived from the function under test).
+        prov = {}
+        current = pi.build_validated_baseline(HERE, provenance=prov)
+        for key, digest in self.reviewed_facts.items():
+            self.assertIn(key, current)
+            self.assertEqual(current[key], digest, f"old fact mutated: {key}")
+        self.assertGreaterEqual(len(current), len(self.reviewed_facts))
+        self.assertEqual(prov["historicalFacts"], len(current))
+        self.assertLessEqual(set(BASE.PUBLICATION_PINS),
+                             set(prov["publicationPins"]))
+        live_rows = BASE.load_ledger(HERE)["publications"]
+        live_keys = {json.dumps(row, sort_keys=True) for row in live_rows}
+        for row in self.reviewed_rows:
+            self.assertIn(json.dumps(row, sort_keys=True), live_keys)
+        for channel, rel in (("ios", "catalog.json"),
+                             ("android", "android/catalog.json")):
+            feed = json.loads((HERE / rel).read_bytes())
+            for entry in feed["entries"]:
+                package = entry.get("package")
+                if package is not None:
+                    self.assertEqual(
+                        current.get((channel, entry["id"], entry["version"])),
+                        package["contentDigest"],
+                        f"current {channel} offer {entry['id']} "
+                        f"{entry['version']} not covered")
 
     def test_republishing_the_current_bytes_is_allowed(self):
         baseline = pi.build_validated_baseline(HERE)
@@ -608,7 +733,72 @@ class RealRepositoryTests(unittest.TestCase):
     def test_current_publication_commit_pin_verifies(self):
         head = _git(HERE, "rev-parse", "HEAD").strip()
         baseline = pi.build_validated_baseline(HERE, published_pin=head)
-        self.assertEqual(len([k for k in baseline if k[0] == "ios"]), 31)
+        # An append grows the cumulative record; the pin-read baseline must
+        # still contain every reviewed fact with its exact digest.
+        for key, digest in self.reviewed_facts.items():
+            self.assertIn(key, baseline)
+            self.assertEqual(baseline[key], digest, f"old fact mutated: {key}")
+
+    def test_valid_new_version_appends_are_accepted_without_count_patch(self):
+        # The next authorized publication re-signs today's bytes PLUS three
+        # genuinely new (id, version) offers per channel. Against the REAL
+        # cumulative baseline this passes with no expected-count anywhere —
+        # appending never requires a manual baseline update.
+        baseline = pi.build_validated_baseline(HERE)
+        outputs = {}
+        for rel, channel in (("catalog.json", "ios"),
+                             ("android/catalog.json", "android")):
+            doc = json.loads((HERE / rel).read_bytes())
+            appended = [
+                {"id": entry["id"], "version": "99.0.0",
+                 "package": {"path": hubcore.package_path_for(
+                     entry["id"], "99.0.0", channel),
+                     "contentDigest": "e" * 64}}
+                for entry in doc["entries"][:3]]
+            doc["entries"] = list(doc["entries"]) + appended
+            outputs[rel] = hubcore.encoded(doc)
+        self.assertTrue(pi.assert_immutable_publication(outputs, baseline))
+        # Once the coordinator's ledger extension carries the appended
+        # version, re-signing that SAME (channel, id, version) with changed
+        # bytes is refused against the grown baseline.
+        first_ios_id = json.loads(
+            (HERE / "catalog.json").read_bytes())["entries"][0]["id"]
+        extended = dict(baseline)
+        extended[("ios", first_ios_id, "99.0.0")] = "e" * 64
+        doc = json.loads(outputs["catalog.json"])
+        moved = next(e for e in doc["entries"]
+                     if e["id"] == first_ios_id and e["version"] == "99.0.0")
+        moved["package"]["contentDigest"] = "d" * 64
+        with self.assertRaises(hubcore.HubError):
+            pi.assert_immutable_publication(
+                {"catalog.json": hubcore.encoded(doc)}, extended)
+
+    def test_changed_or_dropped_historical_fact_is_refused(self):
+        # Real-data refusal legs, strictly read-only against the repository:
+        # (1) a reviewed offer digest swapped in a copy of the ledger is
+        # caught by the cryptographic anchor at the pinned publication's
+        # signed bytes (verify_ledger on a scratch path); (2) dropping the
+        # bootstrap rows is caught by the production append-only guard
+        # reading the REAL committed ledger history.
+        doc = json.loads(BASE.reviewed_ledger_blob(HERE))
+        doc["publications"][0]["offers"][0]["contentDigest"] = "9" * 64
+        with tempfile.TemporaryDirectory(prefix="hub-tamper-") as tmp:
+            path = pathlib.Path(tmp) / "ledger.json"
+            path.write_bytes(pi.render_ledger(
+                doc["publications"], description=doc["description"]))
+            with self.assertRaisesRegex(hubcore.HubError, "contentDigest"):
+                pi.verify_ledger(path, HERE)
+        truncated = json.loads(BASE.reviewed_ledger_blob(HERE))
+        truncated["publications"] = [
+            row for row in truncated["publications"]
+            if row["publication"] != BASE.BOOTSTRAP_PIN]
+        raw = pi.render_ledger(truncated["publications"],
+                               description=truncated["description"])
+        with self.assertRaisesRegex(hubcore.HubError, "append-only"):
+            # the same production leg verify_ledger runs for the live tooling
+            # ledger, exercised against the real committed history; the repo
+            # itself is never written.
+            pi._assert_ledger_append_only(HERE, raw, truncated)
 
 
 if __name__ == "__main__":

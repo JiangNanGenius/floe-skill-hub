@@ -1,0 +1,692 @@
+name: skill-hub-upstream-tracker
+# Stage0 of the cloud-only automatic publication pipeline
+# (docs/AUTOMATIC-PUBLICATION.md). Grouped upstream scan every 6h, offset from
+# the hourly peak and from the 06:10 UTC impeccable-engine-updater job, plus
+# manual dispatch.
+#
+# Runs the frozen tracker CLI (check/plan/stage) and the automatic_publication
+# builder on a GitHub-hosted runner. Every candidate is verified INDEPENDENTLY
+# from bytes before anything is pushed: deterministic archive rebuild, registry
+# and per-entry effective-pin provenance via the frozen upstream_pins contract,
+# prior guest-proof re-verification, honest review-record validation. Only the
+# two scoped refs are ever pushed (auto/candidate-* and auto-state); refs/
+# heads/main, tags, releases and every other repository are never touched here.
+# Held drift becomes actionable committed state with the published version
+# intact. A stale open request (its bound base no longer live) is closed
+# idempotently on the next scan or no-op checkpoint, so the pipeline can never
+# stall busy against a moved main. No secret exists or is read: the signing key
+# stays in the App repository. No model calls, no App/Simulator/Codex/Mac
+# dependency; a no-op run writes at most one bounded daily checkpoint commit on
+# the control branch. Activation is gated on the repository variable
+# FLOE_SKILL_HUB_AUTO_UPDATES == "enabled", which the maintainer sets only after
+# the anchor/repin review of this exact code.
+#
+# Checkout discipline: the primary checkout is never branch-swiped. The control
+# branch lives in a detached worktree under the runner temp directory, helper
+# CLIs always run from the absolute trusted checkout path, and the orphan
+# control branch is bootstrapped with commit-tree of the empty tree (never
+# checkout --orphan plus add -A leftovers), so no source tree is ever wiped and
+# no source file can enter a data ref. Push authentication uses only the
+# job-scoped runtime token delivered through the environment to a Git
+# credential helper; persist-credentials stays false everywhere, the token is
+# never a literal in argv, logs or Git config.
+on:
+  schedule:
+    - cron: "37 2,8,14,20 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Scan/plan/stage/build and upload audit artifacts, push nothing
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: floe-skill-hub-auto-publication
+  cancel-in-progress: false
+
+env:
+  PYTHON_VERSION: "3.11"
+  CRYPTOGRAPHY_PIN: "cryptography==46.0.6"
+  HUB_ORIGIN: https://github.com/JiangNanGenius/floe-skill-hub.git
+  PYTHONDONTWRITEBYTECODE: "1"
+  TRUSTED: ${{ github.workspace }}
+
+jobs:
+  track:
+    if: vars.FLOE_SKILL_HUB_AUTO_UPDATES == 'enabled'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write   # used ONLY for refs/heads/auto/candidate-* and auto-state
+    outputs:
+      action: ${{ steps.decide.outputs.action }}
+      requestId: ${{ steps.commit.outputs.requestId }}
+      candidateRef: ${{ steps.commit.outputs.ref }}
+    steps:
+      # Immutable pinned action commits shared with the catalog workflow:
+      #   actions/checkout        v4.4.0 -> 11d5960a326750d5838078e36cf38b85af677262
+      #   actions/setup-python    v5.6.0 -> a26af69be951a213d495a4c3e4e4022e16d87065
+      #   actions/upload-artifact v4.6.2 -> ea165f8d65b6e75b540449e92b4886f43607fa02
+      - name: Resolve the UTC date
+        id: today
+        run: echo "date=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install the pinned verification library
+        run: python3 -m pip install --disable-pip-version-check "$CRYPTOGRAPHY_PIN"
+
+      - name: Resolve the live base freshly (fixed origin; a stale event exits bounded)
+        id: livebase
+        run: |
+          set -euo pipefail
+          resolve_live_main() {
+            local line live
+            line=$(git ls-remote "$1" "refs/heads/main")
+            if [ "$(printf '%s\n' "$line" | grep -c '')" != "1" ]; then
+              echo "official main resolution is not exactly one line" >&2
+              return 2
+            fi
+            live=$(printf '%s' "$line" | cut -f1)
+            if ! printf '%s' "$live" | grep -Eq '^[0-9a-f]{40}$'; then
+              echo "official main resolution is not a 40-hex commit" >&2
+              return 2
+            fi
+            printf '%s' "$live"
+          }
+          LIVE=$(resolve_live_main "$HUB_ORIGIN")
+          if [ "$LIVE" != "${{ github.sha }}" ]; then
+            # the event-captured SHA is stale after waiting on the shared
+            # concurrency group; never scan, build or write control state
+            # pretending it is live
+            echo "event base ${{ github.sha }} is stale behind live $LIVE; exiting bounded before any expensive scan (the next run starts from the current tip)"
+            echo "action=stale-event" >> "$GITHUB_OUTPUT"
+            echo "live=$LIVE" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "action=live" >> "$GITHUB_OUTPUT"
+          echo "live=$LIVE" >> "$GITHUB_OUTPUT"
+
+      - name: Existing full-repository gates on the clean BASE (before any candidate)
+        if: steps.livebase.outputs.action == 'live'
+        run: |
+          set -euo pipefail
+          python3 "$TRUSTED/scripts/gen_schemas.py" --check
+          python3 "$TRUSTED/scripts/make_fixture.py" --check
+          python3 "$TRUSTED/scripts/build_catalog.py" --mode preview --check \
+            --source-commit 1111111111111111111111111111111111111111
+          python3 "$TRUSTED/scripts/check_catalog.py"
+          python3 "$TRUSTED/showcase/scripts/validate_showcase.py"
+          python3 -m unittest discover -s "$TRUSTED/tests" -v
+
+      - name: Grouped upstream check (tokenless public git reads only)
+        if: steps.livebase.outputs.action == 'live'
+        run: |
+          set -euo pipefail
+          python3 "$TRUSTED/scripts/upstream_updates.py" check --repo-root . --quiet \
+            --out "$RUNNER_TEMP/check.json"
+
+      - name: Decide the pass (drifted vs no-op)
+        id: decide
+        if: steps.livebase.outputs.action == 'live'
+        env:
+          BASE_SHA: ${{ steps.livebase.outputs.live }}
+        run: |
+          set -euo pipefail
+          drifted=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["counts"]["drifted"])' "$RUNNER_TEMP/check.json")
+          errors=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["counts"]["error"])' "$RUNNER_TEMP/check.json")
+          if [ "$errors" != "0" ]; then
+            echo "upstream check recorded error states; refusing to plan against them" >&2
+            exit 2
+          fi
+          if [ "$drifted" = "0" ]; then
+            echo "action=noop" >> "$GITHUB_OUTPUT"
+            echo "no upstream drift against base ${BASE_SHA:0:10}: at most a bounded daily checkpoint"
+            exit 0
+          fi
+          python3 "$TRUSTED/scripts/upstream_updates.py" plan --repo-root . --quiet \
+            --check-report "$RUNNER_TEMP/check.json" --out "$RUNNER_TEMP/plan.json"
+          python3 "$TRUSTED/scripts/upstream_updates.py" stage --repo-root . --quiet \
+            --plan "$RUNNER_TEMP/plan.json" --stage-root "$RUNNER_TEMP/stage"
+          staged=$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(len(d.get("candidateFacts",{}).get("changedSkillIds",[])))' "$RUNNER_TEMP/stage/staging-manifest.json")
+          if [ "$staged" = "0" ]; then
+            echo "action=held" >> "$GITHUB_OUTPUT"
+          else
+            echo "action=candidate" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build and independently verify the minimal staging payload
+        if: steps.livebase.outputs.action == 'live' && steps.decide.outputs.action == 'candidate'
+        run: |
+          set -euo pipefail
+          python3 "$TRUSTED/scripts/automatic_publication.py" stage-build \
+            --repo-root . --base-commit "${{ steps.livebase.outputs.live }}" \
+            --stage-root "$RUNNER_TEMP/stage" --out "$RUNNER_TEMP/s-payload" \
+            --today "${{ steps.today.outputs.date }}"
+
+      - name: Apply the staged candidate (minimal unsigned S; base gates already passed)
+        if: steps.livebase.outputs.action == 'live' && steps.decide.outputs.action == 'candidate'
+        run: |
+          set -euo pipefail
+          python3 "$TRUSTED/scripts/automatic_publication.py" apply-payload \
+            --payload-dir "$RUNNER_TEMP/s-payload" --repo-root .
+          python3 "$TRUSTED/scripts/build_packages.py"
+          python3 "$TRUSTED/scripts/build_packages.py" --check
+          # showcase evidence integrity is safe and meaningful on the candidate;
+          # the signed-release gates (check_catalog / build_catalog --check /
+          # full suite) already ran on the clean BASE above: minimal unsigned S
+          # must never be judged against old published feeds, and no signature
+          # is ever fabricated for a candidate preview
+          python3 "$TRUSTED/showcase/scripts/validate_showcase.py"
+
+      - name: Commit S locally and verify the committed candidate against the fresh stage
+        if: steps.livebase.outputs.action == 'live' && steps.decide.outputs.action == 'candidate'
+        id: commit
+        env:
+          TODAY: ${{ steps.today.outputs.date }}
+          LIVE_BASE: ${{ steps.livebase.outputs.live }}
+        run: |
+          set -euo pipefail
+          git config user.name "floe-skill-hub-automation"
+          git config user.email "automation@users.noreply.github.com"
+          git add -A
+          git commit -q -m "auto-stage: upstream candidates ${{ steps.today.outputs.date }} run ${GITHUB_RUN_ID}"
+          S=$(git rev-parse HEAD)
+          test "$S" != "$LIVE_BASE"
+          # every committed path outside the candidate data allowlist, every
+          # symlink/gitlink mode and every untracked leftover fails the job
+          # closed before the candidate ref exists
+          test -z "$(git status --porcelain --untracked-files=all)"
+          python3 - "$TRUSTED" "$LIVE_BASE" "$S" <<'PY'
+          import subprocess, sys
+          trusted, base, s = sys.argv[1], sys.argv[2], sys.argv[3]
+          sys.path.insert(0, trusted + "/scripts")
+          import automatic_publication as ap
+          raw = subprocess.run(["git", "diff", "--name-status", "-z", base, s],
+                               capture_output=True, check=True).stdout
+          fields = [f for f in raw.split(b"\0") if f]
+          changed = []
+          index = 0
+          while index + 1 < len(fields) + 1 and index < len(fields):
+              status = fields[index].decode()
+              path = fields[index + 1].decode()
+              changed.append((status, path))
+              index += 2
+          for status, rel in changed:
+              if status[0] in ("R", "C"):
+                  raise SystemExit(f"candidate carries an unexpected rename/copy: {rel}")
+              if status[0] == "D":
+                  allowed_delete = (rel.startswith("sources/")
+                                    or rel.startswith(ap.REVIEW_HISTORY_PREFIXES_TUPLE))
+                  if not allowed_delete:
+                      raise SystemExit(f"candidate may not delete this path: {rel}")
+                  continue
+              ok = (rel in ap.CANDIDATE_ALLOW_EXACT
+                    or any(rel.startswith(p) for p in ap.CANDIDATE_ALLOW_DIRS))
+              if not ok:
+                  raise SystemExit(f"candidate changes a path outside the allowlist: {rel}")
+              listed = subprocess.run(["git", "ls-tree", s, "--", rel],
+                                      capture_output=True, check=True).stdout.decode()
+              for line in listed.splitlines():
+                  meta = line.split()
+                  if meta[1] != "blob" or meta[0] not in ("100644", "100755"):
+                      raise SystemExit(f"candidate carries an unsafe tree entry: {line}")
+          print(f"candidate S touches {len(changed)} path(s), all inside the data allowlist")
+          PY
+          REF="auto/candidate-${{ steps.today.outputs.date }}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          echo "s=$S" >> "$GITHUB_OUTPUT"
+          echo "ref=$REF" >> "$GITHUB_OUTPUT"
+          python3 "$TRUSTED/scripts/automatic_publication.py" emit-request \
+            --repo-root . --base-commit "$LIVE_BASE" \
+            --candidate-commit "$S" --stage-root "$RUNNER_TEMP/stage" \
+            --candidate-ref "$REF" --out "$RUNNER_TEMP/control" \
+            --today "$TODAY"
+          echo "requestId=$(python3 -c 'import json,sys,pathlib; print(json.loads(pathlib.Path(sys.argv[1]).read_bytes())["requestId"])' "$RUNNER_TEMP/control/request.json")" >> "$GITHUB_OUTPUT"
+
+      - name: Verify the committed candidate against the fresh re-derivation
+        if: steps.livebase.outputs.action == 'live' && steps.decide.outputs.action == 'candidate'
+        run: |
+          set -euo pipefail
+          # REQUIRED authority: re-derive comparison over the committed candidate,
+          # independent of any caller-reported counts
+          python3 "$TRUSTED/scripts/automatic_publication.py" verify-candidate \
+            --repo-root . --request-file "$RUNNER_TEMP/control/request.json" \
+            --manifest-file "$RUNNER_TEMP/control/candidate-manifest.json" \
+            --stage-root "$RUNNER_TEMP/stage" --expected-base "${{ steps.livebase.outputs.live }}"
+
+      - name: Emit held-only state payload
+        if: steps.livebase.outputs.action == 'live' && steps.decide.outputs.action == 'held'
+        run: |
+          set -euo pipefail
+          floe_fetch_optional() {
+            local log rc
+            log=$(mktemp)
+            if git -c gc.auto=0 fetch --no-tags "$1" "$2" 2>"$log"; then
+              rm -f "$log"; return 0
+            else
+              # capture the REAL git status here: `$?` after an if-compound
+              # with a false condition and no else is 0, which would turn a
+              # genuine fetch failure into a silent missing-ref no-op
+              rc=$?
+            fi
+            if grep -q "couldn't find remote ref" "$log"; then
+              echo "optional ref absent: $2"
+              rm -f "$log"; return 0
+            fi
+            cat "$log" >&2; rm -f "$log"; return "$rc"
+          }
+          floe_fetch_optional "$HUB_ORIGIN" "+refs/heads/auto-state:refs/floe/auto-state"
+          echo '{}' > "$RUNNER_TEMP/current-state.json"
+          if git rev-parse --verify --quiet refs/floe/auto-state >/dev/null; then
+            if ! git show refs/floe/auto-state:state.json > "$RUNNER_TEMP/current-state.json" 2>/dev/null; then
+              echo '{}' > "$RUNNER_TEMP/current-state.json"
+            fi
+          fi
+          python3 "$TRUSTED/scripts/automatic_publication.py" held-state \
+            --stage-root "$RUNNER_TEMP/stage" --out "$RUNNER_TEMP/control" \
+            --today "${{ steps.today.outputs.date }}" \
+            --state-file "$RUNNER_TEMP/current-state.json"
+
+      - name: Push the candidate ref (never main; token strictly from env)
+        if: steps.decide.outputs.action == 'candidate' && github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git -c credential.helper='!f() { echo "username=x-access-token"; echo "password=${GH_TOKEN}"; }; f' \
+            -c gc.auto=0 push origin "${{ steps.commit.outputs.s }}:refs/heads/${{ steps.commit.outputs.ref }}"
+
+      - name: Transaction the control branch via a detached worktree (scripts stay intact)
+        if: steps.livebase.outputs.action == 'live' && steps.decide.outputs.action != 'noop' && github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LIVE_MAIN: ${{ steps.livebase.outputs.live }}
+          TODAY: ${{ steps.today.outputs.date }}
+        run: |
+          set -euo pipefail
+          floe_fetch_optional() {
+            local log rc
+            log=$(mktemp)
+            if git -c gc.auto=0 fetch --no-tags "$1" "$2" 2>"$log"; then
+              rm -f "$log"; return 0
+            else
+              # capture the REAL git status here: `$?` after an if-compound
+              # with a false condition and no else is 0, which would turn a
+              # genuine fetch failure into a silent missing-ref no-op
+              rc=$?
+            fi
+            if grep -q "couldn't find remote ref" "$log"; then
+              echo "optional ref absent: $2"
+              rm -f "$log"; return 0
+            fi
+            cat "$log" >&2; rm -f "$log"; return "$rc"
+          }
+          floe_fetch_optional "$HUB_ORIGIN" "+refs/heads/auto-state:refs/floe/auto-state"
+          if ! git rev-parse --verify --quiet refs/floe/auto-state >/dev/null; then
+            # orphan bootstrap: an EMPTY-TREE commit, never a branch swipe
+            EMPTY_TREE=$(git hash-object -t tree /dev/null)
+            BOOT=$(git -c user.name="floe-skill-hub-automation" \
+              -c user.email="automation@users.noreply.github.com" \
+              commit-tree "$EMPTY_TREE" -m "auto-control: initialize control branch")
+            git -c credential.helper='!f() { echo "username=x-access-token"; echo "password=${GH_TOKEN}"; }; f' \
+              -c gc.auto=0 push origin "$BOOT:refs/heads/auto-state"
+            git -c gc.auto=0 fetch --no-tags "$HUB_ORIGIN" \
+              "+refs/heads/auto-state:refs/floe/auto-state"
+          fi
+          CTRL="$RUNNER_TEMP/ctrl-wt"
+          rm -rf "$CTRL"
+          git worktree add --detach -q "$CTRL" refs/floe/auto-state
+          echo '{}' > "$RUNNER_TEMP/current-state.json"
+          if [ -f "$CTRL/state.json" ]; then
+            cp "$CTRL/state.json" "$RUNNER_TEMP/current-state.json"
+          fi
+          rm -f "$RUNNER_TEMP/open-request.json"
+          if [ -f "$CTRL/request.json" ]; then
+            cp "$CTRL/request.json" "$RUNNER_TEMP/open-request.json"
+          fi
+          if [ -f "$RUNNER_TEMP/open-request.json" ]; then
+            python3 "$TRUSTED/scripts/automatic_publication.py" plan-control-update \
+              --payload-dir "$RUNNER_TEMP/control" \
+              --state-file "$RUNNER_TEMP/current-state.json" \
+              --request-file "$RUNNER_TEMP/open-request.json" \
+              --live-main "$LIVE_MAIN" --today "$TODAY" \
+              --out "$RUNNER_TEMP/planned"
+          else
+            python3 "$TRUSTED/scripts/automatic_publication.py" plan-control-update \
+              --payload-dir "$RUNNER_TEMP/control" \
+              --state-file "$RUNNER_TEMP/current-state.json" \
+              --live-main "$LIVE_MAIN" --today "$TODAY" \
+              --out "$RUNNER_TEMP/planned"
+          fi
+          ACTION=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["action"])' \
+            "$RUNNER_TEMP/planned/control-plan.json")
+          echo "control action: $ACTION"
+          python3 - "$RUNNER_TEMP/planned" "$CTRL" "$LIVE_MAIN" "$RUNNER_TEMP" <<'PY'
+          import json, pathlib, shutil, sys
+          planned, ctrl, live = (pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2]),
+                                 sys.argv[3])
+          tmp = pathlib.Path(sys.argv[4])
+          manifest = json.loads((planned / "control-plan.json").read_bytes())
+          def checked(rel):
+              parts = str(rel).split("/")
+              if (not isinstance(rel, str) or rel.startswith("/")
+                      or any(part in ("", ".", "..") for part in parts)):
+                  raise SystemExit(f"control plan carries an unsafe relative path: {rel!r}")
+              return pathlib.Path(rel)
+          for group in ("mirror", "removeRoot"):
+              for rel in manifest[group]:
+                  checked(rel)
+          open_rid = None
+          root_request = ctrl / "request.json"
+          if root_request.is_file():
+              open_request = json.loads(root_request.read_bytes())
+              open_rid = open_request["requestId"]
+              archived = [pathlib.Path(str(a)).parts[1] if str(a).startswith("requests/") else None
+                          for a in manifest["appendArchive"]]
+              if open_rid not in archived and manifest["action"] != "busy-checkpoint":
+                  archive = ctrl / "requests" / open_rid
+                  archive.mkdir(parents=True, exist_ok=True)
+                  for name in ("request.json", "candidate-manifest.json"):
+                      source = ctrl / name
+                      if source.is_file():
+                          shutil.copyfile(source, archive / name)
+          for rel in manifest["mirror"]:
+              source = planned / checked(rel)
+              if not source.is_file():
+                  continue
+              target = ctrl / checked(rel)
+              target.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(source, target)
+          for rel in manifest["removeRoot"]:
+              path = ctrl / checked(rel)
+              if path.exists():
+                  path.unlink()
+          for archive in manifest["appendArchive"]:
+              rel = checked(str(archive).rstrip("/"))
+              source = planned / rel
+              if source.is_dir():
+                  target = ctrl / rel
+                  target.mkdir(parents=True, exist_ok=True)
+                  for path in sorted(source.rglob("*")):
+                      if path.is_file():
+                          dest = target / path.relative_to(source)
+                          dest.parent.mkdir(parents=True, exist_ok=True)
+                          shutil.copyfile(path, dest)
+          # Bounded stale-request close: an open request bound to a base that is
+          # no longer live, which this transaction neither replaced (no planned
+          # root request) nor keeps in flight (busy), is closed idempotently so
+          # the publisher and the next scan can never stall on it.
+          if open_rid is not None and manifest["action"] != "busy-checkpoint" \
+                  and "request.json" not in manifest["mirror"]:
+              open_request = json.loads((tmp / "open-request.json").read_bytes()) \
+                  if (tmp / "open-request.json").is_file() else None
+              if open_request is not None \
+                      and open_request["basePublication"] != live:
+                  for name in ("request.json", "candidate-manifest.json"):
+                      path = ctrl / name
+                      if path.is_file():
+                          path.unlink()
+                  (tmp / "stale-close.json").write_text(
+                      json.dumps({"closedStaleRequestId": open_rid}))
+          PY
+          if [ -f "$RUNNER_TEMP/stale-close.json" ]; then
+            python3 - "$RUNNER_TEMP/stale-close.json" "$CTRL/state.json" \
+              "$RUNNER_TEMP/stale-patch.json" "$TODAY" <<'PY'
+          import json, pathlib, sys
+          closed = json.loads(pathlib.Path(sys.argv[1]).read_bytes())["closedStaleRequestId"]
+          state = json.loads(pathlib.Path(sys.argv[2]).read_bytes())
+          ids = list(state.get("closedStaleRequestIds") or [])
+          if closed not in ids:
+              ids.append(closed)
+          pathlib.Path(sys.argv[3]).write_text(json.dumps({
+              "closedStaleRequestIds": ids,
+              "openRequestId": None,
+              "pipelineStage": "stale-request-closed",
+              "lastCheckUTC": sys.argv[4],
+              "note": "stale open request closed by the scan against the current live base",
+          }))
+          PY
+            python3 "$TRUSTED/scripts/automatic_publication.py" state-patch \
+              --state-file "$CTRL/state.json" \
+              --patch-file "$RUNNER_TEMP/stale-patch.json" \
+              --out "$RUNNER_TEMP/stale-patched-state.json"
+            cp "$RUNNER_TEMP/stale-patched-state.json" "$CTRL/state.json"
+            echo "closed a stale open request against the current live base"
+          fi
+          if [ -d "$CTRL/requests" ]; then
+            python3 "$TRUSTED/scripts/automatic_publication.py" prune-requests \
+              --requests-dir "$CTRL/requests" --state-file "$CTRL/state.json"
+          fi
+          git -C "$CTRL" add -A
+          python3 - "$CTRL" <<'PY'
+          import subprocess, sys
+          ctrl = sys.argv[1]
+          allowed = ("state.json", "request.json", "candidate-manifest.json")
+          listed = subprocess.run(["git", "-C", ctrl, "ls-files", "-s", "-z"],
+                                  capture_output=True, check=True).stdout
+          entries = [e for e in listed.split(b"\0") if e]
+          if not entries:
+              raise SystemExit(0)
+          for entry in entries:
+              meta, name = entry.split(b"\t", 1)
+              mode, rel = meta.split()[0].decode(), name.decode()
+              parts = rel.split("/")
+              if rel in allowed:
+                  pass
+              elif (len(parts) == 3 and parts[0] == "requests"
+                    and len(parts[1]) == 64
+                    and all(c in "0123456789abcdef" for c in parts[1])
+                    and parts[2] in ("request.json", "candidate-manifest.json")):
+                  pass
+              else:
+                  raise SystemExit(f"control branch path is outside the allowlist: {rel}")
+              if mode != "100644":
+                  raise SystemExit(f"control branch carries a non-blob mode: {mode} {rel}")
+          PY
+          if git -C "$CTRL" diff --cached --quiet; then
+            echo "control unchanged; skipping push"
+            git worktree remove --force "$CTRL" || true
+            exit 0
+          fi
+          git -C "$CTRL" -c user.name="floe-skill-hub-automation" \
+            -c user.email="automation@users.noreply.github.com" \
+            commit -q -m "auto-control: ${ACTION} run ${GITHUB_RUN_ID}"
+          CTRL_SHA=$(git -C "$CTRL" rev-parse HEAD)
+          git -c credential.helper='!f() { echo "username=x-access-token"; echo "password=${GH_TOKEN}"; }; f' \
+            -c gc.auto=0 push "$HUB_ORIGIN" "$CTRL_SHA:refs/heads/auto-state"
+          git worktree remove --force "$CTRL" || true
+
+      - name: No-op checkpoint (bounded daily plus stale-request close, control worktree only)
+        if: steps.livebase.outputs.action == 'live' && steps.decide.outputs.action == 'noop' && github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LIVE_MAIN: ${{ steps.livebase.outputs.live }}
+          TODAY: ${{ steps.today.outputs.date }}
+        run: |
+          set -euo pipefail
+          floe_fetch_optional() {
+            local log rc
+            log=$(mktemp)
+            if git -c gc.auto=0 fetch --no-tags "$1" "$2" 2>"$log"; then
+              rm -f "$log"; return 0
+            else
+              # capture the REAL git status here: `$?` after an if-compound
+              # with a false condition and no else is 0, which would turn a
+              # genuine fetch failure into a silent missing-ref no-op
+              rc=$?
+            fi
+            if grep -q "couldn't find remote ref" "$log"; then
+              echo "optional ref absent: $2"
+              rm -f "$log"; return 0
+            fi
+            cat "$log" >&2; rm -f "$log"; return "$rc"
+          }
+          floe_fetch_optional "$HUB_ORIGIN" "+refs/heads/auto-state:refs/floe/auto-state"
+          if ! git rev-parse --verify --quiet refs/floe/auto-state >/dev/null; then
+            echo "no control branch yet; a no-op scan creates nothing (avoids orphan churn)"
+            exit 0
+          fi
+          CTRL="$RUNNER_TEMP/noop-wt"
+          rm -rf "$CTRL"
+          git worktree add --detach -q "$CTRL" refs/floe/auto-state
+          echo '{}' > "$RUNNER_TEMP/current-state.json"
+          if [ -f "$CTRL/state.json" ]; then
+            cp "$CTRL/state.json" "$RUNNER_TEMP/current-state.json"
+          fi
+          STALE=$(python3 - "$CTRL/request.json" "$LIVE_MAIN" <<'PY'
+          import json, pathlib, sys
+          path = pathlib.Path(sys.argv[1])
+          if not path.is_file():
+              print("")
+          else:
+              request = json.loads(path.read_bytes())
+              print(request["requestId"] if request["basePublication"] != sys.argv[2] else "")
+          PY
+          )
+          TODAY_DONE=$(python3 -c 'import json,sys,pathlib
+          path = pathlib.Path(sys.argv[1])
+          state = json.loads(path.read_bytes()) if path.stat().st_size else {}
+          print("1" if state.get("lastCheckUTC") == sys.argv[2] else "")' \
+            "$RUNNER_TEMP/current-state.json" "$TODAY")
+          if [ -z "$STALE" ] && [ -n "$TODAY_DONE" ]; then
+            echo "daily checkpoint already recorded; no-op without any commit"
+            git worktree remove --force "$CTRL" || true
+            exit 0
+          fi
+          python3 - "$RUNNER_TEMP/current-state.json" "$STALE" "$RUNNER_TEMP/stale-patch.json" \
+            "$TODAY" <<'PY'
+          import json, pathlib, sys
+          state = json.loads(pathlib.Path(sys.argv[1]).read_bytes() or b"{}")
+          stale = sys.argv[2]
+          patch = {"lastCheckUTC": sys.argv[4], "pipelineStage": "up-to-date"}
+          if stale:
+              ids = list(state.get("closedStaleRequestIds") or [])
+              if stale not in ids:
+                  ids.append(stale)
+              patch.update({
+                  "closedStaleRequestIds": ids,
+                  "openRequestId": None,
+                  "pipelineStage": "stale-request-closed",
+                  "note": "stale open request closed by the no-op scan against the current live base",
+              })
+          pathlib.Path(sys.argv[3]).write_text(json.dumps(patch))
+          PY
+          python3 "$TRUSTED/scripts/automatic_publication.py" state-patch \
+            --state-file "$RUNNER_TEMP/current-state.json" \
+            --patch-file "$RUNNER_TEMP/stale-patch.json" \
+            --out "$RUNNER_TEMP/state.json"
+          cp "$RUNNER_TEMP/state.json" "$CTRL/state.json"
+          if [ -n "$STALE" ]; then
+            mkdir -p "$CTRL/requests/$STALE"
+            if [ -f "$CTRL/request.json" ]; then
+              cp "$CTRL/request.json" "$CTRL/requests/$STALE/request.json"
+            fi
+            if [ -f "$CTRL/candidate-manifest.json" ]; then
+              cp "$CTRL/candidate-manifest.json" \
+                "$CTRL/requests/$STALE/candidate-manifest.json"
+            fi
+            rm -f "$CTRL/request.json" "$CTRL/candidate-manifest.json"
+            echo "closed stale request $STALE idempotently on the no-op checkpoint"
+          fi
+          git -C "$CTRL" add -A
+          if git -C "$CTRL" diff --cached --quiet; then
+            echo "nothing changed"
+            git worktree remove --force "$CTRL" || true
+            exit 0
+          fi
+          git -C "$CTRL" -c user.name="floe-skill-hub-automation" \
+            -c user.email="automation@users.noreply.github.com" \
+            commit -q -m "auto-control: checkpoint ${{ steps.today.outputs.date }}"
+          NOOP_SHA=$(git -C "$CTRL" rev-parse HEAD)
+          git -c credential.helper='!f() { echo "username=x-access-token"; echo "password=${GH_TOKEN}"; }; f' \
+            -c gc.auto=0 push "$HUB_ORIGIN" "$NOOP_SHA:refs/heads/auto-state"
+          git worktree remove --force "$CTRL" || true
+
+      - name: Stage audit files inside the workspace
+        if: always() && steps.livebase.outputs.action == 'live' && steps.decide.outputs.action != 'noop'
+        run: |
+          set -euo pipefail
+          mkdir -p audit
+          for f in "$RUNNER_TEMP/check.json" "$RUNNER_TEMP/plan.json" \
+                   "$RUNNER_TEMP/stage/staging-manifest.json" \
+                   "$RUNNER_TEMP/s-payload/changes.json" \
+                   "$RUNNER_TEMP/control/request.json" \
+                   "$RUNNER_TEMP/control/candidate-manifest.json" \
+                   "$RUNNER_TEMP/control/state.json"; do
+            if [ -f "$f" ]; then
+              cp "$f" audit/
+            fi
+          done
+      - name: Upload the audit payload
+        if: always() && steps.livebase.outputs.action == 'live' && steps.decide.outputs.action != 'noop'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: upstream-tracker-audit-${{ github.run_id }}
+          path: audit
+          if-no-files-found: error
+
+      - name: Failure checkpoint (bounded actionable state, main untouched)
+        if: failure() && github.event.inputs.dry_run != 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          floe_fetch_optional() {
+            local log rc
+            log=$(mktemp)
+            if git -c gc.auto=0 fetch --no-tags "$1" "$2" 2>"$log"; then
+              rm -f "$log"; return 0
+            else
+              # capture the REAL git status here: `$?` after an if-compound
+              # with a false condition and no else is 0, which would turn a
+              # genuine fetch failure into a silent missing-ref no-op
+              rc=$?
+            fi
+            if grep -q "couldn't find remote ref" "$log"; then
+              echo "optional ref absent: $2"
+              rm -f "$log"; return 0
+            fi
+            cat "$log" >&2; rm -f "$log"; return "$rc"
+          }
+          floe_fetch_optional "$HUB_ORIGIN" "+refs/heads/auto-state:refs/floe/auto-state"
+          if ! git rev-parse --verify --quiet refs/floe/auto-state >/dev/null; then
+            echo "auto-state does not exist yet; the failure is recorded in the run log only"
+            exit 0
+          fi
+          CTRL="$RUNNER_TEMP/failure-wt"
+          rm -rf "$CTRL"
+          git worktree add --detach -q "$CTRL" refs/floe/auto-state
+          echo '{}' > "$RUNNER_TEMP/current-state.json"
+          if [ -f "$CTRL/state.json" ]; then
+            cp "$CTRL/state.json" "$RUNNER_TEMP/current-state.json"
+          fi
+          printf '{"lastCheckUTC":"%s","pipelineStage":"scan-failed","failedRunUrl":"%s"}' \
+            "$(date -u +%F)" "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            > "$RUNNER_TEMP/failure-patch.json"
+          python3 "$TRUSTED/scripts/automatic_publication.py" state-patch \
+            --state-file "$RUNNER_TEMP/current-state.json" \
+            --patch-file "$RUNNER_TEMP/failure-patch.json" \
+            --out "$RUNNER_TEMP/failure-state.json"
+          cp "$RUNNER_TEMP/failure-state.json" "$CTRL/state.json"
+          git -C "$CTRL" add -A
+          if git -C "$CTRL" diff --cached --quiet; then
+            exit 0
+          fi
+          git -C "$CTRL" -c user.name="floe-skill-hub-automation" \
+            -c user.email="automation@users.noreply.github.com" \
+            commit -q -m "auto-control: scan failure checkpoint run ${GITHUB_RUN_ID}"
+          FAIL_SHA=$(git -C "$CTRL" rev-parse HEAD)
+          git -c credential.helper='!f() { echo "username=x-access-token"; echo "password=${GH_TOKEN}"; }; f' \
+            -c gc.auto=0 push "$HUB_ORIGIN" "$FAIL_SHA:refs/heads/auto-state"

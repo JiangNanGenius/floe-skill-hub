@@ -1,0 +1,367 @@
+{
+  "schemaVersion": 1,
+  "policyId": "floe-skill-hub-upstream-update-policy",
+  "updatedAt": "2026-10-28",
+  "description": {
+    "en": "Declarative tracking policy for scripts/upstream_updates.py: which registry entries automatically track upstream, how each tracked skill's local layout maps to its upstream subtree, what is intentionally excluded, how the engine and the license-blocked replacements are tracked, and which gates decide eligibility versus hold. The registry (catalog/skills.json) stays authoritative for pins/paths/licenses; docs/UPSTREAM-PINS.json stays the pin authority. This file never grants publication: eligible candidates flow to the Root-owned signing/publishing pipeline, held candidates preserve the published version with an actionable repair state.",
+    "zh-Hans": "scripts/upstream_updates.py 的声明式跟踪策略：哪些登记条目自动跟踪上游、每个被跟踪技能的本地布局如何映射到其上游子树、哪些内容被有意排除、引擎与因许可证受阻的替代品如何跟踪，以及哪些门槛决定可发布还是暂缓。登记文件（catalog/skills.json）仍是固定提交/路径/许可证的权威；docs/UPSTREAM-PINS.json 仍是固定提交权威。本文件从不授予发布权：合格候选进入 Root 拥有的签名/发布流水线，暂缓候选保留已发布版本并给出可执行的修复状态。"
+  },
+  "executionModel": {
+    "unattended": "github-actions-only",
+    "localDaemonsProhibited": true,
+    "noMacAppCodexOnlineDependency": true,
+    "eligibleUpdates": "complete check/plan/stage in the cloud and flow to the existing Root-owned build/verify/sign/publish pipeline using existing credentials and scoped tokens",
+    "heldUpdates": "preserve the previously published version, record an actionable adaptation state, and never fabricate runtime/native qualification; emulation never sets guest-verified"
+  },
+  "pinsAuthority": "docs/UPSTREAM-PINS.json",
+  "registryAuthority": "catalog/skills.json",
+  "repositories": {
+    "https://github.com/anthropics/skills": {
+      "role": "corpus",
+      "trackedRef": "HEAD",
+      "rootLicense": null,
+      "licenseNote": "no repository-root license; each carried skill subtree ships its own LICENSE.txt (Apache-2.0), mapped per skill to references/licenses/UPSTREAM-LICENSE.txt"
+    },
+    "https://github.com/alirezarezvani/claude-skills": {
+      "role": "corpus",
+      "trackedRef": "HEAD",
+      "rootLicense": "LICENSE",
+      "licenseNote": "MIT root LICENSE; local UPSTREAM-LICENSE.txt copies are Floe-owned bytes and are never regenerated automatically"
+    },
+    "https://github.com/K-Dense-AI/scientific-agent-skills": {
+      "role": "corpus",
+      "trackedRef": "HEAD",
+      "rootLicense": "LICENSE.md",
+      "licenseNote": "MIT root LICENSE.md"
+    },
+    "https://github.com/obra/superpowers": {
+      "role": "corpus",
+      "trackedRef": "HEAD",
+      "rootLicense": "LICENSE",
+      "licenseNote": "MIT root LICENSE"
+    },
+    "https://github.com/pbakaus/impeccable": {
+      "role": "engine",
+      "trackedRef": "HEAD",
+      "rootLicense": "LICENSE",
+      "engineReleaseTagPattern": "engine-v*",
+      "licenseNote": "Apache-2.0 root LICENSE; engine stable releases are tracked by engine-v<semver> tags, never by main HEAD"
+    },
+    "https://github.com/vercel-labs/agent-skills": {
+      "role": "watch-only",
+      "trackedRef": "HEAD",
+      "rootLicense": null,
+      "licenseNote": "no license at the reviewed pin; pinned in docs/UPSTREAM-PINS.json but referenced by no admitted entry: curation/license-signal only, never auto-admits a skill and never copies bytes"
+    }
+  },
+  "engineTracking": {
+    "impeccable": {
+      "skillId": "impeccable",
+      "repository": "https://github.com/pbakaus/impeccable",
+      "corpusPath": "plugin/skills/impeccable",
+      "engineLock": "engines/impeccable/ENGINE-LOCK.json",
+      "stableReleaseTagPattern": "engine-v<semver>, non-prerelease only, tag must agree with the ENGINE_VERSION in its own tree (validated by the engine updater workflow, not here)",
+      "genericMergeProhibited": true,
+      "route": "sources/impeccable is regenerated only by the pinned two-stage engines/impeccable pipeline; engine updates run through .github/workflows/impeccable-engine-updater.yml; this tracker reports signals and holds, it never constructs an impeccable candidate",
+      "ownedPaths": ["sources/impeccable", "engines/impeccable"]
+    }
+  },
+  "selection": {
+    "tracked": [
+      "internal-comms",
+      "algorithmic-art",
+      "canvas-design",
+      "theme-factory",
+      "webapp-testing",
+      "copywriting",
+      "copy-editing",
+      "content-production",
+      "social-content",
+      "deep-research",
+      "deepread",
+      "research-summarizer",
+      "ui-design-system",
+      "ux-researcher-designer",
+      "a11y-audit",
+      "product-manager-toolkit",
+      "product-discovery",
+      "code-to-prd",
+      "meetings",
+      "literature-review",
+      "citation-management",
+      "scientific-critical-thinking",
+      "exploratory-data-analysis",
+      "statistical-analysis",
+      "scientific-visualization",
+      "markitdown",
+      "sympy",
+      "systematic-debugging",
+      "test-driven-development",
+      "requesting-code-review"
+    ],
+    "engineManaged": ["impeccable"],
+    "watchOnly": [
+      {
+        "id": "doc-coauthoring",
+        "originalRepository": "https://github.com/anthropics/skills",
+        "originalPath": "skills/doc-coauthoring",
+        "reason": "first-party replacement of a license-blocked original (no license at the reviewed pin); sources/doc-coauthoring/references/PROVENANCE.md records that NO upstream bytes were copied. Signal-only: report whether a license appeared upstream; copying stays prohibited and re-adoption is a Root curation decision."
+      },
+      {
+        "id": "writing-guidelines",
+        "originalRepository": "https://github.com/vercel-labs/agent-skills",
+        "originalPath": "skills/writing-guidelines",
+        "reason": "first-party replacement of a license-blocked original; license-appearance signal only, copying prohibited"
+      },
+      {
+        "id": "react-best-practices",
+        "originalRepository": "https://github.com/vercel-labs/agent-skills",
+        "originalPath": "skills/react-best-practices",
+        "reason": "first-party replacement of a license-blocked original; license-appearance signal only, copying prohibited"
+      },
+      {
+        "id": "composition-patterns",
+        "originalRepository": "https://github.com/vercel-labs/agent-skills",
+        "originalPath": "skills/composition-patterns",
+        "reason": "first-party replacement of a license-blocked original; license-appearance signal only, copying prohibited"
+      },
+      {
+        "id": "web-design-guidelines",
+        "originalRepository": "https://github.com/vercel-labs/agent-skills",
+        "originalPath": "skills/web-design-guidelines",
+        "reason": "first-party replacement of a license-blocked original; license-appearance signal only, copying prohibited"
+      }
+    ],
+    "notTracked": {
+      "builtins": ["floe-pdf", "floe-office", "floe-network", "floe-video"],
+      "firstParty": ["floe-email-drafting", "floe-file-organizer", "floe-invoice-organizer"],
+      "note": "the 4 builtins carry firstParty pins and ship inside the App; the 3 firstParty optionals and the 5 watchOnly replacements have upstream=null by design. None of the 12 is ever imported from any upstream repository; the coverage invariant tracked(30)+engineManaged(1)+watchOnly(5)+builtins(4)+firstParty(3)=43 is enforced by scripts/upstream_updates.py validate-policy and by tests/test_upstream_updates.py."
+    }
+  },
+  "layoutDefaults": {
+    "licenseCarryRule": "a fileMapping with kind=license is a license carry: its upstream bytes changing between the pinned and resolved commits is ALWAYS held-license-drift (license re-audit), never an automatic carry; unchanged license bytes keep the local file as-is",
+    "floeOwnedDefaults": [
+      "floe.json",
+      "references/PROVENANCE.md",
+      "references/ADAPTATION-NOTES.md",
+      "references/licenses/**",
+      "references/dependencies.json",
+      "references/requirements.lock.txt",
+      "references/FONTS-LICENSE.md",
+      "references/font-asset-audit.md",
+      "assets/fixtures/**",
+      "references/evidence-samples/**",
+      "references/expected-outputs/**",
+      "scripts/*_verify.py",
+      "scripts/lit_verify.py",
+      "scripts/eda_verify.py",
+      "scripts/stats_verify.py",
+      "scripts/stats_run.py",
+      "scripts/viz_verify.py",
+      "scripts/md_verify.py",
+      "scripts/md_batch.py",
+      "scripts/md_convert.py",
+      "scripts/md_converters.py",
+      "scripts/sympy_verify.py",
+      "scripts/pandas_profile.py",
+      "scripts/_capabilities.py",
+      "scripts/capability_manifest.py"
+    ],
+    "floeOwnedNote": "declared defaults are documentation and a safety net; the operative rule is that any local file without an upstream correspondence (no fileMapping, no relocation, no path identity, no unique content match) is Floe-owned and preserved byte-identical. RISC-V guest integrations (verify scripts, fixtures, dependency locks, engine bindings) live in these paths."
+  },
+  "skills": {
+    "internal-comms": {
+      "relocations": [{"upstreamPrefix": "examples/", "localPrefix": "references/examples/"}],
+      "fileMappings": [{"upstream": "LICENSE.txt", "local": "references/licenses/UPSTREAM-LICENSE.txt", "kind": "license"}],
+      "excludedUpstream": []
+    },
+    "algorithmic-art": {
+      "relocations": [],
+      "fileMappings": [{"upstream": "LICENSE.txt", "local": "references/licenses/UPSTREAM-LICENSE.txt", "kind": "license"}],
+      "excludedUpstream": ["templates/"],
+      "notes": "deep adaptation: local assets (floegart.js, shell-template.html, viewer-ui.js) and scripts are Floe-authored; upstream templates/ intentionally not carried"
+    },
+    "canvas-design": {
+      "relocations": [],
+      "fileMappings": [
+        {"upstream": "LICENSE.txt", "local": "references/licenses/UPSTREAM-LICENSE.txt", "kind": "license"},
+        {"upstream": "canvas-fonts/BigShoulders-Bold.ttf", "local": "assets/fonts/BigShoulders-Bold.ttf", "kind": "asset"},
+        {"upstream": "canvas-fonts/BigShoulders-Regular.ttf", "local": "assets/fonts/BigShoulders-Regular.ttf", "kind": "asset"},
+        {"upstream": "canvas-fonts/BigShoulders-OFL.txt", "local": "assets/fonts/BigShoulders-OFL.txt", "kind": "asset"},
+        {"upstream": "canvas-fonts/Italiana-Regular.ttf", "local": "assets/fonts/Italiana-Regular.ttf", "kind": "asset"},
+        {"upstream": "canvas-fonts/Italiana-OFL.txt", "local": "assets/fonts/Italiana-OFL.txt", "kind": "asset"},
+        {"upstream": "canvas-fonts/Outfit-Bold.ttf", "local": "assets/fonts/Outfit-Bold.ttf", "kind": "asset"},
+        {"upstream": "canvas-fonts/Outfit-Regular.ttf", "local": "assets/fonts/Outfit-Regular.ttf", "kind": "asset"},
+        {"upstream": "canvas-fonts/Outfit-OFL.txt", "local": "assets/fonts/Outfit-OFL.txt", "kind": "asset"},
+        {"upstream": "canvas-fonts/RedHatMono-Bold.ttf", "local": "assets/fonts/RedHatMono-Bold.ttf", "kind": "asset"},
+        {"upstream": "canvas-fonts/RedHatMono-Regular.ttf", "local": "assets/fonts/RedHatMono-Regular.ttf", "kind": "asset"},
+        {"upstream": "canvas-fonts/RedHatMono-OFL.txt", "local": "assets/fonts/RedHatMono-OFL.txt", "kind": "asset"}
+      ],
+      "excludedUpstream": ["canvas-fonts/"],
+      "notes": "deep adaptation: only the four curated font families are carried (explicit fileMappings take precedence over the canvas-fonts/ exclusion); fonts are runtime assets, any byte change is a fingerprint change and holds"
+    },
+    "theme-factory": {
+      "relocations": [{"upstreamPrefix": "themes/", "localPrefix": "references/themes/"}],
+      "fileMappings": [
+        {"upstream": "LICENSE.txt", "local": "references/licenses/UPSTREAM-LICENSE.txt", "kind": "license"},
+        {"upstream": "theme-showcase.pdf", "local": "assets/theme-showcase.pdf", "kind": "asset"}
+      ],
+      "excludedUpstream": []
+    },
+    "webapp-testing": {
+      "relocations": [],
+      "fileMappings": [{"upstream": "LICENSE.txt", "local": "references/licenses/UPSTREAM-LICENSE.txt", "kind": "license"}],
+      "excludedUpstream": ["examples/", "scripts/"],
+      "notes": "deep adaptation: Floe browser-tool scripts and fixtures replace the upstream Playwright examples; upstream scripts/with_server.py intentionally not carried"
+    },
+    "copywriting": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": ["scripts/"]
+    },
+    "copy-editing": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": ["scripts/"]
+    },
+    "content-production": {
+      "relocations": [{"upstreamPrefix": "templates/", "localPrefix": "references/templates/"}],
+      "fileMappings": [],
+      "excludedUpstream": ["scripts/"]
+    },
+    "social-content": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "deep-research": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": ["references/full-catalog.md"]
+    },
+    "deepread": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": [".claude-plugin/"]
+    },
+    "research-summarizer": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": ["scripts/"]
+    },
+    "ui-design-system": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": ["scripts/"]
+    },
+    "ux-researcher-designer": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": ["scripts/"]
+    },
+    "a11y-audit": {
+      "relocations": [{"upstreamPrefix": "expected_outputs/", "localPrefix": "references/expected-outputs/"}],
+      "fileMappings": [],
+      "excludedUpstream": ["scripts/"]
+    },
+    "product-manager-toolkit": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": ["scripts/"]
+    },
+    "product-discovery": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": ["scripts/"]
+    },
+    "code-to-prd": {
+      "relocations": [{"upstreamPrefix": "expected_outputs/", "localPrefix": "references/expected-outputs/"}],
+      "fileMappings": [],
+      "excludedUpstream": ["scripts/"]
+    },
+    "meetings": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": ["scripts/"]
+    },
+    "literature-review": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": ["scripts/generate_pdf.py", "scripts/generate_schematic.py", "scripts/generate_schematic_ai.py"],
+      "notes": "deep adaptation: carried upstream scripts (search_databases.py, verify_citations.py) plus the Floe lit_verify.py and fixtures; the three generate_* scripts were audited out at curation"
+    },
+    "citation-management": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": ["scripts/search_google_scholar.py"]
+    },
+    "scientific-critical-thinking": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "exploratory-data-analysis": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": ["scripts/image_inspector.py", "scripts/sequence_inspector.py"],
+      "notes": "deep adaptation: inspector scripts audited out at curation; carried scripts are locally edited, so upstream script changes normally need a three-way merge or hold"
+    },
+    "statistical-analysis": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "scientific-visualization": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "markitdown": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": ["references/", "scripts/"],
+      "notes": "deep adaptation: NO upstream file bytes are shipped except the adapted SKILL.md lineage (see references/PROVENANCE.md); upstream references and scripts target the Microsoft markitdown package and external services, re-implemented first-party"
+    },
+    "sympy": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "systematic-debugging": {
+      "relocations": [],
+      "fileMappings": [
+        {"upstream": "condition-based-waiting.md", "local": "references/condition-based-waiting.md", "kind": "doc"},
+        {"upstream": "condition-based-waiting-example.ts", "local": "references/condition-based-waiting-example.ts", "kind": "doc"},
+        {"upstream": "defense-in-depth.md", "local": "references/defense-in-depth.md", "kind": "doc"},
+        {"upstream": "root-cause-tracing.md", "local": "references/root-cause-tracing.md", "kind": "doc"}
+      ],
+      "excludedUpstream": ["CREATION-LOG.md", "find-polluter.sh", "test-academic.md", "test-pressure-*.md"],
+      "notes": "upstream root-level technique docs are carried under references/; find-polluter.sh is excluded and its bytes are preserved as a fenced reference inside the Floe-authored references/find-polluter-example.md"
+    },
+    "test-driven-development": {
+      "relocations": [],
+      "fileMappings": [
+        {"upstream": "writing-good-tests.md", "local": "references/writing-good-tests.md", "kind": "doc"}
+      ],
+      "excludedUpstream": []
+    },
+    "requesting-code-review": {
+      "relocations": [],
+      "fileMappings": [
+        {"upstream": "code-reviewer.md", "local": "references/code-reviewer.md", "kind": "doc"}
+      ],
+      "excludedUpstream": []
+    }
+  },
+  "versioning": {
+    "bump": "patch",
+    "rule": "an accepted content change always proposes a NEW version (patch bump of the registry versionTarget, re-bumped while the version exists anywhere in packages/<id>/, the feeds or the publication ledger); identical candidate contentDigest means no-change and never a bump; same (id,version) digest replacement is refused by construction"
+  },
+  "gates": {
+    "packageGates": "hubcore.validate_package_files applies unchanged to every candidate tree (paths, symlinks, native payloads, sizes, counts, NFC/casefold duplicates, notice preservation, runtime/script consistency)",
+    "upstreamEntryGates": "upstream tree entries are refused (held-unsafe) on symlink or submodule modes, unsafe names, size caps above hubcore.MAX_FILE_BYTES, and native payload magics; oversized or binary additions are never carried silently",
+    "driftHolds": "license drift (mapped license carry or repository root license), permission drift (capabilities/tools/scriptRuntime/pythonPackages), dependency drift (references/dependencies.json, requirements locks) and any execution-fingerprint or instruction-code-fingerprint change on a scripted skill hold the candidate with the published version intact",
+    "editorialHolds": "showcase/links.json evidence whose exact cited line block does not survive uniquely in a changed file holds (held-editorial-review); a non-mechanical references/PROVENANCE.md shape holds (held-provenance-format)",
+    "minimumAppVersion": "never raised or lowered by the tracker; a candidate that would need a new minimumAppVersion implies new native behaviour and is held"
+  }
+}

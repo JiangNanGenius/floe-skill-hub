@@ -39,7 +39,9 @@ import unittest
 
 HERE = pathlib.Path(__file__).resolve()
 sys.path.insert(0, str(HERE.parents[2] / "scripts"))
+sys.path.insert(0, str(HERE.parents[1]))
 import hubcore
+import admission_baseline as BASE
 import fixture_status
 import runtime_dependency
 import build_packages
@@ -50,8 +52,15 @@ from test_publication_integrity import (
 REPO = HERE.parents[2]
 REAL_DESCRIPTOR_BYTES = (REPO / "engines" / "impeccable" / "runtime-dependency" /
                          "descriptor.v1.json").read_bytes()
-REAL_ARTIFACT_REL = "engines/impeccable/dist/impeccable-0.1.17+floe.1.0.0/" \
-                    "riscv64gc-unknown-linux-musl/floe-impeccable"
+# The real read-only artifact is bound to the CURRENT frozen descriptor: the
+# tree tests must exercise exactly the bytes the descriptor authenticates
+# (component 0.1.17+floe.1.1.1, 5594368 bytes, sha256 774333d3...). Hardcoding
+# a stale dist version here previously broke the gate order (size mismatch
+# fired before the intended descriptor/hash gate), so the path and bytes are
+# derived from the frozen descriptor itself and cross-checked against the
+# independently reviewed admission baseline literals.
+REAL_DESCRIPTOR = json.loads(REAL_DESCRIPTOR_BYTES)
+REAL_ARTIFACT_REL = REAL_DESCRIPTOR["artifact"]["path"]
 REAL_ARTIFACT_BYTES = (REPO / REAL_ARTIFACT_REL).read_bytes()
 
 # Clearly test-only synthetic component identity; never a real release.
@@ -311,7 +320,17 @@ class TestArtifactBytesGate(unittest.TestCase):
         descriptor = json.loads(REAL_DESCRIPTOR_BYTES)
         runtime_dependency.validate_artifact_bytes(REAL_ARTIFACT_BYTES, descriptor,
                                                    "real-readonly")
-        self.assertEqual(len(REAL_ARTIFACT_BYTES), 5579704)
+        # reviewed 2026-10-28 frozen engine identity: descriptor agrees with
+        # the independent baseline literal, and the on-disk artifact matches
+        # the descriptor byte for byte (never executed).
+        self.assertEqual(descriptor["componentVersion"],
+                         BASE.FROZEN_ENGINE_COMPONENT_VERSION)
+        self.assertEqual(descriptor["minimumAppVersion"],
+                         BASE.FROZEN_ENGINE_MINIMUM_APP_VERSION)
+        self.assertEqual(REAL_ARTIFACT_REL, BASE.FROZEN_ENGINE_ARTIFACT_REL)
+        self.assertEqual(len(REAL_ARTIFACT_BYTES), BASE.FROZEN_ENGINE_ARTIFACT_BYTES)
+        self.assertEqual(hubcore.sha256_hex(REAL_ARTIFACT_BYTES),
+                         BASE.FROZEN_ENGINE_ARTIFACT_SHA256)
 
     def test_synthetic_fixture_binary_validates(self):
         data = synthetic_elf()
@@ -514,7 +533,10 @@ class TestTreeBinding(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root, _ = make_bound_tree(tmp)
             tampered = json.loads(REAL_DESCRIPTOR_BYTES)
-            tampered["minimumAppVersion"] = "1.7.60"
+            # mutate to a value the frozen descriptor does NOT carry (the
+            # frozen baseline requires 1.7.60, so the old "1.7.60" tamper
+            # became a no-op); the intended gate is embedded-vs-frozen.
+            tampered["minimumAppVersion"] = "1.7.99"
             with self.assertRaisesRegex(hubcore.HubError, "differs from the frozen"):
                 runtime_dependency.bind_package_descriptor(
                     hubcore.encoded(tampered), root)
@@ -548,14 +570,21 @@ class TestTreeBinding(unittest.TestCase):
 # source/package production gate (build_packages)
 # --------------------------------------------------------------------------
 
-def stage_impeccable_source(root, descriptor_bytes):
+def stage_impeccable_source(root, descriptor_bytes, version):
+    """Stage the synthetic impeccable source at the registry's target version.
+
+    The version must match the staged registry's versionTarget (currently the
+    reviewed 1.1.1 admission): staging an old-version archive while the live
+    registry targets a newer version fails the earlier version-equality gate,
+    which is NOT the runtime descriptor/hash gate under test.
+    """
     folder = root / "sources" / "impeccable"
     folder.mkdir(parents=True, exist_ok=True)
     files = {
         "SKILL.md": (b"---\nname: impeccable\ndescription: Synthetic H6 gate test "
                      b"package; not real content.\n---\n\nSynthetic body.\n"),
         "floe.json": hubcore.encoded({
-            "schemaVersion": 1, "id": "impeccable", "version": "1.0.0",
+            "schemaVersion": 1, "id": "impeccable", "version": version,
             "capabilities": [], "tools": [], "platforms": ["ios"],
             "scriptRuntime": "none", "pythonPackages": []}),
         "references/NOTICE.md": b"Synthetic test notice.\n",
@@ -581,7 +610,9 @@ class TestSourcePackageGate(unittest.TestCase):
         registry = json.loads((REPO / "catalog" / "skills.json").read_bytes())
         (root / "catalog").mkdir(exist_ok=True)
         (root / "catalog" / "skills.json").write_bytes(hubcore.encoded(registry))
-        stage_impeccable_source(root, embedded_descriptor or REAL_DESCRIPTOR_BYTES)
+        entry = next(e for e in registry["skills"] if e["id"] == "impeccable")
+        stage_impeccable_source(root, embedded_descriptor or REAL_DESCRIPTOR_BYTES,
+                                entry["versionTarget"])
         return root
 
     def test_staged_source_with_real_descriptor_and_artifact_passes(self):
@@ -594,7 +625,10 @@ class TestSourcePackageGate(unittest.TestCase):
     def test_staged_source_descriptor_drift_fails_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
             tampered = json.loads(REAL_DESCRIPTOR_BYTES)
-            tampered["minimumAppVersion"] = "1.7.60"
+            # a value the frozen tree descriptor does NOT carry: the original
+            # "1.7.60" tamper is the frozen descriptor's real value today and
+            # would be a no-op, so drift must stay a genuine mutation.
+            tampered["minimumAppVersion"] = "1.7.99"
             root = self._staged_tree(tmp, embedded_descriptor=hubcore.encoded(tampered))
             entry = impeccable_registry_entry(root)
             with self.assertRaisesRegex(hubcore.HubError, "differs from the frozen"):
@@ -624,7 +658,15 @@ class TestSourcePackageGate(unittest.TestCase):
 # --------------------------------------------------------------------------
 
 def synthetic_registry():
-    """Registry copy with ONLY impeccable flipped qualified (isolated test)."""
+    """Registry copy with ONLY impeccable flipped qualified (isolated test).
+
+    The CLI runtime-binding regressions below need BOTH channel feeds to
+    carry the qualified impeccable row (the builder correctly refuses an
+    empty release feed), so the fixture explicitly re-plans its single
+    synthetic qualified row for ios+android — a staged-tree property of the
+    isolated copy, never a claim about the live registry, whose impeccable
+    plan is iOS-only in the reviewed 2026-10-28 baseline.
+    """
     reg = fixture_status.stage_unadmitted_fixture(
         json.loads((REPO / "catalog" / "skills.json").read_bytes()))
     for entry in reg["skills"]:
@@ -632,6 +674,8 @@ def synthetic_registry():
             entry["status"] = dict(entry["status"], licenseChecked=True,
                                    adaptation="frozen", packaged=True,
                                    reviewed=True, qualified=True)
+            entry["plannedRuntime"] = dict(entry["plannedRuntime"],
+                                           installPlatforms=["ios", "android"])
     return reg
 
 
@@ -661,12 +705,19 @@ def stage_impeccable_tree(tmp, pub_b64, descriptor_bytes, artifact_bytes,
 
 
 def stage_impeccable_package(root, descriptor_bytes):
-    """Deterministic synthetic impeccable archive at both channel paths."""
+    """Deterministic synthetic impeccable archive at both channel paths.
+
+    The archive version follows the STAGED fixture registry's versionTarget so
+    the isolated tree is internally coherent (the release builder binds the
+    registry's target version; an old-version archive would fail the wrong,
+    earlier gate and never reach the runtime binding under test).
+    """
+    version = impeccable_registry_entry(root)["versionTarget"]
     files = {
         "SKILL.md": (b"---\nname: impeccable\ndescription: Synthetic H6 publication "
                      b"test package; not real content.\n---\n\nSynthetic body.\n"),
         "floe.json": hubcore.encoded({
-            "schemaVersion": 1, "id": "impeccable", "version": "1.0.0",
+            "schemaVersion": 1, "id": "impeccable", "version": version,
             "capabilities": [], "tools": [], "platforms": ["ios"],
             "scriptRuntime": "none", "pythonPackages": []}),
         "references/NOTICE.md": b"Synthetic test notice.\n",
@@ -675,7 +726,7 @@ def stage_impeccable_package(root, descriptor_bytes):
     hubcore.validate_package_files(files)
     data = hubcore.make_zip(files)
     for channel in ("ios", "android"):
-        rel = hubcore.package_path_for("impeccable", "1.0.0", channel)
+        rel = hubcore.package_path_for("impeccable", version, channel)
         target = root / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
@@ -683,9 +734,10 @@ def stage_impeccable_package(root, descriptor_bytes):
 
 
 def stage_impeccable_review(root, key, files, data):
+    version = impeccable_registry_entry(root)["versionTarget"]
     manifest, _ = hubcore.validate_package_files(files)
     record = {
-        "schemaVersion": 1, "id": "impeccable", "version": "1.0.0",
+        "schemaVersion": 1, "id": "impeccable", "version": version,
         "contentDigest": hubcore.content_digest(files),
         "packageSha256": hubcore.sha256_hex(data),
         "reviewedCapabilities": list(manifest["capabilities"]),
@@ -700,7 +752,7 @@ def stage_impeccable_review(root, key, files, data):
                   "zh-Hans": "仅供隔离 H6 运行时绑定 CLI 回归使用的合成审核记录。"},
     }
     record_bytes = hubcore.encoded(record)
-    path = root / "reviews" / "impeccable" / "1.0.0.review.json"
+    path = root / "reviews" / "impeccable" / (version + ".review.json")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(record_bytes)
     path.with_suffix(path.suffix + ".sig").write_bytes(
@@ -921,6 +973,7 @@ class TestPublicationRuntimeGate(unittest.TestCase):
         # reject it before the runtime gate is even reached.
         with tempfile.TemporaryDirectory() as tmp:
             root, _k, descriptor_bytes, _a, _r = published_impeccable_repo(tmp)
+            version = impeccable_registry_entry(root)["versionTarget"]
             tampered = json.loads(descriptor_bytes)
             tampered["minimumAppVersion"] = "1.7.60"
             files = {
@@ -928,7 +981,7 @@ class TestPublicationRuntimeGate(unittest.TestCase):
                              b"publication test package; not real content.\n---\n\n"
                              b"Synthetic body.\n"),
                 "floe.json": hubcore.encoded({
-                    "schemaVersion": 1, "id": "impeccable", "version": "1.0.0",
+                    "schemaVersion": 1, "id": "impeccable", "version": version,
                     "capabilities": [], "tools": [], "platforms": ["ios"],
                     "scriptRuntime": "none", "pythonPackages": []}),
                 "references/NOTICE.md": b"Synthetic test notice.\n",
@@ -936,7 +989,7 @@ class TestPublicationRuntimeGate(unittest.TestCase):
             }
             data = hubcore.make_zip(files)
             for channel in ("ios", "android"):
-                rel = hubcore.package_path_for("impeccable", "1.0.0", channel)
+                rel = hubcore.package_path_for("impeccable", version, channel)
                 (root / rel).write_bytes(data)
             code, out = run_script(root, "check_catalog.py", [])
             self.assertNotEqual(code, 0)

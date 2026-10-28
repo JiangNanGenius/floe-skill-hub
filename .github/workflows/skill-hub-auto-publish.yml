@@ -1,0 +1,1370 @@
+name: skill-hub-auto-publish
+# Stage2 of the cloud-only automatic publication pipeline
+# (docs/AUTOMATIC-PUBLICATION.md). Cheap poll of the public control request and
+# the App metadata relay every 30 minutes, offset from the hourly peak, plus
+# manual dispatch. A no-op run exits after bounded tokenless reads (no rebuild,
+# no model, no state churn).
+#
+# Every job is self-contained: a candidate is RE-DERIVED deterministically from
+# the IMMUTABLE upstream commits the candidate itself selected — each selected
+# NEW pin is independently proven reachable on the fixed official upstream and
+# a descendant of the OLD pin, and the trusted tracker core is re-run only over
+# the ids the actual candidate diff touches, at the candidate staging date,
+# against the live base. Re-derivation never demands that an unrelated upstream
+# simply still be HEAD: reachability plus a byte-exact local recompute is the
+# authority, so an upstream advance cannot invalidate a legitimate candidate
+# forever. Caller manifests, gateResults and candidateFacts are cross-checked
+# for agreement and are never authority. request.basePublication must equal
+# the CURRENT live main freshly resolved from the fixed official origin (never
+# the event-captured checkout SHA, which can be stale after waiting on the
+# shared concurrency group, and never a historical ledger pin). Official
+# signatures, receipt digests, engine/package/review history freezes and the
+# append-only ledger are all re-verified from public objects. Only the two
+# scoped refs (the auto/candidate-* chain and auto-state) ever receive pushes;
+# main advances exactly once through the GitHub GraphQL updateRefs exact CAS
+# (beforeOid = the freshly live-resolved B, afterOid = H, force = false;
+# GraphQL errors are checked even at HTTP 200, and a stale beforeOid is
+# refused with the refs unchanged), and the actual public bytes/history are
+# verified directly afterward.
+#
+# Crash-point recovery is part of the route, not an afterthought: if the
+# candidate ref tip has already advanced past the open request's sourceCommit
+# (a lost run pushed X or H before finishing its control write or CAS), the
+# job re-validates its branch classification from freshly resolved public
+# refs and then runs the ACTUAL core recover CLI over the freshly re-derived
+# stage. For a reviews tip, recover re-verifies the tip as an exact S->X
+# restore of the ORIGINAL base B from the verified relay over S (action
+# reuse-x). For a catalog tip, recover resolves the ORIGINAL Y as the tip's
+# single parent and X as Y's parent (which must equal the request
+# sourceCommit) and runs the ONE centralized published-chain proof over the
+# ORIGINAL commits — structural chain diffs plus allow/deny and engine/
+# history freezes, explicit append-only ledger prefix retention with the
+# exact expected ledger bytes over the ORIGINAL Y, the catalog relay receipt
+# over locally rebuilt feed bytes byte-equal to the committed Y feeds on
+# both channels, and the FULL candidate verification over the committed X —
+# returning action cas-existing-h (live main still equals the request base)
+# or close-published (live main already equals the tip). Freshly rebuilt
+# timestamped commits are never compared: rebuilding would change timestamps
+# and the ledger row bound to publicationY, so an exact rebuilt-H equality
+# can never legitimately hold. Recovery then continues idempotently: emit
+# the catalog request over the SAME original X; retry the exact CAS on the
+# SAME original H with no re-signing; or run the direct public byte/history
+# check (with the append-only ledger prefix over the committed base) before
+# closing the request processed. A forged, tampered or unrelated tip, a
+# broken chain, a missing proof input or a stale live main fails closed with
+# nothing written; an unrelated live-base move hands the request to the
+# scan's bounded stale-close instead of stalling forever.
+#
+# No secret exists or is read here; the signing key never enters this
+# repository. The primary checkout is never branch-swiped: every data branch
+# is touched only through a detached worktree under the runner temp directory.
+# Push authentication uses the job-scoped runtime token strictly through the
+# environment into a Git credential helper (persist-credentials is false on
+# every checkout; the token is never a literal in argv, logs or Git config).
+# Activation is gated on the repository variable
+# FLOE_SKILL_HUB_AUTO_UPDATES == "enabled".
+on:
+  schedule:
+    - cron: "21,51 * * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Fetch/verify/recompute and record state, change nothing
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: floe-skill-hub-auto-publication
+  cancel-in-progress: false
+
+env:
+  PYTHON_VERSION: "3.11"
+  CRYPTOGRAPHY_PIN: "cryptography==46.0.6"
+  HUB_ORIGIN: https://github.com/JiangNanGenius/floe-skill-hub.git
+  APP_ORIGIN: https://github.com/JiangNanGenius/floe-agent.git
+  PYTHONDONTWRITEBYTECODE: "1"
+
+jobs:
+  verify:
+    if: vars.FLOE_SKILL_HUB_AUTO_UPDATES == 'enabled'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    outputs:
+      action: ${{ steps.route.outputs.action }}
+      mode: ${{ steps.route.outputs.mode }}
+      requestId: ${{ steps.route.outputs.requestId }}
+      stagingRef: ${{ steps.route.outputs.stagingRef }}
+      sourceCommit: ${{ steps.route.outputs.sourceCommit }}
+      base: ${{ steps.route.outputs.liveMain }}
+    steps:
+      # Pinned immutable action commits (identical SHAs to the catalog workflow;
+      # no download-artifact: every downstream job re-derives from public refs):
+      #   actions/checkout        v4.4.0 -> 11d5960a326750d5838078e36cf38b85af677262
+      #   actions/setup-python    v5.6.0 -> a26af69be951a213d495a4c3e4e4022e16d87065
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install the pinned verification library
+        run: python3 -m pip install --disable-pip-version-check "$CRYPTOGRAPHY_PIN"
+
+      - name: Route the open request (idle / advance / recover / await-signer / hold)
+        id: route
+        run: |
+          set -euo pipefail
+          floe_fetch_optional() {
+            local log rc
+            log=$(mktemp)
+            if git -c gc.auto=0 fetch --no-tags "$1" "$2" 2>"$log"; then
+              rm -f "$log"; return 0
+            else
+              # capture the REAL git status here: `$?` after an if-compound
+              # with a false condition and no else is 0, which would turn a
+              # genuine fetch failure into a silent missing-ref no-op
+              rc=$?
+            fi
+            if grep -q "couldn't find remote ref" "$log"; then
+              echo "optional ref absent: $2"
+              rm -f "$log"; return 0
+            fi
+            cat "$log" >&2; rm -f "$log"; return "$rc"
+          }
+          resolve_live_main() {
+            local line live
+            line=$(git ls-remote "$1" "refs/heads/main")
+            if [ "$(printf '%s\n' "$line" | grep -c '')" != "1" ]; then
+              echo "official main resolution is not exactly one line" >&2
+              return 2
+            fi
+            live=$(printf '%s' "$line" | cut -f1)
+            if ! printf '%s' "$live" | grep -Eq '^[0-9a-f]{40}$'; then
+              echo "official main resolution is not a 40-hex commit" >&2
+              return 2
+            fi
+            printf '%s' "$live"
+          }
+          echo '{"status":"idle"}' > "$RUNNER_TEMP/poll.json"
+          floe_fetch_optional "$HUB_ORIGIN" "+refs/heads/auto-state:refs/floe/auto-state"
+          if git rev-parse --verify --quiet refs/floe/auto-state >/dev/null; then
+            python3 scripts/automatic_publication.py poll-request \
+              --repo-root . --control-commit "$(git rev-parse refs/floe/auto-state)" \
+              > "$RUNNER_TEMP/poll.json"
+          fi
+          STATUS=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["status"])' "$RUNNER_TEMP/poll.json")
+          if [ "$STATUS" != "open" ]; then
+            echo "action=none" >> "$GITHUB_OUTPUT"; echo "mode=none" >> "$GITHUB_OUTPUT"
+            echo "requestId=" >> "$GITHUB_OUTPUT"; echo "stagingRef=" >> "$GITHUB_OUTPUT"
+            echo "sourceCommit=" >> "$GITHUB_OUTPUT"; echo "liveMain=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python3 - "$RUNNER_TEMP" <<'PY'
+          import json, pathlib, re, sys
+          tmp = pathlib.Path(sys.argv[1])
+          poll = json.loads((tmp / "poll.json").read_bytes())
+          request, manifest, state = poll["openRequest"], poll["manifest"], poll.get("state") or {}
+          ref = manifest["stagingRef"]
+          assert re.fullmatch(r"auto/candidate-[0-9A-Za-z._-]{1,120}", ref), ref
+          assert request["requestId"] == manifest["requestId"], "manifest is not bound to the request"
+          assert request["sourceCommit"] == manifest["sourceCommit"], "manifest source disagrees with the request"
+          assert request["basePublication"] == manifest["basePublication"], "manifest base disagrees with the request"
+          processed = "1" if request["requestId"] in (state.get("processedRequestIds") or []) else "0"
+          lines = ["REQ_ID=" + request["requestId"], "MODE=" + request["mode"],
+                   "REF=" + ref, "SRC_SHA=" + request["sourceCommit"],
+                   "REQ_BASE=" + request["basePublication"], "PROCESSED=" + processed]
+          (tmp / "route.env").write_text("\n".join(lines) + "\n")
+          PY
+          . "$RUNNER_TEMP/route.env"
+          if [ "$PROCESSED" = "1" ]; then
+            echo "already-processed request ${REQ_ID}: idempotent no-op"
+            echo "action=none" >> "$GITHUB_OUTPUT"; echo "mode=none" >> "$GITHUB_OUTPUT"
+            echo "requestId=" >> "$GITHUB_OUTPUT"; echo "stagingRef=" >> "$GITHUB_OUTPUT"
+            echo "sourceCommit=" >> "$GITHUB_OUTPUT"; echo "liveMain=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # live base for every classification decision is freshly resolved from
+          # the FIXED official origin here — never the event-captured SHA, which
+          # can be stale after the shared concurrency group serializes runs
+          LIVE=$(resolve_live_main "$HUB_ORIGIN")
+          floe_fetch_optional "$HUB_ORIGIN" "+refs/heads/${REF}:refs/floe/candidate-tip"
+          TIP=$(git rev-parse --verify --quiet refs/floe/candidate-tip || true)
+          if [ -z "$TIP" ]; then
+            echo "open request ${REQ_ID} carries no candidate ref tip; refusing to advance" >&2
+            exit 2
+          fi
+          ACTION=$(python3 - "$LIVE" "$TIP" "$SRC_SHA" "$REQ_BASE" "$MODE" <<'PY'
+          import sys
+          live, tip, src, base, mode = sys.argv[1:6]
+          if tip == src:
+              print("relay")
+          elif mode == "reviews" and live == base:
+              print("recover-catalog")
+          elif mode == "catalog" and live == base:
+              print("recover-cas")
+          elif mode == "catalog" and live == tip:
+              print("recover-close")
+          else:
+              print("hold")
+          PY
+          )
+          case "$ACTION" in
+            relay)
+              # the tip still equals the request source: the ordinary two-phase flow
+              if ! python3 scripts/automatic_publication.py relay-peek --request-id "$REQ_ID"; then
+                echo "action=await-signer" >> "$GITHUB_OUTPUT"
+              else
+                echo "action=advance" >> "$GITHUB_OUTPUT"
+              fi ;;
+            hold)
+              echo "action=hold" >> "$GITHUB_OUTPUT"
+              echo "live main moved away from this pipeline's base and the tip is not its next committed state; the scan's stale-close owns this request now (bounded hold, never forced)" ;;
+            *)
+              echo "action=$ACTION" >> "$GITHUB_OUTPUT" ;;
+          esac
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "requestId=$REQ_ID" >> "$GITHUB_OUTPUT"
+          echo "stagingRef=$REF" >> "$GITHUB_OUTPUT"
+          echo "sourceCommit=$SRC_SHA" >> "$GITHUB_OUTPUT"
+          echo "liveMain=$LIVE" >> "$GITHUB_OUTPUT"
+
+  advance-x:
+    needs: verify
+    if: >-
+      vars.FLOE_SKILL_HUB_AUTO_UPDATES == 'enabled' &&
+      needs.verify.outputs.action == 'advance' &&
+      needs.verify.outputs.mode == 'reviews'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write   # only refs/heads/<stagingRef> and refs/heads/auto-state
+    env:
+      STAGING_REF: ${{ needs.verify.outputs.stagingRef }}
+      REQ_ID: ${{ needs.verify.outputs.requestId }}
+      BASE_SHA: ${{ needs.verify.outputs.base }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install the pinned verification library
+        run: python3 -m pip install --disable-pip-version-check "$CRYPTOGRAPHY_PIN"
+
+      - name: Fetch refs and re-validate the advance against a freshly resolved live base
+        id: precheck
+        run: |
+          set -euo pipefail
+          resolve_live_main() {
+            local line live
+            line=$(git ls-remote "$1" "refs/heads/main")
+            if [ "$(printf '%s\n' "$line" | grep -c '')" != "1" ]; then
+              echo "official main resolution is not exactly one line" >&2
+              return 2
+            fi
+            live=$(printf '%s' "$line" | cut -f1)
+            if ! printf '%s' "$live" | grep -Eq '^[0-9a-f]{40}$'; then
+              echo "official main resolution is not a 40-hex commit" >&2
+              return 2
+            fi
+            printf '%s' "$live"
+          }
+          git -c gc.auto=0 fetch --no-tags "$HUB_ORIGIN" \
+            +refs/heads/auto-state:refs/floe/auto-state
+          git -c gc.auto=0 fetch --no-tags "$HUB_ORIGIN" \
+            "+refs/heads/${STAGING_REF}:refs/floe/candidate-tip"
+          git -c gc.auto=0 fetch --no-tags "$APP_ORIGIN" \
+            +refs/heads/skill-hub-signing-relay:refs/floe/app-relay
+          git worktree add --detach -q "$RUNNER_TEMP/relay" refs/floe/app-relay
+          git show refs/floe/auto-state:request.json > "$RUNNER_TEMP/request.json"
+          git show refs/floe/auto-state:candidate-manifest.json > "$RUNNER_TEMP/candidate-manifest.json"
+          git show refs/floe/auto-state:state.json > "$RUNNER_TEMP/state.json" 2>/dev/null \
+            || echo '{}' > "$RUNNER_TEMP/state.json"
+          OPEN=$(python3 -c 'import json,sys,pathlib; print(json.loads(pathlib.Path(sys.argv[1]).read_bytes())["requestId"])' "$RUNNER_TEMP/request.json")
+          S=$(python3 -c 'import json,sys,pathlib; print(json.loads(pathlib.Path(sys.argv[1]).read_bytes())["sourceCommit"])' "$RUNNER_TEMP/request.json")
+          echo "S_SHA=$S" >> "$GITHUB_ENV"
+          LIVE=$(resolve_live_main "$HUB_ORIGIN")
+          set +e
+          python3 - "$RUNNER_TEMP/request.json" "$REQ_ID" "$OPEN" "$S" \
+            "$(git rev-parse refs/floe/candidate-tip)" "$LIVE" <<'PY'
+          import json, pathlib, sys
+          request = json.loads(pathlib.Path(sys.argv[1]).read_bytes())
+          rid, open_id, source, tip, live = sys.argv[2:7]
+          reasons = []
+          if request["requestId"] != rid or open_id != rid:
+              reasons.append("open request changed since routing")
+          if request["mode"] != "reviews":
+              reasons.append("request is not reviews-mode")
+          if tip != source:
+              reasons.append("the tip already moved past the source; recovery owns this")
+          if request["basePublication"] != live:
+              reasons.append("live main moved away from the request base")
+          if reasons:
+              print("; ".join(reasons))
+              sys.exit(140)
+          PY
+          RC=$?
+          set -e
+          if [ "$RC" = "140" ]; then
+            echo "the advance classification no longer applies; bounded no-write exit, the next poll re-evaluates"
+            echo "proceed=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          [ "$RC" = "0" ] || { echo "revalidation failed rc=$RC" >&2; exit "$RC"; }
+          echo "proceed=1" >> "$GITHUB_OUTPUT"
+          echo "LIVE_BASE=$LIVE" >> "$GITHUB_ENV"
+
+      - name: Re-derive the candidate deterministically from its immutable selected commits
+        id: recompute
+        if: steps.precheck.outputs.proceed == '1'
+        run: |
+          set -euo pipefail
+          TODAY=$(python3 -c 'import json,sys,pathlib; print(json.loads(pathlib.Path(sys.argv[1]).read_bytes())["stageToday"])' "$RUNNER_TEMP/candidate-manifest.json")
+          echo "today=$TODAY" >> "$GITHUB_OUTPUT"
+          git worktree add --detach -q "$RUNNER_TEMP/base-wt" "$LIVE_BASE"
+          # REQUIRED authority: pinned per-repository NEW commits (proven
+          # reachable descendants of the OLD pins on the fixed official
+          # upstreams), re-running the trusted tracker gates over exactly the
+          # candidate-derived changed/pin-advanced ids. No latest-HEAD race.
+          python3 "$RUNNER_TEMP/base-wt/scripts/automatic_publication.py" rederive-candidate \
+            --repo-root "$RUNNER_TEMP/base-wt" --base-commit "$LIVE_BASE" \
+            --candidate-commit "$S_SHA" --today "$TODAY" \
+            --stage-root "$RUNNER_TEMP/fresh-stage"
+
+      - name: Verify committed S against the re-derivation, relay and freezes
+        if: steps.precheck.outputs.proceed == '1'
+        run: |
+          set -euo pipefail
+          python3 scripts/automatic_publication.py verify-candidate \
+            --repo-root . --request-file "$RUNNER_TEMP/request.json" \
+            --manifest-file "$RUNNER_TEMP/candidate-manifest.json" \
+            --stage-root "$RUNNER_TEMP/fresh-stage" --expected-base "$LIVE_BASE"
+          python3 scripts/automatic_publication.py relay-verify \
+            --repo-root . --request-file "$RUNNER_TEMP/request.json" \
+            --relay-dir "$RUNNER_TEMP/relay" --candidate-commit "$S_SHA"
+          python3 scripts/automatic_publication.py build-x \
+            --repo-root . --base-commit "$LIVE_BASE" --s-commit "$S_SHA" \
+            --request-file "$RUNNER_TEMP/request.json" \
+            --relay-dir "$RUNNER_TEMP/relay" --out "$RUNNER_TEMP/x-payload"
+
+      - name: Commit X (all historical review pairs restored from the original B)
+        id: x
+        if: steps.precheck.outputs.proceed == '1'
+        run: |
+          set -euo pipefail
+          git config user.name "floe-skill-hub-automation"
+          git config user.email "automation@users.noreply.github.com"
+          git worktree add --detach -q "$RUNNER_TEMP/x-wt" "$S_SHA"
+          python3 scripts/automatic_publication.py apply-payload \
+            --payload-dir "$RUNNER_TEMP/x-payload" --repo-root "$RUNNER_TEMP/x-wt"
+          git -C "$RUNNER_TEMP/x-wt" add -A
+          git -C "$RUNNER_TEMP/x-wt" commit -q -m "auto-catalog: X for request ${REQ_ID}"
+          X=$(git -C "$RUNNER_TEMP/x-wt" rev-parse HEAD)
+          python3 - . "$S_SHA" "$X" <<'PY'
+          import subprocess, sys
+          root, s, x = sys.argv[1:4]
+          sys.path.insert(0, "scripts")
+          import automatic_publication as ap
+          raw = subprocess.run(["git", "-C", root, "diff", "--name-status", "-z", s, x],
+                               capture_output=True, check=True).stdout
+          fields = [f for f in raw.split(b"\0") if f]
+          index = 0
+          while index < len(fields):
+              status = fields[index].decode()
+              rel = fields[index + 1].decode()
+              index += 2
+              if status[0] in ("R", "C"):
+                  raise SystemExit(f"X carries an unexpected rename/copy: {rel}")
+              if status[0] == "D":
+                  raise SystemExit(f"X may not delete: {rel}")
+              ok = (rel in ap.PUBLISH_ALLOW_EXACT
+                    or any(rel.startswith(p) for p in ap.PUBLISH_ALLOW_DIRS))
+              if not ok:
+                  raise SystemExit(f"X changes a path outside the publication allowlist: {rel}")
+          PY
+          echo "x=$X" >> "$GITHUB_OUTPUT"
+          echo "X_SHA=$X" >> "$GITHUB_ENV"
+
+      - name: Emit the catalog control payload bound to the exact X
+        id: catalog
+        if: steps.precheck.outputs.proceed == '1'
+        env:
+          STAGING_DATE: ${{ steps.recompute.outputs.today }}
+        run: |
+          set -euo pipefail
+          python3 scripts/automatic_publication.py emit-catalog-request \
+            --repo-root . --x-commit "$X_SHA" \
+            --stage-root "$RUNNER_TEMP/fresh-stage" \
+            --expected-base "$LIVE_BASE" \
+            --manifest-file "$RUNNER_TEMP/candidate-manifest.json" \
+            --candidate-ref "$STAGING_REF" \
+            --control-state-file "$RUNNER_TEMP/state.json" \
+            --out "$RUNNER_TEMP/control-catalog" \
+            --today "$STAGING_DATE"
+
+      - name: Push X on the candidate ref (crash here is recovered by the next poll)
+        if: steps.precheck.outputs.proceed == '1' && github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git -c credential.helper='!f() { echo "username=x-access-token"; echo "password=${GH_TOKEN}"; }; f' \
+            -c gc.auto=0 push "$HUB_ORIGIN" "${X_SHA}:refs/heads/${STAGING_REF}"
+
+      - name: Write the catalog continuation on auto-state (merged state, same X)
+        if: steps.precheck.outputs.proceed == '1' && github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STAGING_DATE: ${{ steps.recompute.outputs.today }}
+        run: |
+          set -euo pipefail
+          floe_fetch_optional() {
+            local log rc
+            log=$(mktemp)
+            if git -c gc.auto=0 fetch --no-tags "$1" "$2" 2>"$log"; then
+              rm -f "$log"; return 0
+            else
+              # capture the REAL git status here: `$?` after an if-compound
+              # with a false condition and no else is 0, which would turn a
+              # genuine fetch failure into a silent missing-ref no-op
+              rc=$?
+            fi
+            if grep -q "couldn't find remote ref" "$log"; then
+              echo "optional ref absent: $2"
+              rm -f "$log"; return 0
+            fi
+            cat "$log" >&2; rm -f "$log"; return "$rc"
+          }
+          # continuation guard: the catalog payload is for the SAME pipeline —
+          # the open reviews request is this job's own REQ_ID, X is a descendant
+          # of its S, and the reviews request is recorded processed first, so
+          # the scan busy rule has nothing in flight to protect when the plan
+          # applies the continuation payload
+          git merge-base --is-ancestor "$S_SHA" "$X_SHA"
+          printf '{"pipelineStage":"catalog-continuation","note":"reviews request consumed; X committed and pushed"}' \
+            > "$RUNNER_TEMP/continuation-extra.json"
+          python3 scripts/automatic_publication.py mark-processed \
+            --state-file "$RUNNER_TEMP/state.json" \
+            --request-file "$RUNNER_TEMP/request.json" \
+            --extra-file "$RUNNER_TEMP/continuation-extra.json" \
+            --out "$RUNNER_TEMP/processed-state.json"
+          set +e
+          python3 scripts/automatic_publication.py processed-check \
+            --state-file "$RUNNER_TEMP/processed-state.json" \
+            --request-file "$RUNNER_TEMP/request.json" >/dev/null; RC=$?
+          set -e
+          [ "$RC" = "3" ] || { echo "continuation guard: reviews request was not recorded processed (rc=$RC)" >&2; exit 2; }
+          CTRL="$RUNNER_TEMP/ctrl-wt"
+          rm -rf "$CTRL"
+          git worktree add --detach -q "$CTRL" refs/floe/auto-state
+          OPEN=$(python3 -c 'import json,sys,pathlib; p=pathlib.Path(sys.argv[1]); print(json.loads(p.read_bytes())["requestId"] if p.is_file() else "")' "$CTRL/request.json")
+          if [ -n "$OPEN" ] && [ "$OPEN" != "$REQ_ID" ]; then
+            echo "open request changed mid-flight; refusing to write over another pipeline" >&2
+            exit 2
+          fi
+          if [ -f "$CTRL/request.json" ]; then
+            cp "$CTRL/request.json" "$RUNNER_TEMP/open-request.json"
+          fi
+          # no --request-file: the processed guard above proves nothing is in
+          # flight, so the module planner takes its honest idle-apply path with
+          # the MERGED processed state; a fabricated plan manifest is never used
+          python3 scripts/automatic_publication.py plan-control-update \
+            --payload-dir "$RUNNER_TEMP/control-catalog" \
+            --state-file "$RUNNER_TEMP/processed-state.json" \
+            --live-main "$LIVE_BASE" --today "$STAGING_DATE" \
+            --out "$RUNNER_TEMP/planned"
+          ACTION=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["action"])' "$RUNNER_TEMP/planned/control-plan.json")
+          [ "$ACTION" = "apply" ] || { echo "expected the continuation apply path, got $ACTION" >&2; exit 2; }
+          python3 - "$RUNNER_TEMP/planned" "$CTRL" "$LIVE_BASE" "$RUNNER_TEMP" <<'PY'
+          import json, pathlib, shutil, sys
+          planned, ctrl, live = (pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2]),
+                                 sys.argv[3])
+          tmp = pathlib.Path(sys.argv[4])
+          manifest = json.loads((planned / "control-plan.json").read_bytes())
+          def checked(rel):
+              parts = str(rel).split("/")
+              if (not isinstance(rel, str) or rel.startswith("/")
+                      or any(part in ("", ".", "..") for part in parts)):
+                  raise SystemExit(f"control plan carries an unsafe relative path: {rel!r}")
+              return pathlib.Path(rel)
+          for group in ("mirror", "removeRoot"):
+              for rel in manifest[group]:
+                  checked(rel)
+          open_rid = None
+          root_request = ctrl / "request.json"
+          if root_request.is_file():
+              open_request = json.loads(root_request.read_bytes())
+              open_rid = open_request["requestId"]
+              archived = [pathlib.Path(str(a)).parts[1] if str(a).startswith("requests/") else None
+                          for a in manifest["appendArchive"]]
+              if open_rid not in archived and manifest["action"] != "busy-checkpoint":
+                  archive = ctrl / "requests" / open_rid
+                  archive.mkdir(parents=True, exist_ok=True)
+                  for name in ("request.json", "candidate-manifest.json"):
+                      source = ctrl / name
+                      if source.is_file():
+                          shutil.copyfile(source, archive / name)
+          for rel in manifest["mirror"]:
+              source = planned / checked(rel)
+              if not source.is_file():
+                  continue
+              target = ctrl / checked(rel)
+              target.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(source, target)
+          for rel in manifest["removeRoot"]:
+              path = ctrl / checked(rel)
+              if path.exists():
+                  path.unlink()
+          for archive in manifest["appendArchive"]:
+              rel = checked(str(archive).rstrip("/"))
+              source = planned / rel
+              if source.is_dir():
+                  target = ctrl / rel
+                  target.mkdir(parents=True, exist_ok=True)
+                  for path in sorted(source.rglob("*")):
+                      if path.is_file():
+                          dest = target / path.relative_to(source)
+                          dest.parent.mkdir(parents=True, exist_ok=True)
+                          shutil.copyfile(path, dest)
+          PY
+          if [ -d "$CTRL/requests" ]; then
+            python3 scripts/automatic_publication.py prune-requests \
+              --requests-dir "$CTRL/requests" --state-file "$CTRL/state.json"
+          fi
+          git -C "$CTRL" add -A
+          python3 - "$CTRL" <<'PY'
+          import subprocess, sys
+          ctrl = sys.argv[1]
+          allowed = ("state.json", "request.json", "candidate-manifest.json")
+          listed = subprocess.run(["git", "-C", ctrl, "ls-files", "-s", "-z"],
+                                  capture_output=True, check=True).stdout
+          for entry in [e for e in listed.split(b"\0") if e]:
+              meta, name = entry.split(b"\t", 1)
+              mode, rel = meta.split()[0].decode(), name.decode()
+              parts = rel.split("/")
+              if rel in allowed:
+                  pass
+              elif (len(parts) == 3 and parts[0] == "requests"
+                    and len(parts[1]) == 64
+                    and all(c in "0123456789abcdef" for c in parts[1])
+                    and parts[2] in ("request.json", "candidate-manifest.json")):
+                  pass
+              else:
+                  raise SystemExit(f"control branch path is outside the allowlist: {rel}")
+              if mode != "100644":
+                  raise SystemExit(f"control branch carries a non-blob mode: {mode} {rel}")
+          PY
+          if git -C "$CTRL" diff --cached --quiet; then
+            echo "control unchanged; skipping push"
+            exit 0
+          fi
+          git -C "$CTRL" -c user.name="floe-skill-hub-automation" \
+            -c user.email="automation@users.noreply.github.com" \
+            commit -q -m "auto-control: catalog continuation for request ${REQ_ID}"
+          CTRL_SHA=$(git -C "$CTRL" rev-parse HEAD)
+          git -c credential.helper='!f() { echo "username=x-access-token"; echo "password=${GH_TOKEN}"; }; f' \
+            -c gc.auto=0 push "$HUB_ORIGIN" "$CTRL_SHA:refs/heads/auto-state"
+
+  recover-catalog:
+    needs: verify
+    if: >-
+      vars.FLOE_SKILL_HUB_AUTO_UPDATES == 'enabled' &&
+      needs.verify.outputs.action == 'recover-catalog'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write   # only refs/heads/auto-state (the tip is already pushed)
+    env:
+      STAGING_REF: ${{ needs.verify.outputs.stagingRef }}
+      REQ_ID: ${{ needs.verify.outputs.requestId }}
+      SOURCE_SHA: ${{ needs.verify.outputs.sourceCommit }}
+      BASE_SHA: ${{ needs.verify.outputs.base }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install the pinned verification library
+        run: python3 -m pip install --disable-pip-version-check "$CRYPTOGRAPHY_PIN"
+
+      - name: Re-validate the recovery classification from freshly resolved public refs
+        id: precheck
+        run: |
+          set -euo pipefail
+          resolve_live_main() {
+            local line live
+            line=$(git ls-remote "$1" "refs/heads/main")
+            if [ "$(printf '%s\n' "$line" | grep -c '')" != "1" ]; then
+              echo "official main resolution is not exactly one line" >&2
+              return 2
+            fi
+            live=$(printf '%s' "$line" | cut -f1)
+            if ! printf '%s' "$live" | grep -Eq '^[0-9a-f]{40}$'; then
+              echo "official main resolution is not a 40-hex commit" >&2
+              return 2
+            fi
+            printf '%s' "$live"
+          }
+          git -c gc.auto=0 fetch --no-tags "$HUB_ORIGIN" \
+            +refs/heads/auto-state:refs/floe/auto-state
+          git -c gc.auto=0 fetch --no-tags "$HUB_ORIGIN" \
+            "+refs/heads/${STAGING_REF}:refs/floe/candidate-tip"
+          git -c gc.auto=0 fetch --no-tags "$APP_ORIGIN" \
+            +refs/heads/skill-hub-signing-relay:refs/floe/app-relay
+          git worktree add --detach -q "$RUNNER_TEMP/relay" refs/floe/app-relay
+          git show refs/floe/auto-state:request.json > "$RUNNER_TEMP/request.json"
+          git show refs/floe/auto-state:candidate-manifest.json > "$RUNNER_TEMP/candidate-manifest.json"
+          git show refs/floe/auto-state:state.json > "$RUNNER_TEMP/state.json" 2>/dev/null \
+            || echo '{}' > "$RUNNER_TEMP/state.json"
+          LIVE=$(resolve_live_main "$HUB_ORIGIN")
+          set +e
+          python3 - "$RUNNER_TEMP/request.json" "$REQ_ID" "$SOURCE_SHA" "$LIVE" \
+            "$(git rev-parse refs/floe/candidate-tip)" <<'PY'
+          import json, pathlib, sys
+          request = json.loads(pathlib.Path(sys.argv[1]).read_bytes())
+          rid, source, live, tip = sys.argv[2:6]
+          reasons = []
+          if request["requestId"] != rid:
+              reasons.append("open request changed")
+          if request["mode"] != "reviews":
+              reasons.append("request is not reviews-mode")
+          if request["sourceCommit"] != source:
+              reasons.append("request source drifted from the routing decision")
+          if request["basePublication"] != live:
+              reasons.append("live main moved away from the request base")
+          if tip == source:
+              reasons.append("the tip equals the source again; the advance path owns this")
+          if reasons:
+              print("; ".join(reasons))
+              sys.exit(140)
+          PY
+          RC=$?
+          set -e
+          if [ "$RC" = "140" ]; then
+            echo "no longer the recover-catalog state; exiting bounded without any write"
+            echo "proceed=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          [ "$RC" = "0" ] || { echo "revalidation failed rc=$RC" >&2; exit "$RC"; }
+          echo "proceed=1" >> "$GITHUB_OUTPUT"
+          echo "LIVE_BASE=$LIVE" >> "$GITHUB_ENV"
+          echo "TIP_SHA=$(git rev-parse refs/floe/candidate-tip)" >> "$GITHUB_ENV"
+
+      - name: Re-derive the tip candidate from its immutable selected commits
+        id: recompute
+        if: steps.precheck.outputs.proceed == '1'
+        run: |
+          set -euo pipefail
+          TODAY=$(python3 -c 'import json,sys,pathlib; print(json.loads(pathlib.Path(sys.argv[1]).read_bytes())["stageToday"])' "$RUNNER_TEMP/candidate-manifest.json")
+          echo "today=$TODAY" >> "$GITHUB_OUTPUT"
+          git worktree add --detach -q "$RUNNER_TEMP/base-wt" "$LIVE_BASE"
+          python3 "$RUNNER_TEMP/base-wt/scripts/automatic_publication.py" rederive-candidate \
+            --repo-root "$RUNNER_TEMP/base-wt" --base-commit "$LIVE_BASE" \
+            --candidate-commit "$TIP_SHA" --today "$TODAY" \
+            --stage-root "$RUNNER_TEMP/fresh-stage"
+
+      - name: Prove the tip is exactly the committed X for the open S (core recover proof)
+        if: steps.precheck.outputs.proceed == '1'
+        run: |
+          set -euo pipefail
+          # ACTUAL final core API (REDERIVE-RECOVERY-API.json apiVersion 2):
+          # recover re-verifies the advanced tip as an exact S->X restore of
+          # the ORIGINAL base B built from the verified relay over S, with S
+          # an ancestor of the tip and every relay-bound member byte-equal;
+          # a forged/tampered/unrelated tip, a missing proof input or a stale
+          # live main fails closed with exit 2 and nothing written.
+          python3 "$RUNNER_TEMP/base-wt/scripts/automatic_publication.py" recover \
+            --repo-root "$RUNNER_TEMP/base-wt" \
+            --request-file "$RUNNER_TEMP/request.json" \
+            --manifest-file "$RUNNER_TEMP/candidate-manifest.json" \
+            --live-main "$LIVE_BASE" --candidate-tip "$TIP_SHA" \
+            --stage-root "$RUNNER_TEMP/fresh-stage" \
+            --relay-dir "$RUNNER_TEMP/relay" \
+            > "$RUNNER_TEMP/recover-plan.json"
+          cat "$RUNNER_TEMP/recover-plan.json"
+          python3 - "$RUNNER_TEMP/recover-plan.json" "$TIP_SHA" <<'PY'
+          import json, pathlib, sys
+          plan = json.loads(pathlib.Path(sys.argv[1]).read_bytes())
+          tip = sys.argv[2]
+          if plan.get("action") != "reuse-x":
+              raise SystemExit(f"core recover no longer classifies this re-validated tip as reuse-x: {plan.get('action')!r}")
+          if plan.get("x") != tip:
+              raise SystemExit("core recover proved a different tip than the re-validated candidate ref")
+          PY
+          echo "tip equals the cryptographically expected X; the catalog request binds the SAME original X (never a rebuilt/different X)"
+
+      - name: Emit the catalog control payload over the proven tip
+        if: steps.precheck.outputs.proceed == '1'
+        env:
+          STAGING_DATE: ${{ steps.recompute.outputs.today }}
+        run: |
+          set -euo pipefail
+          python3 scripts/automatic_publication.py emit-catalog-request \
+            --repo-root . --x-commit "$TIP_SHA" \
+            --stage-root "$RUNNER_TEMP/fresh-stage" \
+            --expected-base "$LIVE_BASE" \
+            --manifest-file "$RUNNER_TEMP/candidate-manifest.json" \
+            --candidate-ref "$STAGING_REF" \
+            --control-state-file "$RUNNER_TEMP/state.json" \
+            --out "$RUNNER_TEMP/control-catalog" \
+            --today "$STAGING_DATE"
+
+      - name: Push the catalog continuation on auto-state (main and the tip untouched)
+        if: steps.precheck.outputs.proceed == '1' && github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STAGING_DATE: ${{ steps.recompute.outputs.today }}
+        run: |
+          set -euo pipefail
+          # continuation guard identical to the advance path: this recovery only
+          # ever continues the request it re-validated, never a different one
+          git merge-base --is-ancestor "$SOURCE_SHA" "$TIP_SHA"
+          printf '{"pipelineStage":"catalog-continuation","note":"recovered lost run: X tip committed, the control write finishes here"}' \
+            > "$RUNNER_TEMP/continuation-extra.json"
+          python3 scripts/automatic_publication.py mark-processed \
+            --state-file "$RUNNER_TEMP/state.json" \
+            --request-file "$RUNNER_TEMP/request.json" \
+            --extra-file "$RUNNER_TEMP/continuation-extra.json" \
+            --out "$RUNNER_TEMP/processed-state.json"
+          set +e
+          python3 scripts/automatic_publication.py processed-check \
+            --state-file "$RUNNER_TEMP/processed-state.json" \
+            --request-file "$RUNNER_TEMP/request.json" >/dev/null; RC=$?
+          set -e
+          [ "$RC" = "3" ] || { echo "continuation guard: reviews request was not recorded processed (rc=$RC)" >&2; exit 2; }
+          CTRL="$RUNNER_TEMP/ctrl-wt"
+          rm -rf "$CTRL"
+          git worktree add --detach -q "$CTRL" refs/floe/auto-state
+          OPEN=$(python3 -c 'import json,sys,pathlib; p=pathlib.Path(sys.argv[1]); print(json.loads(p.read_bytes())["requestId"] if p.is_file() else "")' "$CTRL/request.json")
+          if [ -n "$OPEN" ] && [ "$OPEN" != "$REQ_ID" ]; then
+            echo "open request changed mid-flight; refusing to write over another pipeline" >&2
+            exit 2
+          fi
+          if [ -f "$CTRL/request.json" ]; then
+            cp "$CTRL/request.json" "$RUNNER_TEMP/open-request.json"
+          fi
+          python3 scripts/automatic_publication.py plan-control-update \
+            --payload-dir "$RUNNER_TEMP/control-catalog" \
+            --state-file "$RUNNER_TEMP/processed-state.json" \
+            --live-main "$LIVE_BASE" --today "$STAGING_DATE" \
+            --out "$RUNNER_TEMP/planned"
+          ACTION=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["action"])' "$RUNNER_TEMP/planned/control-plan.json")
+          [ "$ACTION" = "apply" ] || { echo "expected the continuation apply path, got $ACTION" >&2; exit 2; }
+          python3 - "$RUNNER_TEMP/planned" "$CTRL" "$LIVE_BASE" "$RUNNER_TEMP" <<'PY'
+          import json, pathlib, shutil, sys
+          planned, ctrl, live = (pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2]),
+                                 sys.argv[3])
+          tmp = pathlib.Path(sys.argv[4])
+          manifest = json.loads((planned / "control-plan.json").read_bytes())
+          def checked(rel):
+              parts = str(rel).split("/")
+              if (not isinstance(rel, str) or rel.startswith("/")
+                      or any(part in ("", ".", "..") for part in parts)):
+                  raise SystemExit(f"control plan carries an unsafe relative path: {rel!r}")
+              return pathlib.Path(rel)
+          for group in ("mirror", "removeRoot"):
+              for rel in manifest[group]:
+                  checked(rel)
+          open_rid = None
+          root_request = ctrl / "request.json"
+          if root_request.is_file():
+              open_request = json.loads(root_request.read_bytes())
+              open_rid = open_request["requestId"]
+              archived = [pathlib.Path(str(a)).parts[1] if str(a).startswith("requests/") else None
+                          for a in manifest["appendArchive"]]
+              if open_rid not in archived and manifest["action"] != "busy-checkpoint":
+                  archive = ctrl / "requests" / open_rid
+                  archive.mkdir(parents=True, exist_ok=True)
+                  for name in ("request.json", "candidate-manifest.json"):
+                      source = ctrl / name
+                      if source.is_file():
+                          shutil.copyfile(source, archive / name)
+          for rel in manifest["mirror"]:
+              source = planned / checked(rel)
+              if not source.is_file():
+                  continue
+              target = ctrl / checked(rel)
+              target.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(source, target)
+          for rel in manifest["removeRoot"]:
+              path = ctrl / checked(rel)
+              if path.exists():
+                  path.unlink()
+          for archive in manifest["appendArchive"]:
+              rel = checked(str(archive).rstrip("/"))
+              source = planned / rel
+              if source.is_dir():
+                  target = ctrl / rel
+                  target.mkdir(parents=True, exist_ok=True)
+                  for path in sorted(source.rglob("*")):
+                      if path.is_file():
+                          dest = target / path.relative_to(source)
+                          dest.parent.mkdir(parents=True, exist_ok=True)
+                          shutil.copyfile(path, dest)
+          PY
+          if [ -d "$CTRL/requests" ]; then
+            python3 scripts/automatic_publication.py prune-requests \
+              --requests-dir "$CTRL/requests" --state-file "$CTRL/state.json"
+          fi
+          git -C "$CTRL" add -A
+          python3 - "$CTRL" <<'PY'
+          import subprocess, sys
+          ctrl = sys.argv[1]
+          allowed = ("state.json", "request.json", "candidate-manifest.json")
+          listed = subprocess.run(["git", "-C", ctrl, "ls-files", "-s", "-z"],
+                                  capture_output=True, check=True).stdout
+          for entry in [e for e in listed.split(b"\0") if e]:
+              meta, name = entry.split(b"\t", 1)
+              mode, rel = meta.split()[0].decode(), name.decode()
+              parts = rel.split("/")
+              if rel in allowed:
+                  pass
+              elif (len(parts) == 3 and parts[0] == "requests"
+                    and len(parts[1]) == 64
+                    and all(c in "0123456789abcdef" for c in parts[1])
+                    and parts[2] in ("request.json", "candidate-manifest.json")):
+                  pass
+              else:
+                  raise SystemExit(f"control branch path is outside the allowlist: {rel}")
+              if mode != "100644":
+                  raise SystemExit(f"control branch carries a non-blob mode: {mode} {rel}")
+          PY
+          if git -C "$CTRL" diff --cached --quiet; then
+            echo "control unchanged; nothing to push"
+            exit 0
+          fi
+          git -C "$CTRL" -c user.name="floe-skill-hub-automation" \
+            -c user.email="automation@users.noreply.github.com" \
+            commit -q -m "auto-control: catalog recovery for request ${REQ_ID}"
+          CTRL_SHA=$(git -C "$CTRL" rev-parse HEAD)
+          git -c credential.helper='!f() { echo "username=x-access-token"; echo "password=${GH_TOKEN}"; }; f' \
+            -c gc.auto=0 push "$HUB_ORIGIN" "$CTRL_SHA:refs/heads/auto-state"
+
+  advance-publication:
+    needs: verify
+    if: >-
+      vars.FLOE_SKILL_HUB_AUTO_UPDATES == 'enabled' &&
+      needs.verify.outputs.action == 'advance' &&
+      needs.verify.outputs.mode == 'catalog'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write   # only refs/heads/<stagingRef> and refs/heads/auto-state
+    env:
+      STAGING_REF: ${{ needs.verify.outputs.stagingRef }}
+      REQ_ID: ${{ needs.verify.outputs.requestId }}
+      BASE_SHA: ${{ needs.verify.outputs.base }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install the pinned verification library
+        run: python3 -m pip install --disable-pip-version-check "$CRYPTOGRAPHY_PIN"
+
+      - name: Fetch refs, resolve X and re-validate against a freshly resolved live base
+        id: precheck
+        run: |
+          set -euo pipefail
+          resolve_live_main() {
+            local line live
+            line=$(git ls-remote "$1" "refs/heads/main")
+            if [ "$(printf '%s\n' "$line" | grep -c '')" != "1" ]; then
+              echo "official main resolution is not exactly one line" >&2
+              return 2
+            fi
+            live=$(printf '%s' "$line" | cut -f1)
+            if ! printf '%s' "$live" | grep -Eq '^[0-9a-f]{40}$'; then
+              echo "official main resolution is not a 40-hex commit" >&2
+              return 2
+            fi
+            printf '%s' "$live"
+          }
+          git -c gc.auto=0 fetch --no-tags "$HUB_ORIGIN" \
+            +refs/heads/auto-state:refs/floe/auto-state
+          git -c gc.auto=0 fetch --no-tags "$HUB_ORIGIN" \
+            "+refs/heads/${STAGING_REF}:refs/floe/candidate-tip"
+          git -c gc.auto=0 fetch --no-tags "$APP_ORIGIN" \
+            +refs/heads/skill-hub-signing-relay:refs/floe/app-relay
+          git worktree add --detach -q "$RUNNER_TEMP/relay" refs/floe/app-relay
+          git show refs/floe/auto-state:request.json > "$RUNNER_TEMP/request.json"
+          git show refs/floe/auto-state:candidate-manifest.json > "$RUNNER_TEMP/candidate-manifest.json"
+          git show refs/floe/auto-state:state.json > "$RUNNER_TEMP/state.json" 2>/dev/null \
+            || echo '{}' > "$RUNNER_TEMP/state.json"
+          OPEN=$(python3 -c 'import json,sys,pathlib; print(json.loads(pathlib.Path(sys.argv[1]).read_bytes())["requestId"])' "$RUNNER_TEMP/request.json")
+          X=$(python3 -c 'import json,sys,pathlib; d=json.loads(pathlib.Path(sys.argv[1]).read_bytes()); print(d["sourceCommit"]); assert d["mode"]=="catalog"' "$RUNNER_TEMP/request.json")
+          echo "X_SHA=$X" >> "$GITHUB_ENV"
+          LIVE=$(resolve_live_main "$HUB_ORIGIN")
+          set +e
+          python3 - "$RUNNER_TEMP/request.json" "$REQ_ID" "$OPEN" "$X" \
+            "$(git rev-parse refs/floe/candidate-tip)" "$LIVE" <<'PY'
+          import json, pathlib, sys
+          request = json.loads(pathlib.Path(sys.argv[1]).read_bytes())
+          rid, open_id, source, tip, live = sys.argv[2:7]
+          reasons = []
+          if request["requestId"] != rid or open_id != rid:
+              reasons.append("open request changed since routing")
+          if tip != source:
+              reasons.append("the tip already moved past X; recovery owns this")
+          if request["basePublication"] != live:
+              reasons.append("live main moved away from the request base")
+          if reasons:
+              print("; ".join(reasons))
+              sys.exit(140)
+          PY
+          RC=$?
+          set -e
+          if [ "$RC" = "140" ]; then
+            echo "the publication advance classification no longer applies; bounded no-write exit, the next poll re-evaluates"
+            echo "proceed=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          [ "$RC" = "0" ] || { echo "revalidation failed rc=$RC" >&2; exit "$RC"; }
+          echo "proceed=1" >> "$GITHUB_OUTPUT"
+          echo "LIVE_BASE=$LIVE" >> "$GITHUB_ENV"
+
+      - name: Re-derive the candidate + deterministic feed rebuild
+        id: recompute
+        if: steps.precheck.outputs.proceed == '1'
+        run: |
+          set -euo pipefail
+          TODAY=$(python3 -c 'import json,sys,pathlib; print(json.loads(pathlib.Path(sys.argv[1]).read_bytes())["stageToday"])' "$RUNNER_TEMP/candidate-manifest.json")
+          echo "today=$TODAY" >> "$GITHUB_OUTPUT"
+          git worktree add --detach -q "$RUNNER_TEMP/base-wt" "$LIVE_BASE"
+          python3 "$RUNNER_TEMP/base-wt/scripts/automatic_publication.py" rederive-candidate \
+            --repo-root "$RUNNER_TEMP/base-wt" --base-commit "$LIVE_BASE" \
+            --candidate-commit "$X_SHA" --today "$TODAY" \
+            --stage-root "$RUNNER_TEMP/fresh-stage"
+          git worktree add --detach -q "$RUNNER_TEMP/x-wt" "$X_SHA"
+          python3 scripts/automatic_publication.py rebuild-feeds \
+            --x-root "$RUNNER_TEMP/x-wt" --source-commit "$X_SHA" \
+            --out "$RUNNER_TEMP/feeds"
+
+      - name: Verify candidate X + relay (official signatures, receipt digests, freezes)
+        if: steps.precheck.outputs.proceed == '1'
+        run: |
+          set -euo pipefail
+          python3 scripts/automatic_publication.py verify-candidate \
+            --repo-root . --request-file "$RUNNER_TEMP/request.json" \
+            --manifest-file "$RUNNER_TEMP/candidate-manifest.json" \
+            --stage-root "$RUNNER_TEMP/fresh-stage" --expected-base "$LIVE_BASE"
+          python3 scripts/automatic_publication.py relay-verify \
+            --repo-root . --request-file "$RUNNER_TEMP/request.json" \
+            --relay-dir "$RUNNER_TEMP/relay" --candidate-commit "$X_SHA" \
+            --feeds-dir "$RUNNER_TEMP/feeds"
+          python3 scripts/automatic_publication.py build-y \
+            --repo-root . --request-file "$RUNNER_TEMP/request.json" \
+            --relay-dir "$RUNNER_TEMP/relay" --feeds-dir "$RUNNER_TEMP/feeds" \
+            --out "$RUNNER_TEMP/y-payload"
+
+      - name: Commit Y then H (append-only ledger rows derived from Y)
+        id: commits
+        if: steps.precheck.outputs.proceed == '1'
+        run: |
+          set -euo pipefail
+          git config user.name "floe-skill-hub-automation"
+          git config user.email "automation@users.noreply.github.com"
+          git worktree add --detach -q "$RUNNER_TEMP/pub-wt" "$X_SHA"
+          python3 scripts/automatic_publication.py apply-payload \
+            --payload-dir "$RUNNER_TEMP/y-payload" --repo-root "$RUNNER_TEMP/pub-wt"
+          git -C "$RUNNER_TEMP/pub-wt" add -A
+          git -C "$RUNNER_TEMP/pub-wt" commit -q -m "auto-publish: Y for request ${REQ_ID}"
+          Y=$(git -C "$RUNNER_TEMP/pub-wt" rev-parse HEAD)
+          echo "y=$Y" >> "$GITHUB_OUTPUT"
+          python3 - . "$X_SHA" "$Y" <<'PY'
+          import subprocess, sys
+          root, x, y = sys.argv[1:4]
+          sys.path.insert(0, "scripts")
+          import automatic_publication as ap
+          raw = subprocess.run(["git", "-C", root, "diff", "--name-status", "-z", x, y],
+                               capture_output=True, check=True).stdout
+          fields = [f for f in raw.split(b"\0") if f]
+          index = 0
+          while index < len(fields):
+              status = fields[index].decode()
+              rel = fields[index + 1].decode()
+              index += 2
+              if status[0] in ("R", "C", "D"):
+                  raise SystemExit(f"Y may not rename/copy/delete: {rel}")
+              ok = (rel in ap.PUBLISH_ALLOW_EXACT
+                    or any(rel.startswith(p) for p in ap.PUBLISH_ALLOW_DIRS))
+              if not ok:
+                  raise SystemExit(f"Y changes a path outside the publication allowlist: {rel}")
+          PY
+          python3 scripts/automatic_publication.py build-h \
+            --repo-root . --base-commit "$LIVE_BASE" --y-commit "$Y" \
+            --out "$RUNNER_TEMP/h-payload"
+          python3 scripts/automatic_publication.py apply-payload \
+            --payload-dir "$RUNNER_TEMP/h-payload" --repo-root "$RUNNER_TEMP/pub-wt"
+          git -C "$RUNNER_TEMP/pub-wt" add -A
+          git -C "$RUNNER_TEMP/pub-wt" commit -q -m "auto-publish: H ledger append for ${REQ_ID}"
+          H=$(git -C "$RUNNER_TEMP/pub-wt" rev-parse HEAD)
+          echo "h=$H" >> "$GITHUB_OUTPUT"
+          python3 scripts/automatic_publication.py check-chain \
+            --repo-root . --base-commit "$LIVE_BASE" --x-commit "$X_SHA" \
+            --y-commit "$Y" --h-commit "$H"
+
+      - name: Push H on the candidate ref (main untouched; a crash here recovers via the tip proof)
+        if: steps.precheck.outputs.proceed == '1' && github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git -c credential.helper='!f() { echo "username=x-access-token"; echo "password=${GH_TOKEN}"; }; f' \
+            -c gc.auto=0 push "$HUB_ORIGIN" "${{ steps.commits.outputs.h }}:refs/heads/${STAGING_REF}"
+
+      - name: Exact CAS advance of main B -> H (beforeOid re-resolved, force=false)
+        if: steps.precheck.outputs.proceed == '1' && github.event.inputs.dry_run != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 scripts/automatic_publication.py cas \
+            --base-commit "$LIVE_BASE" --head-commit "${{ steps.commits.outputs.h }}" \
+            --token-env GITHUB_TOKEN
+
+      - name: Verify the actual public bytes and history directly
+        if: steps.precheck.outputs.proceed == '1' && github.event.inputs.dry_run != 'true'
+        run: |
+          set -euo pipefail
+          python3 scripts/automatic_publication.py verify-public \
+            --repo-root . --head-commit "${{ steps.commits.outputs.h }}" \
+            --x-commit "$X_SHA" --base-commit "$LIVE_BASE"
+
+      - name: Close the request on auto-state (processed, bounded, idempotent)
+        if: steps.precheck.outputs.proceed == '1' && github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git -c gc.auto=0 fetch --no-tags "$HUB_ORIGIN" \
+            +refs/heads/auto-state:refs/floe/auto-state
+          CTRL="$RUNNER_TEMP/close-wt"
+          rm -rf "$CTRL"
+          git worktree add --detach -q "$CTRL" refs/floe/auto-state
+          NOW_OPEN=$(python3 -c 'import json,sys,pathlib
+          p = pathlib.Path(sys.argv[1])
+          print(json.loads(p.read_bytes())["requestId"] if p.is_file() else "")' "$CTRL/request.json")
+          if [ -n "$NOW_OPEN" ] && [ "$NOW_OPEN" != "$REQ_ID" ]; then
+            echo "open request changed mid-flight; refusing to close another pipeline's request" >&2
+            exit 2
+          fi
+          echo '{}' > "$RUNNER_TEMP/close-state.json"
+          if [ -f "$CTRL/state.json" ]; then
+            cp "$CTRL/state.json" "$RUNNER_TEMP/close-state.json"
+          fi
+          printf '{"pipelineStage":"published","lastPublicationY":"%s","lastPublicationH":"%s"}' \
+            "${{ steps.commits.outputs.y }}" "${{ steps.commits.outputs.h }}" \
+            > "$RUNNER_TEMP/extra.json"
+          python3 scripts/automatic_publication.py mark-processed \
+            --state-file "$RUNNER_TEMP/close-state.json" \
+            --request-file "$RUNNER_TEMP/request.json" \
+            --extra-file "$RUNNER_TEMP/extra.json" \
+            --out "$RUNNER_TEMP/new-state.json"
+          cp "$RUNNER_TEMP/new-state.json" "$CTRL/state.json"
+          rm -f "$CTRL/request.json" "$CTRL/candidate-manifest.json"
+          mkdir -p "$CTRL/requests/$REQ_ID"
+          cp "$RUNNER_TEMP/request.json" "$CTRL/requests/$REQ_ID/request.json"
+          cp "$RUNNER_TEMP/candidate-manifest.json" "$CTRL/requests/$REQ_ID/candidate-manifest.json"
+          python3 scripts/automatic_publication.py prune-requests \
+            --requests-dir "$CTRL/requests" --state-file "$CTRL/state.json"
+          git -C "$CTRL" add -A
+          python3 - "$CTRL" <<'PY'
+          import subprocess, sys
+          ctrl = sys.argv[1]
+          allowed = ("state.json", "request.json", "candidate-manifest.json")
+          listed = subprocess.run(["git", "-C", ctrl, "ls-files", "-s", "-z"],
+                                  capture_output=True, check=True).stdout
+          for entry in [e for e in listed.split(b"\0") if e]:
+              meta, name = entry.split(b"\t", 1)
+              mode, rel = meta.split()[0].decode(), name.decode()
+              parts = rel.split("/")
+              if rel in allowed:
+                  pass
+              elif (len(parts) == 3 and parts[0] == "requests"
+                    and len(parts[1]) == 64
+                    and all(c in "0123456789abcdef" for c in parts[1])
+                    and parts[2] in ("request.json", "candidate-manifest.json")):
+                  pass
+              else:
+                  raise SystemExit(f"control branch path is outside the allowlist: {rel}")
+              if mode != "100644":
+                  raise SystemExit(f"control branch carries a non-blob mode: {mode} {rel}")
+          PY
+          if git -C "$CTRL" diff --cached --quiet; then
+            exit 0
+          fi
+          git -C "$CTRL" -c user.name="floe-skill-hub-automation" \
+            -c user.email="automation@users.noreply.github.com" \
+            commit -q -m "auto-control: published + closed request ${REQ_ID}"
+          CLOSE_SHA=$(git -C "$CTRL" rev-parse HEAD)
+          git -c credential.helper='!f() { echo "username=x-access-token"; echo "password=${GH_TOKEN}"; }; f' \
+            -c gc.auto=0 push "$HUB_ORIGIN" "$CLOSE_SHA:refs/heads/auto-state"
+
+  recover-publish:
+    needs: verify
+    if: >-
+      vars.FLOE_SKILL_HUB_AUTO_UPDATES == 'enabled' &&
+      (needs.verify.outputs.action == 'recover-cas' ||
+       needs.verify.outputs.action == 'recover-close')
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write   # only refs/heads/auto-state; main advances ONLY via cas
+    env:
+      STAGING_REF: ${{ needs.verify.outputs.stagingRef }}
+      REQ_ID: ${{ needs.verify.outputs.requestId }}
+      SOURCE_SHA: ${{ needs.verify.outputs.sourceCommit }}
+      BASE_SHA: ${{ needs.verify.outputs.base }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install the pinned verification library
+        run: python3 -m pip install --disable-pip-version-check "$CRYPTOGRAPHY_PIN"
+
+      - name: Re-validate the recovery branch from freshly resolved public refs
+        id: precheck
+        run: |
+          set -euo pipefail
+          resolve_live_main() {
+            local line live
+            line=$(git ls-remote "$1" "refs/heads/main")
+            if [ "$(printf '%s\n' "$line" | grep -c '')" != "1" ]; then
+              echo "official main resolution is not exactly one line" >&2
+              return 2
+            fi
+            live=$(printf '%s' "$line" | cut -f1)
+            if ! printf '%s' "$live" | grep -Eq '^[0-9a-f]{40}$'; then
+              echo "official main resolution is not a 40-hex commit" >&2
+              return 2
+            fi
+            printf '%s' "$live"
+          }
+          git -c gc.auto=0 fetch --no-tags "$HUB_ORIGIN" \
+            +refs/heads/auto-state:refs/floe/auto-state
+          git -c gc.auto=0 fetch --no-tags "$HUB_ORIGIN" \
+            "+refs/heads/${STAGING_REF}:refs/floe/candidate-tip"
+          git -c gc.auto=0 fetch --no-tags "$APP_ORIGIN" \
+            +refs/heads/skill-hub-signing-relay:refs/floe/app-relay
+          git worktree add --detach -q "$RUNNER_TEMP/relay" refs/floe/app-relay
+          git show refs/floe/auto-state:request.json > "$RUNNER_TEMP/request.json"
+          git show refs/floe/auto-state:candidate-manifest.json > "$RUNNER_TEMP/candidate-manifest.json"
+          git show refs/floe/auto-state:state.json > "$RUNNER_TEMP/state.json" 2>/dev/null \
+            || echo '{}' > "$RUNNER_TEMP/state.json"
+          TIP=$(git rev-parse refs/floe/candidate-tip)
+          LIVE=$(resolve_live_main "$HUB_ORIGIN")
+          BRANCH=$(python3 - "$RUNNER_TEMP/request.json" "$REQ_ID" "$SOURCE_SHA" "$LIVE" "$TIP" <<'PY'
+          import json, pathlib, sys
+          request = json.loads(pathlib.Path(sys.argv[1]).read_bytes())
+          rid, source, live, tip = sys.argv[2:6]
+          if (request["requestId"] != rid or request["sourceCommit"] != source
+                  or request["mode"] != "catalog" or tip == source):
+              print("none")
+          elif live == request["basePublication"]:
+              print("cas")
+          elif live == tip:
+              print("close")
+          else:
+              print("none")
+          PY
+          )
+          if [ "$BRANCH" = "none" ]; then
+            echo "this run's recovery classification no longer applies; exiting without any write"
+            echo "RECOVER_BRANCH=none" >> "$GITHUB_ENV"
+            echo "proceed=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "RECOVER_BRANCH=$BRANCH" >> "$GITHUB_ENV"
+          echo "proceed=1" >> "$GITHUB_OUTPUT"
+          echo "TIP_SHA=$TIP" >> "$GITHUB_ENV"
+          echo "LIVE_BASE=$LIVE" >> "$GITHUB_ENV"
+          # the chain to prove is B -> X -> Y -> H with B = the request's own
+          # base; on the close branch live already equals H, never B
+          echo "REQ_BASE=$(python3 -c 'import json,sys,pathlib; print(json.loads(pathlib.Path(sys.argv[1]).read_bytes())["basePublication"])' "$RUNNER_TEMP/request.json")" >> "$GITHUB_ENV"
+
+      - name: Re-derive the candidate's immutable NEW selections over the request base
+        id: recompute
+        if: steps.precheck.outputs.proceed == '1'
+        run: |
+          set -euo pipefail
+          TODAY=$(python3 -c 'import json,sys,pathlib; print(json.loads(pathlib.Path(sys.argv[1]).read_bytes())["stageToday"])' "$RUNNER_TEMP/candidate-manifest.json")
+          echo "today=$TODAY" >> "$GITHUB_OUTPUT"
+          git worktree add --detach -q "$RUNNER_TEMP/base-wt" "$LIVE_BASE"
+          # both branches re-derive over the request's own X with the request
+          # base (REQ_BASE), never over the live H on the close branch: the
+          # published H is the proof SUBJECT, not the derivation base. The OLD
+          # -> NEW selections come from the candidate's committed registry diff
+          # (rederive-candidate), not from live upstream HEADs.
+          python3 "$RUNNER_TEMP/base-wt/scripts/automatic_publication.py" rederive-candidate \
+            --repo-root "$RUNNER_TEMP/base-wt" --base-commit "$REQ_BASE" \
+            --candidate-commit "$SOURCE_SHA" --today "$TODAY" \
+            --stage-root "$RUNNER_TEMP/fresh-stage"
+
+      - name: Prove the original X->Y->H chain for the tip (core recover proof, never re-signed)
+        if: steps.precheck.outputs.proceed == '1'
+        run: |
+          set -euo pipefail
+          # ACTUAL final core API (REDERIVE-RECOVERY-API.json apiVersion 2):
+          # recover resolves the ORIGINAL Y as the tip's single parent and X
+          # as Y's parent (which must equal the request sourceCommit), then
+          # runs the ONE centralized published-chain proof over the ORIGINAL
+          # commits: structural chain diffs + allow/deny + engine/history
+          # freezes, explicit append-only ledger prefix retention and the
+          # exact expected ledger bytes over the ORIGINAL Y, the catalog
+          # relay receipt over locally rebuilt feed bytes byte-equal to the
+          # committed Y feeds on both channels, and the FULL candidate
+          # verification over the committed X from the fresh stage. Freshly
+          # rebuilt timestamped commits are never compared. A forged/tampered
+          # tip, a broken chain, a ledger prefix violation or a missing proof
+          # input fails closed with exit 2; the recovered action must still
+          # equal this run's freshly re-validated branch classification.
+          git worktree add --detach -q "$RUNNER_TEMP/x-wt" "$SOURCE_SHA"
+          python3 "$RUNNER_TEMP/base-wt/scripts/automatic_publication.py" recover \
+            --repo-root "$RUNNER_TEMP/base-wt" \
+            --request-file "$RUNNER_TEMP/request.json" \
+            --manifest-file "$RUNNER_TEMP/candidate-manifest.json" \
+            --live-main "$LIVE_BASE" --candidate-tip "$TIP_SHA" \
+            --stage-root "$RUNNER_TEMP/fresh-stage" \
+            --relay-dir "$RUNNER_TEMP/relay" \
+            --x-root "$RUNNER_TEMP/x-wt" \
+            > "$RUNNER_TEMP/recover-plan.json"
+          cat "$RUNNER_TEMP/recover-plan.json"
+          python3 - "$RUNNER_TEMP/recover-plan.json" "$TIP_SHA" "$SOURCE_SHA" "$REQ_BASE" "$RECOVER_BRANCH" <<'PY'
+          import json, pathlib, sys
+          plan = json.loads(pathlib.Path(sys.argv[1]).read_bytes())
+          tip, source, base, branch = sys.argv[2:6]
+          want = {"cas": "cas-existing-h", "close": "close-published"}[branch]
+          if plan.get("action") != want:
+              raise SystemExit(f"core recover no longer classifies this re-validated branch: got {plan.get('action')!r}, want {want!r}")
+          if plan.get("h") != tip or plan.get("x") != source:
+              raise SystemExit("core recover proved a different chain than the re-validated candidate tip")
+          if branch == "cas" and plan.get("base") != base:
+              raise SystemExit("core recover CAS base drifted from the request base")
+          proof = plan.get("proofStatus") or {}
+          if (proof.get("chain") != "publication-diffs-ok"
+                  or proof.get("relay") != "relay-ok"
+                  or proof.get("candidate") != "candidate-ok"):
+              raise SystemExit(f"full chain/relay/candidate proof incomplete: {proof}")
+          PY
+
+      - name: Retry the exact CAS on the SAME original H (no re-signing, no rebuilt history)
+        if: steps.precheck.outputs.proceed == '1' && env.RECOVER_BRANCH == 'cas' && github.event.inputs.dry_run != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 scripts/automatic_publication.py cas \
+            --base-commit "$REQ_BASE" --head-commit "$TIP_SHA" \
+            --token-env GITHUB_TOKEN
+
+      - name: Verify the actual public bytes and history directly
+        if: steps.precheck.outputs.proceed == '1' && github.event.inputs.dry_run != 'true'
+        run: |
+          set -euo pipefail
+          # for the cas branch: the tip was just CAS-published from the exact
+          # base; for the close branch: live main already equals the tip (the
+          # crash happened after a successful CAS, before the control close).
+          # --base-commit makes the public readback prove the append-only
+          # ledger prefix over the committed base ledger as well.
+          python3 scripts/automatic_publication.py verify-public \
+            --repo-root . --head-commit "$TIP_SHA" --x-commit "$SOURCE_SHA" \
+            --base-commit "$REQ_BASE"
+
+      - name: Close the request on auto-state (this crash point is recovered here)
+        if: steps.precheck.outputs.proceed == '1' && github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git -c gc.auto=0 fetch --no-tags "$HUB_ORIGIN" \
+            +refs/heads/auto-state:refs/floe/auto-state
+          CTRL="$RUNNER_TEMP/close-wt"
+          rm -rf "$CTRL"
+          git worktree add --detach -q "$CTRL" refs/floe/auto-state
+          NOW_OPEN=$(python3 -c 'import json,sys,pathlib
+          p = pathlib.Path(sys.argv[1])
+          print(json.loads(p.read_bytes())["requestId"] if p.is_file() else "")' "$CTRL/request.json")
+          if [ -n "$NOW_OPEN" ] && [ "$NOW_OPEN" != "$REQ_ID" ]; then
+            echo "open request changed mid-flight; refusing to close another pipeline's request" >&2
+            exit 2
+          fi
+          echo '{}' > "$RUNNER_TEMP/close-state.json"
+          if [ -f "$CTRL/state.json" ]; then
+            cp "$CTRL/state.json" "$RUNNER_TEMP/close-state.json"
+          fi
+          printf '{"pipelineStage":"published","lastPublicationH":"%s","recovered":"1"}' \
+            "$TIP_SHA" > "$RUNNER_TEMP/extra.json"
+          python3 scripts/automatic_publication.py mark-processed \
+            --state-file "$RUNNER_TEMP/close-state.json" \
+            --request-file "$RUNNER_TEMP/request.json" \
+            --extra-file "$RUNNER_TEMP/extra.json" \
+            --out "$RUNNER_TEMP/new-state.json"
+          cp "$RUNNER_TEMP/new-state.json" "$CTRL/state.json"
+          rm -f "$CTRL/request.json" "$CTRL/candidate-manifest.json"
+          mkdir -p "$CTRL/requests/$REQ_ID"
+          cp "$RUNNER_TEMP/request.json" "$CTRL/requests/$REQ_ID/request.json"
+          cp "$RUNNER_TEMP/candidate-manifest.json" "$CTRL/requests/$REQ_ID/candidate-manifest.json"
+          python3 scripts/automatic_publication.py prune-requests \
+            --requests-dir "$CTRL/requests" --state-file "$CTRL/state.json"
+          git -C "$CTRL" add -A
+          python3 - "$CTRL" <<'PY'
+          import subprocess, sys
+          ctrl = sys.argv[1]
+          allowed = ("state.json", "request.json", "candidate-manifest.json")
+          listed = subprocess.run(["git", "-C", ctrl, "ls-files", "-s", "-z"],
+                                  capture_output=True, check=True).stdout
+          for entry in [e for e in listed.split(b"\0") if e]:
+              meta, name = entry.split(b"\t", 1)
+              mode, rel = meta.split()[0].decode(), name.decode()
+              parts = rel.split("/")
+              if rel in allowed:
+                  pass
+              elif (len(parts) == 3 and parts[0] == "requests"
+                    and len(parts[1]) == 64
+                    and all(c in "0123456789abcdef" for c in parts[1])
+                    and parts[2] in ("request.json", "candidate-manifest.json")):
+                  pass
+              else:
+                  raise SystemExit(f"control branch path is outside the allowlist: {rel}")
+              if mode != "100644":
+                  raise SystemExit(f"control branch carries a non-blob mode: {mode} {rel}")
+          PY
+          if git -C "$CTRL" diff --cached --quiet; then
+            exit 0
+          fi
+          git -C "$CTRL" -c user.name="floe-skill-hub-automation" \
+            -c user.email="automation@users.noreply.github.com" \
+            commit -q -m "auto-control: recovered publish + closed request ${REQ_ID}"
+          CLOSE_SHA=$(git -C "$CTRL" rev-parse HEAD)
+          git -c credential.helper='!f() { echo "username=x-access-token"; echo "password=${GH_TOKEN}"; }; f' \
+            -c gc.auto=0 push "$HUB_ORIGIN" "$CLOSE_SHA:refs/heads/auto-state"

@@ -4,6 +4,7 @@
 Checks performed (fail closed, aggregate report):
   1. registry structural validation (43/4/39/9, bilingual, statuses, blockers)
   2. upstream pins equal the coordinator's docs/UPSTREAM-PINS.json baselines
+     (repository default or reviewed per-entry skillOverrides baseline, exact)
   3. schema documents are byte-stable against the validator (gen_schemas --check)
   4. fixture sample rebuilds identically and every signature/digest/join verifies
   5. production publication, when any production artifact exists, is verified
@@ -37,6 +38,7 @@ sys.path.insert(0, str(HERE.parent))
 import hubcore
 import make_fixture
 import runtime_dependency
+import upstream_pins
 
 REPO = HERE.parents[1]
 
@@ -46,18 +48,25 @@ def fail(reasons, message):
 
 
 def check_pins(reasons):
-    pins = json.loads((REPO / "docs" / "UPSTREAM-PINS.json").read_bytes())["repositories"]
+    """Registry commits vs the coordinator's reviewed pins (per-entry contract).
+
+    Strict byte parsing (duplicate keys, oversized/bad-UTF-8 input, fake
+    dates, malformed ids/commits) and effective-pin equality live in
+    upstream_pins so trusted lanes share one contract: an entry must equal
+    its explicit reviewed skillOverrides baseline, else its repository
+    default — exact equality either way, and with no overrides present the
+    gate behaves byte-for-byte like the original repository-only check.
+    """
+    try:
+        doc = upstream_pins.load_pins_file(REPO / upstream_pins.PINS_DOC_RELATIVE_PATH)
+    except upstream_pins.UpstreamPinError as error:
+        fail(reasons, f"docs/UPSTREAM-PINS.json invalid: {error}")
+        return
     registry = json.loads((REPO / "catalog" / "skills.json").read_bytes())
-    for entry in registry["skills"]:
-        upstream = entry.get("upstream")
-        if upstream is None:
-            continue
-        repo = upstream["repository"].removeprefix("https://github.com/")
-        if repo not in pins:
-            fail(reasons, f"{entry['id']}: repository {repo} is not in docs/UPSTREAM-PINS.json")
-        elif upstream["commit"] != pins[repo]:
-            fail(reasons, f"{entry['id']}: commit {upstream['commit'][:10]} diverges from "
-                          f"the review baseline {pins[repo][:10]}")
+    try:
+        reasons.extend(upstream_pins.check_registry_pins(doc, registry))
+    except upstream_pins.UpstreamPinError as error:
+        fail(reasons, f"docs/UPSTREAM-PINS.json vs registry pin check failed: {error}")
 
 
 def check_production(reasons):

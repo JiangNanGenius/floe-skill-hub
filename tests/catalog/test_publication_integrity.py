@@ -323,6 +323,11 @@ class TestCliSourceCommitArguments(unittest.TestCase):
             self.assertNotEqual(code, 0)
 
     def test_check_mode_never_writes_publication_paths(self):
+        # The old era guard "the repo root has no catalog.json" is superseded:
+        # the coordinator HAS published real feeds, so the meaningful,
+        # stronger guarantee is that both --check runs leave every existing
+        # publication byte (tooling AND the signed channel feeds + sigs)
+        # exactly unchanged and create nothing new.
         snapshot = {}
         for root in (REPO / "scripts", REPO / "schema", REPO / "tests" / "catalog",
                      REPO / "catalog"):
@@ -330,14 +335,33 @@ class TestCliSourceCommitArguments(unittest.TestCase):
                 if path.is_file() and "__pycache__" not in path.parts:
                     snapshot[str(path)] = base64.b64encode(
                         hashlib_bytes(path.read_bytes())).decode()
+        for rel in ("catalog.json", "catalog.sig", "android/catalog.json",
+                    "android/catalog.sig"):
+            path = REPO / rel
+            self.assertTrue(path.is_file(),
+                            f"published feed present before --check: {rel}")
+            snapshot[rel] = base64.b64encode(
+                hashlib_bytes(path.read_bytes())).decode()
+        names_before = {str(p.relative_to(REPO)) for p in REPO.rglob("*")
+                        if p.is_file() and "__pycache__" not in p.parts
+                        and ".git" not in p.relative_to(REPO).parts
+                        and ".build" not in p.relative_to(REPO).parts}
         run_script(REPO, "build_catalog.py", ["--mode", "preview",
                                               "--source-commit", SOURCE_X, "--check"])
         run_script(REPO, "build_catalog.py", ["--mode", "release",
                                               "--source-commit", SOURCE_X, "--check"])
-        for path, digest in snapshot.items():
+        for rel, digest in snapshot.items():
+            path = REPO / rel if rel in ("catalog.json", "catalog.sig",
+                                         "android/catalog.json",
+                                         "android/catalog.sig") else pathlib.Path(rel)
             self.assertEqual(base64.b64encode(
-                hashlib_bytes(pathlib.Path(path).read_bytes())).decode(), digest, path)
-        self.assertFalse((REPO / "catalog.json").exists())
+                hashlib_bytes(path.read_bytes())).decode(), digest, str(path))
+        names_after = {str(p.relative_to(REPO)) for p in REPO.rglob("*")
+                       if p.is_file() and "__pycache__" not in p.parts
+                       and ".git" not in p.relative_to(REPO).parts
+                       and ".build" not in p.relative_to(REPO).parts}
+        self.assertEqual(names_after - names_before, set(),
+                         "check mode created new files in the checkout")
 
 
 def hashlib_bytes(data):

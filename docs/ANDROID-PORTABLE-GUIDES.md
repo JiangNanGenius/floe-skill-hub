@@ -1,8 +1,7 @@
 # Android portable guides — server-side content-floor projection
 
-Status: implemented in trusted build tooling (`scripts/build_catalog.py`,
-`ANDROID_PORTABLE_GUIDE_IDS`); **inert until the coordinator publishes the
-Linux-declared guide batch**. No registry, schema, record, enum, license,
+Status: published on 2026-10-28 in the [signed compatibility batch](https://github.com/JiangNanGenius/floe-skill-hub/commit/9487d7b12bb377132e3fb06ff1c64a87dbb836ba). Trusted build tooling (`scripts/build_catalog.py`,
+`ANDROID_PORTABLE_GUIDE_IDS`) projects the Android content floor for eligible guides. No registry, schema, record, enum, license,
 permission-policy or native App change is involved, and **no validator is
 relaxed**: the projected `0.0.0` floor passes the current
 `hubcore.validate_catalog` and the published schema exactly as they stand.
@@ -20,7 +19,7 @@ instruction-only content whose only requirement is a working
 workspace-read/write grant. The user explicitly asked for a shorter Android
 qualification path with many direct installs.
 
-## The rule (Root decision, 2026-10-28, finalized)
+## The rule (2026-10-28)
 
 A production Android feed entry projects
 `minimumAppVersion="0.0.0"` — a valid strict `X.Y.Z` string, never `null`,
@@ -71,33 +70,31 @@ content digests, review stages, execution claims, version, status and
 platform offers are all untouched. No runtime, permission or license
 relaxation is introduced anywhere.
 
-## Effect on current and staged data
+## Baseline and published compatibility batch
 
 - At the reviewed baseline `3e145cd6`, the published package manifests declared `["ios"]` only, so
   predicate 2 fails for all rows: the baseline feeds rebuild
   **byte-identical** through this code (proved against the frozen audited
   source `2d131b2e…` vs the publication bytes at `3e145cd6…`, all four
   outputs). The baseline entries carry no sentinel.
-- For the reviewed compatibility batch (28 packages at `1.0.1`
-  declaring `["ios","linux"]`, verified against their staged review records
+- For the published compatibility batch (28 packages at `1.0.1`
+  declaring `["ios","linux"]`, verified against their officially signed review records
   with the unchanged gates): **24 ids project the `0.0.0` sentinel**, while
   four keep the `1.7.59` floor because their own frozen manifests exceed the
   capability ceiling — `a11y-audit` (browser.observe), `deep-research` and
   `research-summarizer` (network), `floe-file-organizer` (workspace.delete).
   This is the rule refusing them, not a gap in the rule.
 
-## Activation (coordinator-owned) and honest limitations
+## Publication and client acceptance
 
-The rule activates only when the coordinator lands and **signs** the
-Linux-declared package batch plus its fresh, officially signed static machine reviews. No further validator, schema or client code change is
+The Linux-declared package batch and its fresh static reviews were signed in GitHub Actions and published on 2026-10-28. The two feeds, all 28 new review pairs and both-channel packages were read back from the public immutable commit; the cumulative ledger retains the old rows and appends both new channel rows. No further validator, schema or client code change is
 required for the projected bytes to pass the existing contract: the sentinel
 is an ordinary strict version string for `hubcore.validate_catalog`, the
 published JSON schema and the native schema-3 decoder.
 
 Remaining acceptance limits, stated honestly:
 
-- this is source-only evidence; no device, emulator or App run was made in
-  this lane, and confirming the sentinel's effect on the real Android
+- content signatures and public bytes have been verified; no Android device, emulator or App run was made for this batch. Confirming the sentinel's effect on the real Android
   client's version comparison and install flow remains with the Android main
   owner on an actual build;
 - the sentinel never grants install behavior to a build that lacks the Hub
@@ -125,6 +122,6 @@ floor on both channels with no sentinel anywhere; unknown ids, scripted
 manifests, non-empty tools/`pythonPackages`, non-basic capabilities and
 missing package/review bindings keep the floor; guest-execution or
 wrong-stage reviews fail the unchanged bind/join gates closed; the helper
-never mutates its input and is deterministic; and the full current B release
+never mutates its input and is deterministic; and the historical B release
 feeds rebuild byte-identical from the frozen X snapshot against the
 `3e145cd6` published bytes.

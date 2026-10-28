@@ -15,13 +15,14 @@ so the bridge's exact-snapshot verification is exercised, not stubbed.
 The gate is exercised in BOTH admission shapes of the Root-approved
 incremental policy (2026-10-27): the complete-selection fixture (all 39
 optional rows qualified with all nine mandatory deep IDs admitted — 39
-download offers once the four App-provided builtins are excluded) and the
-incremental fixture carrying exactly the rows the REAL registry admits today
-(28 guide-only plus the 2 guest-qualified skills, the nine mandatory IDs held
-back — 30/30 download offers), plus a key-free in-memory gate probe against
-the ACTUAL signed repository data whose expectations are DERIVED from the
-registry (so a future honest admission changes no test, only the counts), and
-a FROZEN initial-release fixture pinning the exact first-wave semantics.
+download offers once the four App-provided builtins are excluded, 36 of
+them also on Android) and the incremental fixture carrying exactly the rows
+the FROZEN initial-release registry admitted at the first wave (28 guides
+plus the 2 guest-qualified skills, the nine mandatory IDs held back — 30/30
+download offers), plus a key-free in-memory gate probe against the ACTUAL
+signed repository data whose expectations are the EXPLICIT reviewed
+2026-10-28 admission baseline (admission_baseline.py), and a FROZEN
+initial-release fixture pinning the exact first-wave semantics.
 Held-back mandatory IDs no longer block the qualified set; every per-item
 trust refusal stays enforced. The 2026-10-28 platform-admission amendment
 is exercised in a third shape: an actually-offered mandatory ID is admitted
@@ -46,13 +47,19 @@ from types import SimpleNamespace
 
 HERE = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(HERE / "scripts"))
+sys.path.insert(0, str(HERE / "tests" / "catalog"))
 import hubcore  # noqa: E402
+import admission_baseline as BASE  # noqa: E402
 import fixture_status  # noqa: E402
 
 OFFICIAL_ORIGIN = "https://github.com/JiangNanGenius/floe-skill-hub.git"
 KEY_ID = hubcore.PRODUCTION_KEY_ID
 REVIEWED_AT = "2026-10-26"
 REVIEWER = "signing-bridge-fixture-reviewer"
+# Explicit fixture identity for the disposable reviews-mode bridge tests:
+# the staged package/review are synthetic, so the version is pinned here and
+# stays stable no matter which immutable versions get published later.
+FIXTURE_GUIDE_VERSION = "1.0.0"
 MANDATORY = [
     "algorithmic-art", "canvas-design", "exploratory-data-analysis",
     "impeccable", "literature-review", "markitdown",
@@ -381,6 +388,12 @@ class ReviewsModeTests(BridgeFixture):
         registry = base_registry()
         entry = next(e for e in registry["skills"] if e["id"] == id_)
         self.assertEqual(entry["plannedRuntime"]["scriptRuntime"], "none")
+        # This isolated bridge fixture stages its own synthetic package and
+        # review, then asserts the exact written leaf paths. Pin the fixture
+        # identity to one explicit version so a later registry versionTarget
+        # append (new immutable publications) cannot silently change what
+        # this disposable checkout signs; the live registry is never touched.
+        entry["versionTarget"] = FIXTURE_GUIDE_VERSION
         entry["status"] = dict(entry["status"], licenseChecked=True,
                                packaged=True, reviewed=True)
         if mutate is not None:
@@ -726,15 +739,23 @@ class CatalogModeTests(BridgeFixture):
         self.assertEqual(ios["sourceCommit"], commit)
         # 40 qualified registry rows (39 optional + the floe-pdf builtin) but
         # only 39 download offers: the four App-provided builtins are never
-        # Hub download offers.
+        # Hub download offers. The staged fixture mirrors the live planned
+        # channels, so exactly the three iOS-only optional rows (impeccable,
+        # algorithmic-art, canvas-design — reviewed 2026-10-28 baseline) are
+        # absent from the 36-row Android feed while every row ships on iOS.
         self.assertEqual(len(ios["entries"]), 39)
-        self.assertEqual(len(android["entries"]), 39)
+        self.assertEqual(len(android["entries"]), 36)
         self.assertNotIn("floe-pdf", {e["id"] for e in ios["entries"]})
         for entry in ios["entries"]:
             self.assertTrue(entry["status"]["published"], entry["id"])
+        ios_ids = {e["id"] for e in ios["entries"]}
+        android_ids = {e["id"] for e in android["entries"]}
         for id_ in MANDATORY:
-            self.assertIn(id_, {e["id"] for e in ios["entries"]})
-            self.assertIn(id_, {e["id"] for e in android["entries"]})
+            self.assertIn(id_, ios_ids)
+        for id_ in sorted(set(MANDATORY) - BASE.IOS_ONLY_OPTIONAL_IDS):
+            self.assertIn(id_, android_ids)
+        for id_ in sorted(set(MANDATORY) & BASE.IOS_ONLY_OPTIONAL_IDS):
+            self.assertNotIn(id_, android_ids)
         # standalone publication: feed-referenced archives + reviews + sigs staged
         for feed_name, prefix in (("catalog.json", ""), ("android/catalog.json", "android/")):
             feed = json.loads((out / feed_name).read_bytes())
@@ -763,18 +784,22 @@ class CatalogModeTests(BridgeFixture):
         self.assertTrue((out / frozen_rel).is_file())
         self.assertEqual((out / frozen_rel).read_bytes(),
                          (HERE / frozen_rel).read_bytes())
-        engine_rel = ("engines/impeccable/dist/impeccable-0.1.17+floe.1.0.0/"
-                      "riscv64gc-unknown-linux-musl/floe-impeccable")
+        # the frozen descriptor authenticates exactly the reviewed current
+        # engine artifact (0.1.17+floe.1.1.1); the release output must carry
+        # those bytes at the descriptor-relative path.
+        engine_rel = BASE.FROZEN_ENGINE_ARTIFACT_REL
         self.assertTrue((out / engine_rel).is_file())
         self.assertEqual(hubcore.sha256_hex((out / engine_rel).read_bytes()),
-                         hashlib.sha256((HERE / engine_rel).read_bytes()).hexdigest())
+                         BASE.FROZEN_ENGINE_ARTIFACT_SHA256)
+        self.assertEqual((out / engine_rel).read_bytes(),
+                         (HERE / engine_rel).read_bytes())
         receipt = self.verify_receipt(out, trust)
         self.assertEqual(receipt["mode"], "catalog")
         self.assertEqual(receipt["sourceCommit"], commit)
         self.assertEqual(receipt["toolingCommit"], self.tooling_commit)
         self.assertEqual(receipt["launchGate"]["policy"], "incremental-2026-10-27")
         self.assertEqual(receipt["launchGate"]["iosQualified"], 39)
-        self.assertEqual(receipt["launchGate"]["androidQualified"], 39)
+        self.assertEqual(receipt["launchGate"]["androidQualified"], 36)
         self.assertEqual(receipt["launchGate"]["selectionQualified"], 40)
         self.assertEqual(receipt["launchGate"]["builtinProvided"], 1)
         self.assertEqual(receipt["launchGate"]["mandatoryDeepIds"], sorted(MANDATORY))
@@ -1063,7 +1088,10 @@ class CatalogModeTests(BridgeFixture):
         self.assertIn("impeccable", ios_ids)
         self.assertNotIn("impeccable", android_ids)
         self.assertEqual(len(ios_ids), 39)
-        self.assertEqual(len(android_ids), 38)
+        # 36 both-channel optional rows: the live plan already makes
+        # algorithmic-art and canvas-design iOS-only (reviewed 2026-10-28
+        # baseline), so the Android feed is 36, not the pre-amendment 38.
+        self.assertEqual(len(android_ids), 36)
         pkg = next(e for e in ios["entries"] if e["id"] == "impeccable")
         self.assertEqual(pkg["package"]["contentDigest"],
                          staged["impeccable"]["contentDigest"])
@@ -1072,14 +1100,13 @@ class CatalogModeTests(BridgeFixture):
         frozen_rel = "engines/impeccable/runtime-dependency/descriptor.v1.json"
         self.assertEqual((out / frozen_rel).read_bytes(),
                          (HERE / frozen_rel).read_bytes())
-        engine_rel = ("engines/impeccable/dist/impeccable-0.1.17+floe.1.0.0/"
-                      "riscv64gc-unknown-linux-musl/floe-impeccable")
+        engine_rel = BASE.FROZEN_ENGINE_ARTIFACT_REL
         self.assertEqual(hubcore.sha256_hex((out / engine_rel).read_bytes()),
-                         hashlib.sha256((HERE / engine_rel).read_bytes()).hexdigest())
+                         BASE.FROZEN_ENGINE_ARTIFACT_SHA256)
         self.assertFalse((out / "android/packages/impeccable").exists())
         receipt = self.verify_receipt(out, trust)
         self.assertEqual(receipt["launchGate"]["iosQualified"], 39)
-        self.assertEqual(receipt["launchGate"]["androidQualified"], 38)
+        self.assertEqual(receipt["launchGate"]["androidQualified"], 36)
         self.assertEqual(receipt["launchGate"]["mandatoryDeepOffered"], sorted(MANDATORY))
         self.assertEqual(_git(data, "rev-parse", "HEAD").strip(), commit)
 
@@ -1102,8 +1129,11 @@ class CatalogModeTests(BridgeFixture):
         android = json.loads((out / "android/catalog.json").read_bytes())
         self.assertNotIn("impeccable", {e["id"] for e in ios["entries"]})
         self.assertIn("impeccable", {e["id"] for e in android["entries"]})
+        # reviewed baseline channels: iOS keeps the 36 both-channel rows plus
+        # the two live iOS-only art skills (38); Android gains impeccable for
+        # 36 + 1 = 37 (the art skills stay off Android).
         self.assertEqual(len(ios["entries"]), 38)
-        self.assertEqual(len(android["entries"]), 39)
+        self.assertEqual(len(android["entries"]), 37)
         frozen_rel = "engines/impeccable/runtime-dependency/descriptor.v1.json"
         self.assertTrue((out / frozen_rel).is_file())
         receipt = self.verify_receipt(out, {KEY_ID: self.public_b64})
@@ -1317,44 +1347,37 @@ class RealDataIncrementalGateTests(unittest.TestCase):
             self.outputs if outputs is None else outputs)
 
     def test_actual_admission_passes_incremental_gate(self):
-        # Expectations are DERIVED from the registry, not hardcoded: a future
-        # honest admission (e.g. another optional skill qualifying) changes
-        # only the recomputed counts, never this test's structure.
+        # Expectations are the EXPLICIT reviewed 2026-10-28 admission baseline
+        # (admission_baseline.py: 39 iOS / 36 Android download-offer ids, the
+        # full 43-row qualified selection, four App-provided builtins), not a
+        # recomputation of the same file the gate under test reads. An honest
+        # future admission changes this literal only together with the
+        # independently reviewed baseline it pins.
         gate = self._gate()
         self.assertEqual(gate["policy"], "incremental-2026-10-27")
         self.assertEqual(gate["mandatoryDeepIds"], sorted(MANDATORY))
-        admitted = {e["id"] for e in REAL_REGISTRY["skills"]
-                    if e["status"]["qualified"]}
-        download_ios = {e["id"] for e in REAL_REGISTRY["skills"]
-                        if e["status"]["qualified"]
-                        and "ios" in e["plannedRuntime"]["installPlatforms"]
-                        and not hubcore.is_download_offer_excluded(e["id"])}
-        download_android = {e["id"] for e in REAL_REGISTRY["skills"]
-                            if e["status"]["qualified"]
-                            and "android" in e["plannedRuntime"]["installPlatforms"]
-                            and not hubcore.is_download_offer_excluded(e["id"])}
+        download_ios = set(BASE.IOS_OPTIONAL_OFFER_IDS)
+        download_android = set(BASE.ANDROID_OPTIONAL_OFFER_IDS)
+        admitted = download_ios | download_android | set(hubcore.RESERVED_BUILTIN_IDS)
+        self.assertEqual(len(admitted), BASE.QUALIFIED_SELECTION)
         self.assertTrue(download_ios)
         self.assertTrue(download_android)
-        expected_mandatory = set(MANDATORY) & (download_ios | download_android)
-        self.assertEqual(gate["mandatoryDeepOffered"], sorted(expected_mandatory))
-        self.assertEqual(gate["iosQualified"], len(download_ios))
-        self.assertEqual(gate["androidQualified"], len(download_android))
-        self.assertEqual(gate["selectionQualified"], len(admitted))
-        self.assertEqual(
-            gate["builtinProvided"],
-            sum(1 for e in REAL_REGISTRY["skills"]
-                if e["id"] in hubcore.APP_PROVIDED_BUILTIN_IDS
-                and e["status"]["qualified"]))
+        self.assertEqual(gate["mandatoryDeepOffered"], sorted(MANDATORY))
+        self.assertEqual(gate["iosQualified"], 39)
+        self.assertEqual(gate["androidQualified"], 36)
+        self.assertEqual(gate["selectionQualified"], 43)
+        self.assertEqual(gate["builtinProvided"], 4)
         coverage = gate["completeSelectionCoverage"]
         self.assertTrue(coverage["informationalOnly"])
-        self.assertEqual(coverage["selectionQualified"], len(admitted))
-        self.assertEqual(coverage["meetsQualifiedTarget"],
-                         len(admitted) >= self.sign_publication.COMPLETE_SELECTION_QUALIFIED_TARGET)
-        all_mandatory = (set(MANDATORY) <= download_ios
-                         and set(MANDATORY) <= download_android)
-        self.assertEqual(coverage["mandatoryDeepAllPresent"], all_mandatory)
-        self.assertEqual(coverage["complete"],
-                         coverage["meetsQualifiedTarget"] and all_mandatory)
+        self.assertEqual(coverage["selectionQualified"], 43)
+        self.assertTrue(coverage["meetsQualifiedTarget"])
+        self.assertEqual(coverage["downloadEligible"], 39)
+        self.assertTrue(coverage["builtinProvided"] == 4)
+        # all nine mandatory deep IDs are admitted (three of them on their
+        # declared iOS-only plan, six on both channels): the coverage flag
+        # tracks presence across the selection, per the 2026-10-28 amendment.
+        self.assertTrue(coverage["mandatoryDeepAllPresent"])
+        self.assertTrue(coverage["complete"])
         ios = json.loads(self.outputs["catalog.json"])
         android = json.loads(self.outputs["android/catalog.json"])
         self.assertEqual({e["id"] for e in ios["entries"]}, download_ios)
@@ -1469,14 +1492,14 @@ class RealDataIncrementalGateTests(unittest.TestCase):
         registry row explicitly re-planned to iOS-only in a copied registry
         (a mechanism probe of the same declared-channel code path Root's new
         Impeccable entry will use — the real data itself is never mutated),
-        the actual builder plus the unchanged gate admit the iOS-36/Android-35
-        split (this exact build was refused as "single channel"
+        the actual builder plus the unchanged gate admit the iOS-39/Android-35
+        split (the reviewed 39/36 baseline loses only markitdown from
+        Android; this exact build was refused as "single channel"
         pre-amendment), the real production-signed guest review still binds
         the offered channel, and any injection of that iOS-only ID back into
         the Android feed is refused as an unplanned channel. The additive
-        shape (a held mandatory ID newly admitted on iOS growing the feed,
-        37 iOS / 36 Android for impeccable-like plans) is proven E2E by
-        test_ios_only_impeccable_mandatory_publishes_with_full_h6."""
+        shape (iOS-only mandatory rows already present in the live plan) is
+        proven E2E by test_ios_only_impeccable_mandatory_publishes_with_full_h6."""
         changed = copy.deepcopy(self.registry)
         for entry in changed["skills"]:
             if entry["id"] == "markitdown":
@@ -1488,7 +1511,7 @@ class RealDataIncrementalGateTests(unittest.TestCase):
         gate = self.sign_publication.enforce_launch_gate(
             hubcore, self.runtime_dependency, self.args, changed, outputs)
         self.assertIn("markitdown", gate["mandatoryDeepOffered"])
-        self.assertEqual(gate["iosQualified"], 36)
+        self.assertEqual(gate["iosQualified"], 39)
         self.assertEqual(gate["androidQualified"], 35)
         ios = json.loads(outputs["catalog.json"])
         android = json.loads(outputs["android/catalog.json"])

@@ -10,7 +10,9 @@ import unittest
 
 HERE = pathlib.Path(__file__).resolve()
 sys.path.insert(0, str(HERE.parents[2] / "scripts"))
+sys.path.insert(0, str(HERE.parents[1]))
 import hubcore
+import admission_baseline as BASE
 import build_catalog
 import build_packages
 import make_fixture
@@ -102,12 +104,15 @@ class TestPreviewBuild(unittest.TestCase):
         ios = json.loads(feeds["catalog.json"])
         android = json.loads(feeds["android/catalog.json"])
         self.assertEqual(len(ios["entries"]), 43)
-        self.assertEqual(len(android["entries"]), 39)  # the four builtins are iOS-only
+        # 43 candidate rows minus the 4 iOS-only builtins minus the three
+        # iOS-only planned optional rows of the reviewed 2026-10-28 baseline
+        # (impeccable, algorithmic-art, canvas-design).
+        self.assertEqual(len(android["entries"]), 36)
         self.assertTrue(all(e["installOffer"] == "none" for e in ios["entries"]))
         self.assertEqual(ios["counts"]["packaged"], 43)
         self.assertEqual(ios["counts"]["reviewed"], 43)
-        self.assertEqual(ios["counts"]["qualified"], 34)  # status carried from admission
-        self.assertEqual(android["counts"]["qualified"], 30)  # 34 minus 4 iOS-only builtins
+        self.assertEqual(ios["counts"]["qualified"], 43)  # full reviewed selection
+        self.assertEqual(android["counts"]["qualified"], 36)  # minus iOS-only rows
         self.assertEqual(ios["counts"]["offerQualified"], 0)
         self.assertEqual(android["counts"]["offerQualified"], 0)
         # Every packaged+reviewed row is bound to a real archive AND a
@@ -124,12 +129,19 @@ class TestPreviewBuild(unittest.TestCase):
         # carries only the admitted NON-BUILTIN rows (the four App-provided
         # builtins are native App features, never Hub download offers), each
         # with real package+review bindings verified against public-key.json
-        # trust and the feed-only published=true projection.
+        # trust and the feed-only published=true projection. The exact offer
+        # sets are the reviewed 2026-10-28 admission baseline (39 iOS / 36
+        # Android), asserted as identities, not as counts of what the builder
+        # happened to emit.
         feeds = build_catalog.build(self.registry, "release", FAKE_COMMIT, REPO, REPO, TRUST)
         ios = json.loads(feeds["catalog.json"])
         android = json.loads(feeds["android/catalog.json"])
-        self.assertEqual(ios["counts"]["total"], 30)
-        self.assertEqual(android["counts"]["total"], 30)
+        self.assertEqual(ios["counts"]["total"], 39)
+        self.assertEqual(android["counts"]["total"], 36)
+        self.assertEqual({e["id"] for e in ios["entries"]},
+                         set(BASE.IOS_OPTIONAL_OFFER_IDS))
+        self.assertEqual({e["id"] for e in android["entries"]},
+                         set(BASE.ANDROID_OPTIONAL_OFFER_IDS))
         self.assertEqual(ios["counts"]["builtin"], 0)
         self.assertEqual(android["counts"]["builtin"], 0)
         self.assertFalse({e["id"] for e in ios["entries"]}
@@ -186,9 +198,12 @@ class TestPreviewBuild(unittest.TestCase):
         args = SimpleNamespace(data=str(REPO), source_commit=FAKE_COMMIT)
         gate = sign_publication.enforce_launch_gate(
             hubcore, runtime_dependency, args, registry, outputs)
-        self.assertEqual(gate["iosQualified"], 30)
-        self.assertEqual(gate["androidQualified"], 30)
-        self.assertEqual(gate["selectionQualified"], 34)
+        # Counts of the reviewed 2026-10-28 baseline, proven unchanged by the
+        # kind relabel: 39 iOS + 36 Android download offers, the full 43-row
+        # qualified selection and the 4 qualified App-provided builtins.
+        self.assertEqual(gate["iosQualified"], 39)
+        self.assertEqual(gate["androidQualified"], 36)
+        self.assertEqual(gate["selectionQualified"], 43)
         self.assertEqual(gate["builtinProvided"], 4)
 
     def test_release_mode_refuses_when_nothing_is_admitted(self):
@@ -323,9 +338,26 @@ class TestLegacyView(unittest.TestCase):
         self.assertIn("no qualified package", str(ctx.exception))
 
     def test_legacy_cli_reports_pending_without_root_catalog(self):
-        result = run_cli("build_legacy_view.py", ["--catalog", str(REPO / "catalog.json")])
+        # The original setup relied on the REPO not having a root catalog.json
+        # at all (pre-publication era). The coordinator has since published
+        # the real feeds, so the "no production feed yet" state is now
+        # isolated EXPLICITLY: run the CLI against a path that genuinely does
+        # not exist. The refusal message and non-zero exit stay load-bearing.
+        tmp = tempfile.mkdtemp(prefix="hub-legacy-missing-")
+        self.addCleanup(shutil.rmtree, tmp, True)
+        missing = pathlib.Path(tmp) / "no-such-feed.json"
+        self.assertFalse(missing.exists())
+        result = run_cli("build_legacy_view.py", ["--catalog", str(missing)])
         self.assertNotEqual(result["code"], 0)
         self.assertIn("production feed", result["output"])
+
+    def test_legacy_cli_refuses_the_release_feed_without_inventing_guides(self):
+        # On the ACTUAL published root feed (which carries no builtin rows —
+        # builtins are never download offers) the decoder must refuse rather
+        # than fabricate the four reserved rows.
+        result = run_cli("build_legacy_view.py", ["--catalog", str(REPO / "catalog.json")])
+        self.assertNotEqual(result["code"], 0)
+        self.assertIn("all four reserved guides", result["output"])
 
 
 class TestImmutability(unittest.TestCase):
@@ -381,13 +413,60 @@ class TestImmutability(unittest.TestCase):
 
 class TestFixtureBoundary(unittest.TestCase):
     def test_fixture_files_stay_under_tests_catalog_fixtures(self):
-        # packages/** and reviews/** are now canonical admitted data (signed
-        # review epoch); what must NOT exist before the coordinator's
-        # publication run are the production channel feeds and their sigs.
-        for production in (REPO / "catalog.json", REPO / "catalog.sig",
-                           REPO / "android" / "catalog.json",
-                           REPO / "android" / "catalog.sig"):
-            self.assertFalse(production.exists(), f"production path claimed: {production}")
+        # The boundary that must hold FOREVER is fixture isolation, not the
+        # old era condition "the repo root has no feeds": the coordinator has
+        # published real production feeds, and fixtures must never leak into
+        # or masquerade as production. Scan everything outside
+        # tests/catalog/fixtures for fixture identity — fixture-signed
+        # envelopes, fixture-status feeds, fixture-* entry ids or fixture
+        # paths — and refuse any leak. Then prove the production side really
+        # is production: the published channel feeds carry feedStatus
+        # "production" and verify under the official trust root.
+        fixtures_dir = HERE.parents[0] / "fixtures"
+        leaked = []
+        for path in REPO.rglob("*"):
+            if not path.is_file() or "__pycache__" in path.parts:
+                continue
+            if path.relative_to(REPO).parts[0] in (".git", ".build"):
+                continue
+            try:
+                path.relative_to(fixtures_dir)
+                continue  # fixture home: allowed to be fixture
+            except ValueError:
+                pass
+            rel_parts = path.relative_to(REPO).parts
+            if any(part.startswith("fixture-") for part in rel_parts):
+                leaked.append(str(path.relative_to(REPO)) + ": fixture- path")
+            if path.name == "catalog.json" or path.name.endswith(".review.json"):
+                doc = json.loads(path.read_bytes())
+                if doc.get("feedStatus") == "fixture":
+                    leaked.append(str(path.relative_to(REPO)) + ": fixture feed")
+                entries = doc.get("entries") or []
+                if any(str(e.get("id", "")).startswith("fixture-") for e in entries):
+                    leaked.append(str(path.relative_to(REPO)) + ": fixture entries")
+            elif path.suffix == ".sig":
+                envelope = json.loads(path.read_bytes())
+                if envelope.get("keyID") == hubcore.FIXTURE_KEY_ID:
+                    leaked.append(str(path.relative_to(REPO)) + ": fixture keyID")
+        self.assertEqual(leaked, [])
+        # The published production feeds exist and are production-status.
+        for rel in ("catalog.json", "android/catalog.json"):
+            feed = json.loads((REPO / rel).read_bytes())
+            self.assertEqual(feed["feedStatus"], "production", rel)
+            self.assertIsNotNone(feed["sourceCommit"], rel)
+        body = (REPO / "catalog.json").read_bytes()
+        envelope = (REPO / "catalog.sig").read_bytes()
+        self.assertEqual(hubcore.verify_envelope(body, envelope, TRUST),
+                         hubcore.PRODUCTION_KEY_ID)
+
+    def test_production_feed_paths_existed_after_publication(self):
+        # Honest era marker: the root/android feed+sig bytes are committed
+        # production data now; the old assertion that they must NOT exist was
+        # a pre-publication fixture condition, correctly superseded by the
+        # leak scan above and the production-trust verification.
+        for rel in ("catalog.json", "catalog.sig", "android/catalog.json",
+                    "android/catalog.sig"):
+            self.assertTrue((REPO / rel).is_file(), rel)
 
     def test_fixture_identity_is_unmistakable(self):
         marker = (FIXTURES / "FIXTURE-ONLY.md").read_text()
