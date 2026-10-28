@@ -1,6 +1,6 @@
-# Reviewed installation: daily checks and candidate builds are enabled.
-# Draft PR creation is DISABLED until the owner explicitly authorizes the
-# repository create/approve setting and sets FLOE_IMPECCABLE_UPDATE_PRS=enabled.
+# Daily checks and candidate builds run independently of publication.
+# Draft PR creation is DISABLED unless FLOE_IMPECCABLE_UPDATE_PRS=enabled and
+# the owner-managed repository setting allows Actions to create pull requests.
 # No automatic approval, merge, signing, publication or client installation.
 #
 # Content: identical to the reviewed template under
@@ -60,12 +60,9 @@
 #     action repositories' own refs; see `engines/impeccable/workflows/README.md`),
 #     not floating major tags.
 #
-# Remote prerequisite (verified read-only by the coordinator): the repository
-# default workflow permission is `read` and `can_approve_pull_request_reviews`
-# is `false`. This file keeps top-level `contents: read` and grants write only
-# to the PR job. Do not change any remote account/repository permission to
-# make automation smoother, and do not treat a created PR as possible to
-# self-approve.
+# Repository defaults remain read-only. This file keeps top-level
+# `contents: read` and grants write only to the draft-PR job. It never changes
+# account or repository permissions, approves a PR, or merges an update.
 
 name: impeccable-engine-updater
 

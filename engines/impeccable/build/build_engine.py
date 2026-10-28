@@ -14,8 +14,8 @@ What it does, in order, failing closed at every step:
  1. verify the source checkout is exactly the pinned commit and tree;
  2. export that commit with `git archive` into a clean build tree (no git
     metadata, no working-tree drift);
- 3. apply `patches/*.patch` in lexical order with `git apply --check` first,
-    recording each digest;
+ 3. apply `patches/*.patch` in lexical order with `patch(1)` (exact-context,
+    fuzz-free, dry-run first), recording each digest;
  4. copy the tracked adapter crate in as `crates/floe-impeccable` and the frozen
     `contract/` into its `data/`, verifying every contract digest against the
     tracked files so the binary cannot embed a contract that differs from the
@@ -164,6 +164,28 @@ def apply_patches(build_dir: Path) -> list[dict]:
     has no repository discovery, and the post-conditions below mean a skipped or
     half-applied patch fails the build instead of producing an engine that still
     carries the upstream TLS and update paths.
+
+    Two `patch(1)` options carry the audit that used to lean on the `.orig`
+    scan alone (hosted updater run 40614187492: applying the tracked patches to
+    upstream 0.1.18 failed only because every hunk matched its context exactly
+    but at a line *offset*, and GNU patch's default backup-on-mismatch then
+    leaves a `.orig` copy of the pristine file behind for each offset-applied
+    hunk; those backups are byte-identical to the pre-patch export):
+
+    * `--fuzz=0` — every hunk must match its declared context exactly. The
+      default fuzz factor (2) would let patch(1) *drop leading or trailing
+      context lines* and still report success, silently placing a hunk in
+      shifted content; with fuzz 0 a hunk that needs it exits non-zero at the
+      dry-run gate and the workflow must rebase the patch instead.
+    * `--no-backup-if-mismatch` — an offset-only application is legitimate and
+      must not be mistaken for a conflict; without this, the mismatch backup
+      semantics turn those `.orig` copies into false build failures. True
+      rejects still write `.rej` and exit non-zero either way.
+
+    The `.rej`/`.orig` scan below stays as the fail-closed net: with these
+    options a successful, complete application must leave no artifacts at all,
+    so any surviving reject or original file (or a `with fuzz` line in GNU
+    patch's output) is a genuine anomaly and stops the build.
     """
     applied = []
     if not PATCH_DIR.is_dir():
@@ -172,10 +194,11 @@ def apply_patches(build_dir: Path) -> list[dict]:
     patch_bin = shutil.which("patch")
     if not patch_bin:
         fail("patch(1) is required to apply the tracked upstream patches")
+    apply_args = [patch_bin, "-p1", "--forward", "--fuzz=0", "--no-backup-if-mismatch"]
     for patch in sorted(PATCH_DIR.glob("*.patch")):
         digest = sha256_file(patch)
         dry = subprocess.run(
-            [patch_bin, "-p1", "--forward", "--dry-run", "-i", str(patch)],
+            apply_args + ["--dry-run", "-i", str(patch)],
             cwd=str(build_dir), capture_output=True, text=True,
         )
         if dry.returncode != 0:
@@ -187,16 +210,26 @@ def apply_patches(build_dir: Path) -> list[dict]:
                 stderr=dry.stderr[-2000:],
             )
         result = subprocess.run(
-            [patch_bin, "-p1", "--forward", "-i", str(patch)],
+            apply_args + ["-i", str(patch)],
             cwd=str(build_dir), capture_output=True, text=True,
         )
         if result.returncode != 0:
             fail("applying a patch failed", patch=patch.name,
                  stdout=result.stdout[-2000:], stderr=result.stderr[-2000:])
+        report = result.stdout + result.stderr
+        if "with fuzz" in report:
+            fail("a patch applied only after dropping context lines; the updater workflow must "
+                 "rebase it", patch=patch.name, stdout=report[-2000:])
+        offsets = re.findall(r"succeeded at \d+ \(offset (\d+) lines\)", report)
+        if "FAILED" in report:
+            fail("a patch hunk failed to apply", patch=patch.name, stdout=report[-2000:])
         rejects = list(build_dir.rglob("*.rej")) + list(build_dir.rglob("*.orig"))
         if rejects:
             fail("a patch left reject or original files behind", files=[str(r) for r in rejects[:10]])
         applied.append({"patch": patch.name, "sha256": digest})
+        print(f"[patch] {patch.name}: applied with exact context"
+              + (f" ({len(offsets)} hunk(s) applied at a line offset)" if offsets else ""),
+              flush=True)
     verify_patch_effects(build_dir, applied)
     return applied
 
