@@ -1,6 +1,6 @@
 # macOS original Skill contract — author input
 
-Status: **author input only; not a released channel.** This document defines the
+Status: **frozen author contract; the macOS original channel is not yet published.** This document defines the
 package and feed contract for the reserved macOS original route used by the same-Mac
 bridge. It creates no feed, signature, package, source tree, key, workflow or install
 offer. No production `macos/catalog.json`, `macos/catalog.json.sig`, archive or
@@ -49,9 +49,10 @@ schema, offers or review records.
 Raw catalog bytes are capped at **4 MiB** (4,194,304 bytes). The feed contains at
 most **256 entries** with unique `id`s.
 
-As of this author-input alignment, this document creates no production file: the
-Hub has no `macos/` feed, signature, archive, source directory, private signing key or
-publication workflow for this channel.
+No production file is created by this document. The default branch has no released
+`macos/` feed or install offer. The [candidate producer](MACOS-ORIGINAL-PACKAGING.md)
+and [data-only signer](MACOS-ORIGINAL-SIGNING.md) implement this contract without
+publishing candidates or adding a trust key.
 
 ## Entry fields (exact set)
 
@@ -259,19 +260,24 @@ dependencies can be prepared, or that the Skill runs on a particular Mac.
    bytes with the existing production key and publishes `macos/catalog.json` plus
    `macos/catalog.json.sig` at the immutable publication commit. Do not create a
    feed, key or signature from an author lane.
-9. **Accept on the actual Mac and App.** With a paired Mac bridge and the capable
-   App build, install the original, read it, exercise any model-led dependency
-   preparation and run its instructions. Record the actual result; do not claim
-   Linux guest qualification, an archive, a review receipt or release availability
-   that was not observed.
+9. **Accept the Mac bridge and App delivery.** Before the first channel release,
+   the release owner validates the capable paired bridge/App with representative
+   real originals, including installation, reading, update and task version retention.
+   This is client integration acceptance, not a new execution-qualification gate
+   for every original Skill. An original may be offered after source, signature,
+   integrity, safe-path and capability checks without a per-Skill compatibility run.
+   Record any actual dependency preparation or execution separately; do not invent
+   Linux qualification, archives, review receipts or runtime readiness.
 10. **Re-check history before the next publication.** Compare the previous signed
     Mac feed/history and refuse any same `(id, version)` with a different commit,
     manifest or modes. The App's local immutable check covers only identities that
     client has observed; it is not a substitute for the publisher's historical
     check.
 
-Until all of that happens, the channel is author input only: there is no released
-Mac original download, no published feed and no install offer.
+Before the release owner confirms the client identity and publishes the signed
+feed, this channel has no released Mac original download or install offer.
+Per-Skill execution is not a publication prerequisite for originals; runtime
+readiness is established in the real task environment when a Skill is used.
 
 ## Provenance
 
@@ -295,5 +301,6 @@ The two bilingual guides are linked above at the public frozen commit
 `55457ad5...` are identical (hashes above). The feed envelope and signing model are
 also described in [SIGNING_BRIDGE.md](SIGNING_BRIDGE.md) and
 [CATALOG-CONTRACT.md](CATALOG-CONTRACT.md); the existing trust root is
-[`public-key.json`](../public-key.json). Nothing in this document adds a key,
-schema copy, validator, producer, package, feed or workflow to the Hub.
+[`public-key.json`](../public-key.json). The contract introduces no new trust key or Linux
+qualification requirement; candidate tooling and its evidence remain separate from
+production feed publication.
