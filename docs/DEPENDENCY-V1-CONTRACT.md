@@ -35,6 +35,26 @@ Ordinary `apt` / `pip` / `npm` work through `exec.shell` remains available to
 every skill: this contract is a small reviewed convenience integration, not a
 new execution system and not a fetch restriction.
 
+## Scope: Linux guests only
+
+This declaration, its schema and the provisioning/readiness semantics in this
+document apply only to official curated installs that execute in a resolved
+Linux guest (`target.os` is exactly `"linux"`). They are not a macOS install plan
+and do not describe the separate macOS original channel.
+
+macOS original Skills use [MACOS-ORIGINAL-CONTRACT.md](MACOS-ORIGINAL-CONTRACT.md):
+a separate signed `macos/catalog.json` feed, ordinary model-led dependency
+preparation in the actual Mac task environment, and no dependency bundle or
+Debian/riscv64 plan replayed on the Mac. The frozen Linux schema, limits, tooling
+and qualification statements in this document are unchanged.
+
+Provenance refresh: the current App Main source for that alignment is floe-agent
+commit `55457ad5ff186a3c2f46c4a7318a8ebfb9ed945e` (repository-relative paths;
+pending public publication, not a live link). The bilingual Linux author guides
+and `dependencies.schema.json` at that commit are byte-identical to the frozen
+`e3fc4b8ef3450c47b16338f7aa660d48886db4a5` copies pinned below; no Linux
+declaration semantics changed.
+
 ## Frozen schema (v1)
 
 Top-level keys are exactly `schemaVersion` and `profiles`; a profile is exactly
