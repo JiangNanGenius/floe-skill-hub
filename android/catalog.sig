@@ -1,1 +1,1 @@
-{"keyID":"official-2026-09","signature":"E9zFbrLVu2wgkChZt60cOqrTfZGjMBLXx9u/Kq0tpM4lwSYn3QDFwXlgph722UW5MKYwuXBa4DlLqwF0fEZICQ=="}
+{"keyID":"official-2026-09","signature":"4S1bKe2xC4RFJ5LF/UeHpoG+oTu2h2tEpVpDEpWCzxeRBcyOtibgmms4GL4fFRF7z6mG/vTnmnv5IV882BfrBA=="}
