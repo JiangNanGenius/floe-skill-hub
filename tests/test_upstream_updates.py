@@ -13,6 +13,7 @@ Run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.test_upstream_updates -
 import copy
 import json
 import pathlib
+import re
 import shutil
 import subprocess
 import sys
@@ -26,6 +27,11 @@ sys.path.insert(0, str(REPO / "scripts"))
 import hubcore  # noqa: E402
 import upstream_updates as uu  # noqa: E402
 
+try:
+    import jsonschema
+except ImportError:  # CI installs cryptography only; contract tests still run below
+    jsonschema = None
+
 TODAY = "2026-10-28"
 PIN = "1" * 40
 HEAD = "2" * 40
@@ -33,6 +39,7 @@ OTHER = "3" * 40
 FIXTURE_REPO = "https://github.com/fixture-owner/fixture-skills"
 FIXTURE_ENGINE_REPO = "https://github.com/fixture-owner/fixture-engine"
 FIXTURE_WATCH_REPO = "https://github.com/watch-owner/watch-repo"
+POLICY_SCHEMA = REPO / "schema/upstream-update-policy.schema.json"
 
 
 # ---------------------------------------------------------------------------
@@ -533,6 +540,28 @@ class TestFingerprints(unittest.TestCase):
         self.assertEqual(before, after)
 
 
+class TestGuideCodeDetector(unittest.TestCase):
+    def test_obvious_code_suffixes_are_detected_anywhere(self):
+        for path in ("assets/tool.py", "references/deep/run.sh", "assets/app.js",
+                     "references/helper.rb", "assets/native.c", "assets/worker.ts"):
+            with self.subTest(path=path):
+                self.assertTrue(uu.is_guide_code_path(path, b"code\n"))
+        for path in ("SKILL.md", "references/guide.md", "assets/template.md",
+                     "assets/data.json", "references/licenses/LICENSE.txt",
+                     "references/data.csv"):
+            with self.subTest(path=path):
+                self.assertFalse(uu.is_guide_code_path(path, b"prose or data\n"))
+
+    def test_extensionless_shebang_is_detected(self):
+        self.assertTrue(uu.is_guide_code_path("assets/runner", b"#!/bin/sh\necho hi\n"))
+        self.assertTrue(uu.is_guide_code_path("references/tool", b"#!/usr/bin/env python3\n"))
+        self.assertFalse(uu.is_guide_code_path("assets/runner", b"plain text\n"))
+        self.assertFalse(uu.is_guide_code_path("assets/runner", None))
+        # a suffix wins over content: a Markdown file is still prose even if it
+        # starts with a shebang-looking line, and extensionless prose is inert.
+        self.assertFalse(uu.is_guide_code_path("assets/note.md", b"#!/bin/sh\n"))
+
+
 class TestProvenanceAndManifest(unittest.TestCase):
     def test_provenance_mechanical_update(self):
         files = {"SKILL.md": b"a", "floe.json": b"b"}
@@ -721,6 +750,14 @@ class TestPlanSkillGuideOnly(PlanSkillHarness):
                "LICENSE.txt": b"MIT fixture license\n"}
         return old, new, local
 
+    def trees_with_carried_areas(self):
+        """Baseline trees that already carry an assets/ and references/tools/ area."""
+        old, new, local = self.trees()
+        for tree in (old, new, local):
+            tree["assets/template.md"] = b"# asset template\n"
+            tree["references/tools/guide.md"] = b"# tools\n"
+        return old, new, local
+
     def test_eligible_tier1_verbatim_carry_and_version_bump(self):
         entry = self.entry()
         old, new, local = self.trees()
@@ -759,6 +796,88 @@ class TestPlanSkillGuideOnly(PlanSkillHarness):
         self.assertIn(b"Floe adaptation note.", merged)
         self.assertEqual(plan["status"], "eligible-tier1", plan["reasons"])
 
+    def test_ordinary_prose_delta_with_carried_assets_still_eligible(self):
+        entry = self.entry()
+        old, new, local = self.trees_with_carried_areas()
+        new["SKILL.md"] = skill_md("fixture-guide", body="ordinary prose improved.\n")
+        plan = self.plan(entry, old, new, local, dict(local))
+        self.assertEqual(plan["status"], "eligible-tier1", plan["reasons"])
+        self.assertEqual(plan["tier"], 1)
+        self.assertEqual(plan["instructionCodeFingerprint"]["equal"], True)
+        self.assertEqual(plan["_candidateTree"]["assets/template.md"], b"# asset template\n")
+
+    def test_new_python_code_under_assets_holds_adaptation(self):
+        entry = self.entry()
+        old, new, local = self.trees_with_carried_areas()
+        new["assets/tool.py"] = b"print('carried code')\n"
+        plan = self.plan(entry, old, new, local, dict(local))
+        self.assertEqual(plan["status"], "held-adaptation-required", plan["reasons"])
+        self.assertIn("assets/tool.py", plan["reasons"][0]["detail"])
+        self.assertIn("code-like", plan["reasons"][0]["detail"])
+        self.assertNotIn("_candidateTree", plan)
+        self.assertIn({"upstream": "assets/tool.py", "local": "assets/tool.py",
+                       "action": "add", "rule": "identity",
+                       "sha256": uu.sha256_bytes(b"print('carried code')\n")},
+                      plan["fileActions"])
+
+    def test_new_nested_shell_code_holds_adaptation(self):
+        entry = self.entry()
+        old, new, local = self.trees_with_carried_areas()
+        new["references/tools/run.sh"] = b"#!/bin/sh\necho carried\n"
+        plan = self.plan(entry, old, new, local, dict(local))
+        self.assertEqual(plan["status"], "held-adaptation-required", plan["reasons"])
+        self.assertIn("references/tools/run.sh", plan["reasons"][0]["detail"])
+        self.assertNotIn("_candidateTree", plan)
+
+    def test_extensionless_shebang_holds_adaptation(self):
+        entry = self.entry()
+        old, new, local = self.trees_with_carried_areas()
+        new["assets/runner"] = b"#!/bin/sh\necho carried\n"
+        plan = self.plan(entry, old, new, local, dict(local))
+        self.assertEqual(plan["status"], "held-adaptation-required", plan["reasons"])
+        self.assertIn("assets/runner", plan["reasons"][0]["detail"])
+        self.assertNotIn("_candidateTree", plan)
+
+    def test_modified_asset_code_holds_adaptation(self):
+        entry = self.entry()
+        old, new, local = self.trees_with_carried_areas()
+        old["assets/template.py"] = b"print('old')\n"
+        new["assets/template.py"] = b"print('new')\n"
+        local["assets/template.py"] = b"print('old')\n"
+        plan = self.plan(entry, old, new, local, dict(local))
+        self.assertEqual(plan["status"], "held-adaptation-required", plan["reasons"])
+        self.assertIn("assets/template.py", plan["reasons"][0]["detail"])
+
+    def test_fenced_instruction_code_change_in_guide_holds(self):
+        entry = self.entry()
+        old, new, local = self.trees_with_carried_areas()
+        new["SKILL.md"] = skill_md(
+            "fixture-guide",
+            body="Calculate:\n\n```text\nTotal Variance = Actual - Budget (or Prior)\n```\n")
+        plan = self.plan(entry, old, new, local, dict(local))
+        self.assertEqual(plan["status"], "held-instruction-code-changed", plan["reasons"])
+        self.assertFalse(plan["instructionCodeFingerprint"]["equal"])
+        self.assertIn("SKILL.md", plan["instructionCodeFingerprint"]["changedPaths"])
+        self.assertNotIn("_candidateTree", plan)
+
+    def test_inline_instruction_code_change_in_guide_holds(self):
+        entry = self.entry()
+        old, new, local = self.trees_with_carried_areas()
+        new["SKILL.md"] = skill_md(
+            "fixture-guide", body="Run `python3 scripts/run.py --force` before saving.\n")
+        plan = self.plan(entry, old, new, local, dict(local))
+        self.assertEqual(plan["status"], "held-instruction-code-changed", plan["reasons"])
+        self.assertFalse(plan["instructionCodeFingerprint"]["equal"])
+
+    def test_prose_and_instruction_code_unchanged_but_asset_code_is_held(self):
+        entry = self.entry()
+        old, new, local = self.trees_with_carried_areas()
+        new["SKILL.md"] = skill_md("fixture-guide", body="new prose only.\n")
+        new["assets/helper.js"] = b"export const x = 1;\n"
+        plan = self.plan(entry, old, new, local, dict(local))
+        self.assertEqual(plan["status"], "held-adaptation-required", plan["reasons"])
+        self.assertTrue(plan["instructionCodeFingerprint"]["equal"])
+
     def test_no_change_when_only_excluded_paths_drift(self):
         entry = self.entry()
         old, new, local = self.trees(new_skill_body="old body line\n")
@@ -769,6 +888,9 @@ class TestPlanSkillGuideOnly(PlanSkillHarness):
         self.assertFalse(plan["contentChanged"])
         self.assertEqual(plan["pinAdvance"], {"from": PIN, "to": HEAD})
         self.assertNotIn("proposedVersion", plan)
+        self.assertFalse([a for a in plan["fileActions"]
+                          if a.get("local") == "scripts/helper.py"
+                          and a.get("action") in ("add", "carry-new", "merge")])
 
     def test_conflict_holds_with_actionable_reason_and_no_candidate(self):
         entry = self.entry()
@@ -1411,6 +1533,121 @@ class TestCliSurface(unittest.TestCase):
         report = {"b": 1, "a": [2, 3]}
         self.assertEqual(uu.dump_report(report), uu.dump_report(copy.deepcopy(report)))
 
+
+
+class TestPolicySchemaLicenseEvidence(unittest.TestCase):
+    """Schema and runtime must accept the same documented evidence paths.
+
+    jsonschema is not a CI dependency (catalog.yml installs cryptography only),
+    so the always-running contract test reads the published schema keywords
+    and compares them with the runtime validator. When jsonschema IS available
+    (local qualification / the private 56-row validation root), the same
+    document is additionally checked by a real Draft 2020-12 validator.
+    """
+
+    def setUp(self):
+        self.schema = json.loads(POLICY_SCHEMA.read_bytes())
+        self.repository_schema = (self.schema["properties"]["repositories"]
+                                  ["additionalProperties"])
+        self.inputs = uu.load_inputs(REPO)
+        self.policy = copy.deepcopy(self.inputs["policy"])
+        self.repository = next(iter(self.policy["repositories"]))
+
+    def policy_with(self, value):
+        self.policy["repositories"][self.repository]["licenseEvidencePaths"] = value
+        return self.policy
+
+    def validate_structurally(self, document):
+        return uu.validate_policy(document, self.inputs["registry"],
+                                  self.inputs["pinsDoc"], self.inputs["pinsModule"])
+
+    def test_schema_declares_exactly_the_runtime_contract(self):
+        self.assertEqual(set(self.repository_schema["properties"]),
+                         set(uu.REPOSITORY_POLICY_KEYS))
+        field = self.repository_schema["properties"]["licenseEvidencePaths"]
+        self.assertEqual(field["type"], "array")
+        self.assertIs(field["uniqueItems"], True)
+        self.assertEqual(field["maxItems"], 16)
+        self.assertEqual(field["items"]["type"], "string")
+        pattern = re.compile(field["items"]["pattern"])
+        for path in ("NOTICE.md", "legal/LICENSE", "a/b/c.txt", "LICENSE-2026"):
+            with self.subTest(path=path):
+                self.assertIsNotNone(pattern.fullmatch(path))
+                self.assertEqual(uu.license_evidence_paths(
+                    {"rootLicense": None, "licenseEvidencePaths": [path]}), (path,))
+        for path in ("../LICENSE", "/LICENSE", "legal/../LICENSE", "legal//LICENSE",
+                     "legal\\LICENSE", "legal/./LICENSE", "bad\x00LICENSE", ""):
+            with self.subTest(path=path):
+                self.assertIsNone(pattern.fullmatch(path))
+                with self.assertRaises(uu.UpstreamError):
+                    uu.license_evidence_paths(
+                        {"rootLicense": None, "licenseEvidencePaths": [path]})
+        self.assertEqual(uu.license_evidence_paths(
+            {"rootLicense": "LICENSE", "licenseEvidencePaths": ["NOTICE.md"]}),
+            ("LICENSE", "NOTICE.md"))
+        with self.assertRaises(uu.UpstreamError):
+            uu.license_evidence_paths(
+                {"licenseEvidencePaths": ["NOTICE.md", "NOTICE.md"]})
+        with self.assertRaises(uu.UpstreamError):
+            uu.license_evidence_paths(
+                {"licenseEvidencePaths": [f"legal/LICENSE-{index}" for index in range(17)]})
+
+    def test_structural_validator_rejects_bad_evidence_and_unknown_keys(self):
+        # The CI path has no jsonschema; validate_policy itself must stay
+        # fail-closed for the same values the schema rejects.
+        for value in (["../LICENSE"], ["/LICENSE"], ["legal/../LICENSE"],
+                      ["legal\\LICENSE"], ["bad\x00LICENSE"], [""],
+                      ["NOTICE.md", "NOTICE.md"],
+                      [f"legal/LICENSE-{index}" for index in range(17)]):
+            with self.subTest(value=value):
+                with self.assertRaises(uu.UpstreamError):
+                    self.validate_structurally(self.policy_with(value))
+        document = self.policy_with([])
+        document["repositories"][self.repository]["licenseEvidencePath"] = "NOTICE.md"
+        with self.assertRaises(uu.UpstreamError):
+            self.validate_structurally(document)
+
+    def test_schema_check_rejects_schema_runtime_drift(self):
+        import gen_schemas
+        gen_schemas.check_policy_schema()
+        document = json.loads(POLICY_SCHEMA.read_bytes())
+        properties = (document["properties"]["repositories"]["additionalProperties"]
+                      ["properties"])
+        del properties["licenseEvidencePaths"]
+        with tempfile.TemporaryDirectory() as tmp:
+            path = pathlib.Path(tmp) / "upstream-update-policy.schema.json"
+            path.write_text(json.dumps(document))
+            original = gen_schemas.POLICY_SCHEMA
+            gen_schemas.POLICY_SCHEMA = path
+            try:
+                with self.assertRaises(SystemExit):
+                    gen_schemas.check_policy_schema()
+            finally:
+                gen_schemas.POLICY_SCHEMA = original
+
+    @unittest.skipUnless(jsonschema is not None,
+                         "jsonschema not installed; CI installs cryptography only "
+                         "(the always-running contract test still checks schema/runtime parity)")
+    def test_schema_accepts_documented_license_evidence_paths(self):
+        for value in ([], ["NOTICE.md", "legal/LICENSE"],
+                      [f"legal/LICENSE-{index}" for index in range(16)]):
+            with self.subTest(value=value):
+                jsonschema.Draft202012Validator(self.schema).validate(
+                    self.policy_with(value))
+
+    @unittest.skipUnless(jsonschema is not None,
+                         "jsonschema not installed; CI installs cryptography only "
+                         "(the always-running contract test still checks schema/runtime parity)")
+    def test_schema_rejects_malformed_license_evidence_paths(self):
+        invalid = (["../LICENSE"], ["/LICENSE"], ["legal/../LICENSE"], ["legal//LICENSE"],
+                   ["legal\\LICENSE"], ["legal/./LICENSE"], ["bad\x00LICENSE"], [""],
+                   [1], "NOTICE.md", ["NOTICE.md", "NOTICE.md"],
+                   [f"legal/LICENSE-{index}" for index in range(17)])
+        for value in invalid:
+            with self.subTest(value=value):
+                with self.assertRaises(jsonschema.ValidationError):
+                    jsonschema.Draft202012Validator(self.schema).validate(
+                        self.policy_with(value))
 
 
 class TestAdditionalLicenseEvidence(unittest.TestCase):

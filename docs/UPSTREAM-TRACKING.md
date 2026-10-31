@@ -76,7 +76,11 @@ local source in `sources/<id>`:
   never taken from upstream and are preserved byte-identical;
 * new upstream files are carried only under a declared relocation or an
   existing carried area, through the full gates; anything else holds
-  (`held-adaptation-required`). Upstream removals delete only verbatim
+  (`held-adaptation-required`). A guide-only candidate additionally refuses
+  code-like additions or changes outside `scripts/` (known executable
+  suffixes and extensionless shebangs), so a tool or script smuggled under
+  `assets/` or a nested reference area can never ride an assumed prose delta.
+  Upstream removals delete only verbatim
   carries; removing a locally adapted file holds;
 * mapped license carries (`kind: license`) whose upstream bytes change always
   hold (`held-license-drift`); license text is never auto-adopted.
@@ -102,10 +106,16 @@ names, oversize and native magics (`held-unsafe`).
   treated as safe by itself.
 * **Tier 1 (guide-only, scriptRuntime none)**: auto-publishable when the
   deterministic gates pass, grants/dependencies do not drift, the license is
-  preserved and changed paths stay within the upstream-derived set plus the
-  mechanical set (floe.json version, provenance re-pin). The proposed review
-  record is an honest machine static-content review; execution stays
-  `{null, n/a, unproven}`.
+  preserved, changed paths stay within the upstream-derived set plus the
+  mechanical set (floe.json version, provenance re-pin), AND the
+  instruction-code fingerprint is byte-identical. Any fenced code block or
+  inline code span changed in an instruction markdown holds
+  `held-instruction-code-changed`; fenced formulas are code under this
+  declared contract. Code-like files added or changed anywhere in the carried
+  tree outside `scripts/` (obvious executable suffixes, or an extensionless
+  file with a shebang) hold `held-adaptation-required`; ordinary prose and data
+  assets do not trip the gate. The proposed review record is an honest machine
+  static-content review; execution stays `{null, n/a, unproven}`.
 * **Tier 2 (scripted, docs-only)**: eligible only when the execution
   fingerprint AND the instruction-code fingerprint are byte-identical to the
   published version, the prior guest-qualified review verifies under the
@@ -192,4 +202,4 @@ every published byte, pin and version is untouched.
 
 ## Additional out-of-subtree license evidence
 
-A repository policy may declare `licenseEvidencePaths`, a unique list of at most 16 clean repository-relative paths, in addition to the existing `rootLicense`. Use it for applicable directory licenses and root notices outside the selected skill subtree. Each tracked entry compares these exact bytes between its effective pin and the resolved head. Changes, appearance or removal hold adoption for a license re-audit even when the skill subtree is unchanged; a read error is an error, never proof of an unchanged license. Existing per-file `kind: license` mappings keep their unchanged drift gate. This does not grant permission to import an unselected subtree or adopt a new skill.
+A repository policy may declare `licenseEvidencePaths`, a unique list of at most 16 clean repository-relative paths, in addition to the existing `rootLicense`; the same bounds and path rules are declared in `schema/upstream-update-policy.schema.json` and enforced by the runtime validator. Use it for applicable directory licenses and root notices outside the selected skill subtree. Each tracked entry compares these exact bytes between its effective pin and the resolved head. Changes, appearance or removal hold adoption for a license re-audit even when the skill subtree is unchanged; a read error is an error, never proof of an unchanged license. Existing per-file `kind: license` mappings keep their unchanged drift gate. This does not grant permission to import an unselected subtree or adopt a new skill.

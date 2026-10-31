@@ -86,7 +86,18 @@
           },
           "rootLicense": {
             "type": ["string", "null"],
-            "description": "repository-root license path watched for drift, or null when the repository publishes none"
+            "description": "repository-root license path watched for drift, or null when the repository publishes none",
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))[^/\\\\\\x00-\\x1f\\x7f]+(?:/[^/\\\\\\x00-\\x1f\\x7f]+)*$"
+          },
+          "licenseEvidencePaths": {
+            "type": "array",
+            "uniqueItems": true,
+            "maxItems": 16,
+            "description": "additional out-of-subtree repository-relative licence/notice paths compared between the entry pin and the resolved head; at most 16 unique clean paths",
+            "items": {
+              "type": "string",
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))[^/\\\\\\x00-\\x1f\\x7f]+(?:/[^/\\\\\\x00-\\x1f\\x7f]+)*$"
+            }
           },
           "engineReleaseTagPattern": {"type": "string"},
           "licenseNote": {"type": "string"}

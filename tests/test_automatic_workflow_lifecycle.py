@@ -289,7 +289,7 @@ def substitute(body, ctx):
 # ---------------------------------------------------------------------------
 
 SCRIPT_CLOSURE = [
-    "automatic_publication.py", "automatic_transport.py", "build_catalog.py",
+    "automatic_publication.py", "automatic_transport.py", "build_catalog.py", "catalog_views.py",
     "check_catalog.py", "hubcore.py", "publication_immutability.py",
     "runtime_dependency.py", "sign_publication.py", "upstream_pins.py",
     "upstream_updates.py", "dependency_declaration.py",

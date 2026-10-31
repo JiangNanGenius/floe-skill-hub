@@ -121,6 +121,29 @@ INSTRUCTION_FINGERPRINT_EXCLUDES = (
     "references/MODIFICATIONS.md",
 )
 
+# Obvious executable/code suffixes that are never silently carried into a
+# guide-only package even when they live outside scripts/ (assets/, references/
+# or any nested carried area). The list is deliberately narrow: text assets
+# such as .md/.json/.csv/.html/data templates are not code by suffix, while an
+# extensionless executable is recognised only by its shebang (the existing
+# byte-level detector available on package members).
+GUIDE_CODE_SUFFIXES = frozenset({
+    ".py", ".pyw", ".js", ".mjs", ".cjs", ".ts", ".tsx", ".jsx", ".sh",
+    ".bash", ".zsh", ".fish", ".ps1", ".bat", ".cmd", ".rb", ".pl", ".php",
+    ".go", ".rs", ".java", ".kt", ".kts", ".scala", ".c", ".cc", ".cpp",
+    ".h", ".hpp", ".cs", ".swift", ".lua", ".r", ".ex", ".exs",
+})
+
+# Repository-policy key set shared with schema/upstream-update-policy.schema.json.
+# scripts/gen_schemas.py --check compares this constant with the published
+# schema so a documented runtime field cannot silently disappear from the
+# contract (and a schema-only field cannot silently become runtime-unchecked).
+REPOSITORY_POLICY_KEYS = frozenset({
+    "role", "trackedRef", "rootLicense", "engineReleaseTagPattern",
+    "licenseNote", "licenseEvidencePaths",
+})
+LICENSE_EVIDENCE_MAX_PATHS = 16
+
 
 class UpstreamError(hubcore.HubError):
     """Fail-closed upstream/policy/plan/stage violation."""
@@ -217,6 +240,24 @@ def is_instruction_fingerprint_file(path):
     return path == "SKILL.md" or path.startswith("references/")
 
 
+def is_guide_code_path(path, data=None):
+    """True when one package member is executable/code-like by an obvious sign.
+
+    Guide-only packages carry text instructions and assets; a new or changed
+    program must hold for curation instead of being auto-adopted under an
+    assumed prose budget. scripts/ is already rejected by the package gates for
+    runtime none and is handled there, so the caller skips that prefix to keep
+    one hold reason. The check is suffix-based for well-known languages and
+    shebang-based for extensionless executables; ordinary prose and data
+    assets are intentionally outside this gate.
+    """
+    leaf = path.rsplit("/", 1)[-1]
+    suffix = ("." + leaf.rsplit(".", 1)[-1].lower()) if "." in leaf else ""
+    if suffix in GUIDE_CODE_SUFFIXES:
+        return True
+    return not suffix and isinstance(data, bytes) and data.startswith(b"#!")
+
+
 # --------------------------------------------------------------------------
 # policy / registry / pins loading and validation
 # --------------------------------------------------------------------------
@@ -302,10 +343,11 @@ def effective_pin(inputs, entry_id, repo_short):
 def license_evidence_paths(config):
     """Exact out-of-subtree licence/notice paths, including the legacy root."""
     extra = config.get("licenseEvidencePaths", [])
-    if (not isinstance(extra, list) or len(extra) > 16
+    if (not isinstance(extra, list) or len(extra) > LICENSE_EVIDENCE_MAX_PATHS
             or any(not isinstance(path, str) for path in extra)
             or len(set(extra)) != len(extra)):
-        raise UpstreamError("licenseEvidencePaths must be a unique array of at most 16 paths")
+        raise UpstreamError("licenseEvidencePaths must be a unique array of at most "
+                            f"{LICENSE_EVIDENCE_MAX_PATHS} paths")
     root = config.get("rootLicense")
     paths = list(extra) + ([root] if root is not None else [])
     for path in paths:
@@ -423,7 +465,14 @@ def validate_policy(policy, registry, pins_doc, pins_module=None):
     for url, cfg in sorted(repositories.items()):
         if not re.fullmatch(r"https://github\.com/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+", url or ""):
             bad(f"repository key must be an https GitHub URL: {url!r}")
-        if not isinstance(cfg, dict) or cfg.get("role") not in ("corpus", "engine", "watch-only"):
+        if not isinstance(cfg, dict):
+            bad(f"{url}: repository config must be an object")
+            continue
+        unknown = set(cfg) - set(REPOSITORY_POLICY_KEYS)
+        if unknown:
+            bad(f"{url}: unsupported repository keys {sorted(unknown)} "
+                "(schema additionalProperties=false)")
+        if cfg.get("role") not in ("corpus", "engine", "watch-only"):
             bad(f"{url}: role must be corpus|engine|watch-only")
         if not isinstance(cfg.get("trackedRef"), str) or not cfg["trackedRef"]:
             bad(f"{url}: trackedRef required")
@@ -1839,11 +1888,26 @@ def plan_skill(skill_id, entry, skill_cfg, old_snapshot, new_snapshot, local_tre
     tier = None
     if manifest_runtime == "none":
         tier = 1
+        guide_code_changes = [p for p in changed_paths
+                              if not p.startswith("scripts/")
+                              and is_guide_code_path(p, candidate.get(p))]
+        if guide_code_changes:
+            hold(HELD_ADAPTATION,
+                 "guide-only package would carry code-like files outside scripts/: "
+                 + ", ".join(guide_code_changes)[:2000],
+                 "guide-only updates never adopt executable code: exclude the path, move it out "
+                 "of the carried guide tree, or curate it as a reviewed runtime change")
         if non_upstream_changes:
             hold(HELD_ADAPTATION,
                  f"changed paths outside the upstream-derived set: {non_upstream_changes}",
                  "tier-1 guide-only updates may only change upstream-derived files plus the "
                  "mechanical version/provenance set")
+        if not instr_equal:
+            hold(HELD_INSTRUCTION_CODE,
+                 "code/commands inside changed instruction markdown changed: "
+                 + ", ".join(plan["instructionCodeFingerprint"]["changedPaths"])[:2000],
+                 "a text extension is not safe by itself: re-qualify the changed commands or "
+                 "revert them editorially")
     else:
         tier = 2
         if not exec_equal:

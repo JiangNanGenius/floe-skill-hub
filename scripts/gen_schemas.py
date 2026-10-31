@@ -6,6 +6,11 @@ published contract that the iOS/Android native owners and the website read.
 Regenerating must be byte-stable; scripts/check_catalog.py fails if the
 committed schemas drift from the validator's constants.
 
+The hand-authored schema/upstream-update-policy.schema.json is not re-emitted
+(it is a policy contract, not a hubcore constant document), but --check
+compares its repository key set and licenseEvidencePaths bounds with the
+runtime constants imported from scripts/upstream_updates.py.
+
 python3 scripts/gen_schemas.py [--check]
 """
 import argparse
@@ -16,8 +21,10 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import dependency_declaration
 import hubcore
+import upstream_updates
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
+POLICY_SCHEMA = REPO / "schema" / "upstream-update-policy.schema.json"
 
 DRAFT = "https://json-schema.org/draft/2020-12/schema"
 
@@ -482,10 +489,36 @@ DOCS = {"registry.schema.json": REGISTRY_SCHEMA, "catalog.schema.json": CATALOG_
         "dependencies.schema.json": DEPENDENCIES_SCHEMA}
 
 
+def check_policy_schema():
+    """Keep the hand-authored policy schema aligned with runtime constants."""
+    try:
+        document = json.loads(POLICY_SCHEMA.read_bytes())
+    except (OSError, ValueError) as error:
+        raise SystemExit(f"policy schema unreadable: {error}") from None
+    repositories = (document.get("properties") or {}).get("repositories") or {}
+    properties = ((repositories.get("additionalProperties") or {}).get("properties"))
+    if not isinstance(properties, dict):
+        raise SystemExit("policy schema lacks repositories.additionalProperties.properties")
+    schema_keys = set(properties)
+    runtime_keys = set(upstream_updates.REPOSITORY_POLICY_KEYS)
+    if schema_keys != runtime_keys:
+        raise SystemExit(
+            "policy schema repository keys drift from runtime: "
+            f"schema-only={sorted(schema_keys - runtime_keys)}, "
+            f"runtime-only={sorted(runtime_keys - schema_keys)}")
+    evidence = properties.get("licenseEvidencePaths")
+    if (not isinstance(evidence, dict) or evidence.get("type") != "array"
+            or evidence.get("uniqueItems") is not True
+            or evidence.get("maxItems") != upstream_updates.LICENSE_EVIDENCE_MAX_PATHS
+            or (evidence.get("items") or {}).get("type") != "string"):
+        raise SystemExit("policy schema licenseEvidencePaths constraints drift from runtime")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
+    check_policy_schema()
     root = REPO / "schema"
     for name, doc in DOCS.items():
         data = (json.dumps(doc, ensure_ascii=False, indent=2) + "\n").encode()
