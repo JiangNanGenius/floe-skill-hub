@@ -1412,5 +1412,75 @@ class TestCliSurface(unittest.TestCase):
         self.assertEqual(uu.dump_report(report), uu.dump_report(copy.deepcopy(report)))
 
 
+
+class TestAdditionalLicenseEvidence(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root, self.source = build_fixture_world(self.tmp.name)
+        self.inputs = uu.load_inputs(self.root, expect_counts=(4, 0, 4, 1))
+        policy = self.inputs["policy"]
+        policy["repositories"][FIXTURE_REPO]["licenseEvidencePaths"] = ["NOTICE.md", "legal/LICENSE"]
+        (self.root / "catalog/upstream-update-policy.json").write_bytes(hubcore.pretty(policy))
+        self.inputs = uu.load_inputs(self.root, expect_counts=(4, 0, 4, 1))
+
+    def license_only_head(self, old=None, new=None):
+        repo = self.source.repos[FIXTURE_REPO]
+        pinned = dict(repo["commits"][PIN]["files"])
+        if old is not None:
+            pinned["legal/LICENSE"] = old
+        updated = dict(pinned)
+        updated["README.md"] = b"unrelated change\n"
+        if new is not None:
+            updated["legal/LICENSE"] = new
+        elif "legal/LICENSE" in updated:
+            del updated["legal/LICENSE"]
+        repo["commits"][PIN] = commit(pinned)
+        repo["commits"][HEAD] = commit(updated)
+
+    def test_changed_added_removed_license_holds_even_with_unchanged_skill(self):
+        for old, new in ((b"old", b"new"), (None, b"added"), (b"removed", None)):
+            with self.subTest(old=old, new=new):
+                self.license_only_head(old, new)
+                report = uu.run_check(self.root, self.inputs, self.source, TODAY)
+                check = next(r for r in report["skills"] if r["id"] == "fixture-guide")
+                self.assertTrue(check["rootLicenseChanged"])
+                self.assertEqual(check["state"], "drifted")
+                plan = uu.run_plan(self.root, self.inputs, self.source, TODAY)
+                row = next(r for r in plan["skills"] if r["id"] == "fixture-guide")
+                self.assertEqual(row["status"], "held-license-drift")
+                self.assertFalse(row["contentChanged"])
+                self.assertEqual(plan["acceptance"]["acceptedIds"], [])
+
+    def test_unchanged_evidence_does_not_turn_unrelated_commits_into_updates(self):
+        self.license_only_head(b"same", b"same")
+        plan = uu.run_plan(self.root, self.inputs, self.source, TODAY)
+        row = next(r for r in plan["skills"] if r["id"] == "fixture-guide")
+        self.assertEqual(row["status"], "no-change")
+        self.assertEqual(plan["acceptance"]["acceptedIds"], [])
+
+    def test_evidence_read_error_never_means_unchanged_license(self):
+        self.license_only_head(b"old", b"new")
+        class BrokenEvidence(uu.FixtureUpstreamSource):
+            def read_file(self, url, commit_id, path):
+                if path == "legal/LICENSE":
+                    raise uu.UpstreamError("synthetic evidence read failure")
+                return super().read_file(url, commit_id, path)
+        source = BrokenEvidence(self.source.repos)
+        report = uu.run_check(self.root, self.inputs, source, TODAY)
+        self.assertEqual(next(r for r in report["skills"] if r["id"] == "fixture-guide")["state"], "error")
+        plan = uu.run_plan(self.root, self.inputs, source, TODAY)
+        self.assertEqual(next(r for r in plan["skills"] if r["id"] == "fixture-guide")["status"], "error")
+        self.assertEqual(plan["acceptance"]["acceptedIds"], [])
+
+    def test_evidence_paths_are_bounded_and_clean(self):
+        bad_values = ["NOTICE", ["NOTICE", "NOTICE"], ["../LICENSE"], ["/LICENSE"],
+                      ["legal/../LICENSE"], ["legal//LICENSE"], ["legal\\LICENSE"],
+                      ["bad\x00LICENSE"], [str(i) for i in range(17)]]
+        for value in bad_values:
+            with self.subTest(value=value):
+                with self.assertRaises(uu.UpstreamError):
+                    uu.license_evidence_paths({"rootLicense": "LICENSE", "licenseEvidencePaths": value})
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

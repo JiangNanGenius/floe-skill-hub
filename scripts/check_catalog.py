@@ -36,6 +36,7 @@ import sys
 HERE = pathlib.Path(__file__).resolve()
 sys.path.insert(0, str(HERE.parent))
 import hubcore
+import catalog_views as cv
 import make_fixture
 import runtime_dependency
 import upstream_pins
@@ -89,8 +90,10 @@ def check_production(reasons):
         and the feed's own qualified-offer rules — so an unreviewed entry can
         never carry an install offer in a signed feed.
     """
-    pairs = [("ios", REPO / "catalog.json", REPO / "catalog.sig"),
-             ("android", REPO / "android" / "catalog.json", REPO / "android" / "catalog.sig")]
+    views = cv.VIEWS if any((REPO / path).exists() for view in cv.FULL_VIEWS
+                           for path in cv.FEED_PATHS[view]) else cv.LEGACY_VIEWS
+    pairs = [(view, REPO / cv.FEED_PATHS[view][0], REPO / cv.FEED_PATHS[view][1])
+             for view in views]
     if not any(path.exists() or sig.exists() for _, path, sig in pairs):
         return
     import build_catalog
@@ -135,7 +138,7 @@ def check_production(reasons):
                           "(sorted keys, tight separators, UTF-8)")
             continue
         try:
-            hubcore.validate_catalog(feed, channel=channel)
+            cv.validate_view(feed, channel)
         except hubcore.HubError as error:
             fail(reasons, f"{channel} production feed shape invalid: {error}")
             continue
@@ -205,6 +208,13 @@ def check_production(reasons):
                             runtime_blob, REPO, field)
                     except hubcore.HubError as error:
                         fail(reasons, f"{field}: runtime artifact binding failed: {error}")
+
+    if views == cv.VIEWS and all(path.is_file() for _, path, _ in pairs):
+        try:
+            cv.assert_projection({str(path.relative_to(REPO)): path.read_bytes()
+                                  for _, path, _ in pairs})
+        except hubcore.HubError as error:
+            fail(reasons, f"catalog projection invalid: {error}")
 
 
 def check_sources(reasons):

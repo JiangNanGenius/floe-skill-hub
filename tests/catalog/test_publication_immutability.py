@@ -53,7 +53,7 @@ OFFICIAL_ORIGIN = "https://github.com/JiangNanGenius/floe-skill-hub.git"
 KEY_ID = hubcore.PRODUCTION_KEY_ID
 REVIEWED_AT = "2026-10-27"
 REVIEWER = "immutability-fixture-reviewer"
-REAL_REGISTRY = json.loads((HERE / "catalog" / "skills.json").read_bytes())
+REAL_REGISTRY = json.loads((HERE / "tests/catalog/fixtures/reviewed-registry-2026-10-31.json").read_bytes())
 
 TEST_SEED = hashlib.sha256(
     b"floe-skill-hub immutability ephemeral TEST key -- NOT production").digest()
@@ -148,7 +148,7 @@ class LedgerFixture(unittest.TestCase):
         self._tmp = pathlib.Path(tempfile.mkdtemp(prefix="hub-immut-"))
         self.root = _init_repo(self._tmp / "tooling")
         (self.root / "scripts").mkdir()
-        for name in ("hubcore.py", "build_catalog.py", "runtime_dependency.py",
+        for name in ("catalog_views.py", "hubcore.py", "build_catalog.py", "runtime_dependency.py",
                      "dependency_declaration.py", "publication_immutability.py",
                      "sign_publication.py"):
             shutil.copy(HERE / "scripts" / name, self.root / "scripts" / name)

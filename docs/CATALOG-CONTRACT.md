@@ -1,5 +1,8 @@
 # Floe Skill Hub catalog contract (H1)
 
+Complete-view amendment (2026-10-31): [CATALOG-EXPANSION.md](CATALOG-EXPANSION.md) defines the four fixed complete/legacy pairs, append-only planning slots up to256, source O, and normalized immutable history. This extends the first-wave paths/counts below without changing schema3 fields, categories, permission policy or per-item qualification. Clients must activate the complete paths only after their signed bytes are published.
+
+
 Status: fixed wire contract for native/website consumption. SchemaVersion 3 of
 the signed channel feed is defined here; the legacy four-item feed stays
 unchanged (see [LEGACY-COMPATIBILITY.md](LEGACY-COMPATIBILITY.md)). Nothing in
@@ -95,7 +98,7 @@ Each entry has exactly these keys:
 | `id` | SkillIdentifier grammar (`^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$`, ≤64) |
 | `planNumber` | Row number in the accepted 43-item plan table (1–43) |
 | `kind` | `builtin` (the four reserved official ids) or `optional` |
-| `source` | `F` Floe, `A` anthropics, `V` vercel-labs, `R` alirezarezvani, `K` K-Dense, `S` superpowers, `I` impeccable |
+| `source` | `F` Floe, `A` anthropics, `V` vercel-labs, `R` alirezarezvani, `K` K-Dense, `S` superpowers, `I` impeccable, `O` other pinned upstream (new complete-view rows only) |
 | `name` / `description` | `{en, zh-Hans}` only, both non-empty; generic zh names are translated, brands (`Impeccable`, `Floe PDF`…) stay |
 | `category` | one of seven ids: `office-documents`, `writing-communication`, `web-development`, `research-data`, `design-creation`, `product-requirements`, `productivity-organization` |
 | `tags` | 2–12 unique lowercase slugs |

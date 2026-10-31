@@ -46,7 +46,8 @@ PLATFORMS = ("ios", "macos", "linux")
 STORE_CHANNELS = ("ios", "android")  # install channels are feeds, not native SkillPlatform values
 SCRIPT_RUNTIMES = ("none", "javascriptcore", "python.local", "remote")
 
-SOURCE_CODES = ("F", "A", "V", "R", "K", "S", "I")
+SOURCE_CODES = ("F", "A", "V", "R", "K", "S", "I", "O")
+ALIREZA_REPOSITORY = "https://github.com/alirezarezvani/claude-skills"
 CATEGORIES = (
     "office-documents", "writing-communication", "web-development",
     "research-data", "design-creation", "product-requirements",
@@ -104,6 +105,56 @@ def is_download_offer_excluded(id_):
     automatically after its real qualification.
     """
     return id_ in APP_PROVIDED_BUILTIN_IDS
+
+# The first 43 planning identities remain stable for legacy catalog readers.
+# These trusted constants cannot be supplied or replaced by candidate data.
+MAX_REGISTRY_ENTRIES = 256
+LEGACY_PLAN_IDS = (
+    'floe-pdf',
+    'floe-office',
+    'floe-network',
+    'floe-video',
+    'doc-coauthoring',
+    'internal-comms',
+    'writing-guidelines',
+    'copywriting',
+    'copy-editing',
+    'content-production',
+    'social-content',
+    'floe-email-drafting',
+    'deep-research',
+    'deepread',
+    'literature-review',
+    'citation-management',
+    'scientific-critical-thinking',
+    'research-summarizer',
+    'exploratory-data-analysis',
+    'statistical-analysis',
+    'scientific-visualization',
+    'markitdown',
+    'sympy',
+    'impeccable',
+    'algorithmic-art',
+    'canvas-design',
+    'theme-factory',
+    'ui-design-system',
+    'ux-researcher-designer',
+    'react-best-practices',
+    'composition-patterns',
+    'web-design-guidelines',
+    'webapp-testing',
+    'a11y-audit',
+    'systematic-debugging',
+    'test-driven-development',
+    'requesting-code-review',
+    'product-manager-toolkit',
+    'product-discovery',
+    'code-to-prd',
+    'meetings',
+    'floe-file-organizer',
+    'floe-invoice-organizer',
+)
+LEGACY_DEEP_IDS = frozenset(('literature-review', 'exploratory-data-analysis', 'statistical-analysis', 'scientific-visualization', 'markitdown', 'impeccable', 'algorithmic-art', 'canvas-design', 'webapp-testing'))
 
 REGISTRY_SCHEMA_VERSION = 1
 CATALOG_SCHEMA_VERSION = 3          # outside [1,2]: old clients fail closed by design
@@ -550,7 +601,9 @@ def _validate_pin_block(block, field, require_path):
     for key in ("path", "skillManifestPath"):
         value = block[key]
         if (not isinstance(value, str) or not value
-                or value.startswith("/") or any(p in ("", ".", "..") for p in value.split("/"))):
+                or value.startswith("/") or "\\" in value
+                or any(ord(c) < 32 or ord(c) == 127 for c in value)
+                or any(p in ("", ".", "..") for p in value.split("/"))):
             raise HubError(f"{field}.{key} must be a clean repository-relative path")
     if require_path and not block["skillManifestPath"].endswith("SKILL.md"):
         raise HubError(f"{field}.skillManifestPath must end with SKILL.md")
@@ -581,9 +634,13 @@ def _validate_status(entry, field):
         raise HubError(f"{field}: packaged requires adaptation in-progress or frozen")
 
 
-def validate_registry(registry, expect_counts=(43, 4, 39, 9)):
-    """Fail-closed structural validation of catalog/skills.json content."""
-    total, builtins, optionals, deep = expect_counts
+def validate_registry(registry, expect_counts=None):
+    """Validate append-only production identities, or explicit fixture counts.
+
+    Production keeps the original cohort and permits new optional rows within
+    the existing client bound. Explicit counts remain a trusted test-fixture
+    facility, not a field accepted from registry data.
+    """
     allowed_root = {"schemaVersion", "registry", "publisher", "hub",
                     "categories", "notes", "skills"}
     if not isinstance(registry, dict) or set(registry) - allowed_root:
@@ -606,8 +663,17 @@ def validate_registry(registry, expect_counts=(43, 4, 39, 9)):
     for category in categories:
         require_bilingual(category.get("name", {}), f"category {category.get('id')} name")
     skills = registry.get("skills")
-    if not isinstance(skills, list) or len(skills) != total:
-        raise HubError(f"registry must contain exactly {total} candidate entries")
+    if not isinstance(skills, list):
+        raise HubError("registry skills must be an array")
+    if expect_counts is None:
+        total = len(skills)
+        if not len(LEGACY_PLAN_IDS) <= total <= MAX_REGISTRY_ENTRIES:
+            raise HubError(f"registry must retain the legacy cohort and contain at most {MAX_REGISTRY_ENTRIES} entries")
+        builtins, optionals, deep = len(RESERVED_BUILTIN_IDS), total - len(RESERVED_BUILTIN_IDS), None
+    else:
+        total, builtins, optionals, deep = expect_counts
+        if len(skills) != total:
+            raise HubError(f"registry must contain exactly {total} candidate entries")
     seen_ids, seen_plan = set(), set()
     kind_count = {"builtin": 0, "optional": 0}
     deep_count = 0
@@ -620,11 +686,18 @@ def validate_registry(registry, expect_counts=(43, 4, 39, 9)):
             raise HubError(f"{field}: duplicate id")
         seen_ids.add(entry["id"])
         plan = entry["planNumber"]
-        if not isinstance(plan, int) or not 1 <= plan <= total or plan in seen_plan:
+        if isinstance(plan, bool) or not isinstance(plan, int) or not 1 <= plan <= total or plan in seen_plan:
             raise HubError(f"{field}: planNumber must be a unique 1..{total} row")
         seen_plan.add(plan)
         if entry["kind"] not in ENTRY_KINDS or entry["source"] not in SOURCE_CODES:
             raise HubError(f"{field}: kind/source outside the contract")
+        if entry["source"] == "R" and (not isinstance(entry["upstream"], dict)
+                or entry["upstream"].get("repository") != ALIREZA_REPOSITORY):
+            raise HubError(f"{field}: source R is reserved for alirezarezvani")
+        if entry["source"] == "O" and (plan <= len(LEGACY_PLAN_IDS)
+                or not isinstance(entry["upstream"], dict)
+                or entry["upstream"].get("repository") == ALIREZA_REPOSITORY):
+            raise HubError(f"{field}: source O requires an appended entry and upstream attribution")
         kind_count[entry["kind"]] += 1
         builtin_id = entry["id"] in RESERVED_BUILTIN_IDS
         if builtin_id != (entry["kind"] == "builtin"):
@@ -724,8 +797,16 @@ def validate_registry(registry, expect_counts=(43, 4, 39, 9)):
         _validate_status(entry, field)
     if kind_count["builtin"] != builtins or kind_count["optional"] != optionals:
         raise HubError(f"registry kind counts wrong: {kind_count}")
-    if deep_count != deep:
+    if deep is not None and deep_count != deep:
         raise HubError(f"registry must mark exactly {deep} deep adaptations")
+    if expect_counts is None:
+        by_plan = {entry["planNumber"]: entry for entry in skills}
+        for number, legacy_id in enumerate(LEGACY_PLAN_IDS, 1):
+            entry = by_plan[number]
+            if entry["id"] != legacy_id:
+                raise HubError(f"legacy planNumber {number} must retain {legacy_id}")
+            if entry["deepAdaptation"] != (legacy_id in LEGACY_DEEP_IDS):
+                raise HubError(f"legacy deep-adaptation identity changed (relabeling refused): {legacy_id}")
     return registry
 
 
@@ -855,6 +936,19 @@ def validate_catalog(catalog, channel=None, allow_fixture=False):
         if entry["id"] in seen:
             raise HubError(f"{field}: duplicate id in feed")
         seen.add(entry["id"])
+        plan = entry["planNumber"]
+        if isinstance(plan, bool) or not isinstance(plan, int) or not 1 <= plan <= MAX_REGISTRY_ENTRIES:
+            raise HubError(f"{field}: planNumber out of bound")
+        if entry["source"] not in SOURCE_CODES:
+            raise HubError(f"{field}: source outside the contract")
+        if entry["source"] == "R" and (not isinstance(entry["upstream"], dict)
+                or entry["upstream"].get("repository") != ALIREZA_REPOSITORY):
+            raise HubError(f"{field}: source R is reserved for alirezarezvani")
+        if entry["source"] == "O":
+            if (plan <= len(LEGACY_PLAN_IDS) or not isinstance(entry["upstream"], dict)
+                    or entry["upstream"].get("repository") == ALIREZA_REPOSITORY):
+                raise HubError(f"{field}: source O requires appended upstream attribution")
+            _validate_pin_block(entry["upstream"], f"{field}.upstream", True)
         if catalog["channel"] not in entry["runtime"]["installPlatforms"]:
             raise HubError(f"{field}: entry installPlatforms must include the feed channel")
         if entry["installOffer"] not in INSTALL_OFFERS:

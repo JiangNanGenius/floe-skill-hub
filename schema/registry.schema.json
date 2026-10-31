@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/JiangNanGenius/floe-skill-hub/schema/registry.schema.json",
   "title": "Floe Skill Hub candidate registry (catalog/skills.json) — schemaVersion 1",
-  "description": "Repository source of truth for the 43 first-release candidates. Unsigned source metadata, pretty JSON; only the derived channel feeds are canonical and signed. A candidate registry never grants install, review or publication.",
+  "description": "Repository source of truth retaining the 43 first-release identities and appended candidates. Unsigned source metadata, pretty JSON; only the derived channel feeds are canonical and signed. A candidate registry never grants install, review or publication.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -92,7 +92,7 @@
     "skills": {
       "type": "array",
       "minItems": 43,
-      "maxItems": 43,
+      "maxItems": 256,
       "items": {
         "type": "object",
         "additionalProperties": false,
@@ -123,7 +123,7 @@
           "planNumber": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 43
+            "maximum": 256
           },
           "kind": {
             "enum": [
@@ -139,7 +139,8 @@
               "R",
               "K",
               "S",
-              "I"
+              "I",
+              "O"
             ]
           },
           "name": {
@@ -225,7 +226,11 @@
                   },
                   "path": {
                     "type": "string",
-                    "pattern": "^[^/][^.]*$"
+                    "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))[^/\\\\\\x00-\\x1f\\x7f]+(?:/[^/\\\\\\x00-\\x1f\\x7f]+)*$"
+                  },
+                  "authoringPath": {
+                    "type": "string",
+                    "minLength": 1
                   },
                   "skillManifestPath": {
                     "type": "string"

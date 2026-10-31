@@ -80,6 +80,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import automatic_transport as at  # noqa: E402
 import build_catalog  # noqa: E402
 import hubcore  # noqa: E402
+import catalog_views as cv  # noqa: E402
 import publication_immutability as pi  # noqa: E402
 import upstream_pins  # noqa: E402
 
@@ -144,7 +145,8 @@ PUBLISH_ALLOW_DIRS = ("packages/", "android/packages/", "reviews/", "sources/",
                       "showcase/", "docs/provenance/", "docs/qualification/")
 PUBLISH_ALLOW_EXACT = frozenset({
     REGISTRY_REL, LEDGER_REL, IOS_FEED_REL, "catalog.sig", ANDROID_FEED_REL,
-    "android/catalog.sig", PINS_REL, "catalog/curation.json",
+    "android/catalog.sig", "catalog-full.json", "catalog-full.sig",
+    "android/catalog-full.json", "android/catalog-full.sig", PINS_REL, "catalog/curation.json",
     "README.md", "README.zh-CN.md",
 })
 
@@ -157,7 +159,7 @@ _INSTRUCTION_EXCLUDES = frozenset({
 })
 
 REVIEW_HISTORY_PREFIXES_TUPLE = ("reviews/", "android/reviews/")
-LIVE_REGISTRY_EXPECT_COUNTS = (43, 4, 39, 9)
+LIVE_REGISTRY_EXPECT_COUNTS = None  # append-only production cohort; fixtures pass exact counts
 RECEIPT_REL = at.RELAY_RECEIPT_REL
 RECEIPT_SIG_REL = at.RELAY_RECEIPT_SIG_REL
 
@@ -601,8 +603,7 @@ def assert_frozen_history(base_tree, candidate_tree, mode, label):
             if kept is not None and kept != entry:
                 _hold(f"{label}: candidate mutated a retained historical review "
                       f"path: {rel}")
-        elif rel in (IOS_FEED_REL, "catalog.sig", ANDROID_FEED_REL,
-                     "android/catalog.sig", LEDGER_REL):
+        elif rel in cv.ARTIFACT_FILES or rel == LEDGER_REL:
             if candidate_tree.get(rel) != entry:
                 _hold(f"{label}: candidate cannot pre-write feeds/ledger path {rel!r}")
 
@@ -716,26 +717,33 @@ def baseline_via_blob(root, base_commit):
 
 def prior_published_proof(root, base_commit, trust, baseline, id_, prior_version):
     """Ledger-verified prior proof: signed feed binding + qualified record."""
-    for channel in ("ios", "android"):
+    found = False
+    for channel in cv.VIEWS:
         feed_rel, sig_rel = FEED_PATHS[channel]
         feed_bytes = blob_at(root, base_commit, feed_rel, "base feed")
         sig_bytes = blob_at(root, base_commit, sig_rel, "base feed sig")
+        if feed_bytes is None and sig_bytes is None:
+            continue  # historical publication without this view
         if feed_bytes is None or sig_bytes is None:
-            continue  # channel not part of this publication
+            _hold(f"base {channel} publication pair is incomplete")
         key_id = _as_publication(
             lambda: hubcore.verify_envelope(feed_bytes, sig_bytes, trust))
         if key_id != hubcore.PRODUCTION_KEY_ID:
             _hold(f"base {channel} feed is not official-identity signed")
         feed = _canonical_json(feed_bytes, f"base {channel} feed")
         _as_publication(
-            lambda: hubcore.validate_catalog(feed, channel=channel,
-                                             allow_fixture=False))
-        if baseline.get((channel, id_, prior_version)) is None:
-            _hold(f"{id_}: prior offer is absent from the verified ledger baseline")
+            lambda: cv.validate_view(feed, channel))
         entry = next((e for e in feed["entries"] if e["id"] == id_
                       and e["version"] == prior_version), None)
-        if entry is None or entry["package"] is None or entry["review"] is None:
+        if entry is None:
+            continue
+        found = True
+        if baseline.get((cv.channel_for(channel), id_, prior_version)) is None:
+            _hold(f"{id_}: prior offer is absent from the verified ledger baseline")
+        if entry["package"] is None or entry["review"] is None:
             _hold(f"{id_}@{prior_version} is not a published offer on {channel}")
+    if not found:
+        _hold(f"{id_}@{prior_version} has no verified prior published offer")
 
     record_rel = f"reviews/{id_}/{prior_version}.review.json"
     record_bytes = blob_at(root, base_commit, record_rel, "prior review")
@@ -1756,8 +1764,7 @@ def rebuild_feeds(x_root, source_commit, trust=None):
         lambda: build_catalog.build(registry, "release", source_commit,
                                     pathlib.Path(x_root),
                                     pathlib.Path(x_root), trust))
-    return {IOS_FEED_REL: outputs[IOS_FEED_REL],
-            ANDROID_FEED_REL: outputs[ANDROID_FEED_REL]}
+    return {rel: outputs[rel] for rel in sorted(cv.FEED_FILES)}
 
 
 def assemble_relay_members(relay_dir, request_root_rel, repo_root,
@@ -1794,7 +1801,7 @@ def assemble_relay_members(relay_dir, request_root_rel, repo_root,
         if cls in ("feed", "review"):
             if rel in members:
                 _hold("metadata relay must not carry JSON bodies")
-            if rel in (IOS_FEED_REL, ANDROID_FEED_REL):
+            if rel in cv.FEED_FILES:
                 if not feeds or rel not in feeds:
                     _hold(f"rebuilt feed bytes unavailable for {rel}")
                 members[rel] = feeds[rel]
@@ -1898,8 +1905,9 @@ def build_y_payload(request_doc, relay_dir, repo_root, feeds, out_dir, *,
     verdict, files = relay_validate(relay_dir, request_doc, repo_root,
                                     request_doc["sourceCommit"], feeds=feeds,
                                     trust=trust)
+    _as_publication(lambda: cv.assert_projection(feeds))
     writes = {}
-    for channel in ("ios", "android"):
+    for channel in cv.VIEWS:
         feed_rel, sig_rel = FEED_PATHS[channel]
         if feed_rel not in feeds or sig_rel not in files:
             _hold(f"{channel} feed pair incomplete")
@@ -1930,7 +1938,7 @@ def expected_ledger_bytes(repo_root, base_commit, y_commit):
     doc = _canonical_json(base_ledger, "base ledger")
     rows = doc["publications"]
     new_rows = []
-    for channel in ("ios", "android"):
+    for channel in cv.VIEWS:
         if blob_at(repo_root, y_commit, FEED_PATHS[channel][0], "y feed") is None:
             continue
         row = _as_publication(lambda: pi.build_ledger_row(pathlib.Path(repo_root),
@@ -1970,7 +1978,7 @@ def verify_publication_diffs(root, base_commit, x_commit, y_commit, h_commit):
     if removed:
         _hold("Y deleted paths from X")
     if sorted(set(added) | set(modified)) != sorted(
-            set(FEED_PATHS["ios"]) | set(FEED_PATHS["android"])):
+            cv.ARTIFACT_FILES):
         _hold("Y deviates from X beyond the signed feed pair")
     added, removed, modified = tree_diff(y_tree, h_tree)
     if removed or sorted(set(added) | set(modified)) != [LEDGER_REL]:
@@ -2005,7 +2013,7 @@ def verify_publication_diffs(root, base_commit, x_commit, y_commit, h_commit):
         _hold("H ledger bytes are not exactly base-rows + the rows derived "
               "from the original committed Y (no rebuilt-commit comparison, "
               "no reordering, no extra rows)")
-    published_channels = {channel for channel in ("ios", "android")
+    published_channels = {channel for channel in cv.VIEWS
                           if blob_at(root, y_commit, FEED_PATHS[channel][0],
                                      "y feed") is not None}
     if {row["channel"] for row in new_rows} != published_channels:
@@ -2057,7 +2065,7 @@ def verify_published_chain(root, base_commit, x_commit, y_commit, h_commit,
                                      h_commit)
     trust = trust or build_catalog.load_trust(root)
     feeds = rebuild_feeds(x_root, x_commit, trust=trust)
-    for channel in ("ios", "android"):
+    for channel in cv.VIEWS:
         rel = FEED_PATHS[channel][0]
         committed = blob_at(root, y_commit, rel, "Y feed")
         if committed != feeds[rel]:
@@ -2410,7 +2418,7 @@ def verify_public_main(head_commit, x_commit, *, trust_root, base_commit=None,
         hubcore.require_commit(base_commit, "request base B")
     trust = build_catalog.load_trust(root)
     results = {}
-    for channel in ("ios", "android"):
+    for channel in cv.VIEWS:
         feed_rel, sig_rel = FEED_PATHS[channel]
         _url, feed = fetch_public_raw(head_commit, feed_rel, transport=transport)
         _url, sig = fetch_public_raw(head_commit, sig_rel, transport=transport)
@@ -2428,8 +2436,7 @@ def verify_public_main(head_commit, x_commit, *, trust_root, base_commit=None,
         if key_id != hubcore.PRODUCTION_KEY_ID:
             _hold(f"public {channel} feed identity drifted")
         doc = _canonical_json(feed, f"public {channel} feed")
-        _as_publication(lambda: hubcore.validate_catalog(doc, channel=channel,
-                                                         allow_fixture=False))
+        _as_publication(lambda: cv.validate_view(doc, channel))
         if doc["sourceCommit"] != x_commit:
             _hold(f"public {channel} feed sourceCommit is not the verified X")
         results[channel] = {"sha256": hubcore.sha256_hex(feed),
@@ -2463,16 +2470,18 @@ def verify_public_main(head_commit, x_commit, *, trust_root, base_commit=None,
         _as_publication(lambda: at.verify_ledger_continuity(base_ledger,
                                                             ledger_raw))
         prefix_status = "base rows retained as the exact append-only prefix"
-    if len(rows) < 2:
-        _hold("public ledger does not carry a newest row for each published "
+    if len(rows) < len(results):
+        _hold("public ledger does not carry a newest row to quote the digest for each published "
               "channel")
     by_channel = {}
-    for row in rows[-2:]:
+    for row in rows[-len(results):]:
         channel = row["channel"]
         if channel not in results or channel in by_channel:
             _hold("the newest ledger rows do not cover the published channels "
                   "exactly once (missing, duplicated or wrong-channel row)")
         by_channel[channel] = row
+    if len({row["publication"] for row in by_channel.values()}) != 1:
+        _hold("newest catalog views must share the same immutable publication Y")
     for channel, info in results.items():
         if by_channel[channel]["feedSha256"] != info["sha256"]:
             _hold(f"the newest {channel} ledger row does not quote the digest "
@@ -3086,7 +3095,7 @@ def main(argv=None):
         if args.feeds_dir:
             feeds_dir = pathlib.Path(args.feeds_dir)
             feeds = {rel: (feeds_dir / rel).read_bytes()
-                     for rel in (IOS_FEED_REL, ANDROID_FEED_REL)
+                     for rel in sorted(cv.FEED_FILES)
                      if (feeds_dir / rel).is_file()}
         verdict, _files = relay_validate(args.relay_dir, request_doc, root,
                                          args.candidate_commit, feeds=feeds)
@@ -3118,7 +3127,7 @@ def main(argv=None):
         request_doc = _load_request(args.request_file)
         feeds_dir = pathlib.Path(args.feeds_dir)
         feeds = {rel: (feeds_dir / rel).read_bytes()
-                 for rel in (IOS_FEED_REL, ANDROID_FEED_REL)}
+                 for rel in sorted(cv.FEED_FILES)}
         verdict, payload = build_y_payload(request_doc, args.relay_dir, root,
                                            feeds, args.out)
         print(hubcore.pretty({"status": "y-payload-built",

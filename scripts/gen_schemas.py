@@ -92,7 +92,8 @@ UPSTREAM = {
     "properties": {
         "repository": {"type": "string",
                        "pattern": r"^https://github\.com/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$"},
-        "commit": COMMIT, "path": {"type": "string", "pattern": "^[^/][^.]*$"},
+        "commit": COMMIT, "path": {"type": "string", "pattern": r"^(?!/)(?!.*(?:^|/)\.{1,2}(?:/|$))[^/\\\x00-\x1f\x7f]+(?:/[^/\\\x00-\x1f\x7f]+)*$"},
+        "authoringPath": {"type": "string", "minLength": 1},
         "skillManifestPath": {"type": "string"},
         "retrievedAt": DATE,
         "licenseStatus": {"enum": [s for s in hubcore.LICENSE_STATUSES if s != "floe-owned"]},
@@ -141,7 +142,7 @@ CATALOG_ENTRY = {
                  "tags", "deepAdaptation", "upstream", "firstParty", "runtime", "version",
                  "minimumAppVersion", "status", "notes", "package", "review", "installOffer"],
     "properties": {
-        "id": SKILL_ID, "planNumber": {"type": "integer", "minimum": 1, "maximum": 43},
+        "id": SKILL_ID, "planNumber": {"type": "integer", "minimum": 1, "maximum": hubcore.MAX_REGISTRY_ENTRIES},
         "kind": {"enum": list(hubcore.ENTRY_KINDS)},
         "source": {"enum": list(hubcore.SOURCE_CODES)},
         "name": LOCALE_TEXT, "description": LOCALE_TEXT,
@@ -163,7 +164,7 @@ CATALOG_ENTRY = {
 REGISTRY_SCHEMA = {
     "$schema": DRAFT, "$id": "https://github.com/JiangNanGenius/floe-skill-hub/schema/registry.schema.json",
     "title": "Floe Skill Hub candidate registry (catalog/skills.json) — schemaVersion 1",
-    "description": "Repository source of truth for the 43 first-release candidates. Unsigned "
+    "description": "Repository source of truth retaining the 43 first-release identities and appended candidates. Unsigned "
                    "source metadata, pretty JSON; only the derived channel feeds are canonical "
                    "and signed. A candidate registry never grants install, review or publication.",
     "type": "object", "additionalProperties": False,
@@ -177,13 +178,13 @@ REGISTRY_SCHEMA = {
             "type": "object", "additionalProperties": False, "required": ["id", "name"],
             "properties": {"id": {"enum": list(hubcore.CATEGORIES)}, "name": LOCALE_TEXT}}},
         "notes": LOCALE_TEXT,
-        "skills": {"type": "array", "minItems": 43, "maxItems": 43, "items": {
+        "skills": {"type": "array", "minItems": len(hubcore.LEGACY_PLAN_IDS), "maxItems": hubcore.MAX_REGISTRY_ENTRIES, "items": {
             "type": "object", "additionalProperties": False,
             "required": ["id", "planNumber", "kind", "source", "name", "description",
                          "category", "tags", "deepAdaptation", "upstream", "firstParty",
                          "plannedRuntime", "versionTarget", "minimumAppVersion", "status", "notes"],
             "properties": {
-                "id": SKILL_ID, "planNumber": {"type": "integer", "minimum": 1, "maximum": 43},
+                "id": SKILL_ID, "planNumber": {"type": "integer", "minimum": 1, "maximum": hubcore.MAX_REGISTRY_ENTRIES},
                 "kind": {"enum": list(hubcore.ENTRY_KINDS)},
                 "source": {"enum": list(hubcore.SOURCE_CODES)},
                 "name": LOCALE_TEXT, "description": LOCALE_TEXT,

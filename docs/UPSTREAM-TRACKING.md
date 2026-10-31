@@ -189,3 +189,7 @@ route; `vercel-labs/agent-skills` moved with no license appearance for the four
 watched originals. Result: 30 tracked up-to-date, 0 eligible, 1 held
 (engine-managed), 5 watch-only signals, 0 errors; the apply set is empty and
 every published byte, pin and version is untouched.
+
+## Additional out-of-subtree license evidence
+
+A repository policy may declare `licenseEvidencePaths`, a unique list of at most 16 clean repository-relative paths, in addition to the existing `rootLicense`. Use it for applicable directory licenses and root notices outside the selected skill subtree. Each tracked entry compares these exact bytes between its effective pin and the resolved head. Changes, appearance or removal hold adoption for a license re-audit even when the skill subtree is unchanged; a read error is an error, never proof of an unchanged license. Existing per-file `kind: license` mappings keep their unchanged drift gate. This does not grant permission to import an unselected subtree or adopt a new skill.

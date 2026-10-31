@@ -86,7 +86,7 @@ def _env_value(seed):
     return base64.b64encode(seed).decode()
 
 
-REAL_REGISTRY = json.loads((HERE / "catalog" / "skills.json").read_bytes())
+REAL_REGISTRY = json.loads((HERE / "tests/catalog/fixtures/reviewed-registry-2026-10-31.json").read_bytes())
 
 
 def base_registry():
@@ -215,7 +215,7 @@ class BridgeFixture(unittest.TestCase):
         tooling = cls.root / "tooling"
         scripts = tooling / "scripts"
         scripts.mkdir(parents=True)
-        for name in ("hubcore.py", "build_catalog.py", "runtime_dependency.py",
+        for name in ("catalog_views.py", "hubcore.py", "build_catalog.py", "runtime_dependency.py",
                      "dependency_declaration.py", "publication_immutability.py",
                      "sign_publication.py"):
             shutil.copy(HERE / "scripts" / name, scripts / name)
@@ -1168,23 +1168,13 @@ class CatalogModeTests(BridgeFixture):
 
     def test_relabel_deep_flag_refused(self):
         registry, qualified = self._standard_catalog_registry()
+        data, _original_commit, _staged = self._stage_catalog_data(
+            "catalog-relabel", registry, qualified)
         for entry in registry["skills"]:
             if entry["id"] == "markitdown":
                 entry["deepAdaptation"] = False
             if entry["id"] == "a11y-audit":
                 entry["deepAdaptation"] = True
-        src = self.root / "catalog-positive"
-        self.assertTrue(src.is_dir())
-        data = self._new_data("catalog-relabel")
-        for path in sorted(src.rglob("*")):
-            if path.is_dir() or ".git" in path.parts:
-                continue
-            rel = path.relative_to(src)
-            if rel.as_posix() == "catalog/skills.json":
-                continue
-            target = data / rel
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(path.read_bytes())
         self._stage_registry(data, registry)
         commit = _commit_all(data, "relabel deepAdaptation")
         out = self.root / "out-catalog-relabel"
@@ -1342,6 +1332,13 @@ class RealDataIncrementalGateTests(unittest.TestCase):
         cls.args = SimpleNamespace(data=str(HERE), source_commit=cls.SOURCE_X)
 
     def _gate(self, outputs=None):
+        if outputs is not None:
+            # These historical 43-row tests target per-item/selection faults:
+            # apply their legacy-row mutation to both views. Dedicated view
+            # tests call the production gate directly to test mismatches.
+            outputs = dict(outputs)
+            for prefix in ("", "android/"):
+                outputs[prefix + "catalog-full.json"] = outputs[prefix + "catalog.json"]
         return self.sign_publication.enforce_launch_gate(
             hubcore, self.runtime_dependency, self.args, self.registry,
             self.outputs if outputs is None else outputs)
@@ -1522,8 +1519,8 @@ class RealDataIncrementalGateTests(unittest.TestCase):
         with self.assertRaises(self.sign_publication.SigningError) as ctx:
             self.sign_publication.enforce_launch_gate(
                 hubcore, self.runtime_dependency, self.args, changed,
-                dict(outputs, **{"android/catalog.json":
-                                 hubcore.encoded(injected)}))
+                dict(outputs, **{"android/catalog.json": hubcore.encoded(injected),
+                                 "android/catalog-full.json": hubcore.encoded(injected)}))
         self.assertIn("exactly the qualified rows advertising android",
                       str(ctx.exception))
 

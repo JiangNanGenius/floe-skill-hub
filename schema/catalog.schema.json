@@ -97,7 +97,7 @@
           "planNumber": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 43
+            "maximum": 256
           },
           "kind": {
             "enum": [
@@ -113,7 +113,8 @@
               "R",
               "K",
               "S",
-              "I"
+              "I",
+              "O"
             ]
           },
           "name": {
@@ -199,7 +200,11 @@
                   },
                   "path": {
                     "type": "string",
-                    "pattern": "^[^/][^.]*$"
+                    "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))[^/\\\\\\x00-\\x1f\\x7f]+(?:/[^/\\\\\\x00-\\x1f\\x7f]+)*$"
+                  },
+                  "authoringPath": {
+                    "type": "string",
+                    "minLength": 1
                   },
                   "skillManifestPath": {
                     "type": "string"

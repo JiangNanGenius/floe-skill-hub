@@ -109,6 +109,7 @@ import zipfile
 sys.dont_write_bytecode = True  # keep the trusted checkout byte-clean
 
 import hubcore
+import catalog_views as cv
 import publication_immutability as pi
 import runtime_dependency
 import sign_publication as sp
@@ -373,6 +374,8 @@ DATA_EXACT_PATHS = frozenset({
     "catalog/skills.json",               # registry content rules below
     "catalog.json", "catalog.sig",       # official iOS feed pair
     "android/catalog.json", "android/catalog.sig",
+    "catalog-full.json", "catalog-full.sig",
+    "android/catalog-full.json", "android/catalog-full.sig",
     "docs/UPSTREAM-PINS.json",           # upstream pin data (JSON-parsed)
 })
 DATA_DIR_PREFIXES = (
@@ -935,12 +938,8 @@ def verify_request_candidate_engine_freeze(root, request, candidate_commit):
 
 RELAY_RECEIPT_REL = sp.RECEIPT_REL
 RELAY_RECEIPT_SIG_REL = sp.RECEIPT_SIG_REL
-FEED_MEMBER_CHANNELS = {
-    "catalog.json": "ios", "catalog.sig": "ios",
-    "android/catalog.json": "android", "android/catalog.sig": "android",
-}
-FEED_PATHS = {"ios": ("catalog.json", "catalog.sig"),
-              "android": ("android/catalog.json", "android/catalog.sig")}
+FEED_PATHS = cv.FEED_PATHS
+FEED_MEMBER_CHANNELS = {path: view for view, pair in FEED_PATHS.items() for path in pair}
 REVIEW_RECORD_RE = re.compile(
     r"^reviews/([a-z][a-z0-9]*(?:-[a-z0-9]+)*)/"
     r"((?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*))\.review\.json$")
@@ -1112,7 +1111,7 @@ def _verify_feed_pair(members, outputs, channel, request, public_keys,
     if hubcore.encoded(feed) != feed_bytes:
         raise TransportError(f"{channel} relay feed bytes are not canonical")
     try:
-        hubcore.validate_catalog(feed, channel=channel, allow_fixture=False)
+        cv.validate_view(feed, channel)
     except hubcore.HubError as error:
         raise TransportError(f"{channel} relay feed failed validation: {error}") from None
     if feed["sourceCommit"] != request["sourceCommit"]:
@@ -1123,7 +1122,7 @@ def _verify_feed_pair(members, outputs, channel, request, public_keys,
         if entry["package"] is not None:
             package = entry["package"]
             package_references.append({
-                "channel": channel, "id": entry["id"], "version": entry["version"],
+                "channel": cv.channel_for(channel), "id": entry["id"], "version": entry["version"],
                 "path": package["path"], "sha256": package["sha256"],
                 "size": package["size"], "contentDigest": package["contentDigest"],
             })
@@ -1209,15 +1208,20 @@ def validate_signed_relay(members, request, public_keys):
         if rel + ".sig" not in outputs:
             raise TransportError(f"receipt lists {rel!r} without its signed envelope")
     expected = {RELAY_RECEIPT_REL, RELAY_RECEIPT_SIG_REL}
+    complete_members = set(cv.ARTIFACT_FILES) - set(FEED_PATHS["ios"]) - set(FEED_PATHS["android"])
+    complete_declared = bool((set(outputs) | set(checked)) & complete_members)
+    views = cv.VIEWS if complete_declared else cv.LEGACY_VIEWS
     if request["mode"] == "catalog":
-        for rel in (*FEED_PATHS["ios"], *FEED_PATHS["android"]):
-            if rel not in outputs:
-                raise TransportError(f"catalog relay receipt does not bind {rel!r}")
-            expected.add(rel)
+        if receipt.get("signedFeeds") != sorted(FEED_PATHS[view][0] for view in views):
+            raise TransportError("receipt signedFeeds does not enumerate the exact catalog views")
+        for view in views:
+            for rel in FEED_PATHS[view]:
+                if rel not in outputs:
+                    raise TransportError(f"catalog relay receipt does not bind {rel!r}")
+                expected.add(rel)
     else:
-        for rel in (*FEED_PATHS["ios"], *FEED_PATHS["android"]):
-            if rel in outputs or rel in checked:
-                raise TransportError("a reviews-mode relay must never carry feeds")
+        if (set(outputs) | set(checked)) & cv.ARTIFACT_FILES:
+            raise TransportError("a reviews-mode relay must never carry feeds")
         if not review_paths:
             raise TransportError("reviews-mode relay carries no signed review pairs")
         reviews_meta = receipt.get("reviews")
@@ -1299,9 +1303,21 @@ def validate_signed_relay(members, request, public_keys):
     feeds = {}
     package_references = []
     if request["mode"] == "catalog":
-        for channel in ("ios", "android"):
+        for channel in views:
             feeds[channel] = _verify_feed_pair(checked, outputs, channel, request,
                                                public_keys, package_references)
+    if request["mode"] == "catalog" and complete_declared:
+        try:
+            cv.assert_projection(checked)
+        except hubcore.HubError as error:
+            raise TransportError(f"relay view mismatch: {error}") from None
+    unique_references = {}
+    for reference in package_references:
+        identity = (reference["channel"], reference["id"], reference["version"])
+        if identity in unique_references and unique_references[identity] != reference:
+            raise TransportError("catalog views disagree on an immutable package binding")
+        unique_references[identity] = reference
+    package_references = list(unique_references.values())
     return {
         "status": "relay-ok",
         "requestId": request["requestId"],

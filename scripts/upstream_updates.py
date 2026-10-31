@@ -62,6 +62,7 @@ import tempfile
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import hubcore
+import catalog_views as cv
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
 
@@ -230,12 +231,12 @@ def load_json_bytes(path, label):
         raise UpstreamError(f"{label} is not valid JSON: {error}") from None
 
 
-def load_inputs(root=REPO, policy_path=None, expect_counts=(43, 4, 39, 9)):
+def load_inputs(root=REPO, policy_path=None, expect_counts=None):
     """Load + cross-validate policy, registry and pins. Fail closed.
 
     expect_counts mirrors hubcore.validate_registry's (total, builtins,
-    optionals, deep) contract; the live registry is always 43/4/39/9. Tests
-    may load smaller fixture registries with matching explicit counts.
+    optionals, deep) fixture contract. Production defaults retain the original
+    cohort and allow appended optional entries; tests may use explicit counts.
     """
     root = pathlib.Path(root)
     policy_rel = policy_path or (root / POLICY_REL)
@@ -296,6 +297,23 @@ def effective_pin(inputs, entry_id, repo_short):
     if default is None:
         raise UpstreamError(f"{entry_id}: repository {repo_short} is not pinned")
     return default
+
+
+def license_evidence_paths(config):
+    """Exact out-of-subtree licence/notice paths, including the legacy root."""
+    extra = config.get("licenseEvidencePaths", [])
+    if (not isinstance(extra, list) or len(extra) > 16
+            or any(not isinstance(path, str) for path in extra)
+            or len(set(extra)) != len(extra)):
+        raise UpstreamError("licenseEvidencePaths must be a unique array of at most 16 paths")
+    root = config.get("rootLicense")
+    paths = list(extra) + ([root] if root is not None else [])
+    for path in paths:
+        if (not isinstance(path, str) or not path or path.startswith("/") or "\\" in path
+                or any(part in ("", ".", "..") for part in path.split("/"))
+                or any(ord(c) < 32 or ord(c) == 127 for c in path)):
+            raise UpstreamError("license evidence must be a clean repository-relative path")
+    return tuple(sorted(set(paths)))
 
 
 def validate_policy(policy, registry, pins_doc, pins_module=None):
@@ -411,6 +429,10 @@ def validate_policy(policy, registry, pins_doc, pins_module=None):
             bad(f"{url}: trackedRef required")
         if "rootLicense" not in cfg:
             bad(f"{url}: rootLicense key required (null when the repo publishes none)")
+        try:
+            license_evidence_paths(cfg)
+        except UpstreamError as error:
+            bad(f"{url}: {error}")
 
     skills_cfg = policy.get("skills") or {}
     for skill_id in tracked:
@@ -1274,7 +1296,7 @@ def used_versions(root, skill_id, registry_entry):
                         used.add(offer.get("version"))
         except (ValueError, TypeError, AttributeError):
             pass  # malformed ledger data is the publisher gate's problem, not ours
-    for feed_rel in (IOS_FEED_REL, ANDROID_FEED_REL):
+    for feed_rel in sorted(cv.FEED_FILES):
         feed_path = root / feed_rel
         if feed_path.is_file():
             try:
@@ -2122,16 +2144,18 @@ def run_check(root, inputs, source, today, only=None):
     errors = []
     license_cache = {}
 
-    def root_license_changed(url, root_license, pin, head):
-        """Per-entry root-license drift between ITS effective pin and head."""
-        if not root_license or not pin or pin == head:
+    def root_license_changed(url, paths, pin, head):
+        if not pin or pin == head:
             return False
-        key = (url, root_license, pin, head)
-        if key not in license_cache:
-            old_bytes = source.read_file(url, pin, root_license)
-            new_bytes = source.read_file(url, head, root_license)
-            license_cache[key] = (old_bytes or b"\x00absent") != (new_bytes or b"\x00absent")
-        return license_cache[key]
+        for path in paths:
+            key = (url, path, pin, head)
+            if key not in license_cache:
+                old_bytes = source.read_file(url, pin, path)
+                new_bytes = source.read_file(url, head, path)
+                license_cache[key] = old_bytes != new_bytes
+            if license_cache[key]:
+                return True
+        return False
 
     report = {
         "reportKind": REPORT_KIND_CHECK,
@@ -2195,19 +2219,24 @@ def run_check(root, inputs, source, today, only=None):
             sub = entry["upstream"]["path"]
             entry_pin = entry["upstream"]["commit"]  # validated == effective pin
             license_changed = False
+            license_error = None
             if head and not repo_report.get("error"):
                 try:
-                    license_changed = root_license_changed(url, cfg.get("rootLicense"),
+                    license_changed = root_license_changed(url, license_evidence_paths(cfg),
                                                            entry_pin, head)
                 except UpstreamError as error:
+                    license_error = str(error)
                     errors.append({"scope": f"root license {url}", "error": str(error)})
             skill_report = {"id": skill_id, "mode": "tracked", "repository": url,
                             "upstreamPath": sub, "pinnedCommit": entry_pin,
                             "repositoryDefaultPin": pin, "headCommit": head,
                             "rootLicenseChanged": license_changed}
-            if repo_report.get("error") or head is None:
+            if repo_report.get("error") or head is None or license_error:
                 skill_report["state"] = ST_ERROR
-                skill_report["detail"] = "the repository head could not be resolved"
+                skill_report["detail"] = license_error or "the repository head could not be resolved"
+            elif license_changed:
+                skill_report["state"] = ST_DRIFTED
+                skill_report["detail"] = "declared license/notice evidence changed; re-audit required"
             elif head == entry_pin:
                 skill_report["state"] = ST_UP_TO_DATE
                 skill_report["detail"] = "the repository head equals the entry pin"
@@ -2471,15 +2500,18 @@ def run_plan(root, inputs, source, today, only=None, check_report=None):
     tracked_by_repo = _tracked_by_repository(policy, entries)
     license_cache = {}
 
-    def root_license_changed(url, root_license, pin, head):
-        if not root_license or not pin or pin == head:
+    def root_license_changed(url, paths, pin, head):
+        if not pin or pin == head:
             return False
-        key = (url, root_license, pin, head)
-        if key not in license_cache:
-            old_bytes = source.read_file(url, pin, root_license)
-            new_bytes = source.read_file(url, head, root_license)
-            license_cache[key] = (old_bytes or b"\x00absent") != (new_bytes or b"\x00absent")
-        return license_cache[key]
+        for path in paths:
+            key = (url, path, pin, head)
+            if key not in license_cache:
+                old_bytes = source.read_file(url, pin, path)
+                new_bytes = source.read_file(url, head, path)
+                license_cache[key] = old_bytes != new_bytes
+            if license_cache[key]:
+                return True
+        return False
 
     for url in sorted(tracked_by_repo):
         head_fact = heads.get(url) or {"head": None, "error": "repository not scanned"}
@@ -2492,23 +2524,32 @@ def run_plan(root, inputs, source, today, only=None, check_report=None):
             subpath = entry["upstream"]["path"]
             pin = entry["upstream"]["commit"]  # validated == effective pin (override-aware)
             license_changed = False
+            license_error = None
             if head and not head_fact.get("error"):
                 try:
                     license_changed = root_license_changed(
-                        url, (policy["repositories"].get(url) or {}).get("rootLicense"),
+                        url, license_evidence_paths(policy["repositories"].get(url) or {}),
                         pin, head)
                 except UpstreamError as error:
+                    license_error = str(error)
                     errors.append({"scope": f"root license {url}", "error": str(error)})
             row = {"id": skill_id, "mode": "tracked", "repository": url,
                    "upstreamPath": subpath, "pinnedCommit": pin,
                    "repositoryDefaultPin": default_pin, "headCommit": head,
                    "rootLicenseChanged": license_changed}
-            if head_fact.get("error") or head is None:
+            if head_fact.get("error") or head is None or license_error:
                 row.update({"status": ST_ERROR,
                             "reasons": [{"code": ST_ERROR,
-                                         "detail": head_fact.get("error"),
+                                         "detail": license_error or head_fact.get("error"),
                                          "repair": "restore upstream connectivity or the "
                                                    "repository pin"}]})
+                report["skills"].append(row)
+                continue
+            if license_changed:
+                row.update({"status": HELD_LICENSE, "contentChanged": False, "pinAdvance": None,
+                            "reasons": [{"code": HELD_LICENSE,
+                                         "detail": "declared license/notice evidence changed",
+                                         "repair": "re-audit licensing before adopting upstream content"}]})
                 report["skills"].append(row)
                 continue
             if head == pin:
@@ -2826,7 +2867,7 @@ def run_stage(root, inputs, source, plan_report, stage_root):
                                      retrievedAt=today)
 
     hubcore.validate_registry(new_registry,
-                              expect_counts=inputs.get("expectCounts", (43, 4, 39, 9)))
+                              expect_counts=inputs.get("expectCounts"))
     writes[REGISTRY_REL] = hubcore.pretty(new_registry)
     new_pins_bytes, helper_label = advance_pins(pins_bytes, registry_doc, new_registry,
                                                 accepted_ids, today)

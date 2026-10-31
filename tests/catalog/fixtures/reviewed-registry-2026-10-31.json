@@ -1,0 +1,3090 @@
+{
+  "categories": [
+    {
+      "id": "office-documents",
+      "name": {
+        "en": "Office & Documents",
+        "zh-Hans": "办公与文档"
+      }
+    },
+    {
+      "id": "writing-communication",
+      "name": {
+        "en": "Writing & Communication",
+        "zh-Hans": "写作与沟通"
+      }
+    },
+    {
+      "id": "web-development",
+      "name": {
+        "en": "Web & Development",
+        "zh-Hans": "网页与开发"
+      }
+    },
+    {
+      "id": "research-data",
+      "name": {
+        "en": "Research & Data",
+        "zh-Hans": "研究与数据"
+      }
+    },
+    {
+      "id": "design-creation",
+      "name": {
+        "en": "Design & Creation",
+        "zh-Hans": "设计与创作"
+      }
+    },
+    {
+      "id": "product-requirements",
+      "name": {
+        "en": "Product & Requirements",
+        "zh-Hans": "产品与需求"
+      }
+    },
+    {
+      "id": "productivity-organization",
+      "name": {
+        "en": "Productivity & Organization",
+        "zh-Hans": "效率与整理"
+      }
+    }
+  ],
+  "hub": {
+    "channelRoots": {
+      "android": "android",
+      "ios": "."
+    },
+    "pinsAuthority": "docs/UPSTREAM-PINS.json",
+    "productionLayout": {
+      "androidCatalog": "android/catalog.json",
+      "androidPackages": "android/packages/{id}/{version}/{id}.zip",
+      "androidSignature": "android/catalog.sig",
+      "iosCatalog": "catalog.json",
+      "iosPackages": "packages/{id}/{version}/{id}.zip",
+      "iosSignature": "catalog.sig",
+      "reviews": "reviews/{id}/{version}.review.json"
+    },
+    "repository": "JiangNanGenius/floe-skill-hub"
+  },
+  "notes": {
+    "en": "Candidate registry for the first release target of 43 entries (4 app-bundled + 39 optional, 9 deep adaptations). The deprecated content-creator redirect is excluded. Every entry stays a candidate until license, package and functional qualification pass; nothing here claims reviewed, packaged, qualified, published or execution-verified status. Pinned commits are the review baseline from docs/UPSTREAM-PINS.json, not a blanket license: each item needs its own per-file license audit before packaging. License blockers are recorded per entry with reasons and required actions; the launch-set count rule (at most three blocked non-required candidates) is a coordinator release decision, not this file.",
+    "zh-Hans": "首版 43 项目标候选登记（4 项内置 + 39 项按需，9 项深度适配）。已弃用的 content-creator 跳转不收录。每项在许可、打包与功能资格全部通过前都只是候选；本文件不宣称任何已审、已打包、已资格、已发布或执行验证状态。固定提交是 docs/UPSTREAM-PINS.json 的审核基线而非整体许可：每项素材仍需逐文件许可核验后方可打包。许可阻碍逐项记录原因与待办；可用数量阻碍规则（非必交付候选最多三项）由协调者在发布时决定，不由本文件宣称。"
+  },
+  "publisher": "JiangNanGenius",
+  "registry": "candidate",
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Read, annotate and organize PDFs, extract content and export the files you need.",
+        "zh-Hans": "阅读、批注和整理 PDF，提取内容并导出所需文件。"
+      },
+      "firstParty": {
+        "commit": "257acf30dcb1d40bd11860ec0b7f49ecc1ef32cd",
+        "licenseEvidencePath": null,
+        "licenseStatus": "floe-owned",
+        "path": "skill-hub/sources/floe-pdf",
+        "releasedVersion": "1.3.1",
+        "repository": "https://github.com/JiangNanGenius/floe-agent",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skill-hub/sources/floe-pdf/SKILL.md",
+        "stagedSourceVersion": "1.3.2"
+      },
+      "id": "floe-pdf",
+      "kind": "builtin",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Floe PDF",
+        "zh-Hans": "Floe PDF"
+      },
+      "notes": {
+        "en": "Ships inside the app; migrated to this hub for single-source maintenance. A pinned offline copy stays in the App build.",
+        "zh-Hans": "随 App 内置；迁入本仓统一管理来源。App 构建保留固定提交导入的离线副本。"
+      },
+      "planNumber": 1,
+      "plannedRuntime": {
+        "capabilities": [],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "F",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "pdf",
+        "documents",
+        "annotation",
+        "export"
+      ],
+      "upstream": null,
+      "versionTarget": "1.3.2"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Create and edit documents, spreadsheets and presentations with text, data and charts.",
+        "zh-Hans": "创建和编辑文档、表格与演示，把文字、数据和图表整理成可交付的作品。"
+      },
+      "firstParty": {
+        "commit": "257acf30dcb1d40bd11860ec0b7f49ecc1ef32cd",
+        "licenseEvidencePath": null,
+        "licenseStatus": "floe-owned",
+        "path": "skill-hub/sources/floe-office",
+        "releasedVersion": "1.3.0",
+        "repository": "https://github.com/JiangNanGenius/floe-agent",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skill-hub/sources/floe-office/SKILL.md",
+        "stagedSourceVersion": "1.5.0"
+      },
+      "id": "floe-office",
+      "kind": "builtin",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Floe Office",
+        "zh-Hans": "Floe Office"
+      },
+      "notes": {
+        "en": "Staged source is 1.5.0 while the released feed carries 1.3.0; the two states must never be mixed, and chart-workbook round-trip stays in qualification.",
+        "zh-Hans": "源码已至 1.5.0 而已发布目录仍为 1.3.0；两种状态不得混同，图表工作簿往返编辑仍在资格确认。"
+      },
+      "planNumber": 2,
+      "plannedRuntime": {
+        "capabilities": [],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "F",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "office",
+        "docx",
+        "xlsx",
+        "pptx",
+        "charts"
+      ],
+      "upstream": null,
+      "versionTarget": "1.5.0"
+    },
+    {
+      "category": "web-development",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Check connectivity, DNS and network routes to investigate connection problems.",
+        "zh-Hans": "检查网络连通性、DNS 与连接路径，定位连接问题。"
+      },
+      "firstParty": {
+        "commit": "257acf30dcb1d40bd11860ec0b7f49ecc1ef32cd",
+        "licenseEvidencePath": null,
+        "licenseStatus": "floe-owned",
+        "path": "skill-hub/sources/floe-network",
+        "releasedVersion": "1.1.3",
+        "repository": "https://github.com/JiangNanGenius/floe-agent",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skill-hub/sources/floe-network/SKILL.md",
+        "stagedSourceVersion": "1.1.4"
+      },
+      "id": "floe-network",
+      "kind": "builtin",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Floe Network",
+        "zh-Hans": "Floe Network"
+      },
+      "notes": {
+        "en": "Ships inside the app; migrated to this hub for single-source maintenance.",
+        "zh-Hans": "随 App 内置；迁入本仓统一管理来源。"
+      },
+      "planNumber": 3,
+      "plannedRuntime": {
+        "capabilities": [],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "F",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "network",
+        "diagnostics",
+        "icmp",
+        "dns"
+      ],
+      "upstream": null,
+      "versionTarget": "1.1.4"
+    },
+    {
+      "category": "design-creation",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Inspect media files and handle common audio and video conversion tasks.",
+        "zh-Hans": "查看媒体信息，完成常见音视频转码与封装。"
+      },
+      "firstParty": {
+        "commit": "257acf30dcb1d40bd11860ec0b7f49ecc1ef32cd",
+        "licenseEvidencePath": null,
+        "licenseStatus": "floe-owned",
+        "path": "skill-hub/sources/floe-video",
+        "releasedVersion": "1.0.1",
+        "repository": "https://github.com/JiangNanGenius/floe-agent",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skill-hub/sources/floe-video/SKILL.md",
+        "stagedSourceVersion": "1.0.2"
+      },
+      "id": "floe-video",
+      "kind": "builtin",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Floe Video",
+        "zh-Hans": "Floe Video"
+      },
+      "notes": {
+        "en": "Retains real capability limits: unconnected editing and model paths are not advertised as available; its CoreML asset catalog lives with the app, not the ZIP.",
+        "zh-Hans": "保留真实能力限制：未接通的编辑与模型路径不得宣称可用；其 CoreML 资产目录随 App 而不进 ZIP。"
+      },
+      "planNumber": 4,
+      "plannedRuntime": {
+        "capabilities": [],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": [
+          "media.capabilities",
+          "video.inspect",
+          "video.transcode",
+          "video.remux",
+          "audio.inspect",
+          "audio.convert"
+        ]
+      },
+      "source": "F",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "video",
+        "audio",
+        "transcode",
+        "media"
+      ],
+      "upstream": null,
+      "versionTarget": "1.0.2"
+    },
+    {
+      "category": "writing-communication",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Shape an outline, draft sections and revise a document together.",
+        "zh-Hans": "共同梳理提纲、撰写章节和修改文稿，逐步完成一份文档。"
+      },
+      "firstParty": null,
+      "id": "doc-coauthoring",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Doc Co-authoring",
+        "zh-Hans": "文档协作"
+      },
+      "notes": {
+        "en": "Floe original guide. Replaces the original candidate with independently authored content; upstream text is not distributed. Candidate identity and provenance remain in the package.",
+        "zh-Hans": "Floe 原创指南，以独立编写的内容替代原候选，不分发其上游文本。包内保留候选来源与处理记录。"
+      },
+      "planNumber": 5,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "F",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "writing",
+        "collaboration",
+        "documents"
+      ],
+      "upstream": null,
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "writing-communication",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Write internal announcements, progress updates and retrospectives for the right audience.",
+        "zh-Hans": "撰写内部通知、进度更新和复盘，让信息适合受众与场合。"
+      },
+      "firstParty": null,
+      "id": "internal-comms",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Internal Comms",
+        "zh-Hans": "内部沟通"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 6,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "writing",
+        "comms",
+        "templates",
+        "workplace"
+      ],
+      "upstream": {
+        "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+        "licenseEvidencePath": "skills/internal-comms/LICENSE.txt",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/internal-comms",
+        "repository": "https://github.com/anthropics/skills",
+        "repositoryLicense": "Apache-2.0 (per-skill LICENSE.txt)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/internal-comms/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "writing-communication",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Review wording, formatting and consistency to make technical writing clearer.",
+        "zh-Hans": "检查措辞、格式与表达一致性，让技术写作更清楚。"
+      },
+      "firstParty": null,
+      "id": "writing-guidelines",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Writing Guidelines",
+        "zh-Hans": "技术写作检查"
+      },
+      "notes": {
+        "en": "Floe original guide. Replaces the original candidate with independently authored content; upstream text is not distributed. Candidate identity and provenance remain in the package.",
+        "zh-Hans": "Floe 原创指南，以独立编写的内容替代原候选，不分发其上游文本。包内保留候选来源与处理记录。"
+      },
+      "planNumber": 7,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "F",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "writing",
+        "style",
+        "guidelines",
+        "review"
+      ],
+      "upstream": null,
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "writing-communication",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Write clear, persuasive copy for product pages, landing pages and campaigns.",
+        "zh-Hans": "为产品页、落地页和推广内容撰写清楚、有说服力的文案。"
+      },
+      "firstParty": null,
+      "id": "copywriting",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Copywriting",
+        "zh-Hans": "网站文案"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 8,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "R",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "copywriting",
+        "marketing",
+        "website",
+        "tone"
+      ],
+      "upstream": {
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "marketing-skill/skills/copywriting",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "marketing-skill/skills/copywriting/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "writing-communication",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Refine structure, wording and tone so existing copy is easier to understand.",
+        "zh-Hans": "修订已有文案的结构、措辞与语气，让重点更容易读懂。"
+      },
+      "firstParty": null,
+      "id": "copy-editing",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Copy Editing",
+        "zh-Hans": "文案校订"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 9,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "R",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "editing",
+        "copy",
+        "review",
+        "consistency"
+      ],
+      "upstream": {
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "marketing-skill/skills/copy-editing",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "marketing-skill/skills/copy-editing/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "writing-communication",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Plan topics and outlines, organize long-form content and develop a draft.",
+        "zh-Hans": "从选题与提纲开始，组织长文内容并逐步完成初稿。"
+      },
+      "firstParty": null,
+      "id": "content-production",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Content Production",
+        "zh-Hans": "长文创作"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 10,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "R",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "longform",
+        "outline",
+        "drafting",
+        "resources"
+      ],
+      "upstream": {
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "marketing-skill/skills/content-production",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "marketing-skill/skills/content-production/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "writing-communication",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Prepare content, angles and publishing plans for different social platforms.",
+        "zh-Hans": "为不同社交平台准备内容、表达角度与发布排期建议。"
+      },
+      "firstParty": null,
+      "id": "social-content",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Social Content",
+        "zh-Hans": "社媒内容"
+      },
+      "notes": {
+        "en": "Product boundary: content generation only; the hub entry must not claim publishing capability.",
+        "zh-Hans": "产品边界：只生成内容；目录项不得宣称代发能力。"
+      },
+      "planNumber": 11,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "R",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "social",
+        "content",
+        "scheduling"
+      ],
+      "upstream": {
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "marketing-skill/skills/social-content",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "marketing-skill/skills/social-content/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "writing-communication",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Draft email around your purpose, recipient and preferred tone.",
+        "zh-Hans": "根据目的、收件人与个人语气起草邮件，整理清楚要点。"
+      },
+      "firstParty": null,
+      "id": "floe-email-drafting",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Floe Email Drafting",
+        "zh-Hans": "Floe 邮件起草"
+      },
+      "notes": {
+        "en": "First-party workflow; implementation lands in the app repo with the mail service. Not packaged until its own review.",
+        "zh-Hans": "自有工作流；实现随 App 仓库的邮件服务落地，完成自身审核前不打包。"
+      },
+      "planNumber": 12,
+      "plannedRuntime": {
+        "capabilities": [],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "F",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "email",
+        "drafting",
+        "workflow"
+      ],
+      "upstream": null,
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Research a question, organize evidence and produce a source-backed report.",
+        "zh-Hans": "围绕问题检索并整理证据，形成有来源的研究报告。"
+      },
+      "firstParty": null,
+      "id": "deep-research",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Deep Research",
+        "zh-Hans": "深度研究"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 13,
+      "plannedRuntime": {
+        "capabilities": [
+          "network",
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "R",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "research",
+        "search",
+        "synthesis",
+        "report"
+      ],
+      "upstream": {
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "research/deep-research/skills/deep-research",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "research/deep-research/skills/deep-research/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Read long articles and documents closely, extract key points and answer questions.",
+        "zh-Hans": "分段精读长文章与文档，提炼要点并围绕内容答疑。"
+      },
+      "firstParty": null,
+      "id": "deepread",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Deep Read",
+        "zh-Hans": "深度阅读"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 14,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "R",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "reading",
+        "documents",
+        "extraction",
+        "qa"
+      ],
+      "upstream": {
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "research/deepread",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "research/deepread/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": true,
+      "description": {
+        "en": "Define a search scope, organize literature and evidence, and write a sourced review.",
+        "zh-Hans": "制定检索范围，梳理文献与证据，形成有出处的综述。"
+      },
+      "firstParty": null,
+      "id": "literature-review",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Literature Review",
+        "zh-Hans": "文献综述"
+      },
+      "notes": {
+        "en": "Pure-standard-library workflows and real DOI checks are qualified in Linux/riscv64. Optional online verification uses the declared network capability; registration and metadata availability remain distinct from claim support. App-specific native PDF export was not exercised in this qualification.",
+        "zh-Hans": "纯标准库流程及真实 DOI 核验已完成 Linux/riscv64 运行鉴定。可选在线核验使用已声明的网络能力；注册状态、元数据可用性与论据支持分别记录。本轮未验证 App 原生 PDF 导出。"
+      },
+      "planNumber": 15,
+      "plannedRuntime": {
+        "capabilities": [
+          "execution.remote",
+          "network",
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "riscv64",
+          "evidence": "guest-verified",
+          "os": "linux"
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "remote",
+        "tools": [
+          "exec.shell"
+        ]
+      },
+      "source": "K",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": true,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "literature",
+        "review",
+        "dedup",
+        "bibtex"
+      ],
+      "upstream": {
+        "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+        "licenseEvidencePath": "LICENSE.md",
+        "licenseNote": {
+          "en": "MIT at the pinned upstream revision; full license and per-file adaptation/asset audit are preserved in references/licenses/. Floe additions and synthetic fixtures are identified separately.",
+          "zh-Hans": "固定上游提交采用 MIT；完整许可与逐文件适配、素材核验记录保存在 references/licenses/，Floe 新增内容及合成样本另有标注。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/literature-review",
+        "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+        "repositoryLicense": "MIT (root LICENSE.md)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/literature-review/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Organize and check citation metadata, then prepare references and BibTeX.",
+        "zh-Hans": "整理和核对引用信息，生成参考文献与 BibTeX。"
+      },
+      "firstParty": null,
+      "id": "citation-management",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Citation Management",
+        "zh-Hans": "引用管理"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 16,
+      "plannedRuntime": {
+        "capabilities": [
+          "execution.remote",
+          "network",
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "riscv64",
+          "evidence": "guest-verified",
+          "os": "linux"
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [
+          "certifi==2026.10.23",
+          "charset-normalizer==3.5.2",
+          "idna==3.20",
+          "requests==2.34.2",
+          "urllib3==2.8.0"
+        ],
+        "scriptRuntime": "remote",
+        "tools": [
+          "exec.shell"
+        ]
+      },
+      "source": "K",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": true,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "citation",
+        "bibtex",
+        "metadata",
+        "references"
+      ],
+      "upstream": {
+        "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+        "licenseEvidencePath": "LICENSE.md",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/citation-management",
+        "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+        "repositoryLicense": "MIT (root LICENSE.md)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/citation-management/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Assess research conclusions, evidence quality and methodological limits.",
+        "zh-Hans": "评估研究结论、证据强度与方法局限，理清可信与存疑之处。"
+      },
+      "firstParty": null,
+      "id": "scientific-critical-thinking",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Scientific Critical Thinking",
+        "zh-Hans": "证据与批判性阅读"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 17,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "K",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "evidence",
+        "critique",
+        "methodology",
+        "reading"
+      ],
+      "upstream": {
+        "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+        "licenseEvidencePath": "LICENSE.md",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/scientific-critical-thinking",
+        "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+        "repositoryLicense": "MIT (root LICENSE.md)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/scientific-critical-thinking/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Summarize research into key points, conclusions and open questions while retaining sources.",
+        "zh-Hans": "把研究材料浓缩为重点、结论与待核实问题，并保留来源线索。"
+      },
+      "firstParty": null,
+      "id": "research-summarizer",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Research Summarizer",
+        "zh-Hans": "研究摘要"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 18,
+      "plannedRuntime": {
+        "capabilities": [
+          "network",
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "R",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "summary",
+        "sources",
+        "research"
+      ],
+      "upstream": {
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "product-team/research-summarizer/skills/research-summarizer",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "product-team/research-summarizer/skills/research-summarizer/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": true,
+      "description": {
+        "en": "Explore data structure, missing values and distributions to find useful leads.",
+        "zh-Hans": "查看数据结构、缺失值与分布，找出值得进一步分析的线索。"
+      },
+      "firstParty": null,
+      "id": "exploratory-data-analysis",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.60",
+      "name": {
+        "en": "EDA",
+        "zh-Hans": "数据探索"
+      },
+      "notes": {
+        "en": "Profile structured files with a standard-library core and optional NumPy/pandas checks.",
+        "zh-Hans": "用标准库分析结构化文件，并可结合NumPy/pandas进行交叉检查。"
+      },
+      "planNumber": 19,
+      "plannedRuntime": {
+        "capabilities": [
+          "execution.remote",
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "riscv64",
+          "evidence": "guest-verified",
+          "os": "linux"
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [
+          "numpy==2.2.4",
+          "pandas==2.2.3"
+        ],
+        "scriptRuntime": "remote",
+        "tools": [
+          "exec.shell"
+        ]
+      },
+      "source": "K",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": true,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "data",
+        "csv",
+        "profile",
+        "report"
+      ],
+      "upstream": {
+        "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+        "licenseEvidencePath": "LICENSE.md",
+        "licenseNote": {
+          "en": "MIT at the pinned upstream revision; full license and per-file adaptation/asset audit are preserved in references/licenses/. Floe additions and synthetic fixtures are identified separately.",
+          "zh-Hans": "固定上游提交采用 MIT；完整许可与逐文件适配、素材核验记录保存在 references/licenses/，Floe 新增内容及合成样本另有标注。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/exploratory-data-analysis",
+        "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+        "repositoryLicense": "MIT (root LICENSE.md)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/exploratory-data-analysis/SKILL.md"
+      },
+      "versionTarget": "1.1.0"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": true,
+      "description": {
+        "en": "Choose suitable statistical methods, check assumptions and prepare reproducible results.",
+        "zh-Hans": "选择合适的统计方法，检查分析前提，整理可复查的结果。"
+      },
+      "firstParty": null,
+      "id": "statistical-analysis",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.60",
+      "name": {
+        "en": "Statistical Analysis",
+        "zh-Hans": "统计分析"
+      },
+      "notes": {
+        "en": "Run statistical tests, effect-size and power analyses, with diagnostic plots and reproducible results.",
+        "zh-Hans": "运行统计检验、效应量与功效分析，输出诊断图及可复核结果。"
+      },
+      "planNumber": 20,
+      "plannedRuntime": {
+        "capabilities": [
+          "execution.remote",
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "riscv64",
+          "evidence": "guest-verified",
+          "os": "linux"
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [
+          "numpy==2.2.4",
+          "scipy==1.15.3",
+          "pandas==2.2.3",
+          "statsmodels==0.14.4",
+          "matplotlib==3.10.1"
+        ],
+        "scriptRuntime": "remote",
+        "tools": [
+          "exec.shell"
+        ]
+      },
+      "source": "K",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": true,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "statistics",
+        "tests",
+        "regression",
+        "reproducible"
+      ],
+      "upstream": {
+        "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+        "licenseEvidencePath": "LICENSE.md",
+        "licenseNote": {
+          "en": "MIT at the pinned upstream revision; full license and per-file adaptation/asset audit are preserved in references/licenses/. Floe additions and synthetic fixtures are identified separately.",
+          "zh-Hans": "固定上游提交采用 MIT；完整许可与逐文件适配、素材核验记录保存在 references/licenses/，Floe 新增内容及合成样本另有标注。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/statistical-analysis",
+        "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+        "repositoryLicense": "MIT (root LICENSE.md)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/statistical-analysis/SKILL.md"
+      },
+      "versionTarget": "1.1.0"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": true,
+      "description": {
+        "en": "Turn data into clearly labeled charts with units for analysis and reports.",
+        "zh-Hans": "把数据整理成带有清楚标签与单位的图表，用于分析和报告。"
+      },
+      "firstParty": null,
+      "id": "scientific-visualization",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.60",
+      "name": {
+        "en": "Scientific Visualization",
+        "zh-Hans": "数据可视化"
+      },
+      "notes": {
+        "en": "Create PNG, PDF and SVG charts with CJK text, and inspect size, fonts and resolution.",
+        "zh-Hans": "生成带中文字形的PNG、PDF及SVG图表，并检查尺寸、字体和分辨率。"
+      },
+      "planNumber": 21,
+      "plannedRuntime": {
+        "capabilities": [
+          "execution.remote",
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "riscv64",
+          "evidence": "guest-verified",
+          "os": "linux"
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [
+          "matplotlib==3.10.1",
+          "numpy==2.2.4",
+          "pillow==11.1.0",
+          "pypdf==5.4.0"
+        ],
+        "scriptRuntime": "remote",
+        "tools": [
+          "exec.shell"
+        ]
+      },
+      "source": "K",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": true,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "charts",
+        "matplotlib",
+        "png",
+        "pdf"
+      ],
+      "upstream": {
+        "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+        "licenseEvidencePath": "LICENSE.md",
+        "licenseNote": {
+          "en": "MIT at the pinned upstream revision; full license and per-file adaptation/asset audit are preserved in references/licenses/. Floe additions and synthetic fixtures are identified separately.",
+          "zh-Hans": "固定上游提交采用 MIT；完整许可与逐文件适配、素材核验记录保存在 references/licenses/，Floe 新增内容及合成样本另有标注。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/scientific-visualization",
+        "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+        "repositoryLicense": "MIT (root LICENSE.md)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/scientific-visualization/SKILL.md"
+      },
+      "versionTarget": "1.1.0"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": true,
+      "description": {
+        "en": "Convert content from documents, web pages and tables into readable Markdown.",
+        "zh-Hans": "把文档、网页和表格中的内容整理为便于阅读与后续处理的 Markdown。"
+      },
+      "firstParty": null,
+      "id": "markitdown",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.60",
+      "name": {
+        "en": "MarkItDown",
+        "zh-Hans": "格式转 Markdown"
+      },
+      "notes": {
+        "en": "Convert supported files to Markdown, preserving tables and identifying cases that need native document or OCR tools.",
+        "zh-Hans": "把支持的文件转换为Markdown，保留表格，并明确指出需要原生文档或OCR工具处理的情况。"
+      },
+      "planNumber": 22,
+      "plannedRuntime": {
+        "capabilities": [
+          "execution.remote",
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "riscv64",
+          "evidence": "guest-verified",
+          "os": "linux"
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [
+          "openpyxl==3.1.5",
+          "pdfminer.six==20221105"
+        ],
+        "scriptRuntime": "remote",
+        "tools": [
+          "exec.shell"
+        ]
+      },
+      "source": "K",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": true,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "conversion",
+        "docx",
+        "xlsx",
+        "pptx",
+        "pdf"
+      ],
+      "upstream": {
+        "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+        "licenseEvidencePath": "LICENSE.md",
+        "licenseNote": {
+          "en": "MIT at the pinned upstream revision; full license and per-file adaptation/asset audit are preserved in references/licenses/. Floe additions and synthetic fixtures are identified separately.",
+          "zh-Hans": "固定上游提交采用 MIT；完整许可与逐文件适配、素材核验记录保存在 references/licenses/，Floe 新增内容及合成样本另有标注。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/markitdown",
+        "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+        "repositoryLicense": "MIT (root LICENSE.md)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/markitdown/SKILL.md"
+      },
+      "versionTarget": "1.1.0"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Perform symbolic calculations, simplify formulas and solve equations with working steps.",
+        "zh-Hans": "进行符号计算、公式化简与求解，并整理推导过程。"
+      },
+      "firstParty": null,
+      "id": "sympy",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "SymPy",
+        "zh-Hans": "符号数学"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 23,
+      "plannedRuntime": {
+        "capabilities": [
+          "execution.remote",
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "riscv64",
+          "evidence": "guest-verified",
+          "os": "linux"
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [
+          "sympy==1.14.0",
+          "mpmath==1.3.0"
+        ],
+        "scriptRuntime": "remote",
+        "tools": [
+          "exec.shell"
+        ]
+      },
+      "source": "K",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": true,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "math",
+        "symbolic",
+        "algebra",
+        "linux"
+      ],
+      "upstream": {
+        "commit": "593377bb048752abb0152deab9fbb1083a6087df",
+        "licenseEvidencePath": "LICENSE.md",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/sympy",
+        "repository": "https://github.com/K-Dense-AI/scientific-agent-skills",
+        "repositoryLicense": "MIT (root LICENSE.md)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/sympy/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "design-creation",
+      "deepAdaptation": true,
+      "description": {
+        "en": "Design and refine web interfaces, reviewing hierarchy, spacing and accessibility.",
+        "zh-Hans": "设计与改进网页界面，检查层级、间距和可访问性，形成修改建议。"
+      },
+      "firstParty": null,
+      "id": "impeccable",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.60",
+      "name": {
+        "en": "Impeccable",
+        "zh-Hans": "Impeccable"
+      },
+      "notes": {
+        "en": "Use page structure, layout and interaction facts to review interfaces and produce improvement suggestions. Uncovered checks remain explicit in the results.",
+        "zh-Hans": "结合网页结构、布局与交互事实检查界面，形成改进建议，并在结果中列明尚未覆盖的检查。"
+      },
+      "planNumber": 24,
+      "plannedRuntime": {
+        "capabilities": [
+          "execution.remote",
+          "workspace.read",
+          "workspace.write",
+          "browser.observe",
+          "browser.interact"
+        ],
+        "execution": {
+          "arch": "riscv64",
+          "evidence": "guest-verified",
+          "os": "linux"
+        },
+        "installPlatforms": [
+          "ios"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "remote",
+        "tools": [
+          "exec.shell"
+        ]
+      },
+      "source": "I",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": true,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "design",
+        "audit",
+        "snapshot",
+        "web",
+        "riscv64"
+      ],
+      "upstream": {
+        "authoringPath": "skill",
+        "commit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Apache-2.0 upstream LICENSE and NOTICE retained byte-for-byte; the pinned text corpus is audited per file. Floe-authored adaptation files retain MPL-2.0.",
+          "zh-Hans": "保留原始 Apache-2.0 LICENSE 与 NOTICE；已逐文件核对固定版本的文本内容。Floe 自行编写的适配文件采用 MPL-2.0。"
+        },
+        "licenseStatus": "verified",
+        "path": "plugin/skills/impeccable",
+        "repository": "https://github.com/pbakaus/impeccable",
+        "repositoryLicense": "Apache-2.0 (root LICENSE + NOTICE.md)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "plugin/skills/impeccable/SKILL.md"
+      },
+      "versionTarget": "1.1.1"
+    },
+    {
+      "category": "design-creation",
+      "deepAdaptation": true,
+      "description": {
+        "en": "Create generative art with reproducible seeds and parameters, and explore visual variations.",
+        "zh-Hans": "用可复现的种子与参数创作生成艺术，探索不同画面效果。"
+      },
+      "firstParty": null,
+      "id": "algorithmic-art",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.62",
+      "name": {
+        "en": "Algorithmic Art",
+        "zh-Hans": "生成艺术"
+      },
+      "notes": {
+        "en": "Create repeatable generative artwork and export full-size PNGs. Requires Floe 1.7.62 or later.",
+        "zh-Hans": "生成可重复的艺术作品并导出完整尺寸 PNG。需要 Floe 1.7.62 或更高版本。"
+      },
+      "planNumber": 25,
+      "plannedRuntime": {
+        "capabilities": [
+          "browser.interact",
+          "browser.observe",
+          "execution.remote",
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "riscv64",
+          "evidence": "guest-verified",
+          "os": "linux"
+        },
+        "installPlatforms": [
+          "ios"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "remote",
+        "tools": [
+          "browser.click",
+          "browser.exportFile",
+          "browser.navigate",
+          "browser.observe",
+          "browser.screenshot",
+          "exec.localService",
+          "exec.shell",
+          "jobs.cancel",
+          "jobs.result",
+          "jobs.status",
+          "jobs.submit",
+          "workspace.publishOutput"
+        ]
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": true,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "art",
+        "generative",
+        "html",
+        "seed",
+        "p5"
+      ],
+      "upstream": {
+        "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+        "licenseEvidencePath": "skills/algorithmic-art/LICENSE.txt",
+        "licenseNote": {
+          "en": "Pinned per-skill Apache-2.0 license preserved; Floe renderer code is separately identified as MPL-2.0. Bundled font faces, where present, retain their full SIL OFL notices and exact hashes.",
+          "zh-Hans": "固定单项 Apache-2.0 许可已保留，Floe 渲染代码单独标注 MPL-2.0；内置字体如有则保留完整 SIL OFL 声明与精确哈希。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/algorithmic-art",
+        "repository": "https://github.com/anthropics/skills",
+        "repositoryLicense": "Apache-2.0 (per-skill LICENSE.txt)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/algorithmic-art/SKILL.md"
+      },
+      "versionTarget": "1.1.0"
+    },
+    {
+      "category": "design-creation",
+      "deepAdaptation": true,
+      "description": {
+        "en": "Create posters and graphic layouts with a clear arrangement of text and visuals.",
+        "zh-Hans": "制作海报与平面版式，组织文字、图形和视觉重点。"
+      },
+      "firstParty": null,
+      "id": "canvas-design",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.62",
+      "name": {
+        "en": "Canvas Design",
+        "zh-Hans": "平面视觉设计"
+      },
+      "notes": {
+        "en": "Create posters and visual layouts and export full-size PNGs. Requires Floe 1.7.62 or later.",
+        "zh-Hans": "设计海报与视觉版式并导出完整尺寸 PNG。需要 Floe 1.7.62 或更高版本。"
+      },
+      "planNumber": 26,
+      "plannedRuntime": {
+        "capabilities": [
+          "browser.interact",
+          "browser.observe",
+          "execution.remote",
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "riscv64",
+          "evidence": "guest-verified",
+          "os": "linux"
+        },
+        "installPlatforms": [
+          "ios"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "remote",
+        "tools": [
+          "browser.click",
+          "browser.exportFile",
+          "browser.navigate",
+          "browser.observe",
+          "browser.screenshot",
+          "exec.localService",
+          "exec.shell",
+          "jobs.cancel",
+          "jobs.result",
+          "jobs.status",
+          "jobs.submit",
+          "workspace.publishOutput"
+        ]
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": true,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "design",
+        "poster",
+        "layout",
+        "export",
+        "fonts"
+      ],
+      "upstream": {
+        "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+        "licenseEvidencePath": "skills/canvas-design/LICENSE.txt",
+        "licenseNote": {
+          "en": "Pinned per-skill Apache-2.0 license preserved; Floe renderer code is separately identified as MPL-2.0. Bundled font faces, where present, retain their full SIL OFL notices and exact hashes.",
+          "zh-Hans": "固定单项 Apache-2.0 许可已保留，Floe 渲染代码单独标注 MPL-2.0；内置字体如有则保留完整 SIL OFL 声明与精确哈希。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/canvas-design",
+        "repository": "https://github.com/anthropics/skills",
+        "repositoryLicense": "Apache-2.0 (per-skill LICENSE.txt)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/canvas-design/SKILL.md"
+      },
+      "versionTarget": "1.1.0"
+    },
+    {
+      "category": "design-creation",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Organize colors, typography and themes for a consistent visual style.",
+        "zh-Hans": "整理配色、字体与主题，让多份内容保持一致的视觉风格。"
+      },
+      "firstParty": null,
+      "id": "theme-factory",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Theme Factory",
+        "zh-Hans": "主题与配色"
+      },
+      "notes": {
+        "en": "Fonts and template assets require per-item license evidence before packaging.",
+        "zh-Hans": "字体与模板素材在打包前需逐项许可证据。"
+      },
+      "planNumber": 27,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "theme",
+        "palette",
+        "fonts",
+        "templates",
+        "design"
+      ],
+      "upstream": {
+        "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+        "licenseEvidencePath": "skills/theme-factory/LICENSE.txt",
+        "licenseNote": {
+          "en": "Per-skill Apache-2.0 license retained; the unchanged PDF showcase contains six embedded DejaVu/GNU FreeFont subsets with their original notices and font-embedding exception supplied. No standalone font files are distributed.",
+          "zh-Hans": "保留单项 Apache-2.0 许可；原 PDF 样例含六个 DejaVu／GNU FreeFont 字体子集，已附原有声明及字体嵌入例外。不分发独立字体文件。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/theme-factory",
+        "repository": "https://github.com/anthropics/skills",
+        "repositoryLicense": "Apache-2.0 (per-skill LICENSE.txt)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/theme-factory/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "design-creation",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Build reusable components, design tokens and guidelines for consistent interfaces.",
+        "zh-Hans": "建立可复用的组件、设计变量与规范，让界面保持一致。"
+      },
+      "firstParty": null,
+      "id": "ui-design-system",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "UI Design System",
+        "zh-Hans": "UI 设计系统"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 28,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "R",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "design-system",
+        "tokens",
+        "components",
+        "ui"
+      ],
+      "upstream": {
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "product-team/skills/ui-design-system",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "product-team/skills/ui-design-system/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "product-requirements",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Organize user research and usability insights to support informed design decisions.",
+        "zh-Hans": "整理用户研究和可用性洞察，支持清楚、有依据的设计决策。"
+      },
+      "firstParty": null,
+      "id": "ux-researcher-designer",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "UX Researcher-Designer",
+        "zh-Hans": "用户体验研究"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 29,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "R",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "ux",
+        "research",
+        "usability",
+        "design"
+      ],
+      "upstream": {
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "product-team/skills/ux-researcher-designer",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "product-team/skills/ux-researcher-designer/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "web-development",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Improve React component structure, data handling and performance.",
+        "zh-Hans": "改进 React 组件的结构、数据处理与性能，减少常见问题。"
+      },
+      "firstParty": null,
+      "id": "react-best-practices",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "React Best Practices",
+        "zh-Hans": "React 最佳实践"
+      },
+      "notes": {
+        "en": "Floe original guide. Replaces the original candidate with independently authored content; upstream text is not distributed. Candidate identity and provenance remain in the package.",
+        "zh-Hans": "Floe 原创指南，以独立编写的内容替代原候选，不分发其上游文本。包内保留候选来源与处理记录。"
+      },
+      "planNumber": 30,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "F",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "react",
+        "frontend",
+        "rules",
+        "examples"
+      ],
+      "upstream": null,
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "web-development",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Break complex interfaces into composable, maintainable React components.",
+        "zh-Hans": "把复杂界面拆成易组合、易维护的 React 组件。"
+      },
+      "firstParty": null,
+      "id": "composition-patterns",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Composition Patterns",
+        "zh-Hans": "React 组件组合"
+      },
+      "notes": {
+        "en": "Floe original guide. Replaces the original candidate with independently authored content; upstream text is not distributed. Candidate identity and provenance remain in the package.",
+        "zh-Hans": "Floe 原创指南，以独立编写的内容替代原候选，不分发其上游文本。包内保留候选来源与处理记录。"
+      },
+      "planNumber": 31,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "F",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "react",
+        "composition",
+        "patterns",
+        "frontend"
+      ],
+      "upstream": null,
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "web-development",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Review web layout, interaction and accessibility, then outline actionable improvements.",
+        "zh-Hans": "检查网页布局、交互与可访问性，整理可执行的改进清单。"
+      },
+      "firstParty": null,
+      "id": "web-design-guidelines",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Web Design Guidelines",
+        "zh-Hans": "网页设计规范"
+      },
+      "notes": {
+        "en": "Floe original guide. Replaces the original candidate with independently authored content; upstream text is not distributed. Candidate identity and provenance remain in the package.",
+        "zh-Hans": "Floe 原创指南，以独立编写的内容替代原候选，不分发其上游文本。包内保留候选来源与处理记录。"
+      },
+      "planNumber": 32,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "F",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "web",
+        "design",
+        "guidelines",
+        "checklist"
+      ],
+      "upstream": null,
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "web-development",
+      "deepAdaptation": true,
+      "description": {
+        "en": "Test web navigation, input and click flows, retaining results and screenshots.",
+        "zh-Hans": "验证网页的导航、输入和点击流程，保存检查结果与截图。"
+      },
+      "firstParty": null,
+      "id": "webapp-testing",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Webapp Testing",
+        "zh-Hans": "Web 应用测试"
+      },
+      "notes": {
+        "en": "Uses Floe browser tools and supervised task services without installing Playwright or Chromium. The unchanged package passed 14 actual App Simulator and Linux RISC-V cases; its signed review preserves the original assertions, run digest and raw-JSONL retention limitation.",
+        "zh-Hans": "使用 Floe 浏览器工具与受管理的任务服务，无需安装 Playwright 或 Chromium。冻结包已通过 14 项实际 App Simulator 与 Linux RISC-V 用例；签名审核保留原始断言、运行摘要及原始 JSONL 未归档的限制。"
+      },
+      "planNumber": 33,
+      "plannedRuntime": {
+        "capabilities": [
+          "execution.remote",
+          "workspace.read",
+          "workspace.write",
+          "browser.observe",
+          "browser.interact"
+        ],
+        "execution": {
+          "arch": "riscv64",
+          "evidence": "guest-verified",
+          "os": "linux"
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "remote",
+        "tools": [
+          "exec.shell"
+        ]
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": true,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "testing",
+        "browser",
+        "e2e",
+        "playwright",
+        "replay"
+      ],
+      "upstream": {
+        "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+        "licenseEvidencePath": "skills/webapp-testing/LICENSE.txt",
+        "licenseNote": {
+          "en": "Apache-2.0 per-skill LICENSE.txt kept byte-identical under references/licenses/; per-asset audit closed 2026-10-26: the pinned subtree contains only text/code (no fonts, images or binary template assets).",
+          "zh-Hans": "单项 Apache-2.0 LICENSE.txt 已按字节保存于 references/licenses/；2026-10-26 完成素材核验：固定提交子树仅含文本与代码（无字体、图片或二进制模板素材）。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/webapp-testing",
+        "repository": "https://github.com/anthropics/skills",
+        "repositoryLicense": "Apache-2.0 (per-skill LICENSE.txt)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/webapp-testing/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "web-development",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Review keyboard interaction, page semantics and readability for accessibility issues.",
+        "zh-Hans": "检查键盘操作、页面语义与可读性，找出可访问性问题。"
+      },
+      "firstParty": null,
+      "id": "a11y-audit",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "A11y Audit",
+        "zh-Hans": "可访问性检查"
+      },
+      "notes": {
+        "en": "Audit execution depends on the native controlled browser, not a bundled crawler.",
+        "zh-Hans": "审计执行依赖原生受控浏览器，而非自带爬虫。"
+      },
+      "planNumber": 34,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "browser.observe"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "R",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "a11y",
+        "accessibility",
+        "audit",
+        "wcag"
+      ],
+      "upstream": {
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "engineering-team/a11y-audit/skills/a11y-audit",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "engineering-team/a11y-audit/skills/a11y-audit/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "web-development",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Reproduce problems, gather evidence and verify causes and fixes systematically.",
+        "zh-Hans": "从复现和证据出发定位问题，逐步验证原因与修复。"
+      },
+      "firstParty": null,
+      "id": "systematic-debugging",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Systematic Debugging",
+        "zh-Hans": "系统化调试"
+      },
+      "notes": {
+        "en": "Guidance-only packaging is expected; adapters run through the existing task tools rather than a new engine.",
+        "zh-Hans": "预期以指南型打包；适配流程复用现有任务工具，不新增引擎。"
+      },
+      "planNumber": 35,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "S",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "debugging",
+        "diagnosis",
+        "logs",
+        "repro"
+      ],
+      "upstream": {
+        "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/systematic-debugging",
+        "repository": "https://github.com/obra/superpowers",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/systematic-debugging/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "web-development",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Define expected behavior and use tests to guide implementation and changes.",
+        "zh-Hans": "先明确预期行为，再用测试推动实现与修改。"
+      },
+      "firstParty": null,
+      "id": "test-driven-development",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "TDD",
+        "zh-Hans": "测试驱动开发"
+      },
+      "notes": {
+        "en": "Adaptation must reference actual project test commands inside the task Linux environment.",
+        "zh-Hans": "适配须引用任务 Linux 环境中项目真实测试命令。"
+      },
+      "planNumber": 36,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "S",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "tdd",
+        "testing",
+        "workflow",
+        "project"
+      ],
+      "upstream": {
+        "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/test-driven-development",
+        "repository": "https://github.com/obra/superpowers",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/test-driven-development/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "web-development",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Review behavior, risk and validation in code changes and provide evidence-based feedback.",
+        "zh-Hans": "检查代码改动的行为、风险与验证情况，整理有依据的评审意见。"
+      },
+      "firstParty": null,
+      "id": "requesting-code-review",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Requesting Code Review",
+        "zh-Hans": "代码评审"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 37,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "S",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "review",
+        "collaboration",
+        "process"
+      ],
+      "upstream": {
+        "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/requesting-code-review",
+        "repository": "https://github.com/obra/superpowers",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "skills/requesting-code-review/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "product-requirements",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Analyze requirements, prioritize work and roadmaps, and record product decisions.",
+        "zh-Hans": "分析需求、梳理优先级与路线图，记录产品决策。"
+      },
+      "firstParty": null,
+      "id": "product-manager-toolkit",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Product Manager Toolkit",
+        "zh-Hans": "产品经理工具箱"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 38,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "R",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "pm",
+        "roadmap",
+        "templates",
+        "requirements"
+      ],
+      "upstream": {
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "product-team/skills/product-manager-toolkit",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "product-team/skills/product-manager-toolkit/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "product-requirements",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Explore opportunities and assumptions, plan experiments and organize findings.",
+        "zh-Hans": "拆解机会与假设，规划验证实验，并整理发现与结论。"
+      },
+      "firstParty": null,
+      "id": "product-discovery",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Product Discovery",
+        "zh-Hans": "产品探索"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 39,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "R",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "discovery",
+        "hypothesis",
+        "validation",
+        "evidence"
+      ],
+      "upstream": {
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "product-team/skills/product-discovery",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "product-team/skills/product-discovery/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "product-requirements",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Read an existing project and document its functionality, behavior and requirements.",
+        "zh-Hans": "阅读现有项目，整理功能、行为与产品需求说明。"
+      },
+      "firstParty": null,
+      "id": "code-to-prd",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Code to PRD",
+        "zh-Hans": "代码转需求说明"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "planNumber": 40,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "R",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "prd",
+        "reverse",
+        "code",
+        "documentation"
+      ],
+      "upstream": {
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "product-team/code-to-prd/skills/code-to-prd",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "product-team/code-to-prd/skills/code-to-prd/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Turn meeting text or transcripts into notes, action items and follow-up questions.",
+        "zh-Hans": "把会议文本或转写整理为纪要、行动项与待跟进问题。"
+      },
+      "firstParty": null,
+      "id": "meetings",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Meetings",
+        "zh-Hans": "会议纪要"
+      },
+      "notes": {
+        "en": "Input must already be authorized text/transcript; this entry never starts recording or cloud transcription itself.",
+        "zh-Hans": "输入须为已授权文本或转写；本项不自行发起录音或云端转写。"
+      },
+      "planNumber": 41,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "R",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "meetings",
+        "minutes",
+        "action-items",
+        "transcript"
+      ],
+      "upstream": {
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The pinned skill subtree and shipped references were audited; full applicable license and per-file adaptation/asset notes are preserved under references/licenses/ and references/PROVENANCE.md.",
+          "zh-Hans": "已核验固定技能子树与所附参考资料，完整适用许可及逐文件适配、素材记录保存在 references/licenses/ 与 references/PROVENANCE.md。"
+        },
+        "licenseStatus": "verified",
+        "path": "productivity/meetings/skills/meetings",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-26",
+        "skillManifestPath": "productivity/meetings/skills/meetings/SKILL.md"
+      },
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Organize workspace files with a reviewable plan and recovery information.",
+        "zh-Hans": "梳理工作区文件，生成可检查、可恢复的整理方案。"
+      },
+      "firstParty": null,
+      "id": "floe-file-organizer",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Floe File Organizer",
+        "zh-Hans": "Floe 文件整理"
+      },
+      "notes": {
+        "en": "First-party implementation with existing workspace change review; no parallel approval system.",
+        "zh-Hans": "自有实现，复用现有工作区变更审阅；不另建审批体系。"
+      },
+      "planNumber": 42,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write",
+          "workspace.delete"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "F",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "files",
+        "organize",
+        "preview",
+        "recoverable"
+      ],
+      "upstream": null,
+      "versionTarget": "1.0.1"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Extract and categorize receipt information into clear records and an archive plan.",
+        "zh-Hans": "提取并归类票据信息，生成清楚的明细与归档清单。"
+      },
+      "firstParty": null,
+      "id": "floe-invoice-organizer",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.59",
+      "name": {
+        "en": "Floe Invoice Organizer",
+        "zh-Hans": "Floe 票据整理"
+      },
+      "notes": {
+        "en": "First-party implementation over existing OCR/PDF services; protected PDFs go through the PDFKit gate only.",
+        "zh-Hans": "自有实现基于现有 OCR/PDF 服务；受保护 PDF 只走 PDFKit 闸门。"
+      },
+      "planNumber": 43,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "F",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "invoice",
+        "ocr",
+        "tables",
+        "archive"
+      ],
+      "upstream": null,
+      "versionTarget": "1.0.1"
+    }
+  ]
+}

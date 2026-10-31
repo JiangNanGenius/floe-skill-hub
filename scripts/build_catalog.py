@@ -64,6 +64,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 import dependency_declaration
 import hubcore
+import catalog_views
 import publication_immutability
 import runtime_dependency
 
@@ -204,6 +205,11 @@ def bind_review(entry, reviews_root, public_keys, package_binding=None, manifest
 # join/install validators that already governed these entries. An entry
 # already carrying the sentinel floor is never re-projected.
 ANDROID_PORTABLE_GUIDE_IDS = frozenset({
+    "construction-estimate-builder", "construction-change-order-processor",
+    "construction-bid-compass", "variance-analysis", "review-contract",
+    "proposal-builder", "hiring-screener", "process-mapper", "senior-pm",
+    "lesson-plan-builder", "study-plan-scheduler", "k12-check-for-understanding",
+    "travel-points-calculator",
     "a11y-audit", "code-to-prd", "composition-patterns", "content-production",
     "copy-editing", "copywriting", "deep-research", "deepread",
     "doc-coauthoring", "floe-email-drafting", "floe-file-organizer",
@@ -323,6 +329,20 @@ def project_android_portable_guide_feed(feed, packages_root, reviews_root):
     return dict(feed, entries=entries)
 
 
+def project_legacy_catalog(registry, feed):
+    """Keep the original planning cohort readable by 1...43 clients.
+
+    The input is already fully bound and validated; projection preserves each
+    retained row byte-for-byte in structure and recomputes only feed counts.
+    Production registry validation pins each legacy number to its original id.
+    """
+    rows = [entry for entry in feed["entries"]
+            if entry["planNumber"] <= len(hubcore.LEGACY_PLAN_IDS)]
+    return hubcore.build_catalog(
+        registry, feed["channel"], feed["feedStatus"], rows,
+        feed["sourceCommit"], generated_note=feed.get("generatedNote"))
+
+
 def build(registry, mode, source_commit, packages_root, reviews_root, public_keys):
     out = {}
     for channel in ("ios", "android"):
@@ -424,8 +444,15 @@ def build(registry, mode, source_commit, packages_root, reviews_root, public_key
             if projected is not None:
                 catalog_bytes = hubcore.encoded(projected)
                 hubcore.validate_catalog(json.loads(catalog_bytes), channel=channel)
+        # Complete and legacy views share the same bound rows, source X and
+        # archive/review identities. Older clients never receive row 44+.
+        full_feed = json.loads(catalog_bytes)
+        legacy_feed = project_legacy_catalog(registry, full_feed)
+        hubcore.validate_catalog(legacy_feed, channel=channel)
         prefix = "" if channel == "ios" else "android/"
-        out[prefix + "catalog.json"] = catalog_bytes
+        out[prefix + "catalog-full.json"] = catalog_bytes
+        out[prefix + "catalog.json"] = hubcore.encoded(legacy_feed)
+    catalog_views.assert_projection(out)
     return out
 
 
@@ -516,7 +543,7 @@ def main():
             raise SystemExit("refusing to sign: the signing key's public identity does not "
                              "match the configured trust in public-key.json")
         for name in list(outputs):
-            if name.endswith("catalog.json"):
+            if name in catalog_views.FEED_FILES:
                 sig_name = name[: -len(".json")] + ".sig"
                 outputs[sig_name] = hubcore.sign_envelope(outputs[name], key,
                                                            hubcore.PRODUCTION_KEY_ID)

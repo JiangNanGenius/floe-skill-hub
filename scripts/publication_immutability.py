@@ -47,6 +47,7 @@ import pathlib
 import subprocess
 
 import hubcore
+import catalog_views as cv
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
 
@@ -63,15 +64,16 @@ LEDGER_DESCRIPTION = (
     "because released bytes stay immutable forever. Append a row per channel "
     "after each coordinator publication run; do not hand-edit existing rows.")
 
-FEED_PAIRS = (
-    ("ios", "catalog.json", "catalog.sig"),
-    ("android", "android/catalog.json", "android/catalog.sig"),
-)
+FEED_PAIRS = tuple((view, *cv.FEED_PATHS[view]) for view in cv.VIEWS)
+
+
+class PublishedBaseline(dict):
+    complete_view_seen = False
 
 
 def _feed_rel(channel, suffix):
-    prefix = "" if channel == "ios" else "android/"
-    return f"{prefix}catalog.{suffix}"
+    cv.channel_for(channel)
+    return cv.FEED_PATHS[channel][0 if suffix == "json" else 1]
 
 
 def _git_output(root, arguments, field):
@@ -124,11 +126,10 @@ def _assert_ledger_append_only(root, raw, doc):
         if (hubcore.encoded(prior) != prior_raw or not isinstance(prior_rows, list)
                 or prior.get("schemaVersion") != LEDGER_SCHEMA_VERSION):
             raise ValueError("invalid prior ledger")
-        old = {hubcore.encoded(row) for row in prior_rows}
-        current = {hubcore.encoded(row) for row in doc["publications"]}
+        prefix_kept = doc["publications"][:len(prior_rows)] == prior_rows
     except (ValueError, TypeError, KeyError):
         raise hubcore.HubError("previous publication ledger cannot be verified") from None
-    if not old.issubset(current):
+    if not prefix_kept:
         raise hubcore.HubError(
             "publication ledger is append-only: historical rows cannot be "
             "removed or rewritten, even after a version leaves the latest feed")
@@ -154,7 +155,7 @@ def _verified_feed_table(feed_bytes, sig_bytes, channel, public_keys, field):
         raise hubcore.HubError(
             f"{field}: published feed bytes are not the canonical encoding; "
             f"refusing an untrustworthy baseline")
-    hubcore.validate_catalog(feed, channel=channel)
+    cv.validate_view(feed, channel)
     table = {}
     for entry in feed["entries"]:
         package = entry.get("package")
@@ -184,7 +185,18 @@ def load_trustworthy_baseline(root=REPO, published_pin=None):
             or not hubcore.COMMIT_PATTERN.fullmatch(published_pin)):
         raise hubcore.HubError("published pin must be a 40-hex commit")
     baseline = {}
+    feed_payloads = {}
+    full_paths = {p for view in cv.FULL_VIEWS for p in cv.FEED_PATHS[view]}
+    if published_pin is not None:
+        present_full = set(_git_output(root, ["ls-tree", "--name-only", "-r", published_pin,
+                                               "--", *sorted(full_paths)], "full-view presence").decode().splitlines())
+    else:
+        present_full = {p for p in full_paths if (root / p).exists()}
+    if present_full and present_full != full_paths:
+        raise hubcore.HubError("incomplete complete-view publication: all full feeds and signatures are required")
     for channel, rel_feed, rel_sig in FEED_PAIRS:
+        if channel in cv.FULL_VIEWS and not present_full:
+            continue  # Historical publication before complete views existed.
         field = f"{channel} published baseline"
         if published_pin is not None:
             field = f"{channel} published baseline at {published_pin[:10]}"
@@ -195,6 +207,7 @@ def load_trustworthy_baseline(root=REPO, published_pin=None):
             sig_bytes = _git_show(root, published_pin, rel_sig, field)
             baseline[channel] = _verified_feed_table(
                 feed_bytes, sig_bytes, channel, public_keys, field)
+            feed_payloads[rel_feed] = feed_bytes
             continue
         path = root / rel_feed
         sig_path = root / rel_sig
@@ -211,6 +224,9 @@ def load_trustworthy_baseline(root=REPO, published_pin=None):
                 f"the gate")
         baseline[channel] = _verified_feed_table(
             path.read_bytes(), sig_path.read_bytes(), channel, public_keys, field)
+        feed_payloads[rel_feed] = path.read_bytes()
+    if present_full:
+        cv.assert_projection(feed_payloads)
     return baseline
 
 
@@ -263,6 +279,8 @@ def verify_ledger(ledger_path, root):
             "trust (public-key.json) in the tooling root")
 
     verified = []
+    seen_rows = set()
+    checked_complete_pins = set()
     for index, row in enumerate(doc["publications"]):
         field = f"publication ledger row {index}"
         if not isinstance(row, dict) or set(row) != {
@@ -274,8 +292,17 @@ def verify_ledger(ledger_path, root):
                 or not hubcore.COMMIT_PATTERN.fullmatch(publication):
             raise hubcore.HubError(f"{field}: publication must be a 40-hex commit")
         channel = row["channel"]
-        if channel not in ("ios", "android"):
+        if channel not in cv.VIEWS:
             raise hubcore.HubError(f"{field}: unknown channel {channel!r}")
+        identity = (publication, channel)
+        if identity in seen_rows:
+            raise hubcore.HubError(f"{field}: duplicate publication/view row")
+        seen_rows.add(identity)
+        if channel in cv.FULL_VIEWS and publication not in checked_complete_pins:
+            paired = load_trustworthy_baseline(root, publication)
+            if not set(cv.FULL_VIEWS) <= set(paired):
+                raise hubcore.HubError(f"{field}: complete publication pairs are absent")
+            checked_complete_pins.add(publication)
         hubcore.require_hex64(row["feedSha256"], f"{field}.feedSha256")
         offers = row["offers"]
         if not isinstance(offers, list) or not offers:
@@ -310,9 +337,12 @@ def verify_ledger(ledger_path, root):
         except ValueError as error:
             raise hubcore.HubError(
                 f"{field}: published feed is not valid JSON: {error}") from None
-        if feed.get("channel") != channel:
+        if feed.get("channel") != cv.channel_for(channel):
             raise hubcore.HubError(f"{field}: ledger channel disagrees with the "
                                    f"published feed")
+        if hubcore.encoded(feed) != feed_bytes:
+            raise hubcore.HubError(f"{field}: noncanonical feed bytes")
+        cv.validate_view(feed, channel)
         published = {}
         for entry in feed.get("entries", []):
             package = entry.get("package")
@@ -361,22 +391,24 @@ def build_validated_baseline(root=REPO, ledger_path=None, published_pin=None,
             f"production history exists at {root} but the cumulative publication "
             f"ledger {ledger_path} is missing; refusing to publish without the "
             f"verified historical baseline (no downgrade to first publication)")
-    merged = {}
+    merged = PublishedBaseline()
     rows = []
     if ledger_path.is_file():
         rows = verify_ledger(ledger_path, root)
         for row in rows:
             for offer in row["offers"]:
-                key = (row["channel"], offer["id"], offer["version"])
+                key = (cv.channel_for(row["channel"]), offer["id"], offer["version"])
                 digest = offer["contentDigest"]
                 if key in merged and merged[key] != digest:
                     raise hubcore.HubError(
                         f"publication ledger conflict for {key}: two publications "
                         f"disagree on the contentDigest")
                 merged[key] = digest
+        merged.complete_view_seen = (any(row["channel"] in cv.FULL_VIEWS for row in rows)
+                                     or bool(set(current) & set(cv.FULL_VIEWS)))
     for channel, table in current.items():
         for (skill_id, version), digest in table.items():
-            if merged.get((channel, skill_id, version)) != digest:
+            if merged.get((cv.channel_for(channel), skill_id, version)) != digest:
                 raise hubcore.HubError(
                     f"the publication ledger does not cover the currently "
                     f"published {channel} offer {skill_id} {version}; the tooling "
@@ -407,7 +439,7 @@ def build_ledger_row(root, publication, channel):
     """
     import build_catalog
 
-    if channel not in ("ios", "android"):
+    if channel not in cv.VIEWS:
         raise hubcore.HubError(f"unknown channel {channel!r}")
     if not isinstance(publication, str) \
             or not hubcore.COMMIT_PATTERN.fullmatch(publication):
@@ -432,7 +464,7 @@ def build_ledger_row(root, publication, channel):
         raise hubcore.HubError(f"{field}: feed is not valid JSON: {error}") from None
     if hubcore.encoded(feed) != feed_bytes:
         raise hubcore.HubError(f"{field}: feed bytes are not canonical")
-    hubcore.validate_catalog(feed, channel=channel)
+    cv.validate_view(feed, channel)
     offers = []
     for entry in sorted(feed["entries"], key=lambda e: (e["id"], e["version"])):
         package = entry.get("package")
@@ -461,8 +493,11 @@ def assert_immutable_publication(candidate_outputs, baseline):
     versions pass; reuse of any historically published version with different
     bytes is refused even when re-signable.
     """
+    full_present = set(candidate_outputs) & {cv.FEED_PATHS[v][0] for v in cv.FULL_VIEWS}
+    if full_present or getattr(baseline, "complete_view_seen", False):
+        cv.assert_projection(candidate_outputs)
     for name, data in candidate_outputs.items():
-        if not name.endswith("catalog.json"):
+        if name not in cv.FEED_FILES:
             continue
         channel = "android" if name.startswith("android/") else "ios"
         if not any(key[0] == channel for key in baseline):

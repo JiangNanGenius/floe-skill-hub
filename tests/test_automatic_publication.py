@@ -307,8 +307,12 @@ class HubFixture(unittest.TestCase):
 
     def _release_feeds(self, registry, source_commit):
         import build_catalog
-        return build_catalog.build(registry, "release", source_commit,
-                                   self.root, self.root, TRUST)
+        outputs = build_catalog.build(registry, "release", source_commit,
+                                      self.root, self.root, TRUST)
+        # This P0 is the frozen historical legacy-only epoch. New X/Y
+        # publication uses the actual four-view builder through rebuild_feeds.
+        return {name: data for name, data in outputs.items()
+                if "catalog-full." not in name}
 
     # -- helpers used by both fixture modes --------------------------------
 
@@ -1640,9 +1644,9 @@ class TestPublicReadback(HubFixture):
                              hubcore.PRODUCTION_KEY_ID)
         self.assertTrue(verdict["ledgerCryptoVerified"])
         self.assertEqual(verdict["newestRowCoverage"],
-                         {"android": f["y"], "ios": f["y"]})
+                         {view: f["y"] for view in ap.FEED_PATHS})
         self.assertIn("append-only prefix", verdict["ledgerPrefix"])
-        self.assertEqual(verdict["ledgerRows"], 4)  # 2 base + 2 published now
+        self.assertEqual(verdict["ledgerRows"], 6)  # 2 historical base + 4 views published now
 
     def test_missing_channel_object_fails_closed(self):
         f = self._publish_full()

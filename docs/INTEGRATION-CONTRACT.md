@@ -5,8 +5,9 @@ Status: integration input; live publication is established by signed feed readba
 ## Repository and channels
 
 - Remote: `JiangNanGenius/floe-skill-hub`; default branch `main`.
-- iOS curated feed: `catalog.json` and `catalog.sig`; immutable archives `packages/{id}/{version}/{id}.zip`.
-- Android channel: `android/catalog.json` and `android/catalog.sig`; archives `android/packages/{id}/{version}/{id}.zip`. No channel becomes active until real signed publication and client compatibility are verified.
+- iOS legacy feed: `catalog.json` and `catalog.sig`; immutable archives `packages/{id}/{version}/{id}.zip`.
+- Android legacy view: `android/catalog.json` and `android/catalog.sig`; archives `android/packages/{id}/{version}/{id}.zip`. No channel becomes active until real signed publication and client compatibility are verified.
+- Complete curated views: `catalog-full.json` / `catalog-full.sig` and `android/catalog-full.json` / `android/catalog-full.sig`; see [the expansion contract](CATALOG-EXPANSION.md). Original43 planning identities stay in the legacy projection; new rows append only in the complete view. All current signing/publication runs bind the four pairs at one Y. Historical legacy-only publications remain valid; partial complete pairs never do.
 - Reserved macOS original channel: `macos/catalog.json` and `macos/catalog.json.sig`, `schemaVersion: 1`, `channel: "macos-original"`; see [the source-pinned author contract](MACOS-ORIGINAL-CONTRACT.md). It has a separate file manifest and installation lifecycle, reuses the existing signing trust, and does not change the curated feeds or require Linux review/archive/qualification records. Do not create or publish this feed until the release owner establishes the capable client identity and authorizes publication.
 - App's historical `JiangNanGenius/floe-agent/skill-hub` four-item feed remains available unchanged. Legacy compatibility views are produced separately; new candidates never silently enter the legacy four-item decoder.
 - Candidate metadata lives in `catalog/skills.json`; deterministic packaging, validation and signing live in `scripts/`; package sources live in `sources/{id}/`.

@@ -696,10 +696,11 @@ def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
     There is no parameter, flag or environment option that disables any of
     the above.
     """
+    import catalog_views as cv
     entries_by_id = {e["id"]: e for e in registry["skills"]}
     try:
-        ios_feed = json.loads(outputs["catalog.json"])
-        android_feed = json.loads(outputs["android/catalog.json"])
+        ios_feed = json.loads(outputs["catalog-full.json"])
+        android_feed = json.loads(outputs["android/catalog-full.json"])
     except KeyError:
         raise SigningError("builder did not emit both channel feeds") from None
     ios_ids = [e["id"] for e in ios_feed["entries"]]
@@ -807,6 +808,10 @@ def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
     # four App-provided builtins); the actual download offers are the
     # qualified non-builtin rows, so the coverage reports the selection and
     # the builtin-provided count separately from the offer counts.
+    try:
+        cv.assert_projection(outputs)
+    except hubcore.HubError as error:
+        raise SigningError(f"catalog view gate: {error}") from None
     selection_qualified = sum(1 for e in registry["skills"]
                               if e["status"]["qualified"])
     builtin_provided = sum(1 for e in registry["skills"]
@@ -872,7 +877,7 @@ def stage_referenced_inputs(hubcore, args, outputs, trust, files):
     its feed path. Nothing else from X is copied; no Git metadata and no key
     material ever enter the output.
     """
-    for feed_name in ("catalog.json", "android/catalog.json"):
+    for feed_name in ("catalog-full.json", "android/catalog-full.json"):
         feed = json.loads(outputs[feed_name])
         for entry in feed["entries"]:
             package = entry["package"]
@@ -986,7 +991,8 @@ def run_catalog_mode(args, hubcore, build_catalog, runtime_dependency,
     files = dict(outputs)
     stage_referenced_inputs(hubcore, args, outputs, trust, files)
     signatures = {}
-    for name in ("catalog.json", "android/catalog.json"):
+    import catalog_views as cv
+    for name in sorted(cv.FEED_FILES):
         payload = outputs[name]
         try:
             envelope = hubcore.sign_envelope(payload, key, hubcore.PRODUCTION_KEY_ID)
