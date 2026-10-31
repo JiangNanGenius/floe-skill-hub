@@ -103,11 +103,10 @@ jobs:
           sys.dont_write_bytecode = True
           sys.path.insert(0, "scripts")
           sys.path.insert(0, "tests/catalog")
-          import hubcore, build_catalog, sign_publication, runtime_dependency
+          import hubcore, build_catalog, sign_publication, runtime_dependency, catalog_views
           import fixture_status
           root = pathlib.Path(".")
-          publication_paths = ("catalog.json", "catalog.sig",
-                               "android/catalog.json", "android/catalog.sig")
+          publication_paths = tuple(sorted(catalog_views.ARTIFACT_FILES))
           def publication_snapshot():
               snapshot = {}
               for relative in publication_paths:
@@ -124,8 +123,8 @@ jobs:
           trust = build_catalog.load_trust(root)
           outputs = build_catalog.build(registry, "release", "${{ github.sha }}",
                                         root, root, trust)
-          ios = json.loads(outputs["catalog.json"])
-          android = json.loads(outputs["android/catalog.json"])
+          ios = json.loads(outputs["catalog-full.json"])
+          android = json.loads(outputs["android/catalog-full.json"])
           expected = {
               channel: {entry["id"] for entry in registry["skills"]
                         if entry["status"]["qualified"]
@@ -192,12 +191,14 @@ jobs:
                 f"{len(gate['mandatoryDeepOffered'])}/"
                 f"{coverage['mandatoryDeepTotal']}; complete-selection coverage "
                 f"(informational): {coverage['complete']}")
-          dropped = json.loads(outputs["catalog.json"])
+          dropped = json.loads(outputs["catalog-full.json"])
           dropped["entries"] = dropped["entries"][:-1]
           try:
               sign_publication.enforce_launch_gate(
                   hubcore, runtime_dependency, args, registry,
-                  dict(outputs, **{"catalog.json": hubcore.encoded(dropped)}))
+                  dict(outputs, **{"catalog-full.json": hubcore.encoded(dropped),
+                                   "catalog.json": hubcore.encoded(
+                                       build_catalog.project_legacy_catalog(registry, dropped))}))
           except sign_publication.SigningError as error:
               if "exactly the qualified rows advertising iOS" not in str(error):
                   raise SystemExit(f"partial-drop refusal changed: {error}")
