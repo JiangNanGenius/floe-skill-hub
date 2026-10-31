@@ -83,12 +83,44 @@ local source in `sources/<id>`:
   Upstream removals delete only verbatim
   carries; removing a locally adapted file holds;
 * mapped license carries (`kind: license`) whose upstream bytes change always
-  hold (`held-license-drift`); license text is never auto-adopted.
+  hold (`held-license-drift`); license text is never auto-adopted;
+* a per-skill `retainedFrontmatter: ["description"]` declaration is an explicit
+  opt-in ownership of the curated local `SKILL.md` description. It is not a
+  blanket conflict suppression: only the `description` key may be declared
+  (the schema and `validate-policy` refuse every other key), the exact local
+  physical `description:` line bytes are retained, and the body still merges
+  three ways under the ordinary gates. Frontmatter and body merge separately,
+  so a description-only upstream rewrite that leaves local bytes unchanged is
+  a genuine `no-change` (no version, review, proof or publication is
+  manufactured). The plan reports `retainedFrontmatter` facts (whether
+  upstream changed, whether local content was deliberately retained, and line
+  hashes). Description shapes outside the reviewed parser's single-line scalar
+  contract — missing, duplicate or indented description keys, YAML
+  tags/anchors/aliases, block scalars, continuation lines, CRLF — stay
+  `held-conflict` with the scanner/parser error; all other frontmatter bytes
+  are opaque and are never interpreted or imported. Under the declaration, any
+  upstream change to a non-description frontmatter key (`name`, `license`,
+  `metadata`, `permissions`, `capabilities`, `dependencies`, `runtime`,
+  unknown scalar additions and so on) is held rather than auto-merged, even
+  when `hubcore.parse_frontmatter` would tolerate the scalar line. Without the
+  declaration, the original line-merge behaviour is unchanged. The field is
+  absent in the live policy, so default behaviour is unchanged.
 
 Every candidate tree passes the unchanged `hubcore` package gates (paths,
 symlinks, native payloads, sizes, counts, notice preservation, runtime/script
 consistency). Upstream entries are refused on symlink/submodule modes, unsafe
-names, oversize and native magics (`held-unsafe`).
+names, oversize and native magics (`held-unsafe`). New relative Markdown
+references — inline links/images, full/collapsed reference uses, and shortcut
+uses whose one-line `[label]: target` definition is present — must resolve to a
+file carried in the same candidate; a link to a policy-excluded upstream file
+(for example a `references/full-catalog.md` index under a guide-only package)
+holds `held-adaptation-required` instead of publishing a broken local link. A
+new relative target that normalizes outside the package root (including a
+percent-encoded traversal) is reported and held without opening anything
+outside; a new definition-looking line this parser cannot resolve is held as
+unsupported syntax. Absolute external URLs, same-document anchors and
+package-absolute paths are separate non-package references. Links that already
+exist in the local source are not re-judged.
 
 ## Runtime proof reuse (never fabricated)
 

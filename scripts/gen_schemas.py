@@ -512,6 +512,31 @@ def check_policy_schema():
             or evidence.get("maxItems") != upstream_updates.LICENSE_EVIDENCE_MAX_PATHS
             or (evidence.get("items") or {}).get("type") != "string"):
         raise SystemExit("policy schema licenseEvidencePaths constraints drift from runtime")
+    skills = (document.get("properties") or {}).get("skills") or {}
+    skill_properties = ((skills.get("additionalProperties") or {}).get("properties"))
+    if not isinstance(skill_properties, dict):
+        raise SystemExit("policy schema lacks skills.additionalProperties.properties")
+    skill_keys = set(skill_properties)
+    runtime_skill_keys = set(upstream_updates.SKILL_POLICY_KEYS)
+    if skill_keys != runtime_skill_keys:
+        raise SystemExit(
+            "policy schema skill keys drift from runtime: "
+            f"schema-only={sorted(skill_keys - runtime_skill_keys)}, "
+            f"runtime-only={sorted(runtime_skill_keys - skill_keys)}")
+    retained = skill_properties.get("retainedFrontmatter")
+    retained_keys = sorted(upstream_updates.RETAINED_FRONTMATTER_KEYS)
+    retained_items = (retained or {}).get("items") if isinstance(retained, dict) else None
+    if isinstance(retained_items, dict):
+        retained_items = [retained_items]
+    if (not isinstance(retained, dict) or retained.get("type") != "array"
+            or retained.get("uniqueItems") is not True
+            or retained.get("minItems") != 1
+            or retained.get("maxItems") != len(retained_keys)
+            or not isinstance(retained_items, list)
+            or len(retained_items) != len(retained_keys)
+            or {item.get("const") for item in retained_items
+                if isinstance(item, dict)} != set(retained_keys)):
+        raise SystemExit("policy schema retainedFrontmatter constraints drift from runtime")
 
 
 def main():

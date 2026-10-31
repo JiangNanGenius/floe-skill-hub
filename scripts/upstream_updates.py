@@ -53,11 +53,13 @@ import hashlib
 import json
 import os
 import pathlib
+import posixpath
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
+import urllib.parse
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
@@ -143,6 +145,20 @@ REPOSITORY_POLICY_KEYS = frozenset({
     "licenseNote", "licenseEvidencePaths",
 })
 LICENSE_EVIDENCE_MAX_PATHS = 16
+
+# Per-skill policy keys shared with schema/upstream-update-policy.schema.json.
+# scripts/gen_schemas.py --check compares this constant with the published
+# schema so a documented runtime field cannot silently disappear from the
+# contract (and a schema-only field cannot silently become runtime-unchecked).
+SKILL_POLICY_KEYS = frozenset({
+    "relocations", "fileMappings", "excludedUpstream", "notes", "retainedFrontmatter",
+})
+# The ONLY frontmatter key a policy may take explicit local ownership of. The
+# declaration is opt-in per skill, never a blanket conflict suppression, and
+# the merge code below refuses any other key even if a caller bypasses
+# validate_policy.
+RETAINED_FRONTMATTER_KEYS = ("description",)
+_RETAINED_FRONTMATTER_UNSAFE_PREFIXES = (b"|", b">", b"!", b"&", b"*", b"[", b"{", b"?")
 
 
 class UpstreamError(hubcore.HubError):
@@ -491,11 +507,14 @@ def validate_policy(policy, registry, pins_doc, pins_module=None):
         if skill_id not in tracked:
             bad(f"{skill_id}: policy skills block without a tracked selection")
     for skill_id, cfg in sorted(skills_cfg.items()):
-        if not isinstance(cfg, dict) or set(cfg) - {"relocations", "fileMappings",
-                                                    "excludedUpstream", "notes"}:
+        if not isinstance(cfg, dict) or set(cfg) - SKILL_POLICY_KEYS:
             bad(f"{skill_id}: skills block keys must be relocations/fileMappings/"
-                "excludedUpstream[/notes]")
+                "excludedUpstream[/notes][/retainedFrontmatter]")
             continue
+        try:
+            retained_frontmatter_keys(cfg)
+        except UpstreamError as error:
+            bad(f"{skill_id}: {error}")
         for rel in cfg.get("relocations") or []:
             if set(rel) != {"upstreamPrefix", "localPrefix"} \
                     or not rel["upstreamPrefix"].endswith("/") \
@@ -1053,6 +1072,389 @@ def _preview(lines, limit=2, width=120):
 
 
 # --------------------------------------------------------------------------
+# explicit curated frontmatter-description ownership (opt-in, description only)
+# --------------------------------------------------------------------------
+
+class _RetainedFrontmatterError(UpstreamError):
+    """The declared description ownership cannot be applied to this shape."""
+
+
+def retained_frontmatter_keys(skill_cfg):
+    """Validated per-skill declaration; refuses anything outside the contract."""
+    config = skill_cfg or {}
+    if "retainedFrontmatter" not in config:
+        return ()
+    declared = config["retainedFrontmatter"]
+    if not isinstance(declared, list) or not declared:
+        raise UpstreamError("retainedFrontmatter must be a non-empty array")
+    bad_types = [value for value in declared if not isinstance(value, str)]
+    if bad_types:
+        raise UpstreamError(
+            "retainedFrontmatter entries must be strings; refused: "
+            + ", ".join(type(value).__name__ for value in bad_types))
+    if len(set(declared)) != len(declared):
+        raise UpstreamError("retainedFrontmatter entries must be unique")
+    unknown = [key for key in declared if key not in RETAINED_FRONTMATTER_KEYS]
+    if unknown:
+        raise UpstreamError(
+            "retainedFrontmatter may only declare the description key; refused: "
+            + ", ".join(repr(key) for key in unknown))
+    return tuple(declared)
+
+
+def _scalar_value(line):
+    """Mirror hubcore.parse_frontmatter's single-line scalar extraction."""
+    _key, _separator, rest = line.partition(b":")
+    raw = rest.strip()
+    if (raw.startswith(b'"') and raw.endswith(b'"')) \
+            or (raw.startswith(b"'") and raw.endswith(b"'")):
+        raw = raw[1:-1]
+    return raw.decode("utf-8")
+
+
+def analyze_skill_frontmatter(data, require_native_contract=False):
+    """Locate the exact description line in a safely line-oriented SKILL.md.
+
+    Returns the frontmatter bytes (through the closing delimiter), body bytes,
+    the zero-based physical line index and the exact description line bytes.
+    The description line itself must have the same single-line scalar shape
+    hubcore.parse_frontmatter recognizes (no YAML tags, anchors, aliases, block
+    scalars, flow collections or continuation lines), and it must be present
+    exactly once. All other frontmatter bytes are treated as opaque lines and
+    are never interpreted or imported. The local Floe file additionally has to
+    pass the native parser because it is the package contract. Anything
+    unsupported or ambiguous raises _RetainedFrontmatterError; the caller
+    keeps the ordinary fail-closed conflict.
+    """
+    try:
+        data.decode("utf-8")
+    except UnicodeDecodeError:
+        raise _RetainedFrontmatterError("SKILL.md must be UTF-8") from None
+    if b"\r" in data:
+        raise _RetainedFrontmatterError(
+            "SKILL.md uses CRLF line endings; exact local description bytes require LF")
+    if not data.startswith(b"---\n"):
+        raise _RetainedFrontmatterError("SKILL.md requires opening frontmatter")
+    end = data.find(b"\n---\n", 4)
+    if end == -1:
+        raise _RetainedFrontmatterError("SKILL.md requires closing frontmatter")
+    front = data[:end + 5]
+    body = data[end + 5:]
+    if not body.strip():
+        raise _RetainedFrontmatterError("SKILL.md instructions body must not be empty")
+    lines = front.splitlines(keepends=True)
+    if not lines or lines[0] != b"---\n" or lines[-1] != b"---\n":
+        raise _RetainedFrontmatterError(
+            "SKILL.md frontmatter delimiters must be dedicated lines")
+    found = []
+    names = []
+    for index in range(1, len(lines) - 1):
+        line = lines[index]
+        if b"\t" in line:
+            raise _RetainedFrontmatterError(
+                "SKILL.md frontmatter must be scalar key: value lines")
+        if not line.strip() or line.startswith(b"#"):
+            continue
+        key_raw, separator, rest = line.partition(b":")
+        if not separator:
+            raise _RetainedFrontmatterError(
+                "SKILL.md frontmatter must be scalar key: value lines")
+        key = key_raw.strip()
+        if key == b"name":
+            if key_raw == b"name":
+                if not rest.strip():
+                    raise _RetainedFrontmatterError(
+                        "SKILL.md name must be an unindented non-empty scalar key line")
+                names.append(line)
+            # An indented 'name:' line belongs to opaque nested metadata and is
+            # never interpreted; only the single unindented name is required.
+            continue
+        if key != b"description":
+            # Opaque metadata/other lines: never interpreted, only merged as
+            # text. An empty value (for example a nested 'metadata:') is fine
+            # here because the nested data is not imported.
+            continue
+        if key_raw != b"description":
+            raise _RetainedFrontmatterError(
+                "SKILL.md description must be an unindented scalar key line")
+        raw = rest.strip()
+        if not raw:
+            raise _RetainedFrontmatterError("SKILL.md frontmatter empty key or value")
+        if raw[:1] in _RETAINED_FRONTMATTER_UNSAFE_PREFIXES:
+            raise _RetainedFrontmatterError(
+                "SKILL.md description uses unsupported YAML syntax "
+                "(tag/anchor/alias/block scalar/flow collection)")
+        following = lines[index + 1] if index + 1 < len(lines) else b""
+        if following[:1] in (b" ", b"\t") and following.strip():
+            raise _RetainedFrontmatterError(
+                "SKILL.md description must be a single-line scalar (continuation line)")
+        found.append((index, line))
+    if len(names) != 1 or not found:
+        raise _RetainedFrontmatterError(
+            "SKILL.md frontmatter requires name and description")
+    if len(found) > 1:
+        raise _RetainedFrontmatterError(
+            "SKILL.md frontmatter has duplicate description keys")
+    index, line = found[0]
+    if require_native_contract:
+        try:
+            values, _native_body = hubcore.parse_frontmatter(data)
+        except hubcore.HubError as error:
+            raise _RetainedFrontmatterError(str(error)) from None
+    else:
+        values = {"name": _scalar_value(names[0]), "description": _scalar_value(line)}
+    return {"front": front, "body": body, "descriptionIndex": index,
+            "descriptionLine": line, "values": values}
+
+
+def _offset_conflicts(conflicts, offset):
+    shifted = []
+    for conflict in conflicts:
+        entry = dict(conflict)
+        old_range = entry.get("oldRange")
+        if isinstance(old_range, list) and len(old_range) == 2:
+            entry["oldRange"] = [old_range[0] + offset, old_range[1] + offset]
+        shifted.append(entry)
+    return shifted
+
+
+def _frontmatter_without_description(item):
+    lines = item["front"].splitlines(keepends=True)
+    return lines[:item["descriptionIndex"]] + lines[item["descriptionIndex"] + 1:]
+
+
+def _non_description_frontmatter_changes(old, new):
+    """Top-level keys whose frontmatter line changed outside description.
+
+    This is the strict boundary of the opt-in exception: a description
+    declaration never permits any other upstream metadata change to ride along,
+    even when the line merge would accept it or hubcore tolerates the scalar.
+    """
+    old_lines = _frontmatter_without_description(old)
+    new_lines = _frontmatter_without_description(new)
+    if old_lines == new_lines:
+        return []
+    keys = set()
+    for index in range(max(len(old_lines), len(new_lines))):
+        before = old_lines[index] if index < len(old_lines) else None
+        after = new_lines[index] if index < len(new_lines) else None
+        if before == after:
+            continue
+        for line in (before, after):
+            if line is None or not line.strip() or line.startswith(b"#"):
+                continue
+            if line.strip() == b"---":
+                continue
+            key = line.partition(b":")[0].strip()
+            if key and key != b"description":
+                keys.add(key.decode("utf-8", "replace"))
+    return sorted(keys or ["<frontmatter-bytes>"])
+
+
+def merge_with_retained_frontmatter(old_bytes, new_bytes, local_bytes, retained_keys):
+    """Three-way merge that keeps the exact local description line bytes.
+
+    Frontmatter and body merge separately. The one physical local description
+    line is authoritative: the corresponding line in all three frontmatter
+    segments is replaced by a deterministic boundary marker before the
+    reviewed line merge, and the exact local line is restored afterwards.
+    Every other frontmatter key and the whole body still merge three ways, so
+    a real conflict elsewhere remains a conflict. Returns
+    {"merged", "conflicts", "facts", "error"} and never interprets YAML.
+    """
+    if tuple(retained_keys) != RETAINED_FRONTMATTER_KEYS:
+        raise _RetainedFrontmatterError(
+            "retainedFrontmatter may only declare the description key")
+    try:
+        analyses = [analyze_skill_frontmatter(old_bytes),
+                    analyze_skill_frontmatter(new_bytes),
+                    analyze_skill_frontmatter(local_bytes, require_native_contract=True)]
+    except _RetainedFrontmatterError as error:
+        return {"merged": None, "conflicts": [], "facts": None, "error": str(error)}
+    old, new, local = analyses
+    changed_keys = _non_description_frontmatter_changes(old, new)
+    if changed_keys:
+        return {"merged": None, "conflicts": [], "facts": None,
+                "error": "the upstream frontmatter changed non-description key(s) "
+                         + ", ".join(changed_keys)}
+    marker = b"description: __floe_retained_frontmatter__\n"
+    suffix = 0
+    while any(marker in item["front"] for item in analyses):
+        suffix += 1
+        marker = f"description: __floe_retained_frontmatter_{suffix}__\n".encode("ascii")
+
+    def masked(item):
+        lines = item["front"].splitlines(keepends=True)
+        lines[item["descriptionIndex"]] = marker
+        return b"".join(lines)
+
+    merged_front, front_conflicts = merge_three_way(masked(old), masked(new), masked(local))
+    if merged_front is None:
+        return {"merged": None, "conflicts": front_conflicts, "facts": None, "error": None}
+    if merged_front.count(marker) != 1:
+        return {"merged": None,
+                "conflicts": [{"kind": "retained-description-boundary",
+                               "detail": "the retained-description marker did not survive the "
+                                         "frontmatter merge exactly once"}],
+                "facts": None, "error": None}
+    merged_front = merged_front.replace(marker, local["descriptionLine"])
+    body_offset = len(old["front"].splitlines())
+    merged_body, body_conflicts = merge_three_way(old["body"], new["body"], local["body"])
+    if merged_body is None:
+        return {"merged": None, "conflicts": _offset_conflicts(body_conflicts, body_offset),
+                "facts": None, "error": None}
+    merged = merged_front + merged_body
+    old_value = old["values"].get("description")
+    new_value = new["values"].get("description")
+    local_value = local["values"].get("description")
+    facts = {
+        "path": "SKILL.md",
+        "declared": list(retained_keys),
+        "upstreamDescriptionChanged": old_value != new_value,
+        "localDescriptionChanged": local_value != old_value,
+        "upstreamDescriptionRetained": old_value != new_value and local_value != new_value,
+        "localDescriptionLineSha256": sha256_bytes(local["descriptionLine"]),
+        "upstreamOldDescriptionLineSha256": sha256_bytes(old["descriptionLine"]),
+        "upstreamNewDescriptionLineSha256": sha256_bytes(new["descriptionLine"]),
+        "mergedMatchesLocal": merged == local_bytes,
+    }
+    return {"merged": merged, "conflicts": [], "facts": facts, "error": None}
+
+
+_MARKDOWN_LINK_TARGET = re.compile(
+    r"!?\[[^\]\n]*\]\(\s*<?([^)>\s]+)>?(?:\s+(?:\"[^\"]*\"|'[^']*'|\([^)]*\)))?\s*\)")
+_MARKDOWN_LINK_DEFINITION = re.compile(
+    r"^[ ]{0,3}\[([^\]\n]+)\]:[ \t]*(?:<([^>\n]+)>|(\S+))"
+    r"(?:[ \t]+(?:\"[^\"]*\"|'[^']*'|\([^)]*\)))?[ \t]*$",
+    re.MULTILINE)
+_MARKDOWN_DEFINITION_PREFIX = re.compile(r"^[ ]{0,3}\[([^\]\n]+)\]:", re.MULTILINE)
+_MARKDOWN_REFERENCE_USE = re.compile(r"!?\[([^\]\n]*)\]\[([^\]\n]*)\]")
+_MARKDOWN_SHORTCUT_USE = re.compile(r"!?\[([^\]\n]+)\](?![\[(:])")
+
+
+def _normalize_link_label(label):
+    return " ".join(label.split()).lower()
+
+
+def _resolve_reference(path, raw):
+    """Classify one reference target without reading anything.
+
+    Returns None for non-package references (external scheme, same-document
+    anchor, package-absolute path, empty, directory-style or placeholder),
+    ("package", resolved) for a relative target inside the package, and
+    ("escape", normalized) for a relative target that normalizes outside the
+    package root. The escape form is reported and held; it is never opened.
+    """
+    raw = raw.strip()
+    if raw.startswith("<") and raw.endswith(">"):
+        raw = raw[1:-1]
+    if not raw or raw.startswith("#") or raw.startswith("/") or raw.endswith("/"):
+        return None
+    if re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", raw):
+        return None
+    raw = raw.split("#", 1)[0].split("?", 1)[0]
+    if not raw:
+        return None
+    raw = urllib.parse.unquote(raw)
+    if "{" in raw or "}" in raw:
+        return None
+    resolved = posixpath.normpath(posixpath.join(posixpath.dirname(path), raw))
+    if resolved in (".", ""):
+        return None
+    if resolved.startswith("/"):
+        return None
+    if resolved == ".." or resolved.startswith("../"):
+        return ("escape", resolved)
+    return ("package", resolved)
+
+
+def _markdown_reference_facts(path, data):
+    """Package targets, escaping relatives and unsupported definitions.
+
+    Supports inline links/images, full/collapsed reference uses and shortcut
+    uses whose one-line ``[label]: target`` definition is present. Fenced and
+    inline code is ignored. Only used definitions count as links. A new
+    definition-looking line this parser cannot resolve is reported separately
+    so it can be held instead of silently ignored.
+    """
+    facts = {"targets": set(), "escapes": set(), "unsupported": []}
+    if data is None or not path.endswith(".md"):
+        return facts
+    try:
+        text = data.decode("utf-8")
+    except UnicodeDecodeError:
+        return facts
+    text = _INLINE_CODE.sub("", _strip_fences(text))
+
+    def add(raw):
+        resolved = _resolve_reference(path, raw)
+        if resolved is None:
+            return
+        kind, value = resolved
+        facts["escapes" if kind == "escape" else "targets"].add(value)
+
+    definitions = {}
+    for match in _MARKDOWN_LINK_DEFINITION.finditer(text):
+        label = _normalize_link_label(match.group(1))
+        raw = match.group(2) or match.group(3) or ""
+        if label:
+            definitions.setdefault(label, raw)
+    for match in _MARKDOWN_LINK_TARGET.finditer(text):
+        add(match.group(1))
+    for match in _MARKDOWN_REFERENCE_USE.finditer(text):
+        label = _normalize_link_label(match.group(2) or match.group(1))
+        if label in definitions:
+            add(definitions[label])
+    for match in _MARKDOWN_SHORTCUT_USE.finditer(text):
+        label = _normalize_link_label(match.group(1))
+        if label in definitions:
+            add(definitions[label])
+    for line in text.splitlines():
+        if _MARKDOWN_DEFINITION_PREFIX.match(line) \
+                and not _MARKDOWN_LINK_DEFINITION.match(line):
+            facts["unsupported"].append(line.strip())
+    return facts
+
+
+def markdown_local_targets(path, data):
+    """Package-relative file targets of live Markdown links in one carried file."""
+    return _markdown_reference_facts(path, data)["targets"]
+
+
+def markdown_unsupported_definitions(data):
+    """Definition-looking lines this reviewed parser cannot resolve."""
+    return _markdown_reference_facts("x.md", data)["unsupported"]
+
+
+def new_missing_local_links(base_files, candidate_files, changed_paths):
+    """New relative Markdown references that do not resolve inside the candidate.
+
+    Only references introduced by this candidate are checked, so pre-existing
+    package content never gains a retroactive hold. Inline, full/collapsed
+    reference and shortcut links with a recognized one-line definition are
+    resolved; a new malformed definition is held as unsupported syntax. A new
+    relative target that normalizes outside the package root (including a
+    percent-encoded traversal) is reported as an escape and held, never opened.
+    This is what stops a policy-excluded upstream index (for example
+    references/full-catalog.md) from publishing a broken link.
+    """
+    problems = []
+    for path in sorted(changed_paths):
+        if path not in candidate_files or not path.endswith(".md"):
+            continue
+        before = _markdown_reference_facts(path, base_files.get(path))
+        after = _markdown_reference_facts(path, candidate_files[path])
+        for target in sorted(after["targets"] - before["targets"]):
+            if target not in candidate_files:
+                problems.append({"path": path, "target": target})
+        for escape in sorted(after["escapes"] - before["escapes"]):
+            problems.append({"path": path, "escaping": escape})
+        for line in sorted(set(after["unsupported"]) - set(before["unsupported"])):
+            problems.append({"path": path, "unsupported": line[:160]})
+    return problems
+
+
+# --------------------------------------------------------------------------
 # fingerprints
 # --------------------------------------------------------------------------
 
@@ -1590,6 +1992,15 @@ def plan_skill(skill_id, entry, skill_cfg, old_snapshot, new_snapshot, local_tre
     def hold(code, detail, repair):
         reasons.append({"code": code, "detail": detail, "repair": repair})
 
+    try:
+        retained_keys = retained_frontmatter_keys(skill_cfg)
+    except UpstreamError as error:
+        retained_keys = ()
+        hold(HELD_POLICY, f"retainedFrontmatter is invalid: {error}",
+             "fix the per-skill declaration in catalog/upstream-update-policy.json; only the "
+             "description key may be declared and only where the reviewed frontmatter parser "
+             "recognizes the shape")
+
     published_version = published_version or entry.get("versionTarget")
     plan = {
         "id": skill_id,
@@ -1701,16 +2112,52 @@ def plan_skill(skill_id, entry, skill_cfg, old_snapshot, new_snapshot, local_tre
                                 "action": "keep",
                                 "note": "upstream unchanged at the resolved commit"})
                 continue
+            if local_data == new_data:
+                actions.append({"upstream": upstream_rel, "local": local_rel,
+                                "action": "keep-converged"})
+                continue
+            if retained_keys and local_rel == "SKILL.md":
+                result = merge_with_retained_frontmatter(old_data, new_data, local_data,
+                                                         retained_keys)
+                if result["facts"] is not None:
+                    plan["retainedFrontmatter"] = result["facts"]
+                if result["merged"] is None:
+                    detail = (f"three-way merge conflict in {local_rel} "
+                              f"(upstream {upstream_rel})")
+                    if result["error"]:
+                        detail += ("; declared retainedFrontmatter could not be applied "
+                                   f"safely: {result['error']}")
+                    hold(HELD_CONFLICT, detail,
+                         "curate the local frontmatter shape or the declaration; the current "
+                         "version stays published and no description bytes are guessed")
+                    action = {"upstream": upstream_rel, "local": local_rel,
+                              "action": "conflict", "conflicts": result["conflicts"]}
+                    if result["error"]:
+                        action["retainedFrontmatterError"] = result["error"]
+                    actions.append(action)
+                    continue
+                merged = result["merged"]
+                if merged == local_data:
+                    actions.append({"upstream": upstream_rel, "local": local_rel,
+                                    "action": "keep",
+                                    "note": "merge result equals the local file; the curated "
+                                            "frontmatter description is retained",
+                                    "retainedFrontmatter": list(retained_keys)})
+                else:
+                    candidate[local_rel] = merged
+                    actions.append({"upstream": upstream_rel, "local": local_rel,
+                                    "action": "merge",
+                                    "sha256Old": sha256_bytes(old_data),
+                                    "sha256New": sha256_bytes(new_data),
+                                    "sha256Merged": sha256_bytes(merged),
+                                    "retainedFrontmatter": list(retained_keys)})
+                continue
             if local_data == old_data:
                 candidate[local_rel] = new_data
                 actions.append({"upstream": upstream_rel, "local": local_rel,
                                 "action": "carry-new",
                                 "sha256Old": sha256_bytes(old_data),
                                 "sha256New": sha256_bytes(new_data)})
-                continue
-            if local_data == new_data:
-                actions.append({"upstream": upstream_rel, "local": local_rel,
-                                "action": "keep-converged"})
                 continue
             merged, conflicts = merge_three_way(old_data, new_data, local_data)
             if merged is None:
@@ -1746,6 +2193,40 @@ def plan_skill(skill_id, entry, skill_cfg, old_snapshot, new_snapshot, local_tre
                 actions.append({"upstream": upstream_rel, "local": local_rel,
                                 "action": "removal-conflict"})
             continue
+
+    # --- new prose links must resolve inside the candidate --------------------
+    changed_vs_local = sorted(path for path in set(local_tree) | set(candidate)
+                              if local_tree.get(path) != candidate.get(path))
+    excluded_matcher = PathMatcher(skill_cfg.get("excludedUpstream") or [])
+    for problem in new_missing_local_links(local_tree, candidate, changed_vs_local):
+        if "escaping" in problem:
+            detail = (f"new markdown link target escapes the package root: "
+                      f"{problem['escaping']} (changed file {problem['path']})")
+            hold(HELD_ADAPTATION, detail,
+                 "rewrite the link to a carried package file; package-external paths are never "
+                 "read or followed and cannot be published")
+            actions.append({"local": problem["path"], "action": "escaping-link-target",
+                            "target": problem["escaping"]})
+            continue
+        if "unsupported" in problem:
+            detail = (f"new markdown link definition syntax is not supported: "
+                      f"{problem['unsupported']} (changed file {problem['path']})")
+            hold(HELD_ADAPTATION, detail,
+                 "use a recognized one-line [label]: target definition, or curate the link out; "
+                 "unresolved new link syntax is never ignored")
+            actions.append({"local": problem["path"], "action": "unsupported-link-definition",
+                            "definition": problem["unsupported"]})
+            continue
+        pattern = excluded_matcher.match(problem["target"])
+        detail = (f"new markdown link target is not carried: {problem['target']} "
+                  f"(changed file {problem['path']})")
+        if pattern:
+            detail += f"; it matches excludedUpstream pattern {pattern!r}"
+        hold(HELD_ADAPTATION, detail,
+             "carry and audit the linked file, or curate the link out of the local source; "
+             "a published package must not contain broken local links")
+        actions.append({"local": problem["path"], "action": "missing-link-target",
+                        "target": problem["target"]})
 
     # --- package gates over the merged candidate -----------------------------
     gate_error = None
@@ -1978,7 +2459,8 @@ def plan_skill(skill_id, entry, skill_cfg, old_snapshot, new_snapshot, local_tre
         "proposedReview": _proposed_review(skill_id, proposed_version, final_digest,
                                            sha256_bytes(package_zip), final_manifest,
                                            tier, entry, head_commit, today, prior_proof,
-                                           plan["executionFingerprint"], changed_paths),
+                                           plan["executionFingerprint"], changed_paths,
+                                           plan.get("retainedFrontmatter")),
     })
     plan["_candidateTree"] = candidate      # consumed by stage; stripped from reports
     plan["_packageZip"] = package_zip
@@ -2011,7 +2493,8 @@ def _published_digests(root, skill_id):
 
 
 def _proposed_review(skill_id, version, content_digest, package_sha256, manifest, tier,
-                     entry, head_commit, today, prior_proof, exec_fp, changed_paths):
+                     entry, head_commit, today, prior_proof, exec_fp, changed_paths,
+                     retained_frontmatter=None):
     """Honest review-record skeleton for the Root-owned signing pipeline.
 
     Tier 1: a fresh static-content review of the new bytes by the machine
@@ -2057,6 +2540,11 @@ def _proposed_review(skill_id, version, content_digest, package_sha256, manifest
         }
         execution = {"os": "linux", "arch": "riscv64", "evidence": "guest-verified"}
         stage = "guest-execution-qualified"
+    if (retained_frontmatter or {}).get("upstreamDescriptionRetained"):
+        notes["en"] += (" The upstream description change was deliberately retained: the local "
+                        "curated description bytes are authoritative for this skill.")
+        notes["zh-Hans"] += (" 已按技能策略保留本地精选 description 字节，上游 description 变更未覆盖"
+                             "本地内容。")
     return {
         "schemaVersion": hubcore.REVIEW_SCHEMA_VERSION,
         "id": skill_id,
@@ -2906,6 +3394,7 @@ def run_stage(root, inputs, source, plan_report, stage_root):
             "changedPaths": replayed["candidate"]["changedPaths"],
             "executionFingerprintEqual": replayed["executionFingerprint"]["equal"],
             "instructionCodeFingerprintEqual": replayed["instructionCodeFingerprint"]["equal"],
+            "retainedFrontmatter": replayed.get("retainedFrontmatter"),
             "showcaseEvidence": {"maintained": sum(1 for r in evidence.get("records", [])
                                                    if r.get("state") == "maintained"),
                                  "proposed": len(proposed),

@@ -245,6 +245,14 @@
             "items": {"type": "string", "minLength": 1},
             "description": "exact paths, trailing-slash directory prefixes, or single-segment '*' globs ('*' never crosses '/')"
           },
+          "retainedFrontmatter": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "uniqueItems": true,
+            "items": {"const": "description"},
+            "description": "Opt-in per-skill ownership of the curated local SKILL.md description. Only the description key may be declared; the exact local description line bytes are retained, every other frontmatter key and the body still merge three ways, and unsupported/ambiguous/missing/duplicate shapes stay fail-closed. Absent = existing behaviour."
+          },
           "notes": {"type": "string"}
         }
       }

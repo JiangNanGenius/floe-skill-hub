@@ -1080,6 +1080,626 @@ class TestPlanSkillScripted(PlanSkillHarness):
         self.assertEqual(plan["status"], "held-prior-proof-unavailable")
 
 
+# ---------------------------------------------------------------------------
+# explicit curated frontmatter-description ownership (opt-in, description only)
+# ---------------------------------------------------------------------------
+
+OWNED_LOCAL_DESCRIPTION_LINE = b"description: 'Local curated   description.'\n"
+
+OWNED_LOCAL_SKILL = (
+    b"---\n"
+    b"name: fixture-guide\n"
+    b"description: 'Local curated   description.'\n"
+    b"---\n"
+    b"\n## Floe runtime adaptation (read first)\n\n"
+    b"Local adaptation line.\n\n"
+    b"# Fixture Guide\n\nOld upstream body line.\n"
+)
+
+
+def owned_upstream_skill(description="Old upstream description.", extra_body=b""):
+    return (
+        b'---\nname: "fixture-guide"\ndescription: "' + description.encode("utf-8")
+        + b'"\nlicense: MIT\nmetadata:\n  version: 1.0.0\n  author: Fixture\n---\n\n'
+        b"# Fixture Guide\n\nOld upstream body line.\n" + extra_body)
+
+
+def owned_scripted_local_skill():
+    return (
+        b"---\n"
+        b"name: fixture-guide\n"
+        b"description: 'Local curated   description.'\n"
+        b"---\n"
+        b"\n## Floe runtime adaptation (read first)\n\nLocal adaptation line.\n\n"
+        b"Run:\n\n```bash\npython3 scripts/run.py\n```\n")
+
+
+def owned_scripted_upstream_skill(description="Old upstream description.", extra_body=b""):
+    return (
+        b'---\nname: "fixture-guide"\ndescription: "' + description.encode("utf-8")
+        + b'"\nlicense: MIT\nmetadata:\n  version: 1.0.0\n  author: Fixture\n---\n\n'
+        b"Run:\n\n```bash\npython3 scripts/run.py\n```\n" + extra_body)
+
+
+SAME_SHAPE_LOCAL_SKILL = (
+    b'---\nname: "fixture-guide"\ndescription: "Old upstream description."\n'
+    b'license: MIT\nmetadata: inline\n---\n\n'
+    b'## Floe runtime adaptation (read first)\n\nLocal adaptation line.\n\n'
+    b'# Fixture Guide\n\nOld upstream body line.\n')
+
+
+def same_shape_upstream(description="Old upstream description.", *, license_value=b"MIT",
+                        metadata_value=b"inline", front_extra=b"", body_extra=b""):
+    return (
+        b'---\nname: "fixture-guide"\ndescription: "' + description.encode("utf-8")
+        + b'"\nlicense: ' + license_value + b'\nmetadata: ' + metadata_value + b'\n'
+        + front_extra + b'---\n\n# Fixture Guide\n\nOld upstream body line.\n'
+        + body_extra)
+
+
+class TestFrontmatterDescriptionOwnership(PlanSkillHarness):
+    """Strict opt-in ownership of the curated SKILL.md description line."""
+
+    def setUp(self):
+        super().setUp()
+        self.local = guide_local_tree("fixture-guide", "1.0.0",
+                                      subpath="skills/fixture-guide")
+        self.local["SKILL.md"] = OWNED_LOCAL_SKILL
+        self.local["references/PROVENANCE.md"] = provenance_md(
+            "fixture-guide", FIXTURE_REPO, PIN, "skills/fixture-guide", self.local)
+        self.old = {"SKILL.md": owned_upstream_skill("Old upstream description."),
+                    "references/guide.md": b"# Guide\n\nupstream guide line\n",
+                    "LICENSE.txt": b"MIT fixture license\n"}
+        self.new = dict(self.old)
+        self.new["SKILL.md"] = owned_upstream_skill("New upstream description.")
+
+    def cfg(self, **overrides):
+        cfg = {"relocations": [], "fileMappings": [
+            {"upstream": "LICENSE.txt",
+             "local": "references/licenses/UPSTREAM-LICENSE.txt", "kind": "license"}],
+            "excludedUpstream": ["scripts/"]}
+        cfg.update(overrides)
+        return cfg
+
+    def plan_owned(self, *, cfg=None, old=None, new=None, local=None, published=None,
+                   runtime="none", prior_proof=None):
+        entry = make_entry("fixture-guide", subpath="skills/fixture-guide", runtime=runtime)
+        local = local if local is not None else self.local
+        published = published if published is not None else local
+        self.published(published)
+        return uu.plan_skill(
+            "fixture-guide", entry,
+            cfg if cfg is not None else self.cfg(retainedFrontmatter=["description"]),
+            snap(old if old is not None else self.old),
+            snap(new if new is not None else self.new),
+            local, dict(published), "1.0.0", self.root, TODAY, None,
+            prior_proof=prior_proof, repo_url=FIXTURE_REPO, head_commit=HEAD)
+
+    def same_shape_trees(self, new_skill):
+        local = dict(self.local)
+        local["SKILL.md"] = SAME_SHAPE_LOCAL_SKILL
+        local["references/PROVENANCE.md"] = provenance_md(
+            "fixture-guide", FIXTURE_REPO, PIN, "skills/fixture-guide", local)
+        old = {"SKILL.md": same_shape_upstream(),
+               "references/guide.md": b"# Guide\n\nupstream guide line\n",
+               "LICENSE.txt": b"MIT fixture license\n"}
+        new = dict(old)
+        new["SKILL.md"] = new_skill
+        return old, new, local
+
+    def test_default_without_declaration_still_conflicts(self):
+        plan = self.plan_owned(cfg=self.cfg())
+        self.assertEqual(plan["status"], "held-conflict", plan["reasons"])
+        self.assertNotIn("retainedFrontmatter", plan)
+        self.assertNotIn("_candidateTree", plan)
+        self.assertIsNone(plan.get("proposedVersion"))
+
+    def test_opt_in_retains_exact_local_description_and_is_no_change(self):
+        plan = self.plan_owned()
+        self.assertEqual(plan["status"], "no-change", plan["reasons"])
+        self.assertFalse(plan["contentChanged"])
+        self.assertNotIn("proposedVersion", plan)
+        self.assertNotIn("proposedReview", plan)
+        self.assertNotIn("_candidateTree", plan)
+        self.assertEqual(plan["pinAdvance"], {"from": PIN, "to": HEAD})
+        facts = plan["retainedFrontmatter"]
+        self.assertEqual(facts["declared"], ["description"])
+        self.assertTrue(facts["upstreamDescriptionChanged"])
+        self.assertTrue(facts["localDescriptionChanged"])
+        self.assertTrue(facts["upstreamDescriptionRetained"])
+        self.assertTrue(facts["mergedMatchesLocal"])
+        self.assertEqual(facts["localDescriptionLineSha256"],
+                         uu.sha256_bytes(OWNED_LOCAL_DESCRIPTION_LINE))
+        keep = [a for a in plan["fileActions"]
+                if a.get("local") == "SKILL.md" and a.get("action") == "keep"]
+        self.assertEqual(keep[0]["retainedFrontmatter"], ["description"])
+
+    def test_opt_in_body_nonconflict_is_eligible_tier1(self):
+        new = dict(self.new)
+        new["SKILL.md"] = owned_upstream_skill(
+            "New upstream description.", extra_body=b"\nExtra safe prose paragraph.\n")
+        plan = self.plan_owned(new=new)
+        self.assertEqual(plan["status"], "eligible-tier1", plan["reasons"])
+        self.assertEqual(plan["tier"], 1)
+        self.assertEqual(plan["proposedVersion"], "1.0.1")
+        candidate = plan["_candidateTree"]["SKILL.md"]
+        self.assertEqual(candidate, OWNED_LOCAL_SKILL + b"\nExtra safe prose paragraph.\n")
+        self.assertIn(OWNED_LOCAL_DESCRIPTION_LINE, candidate)
+        self.assertNotIn(b"New upstream description.", candidate)
+        self.assertTrue(plan["retainedFrontmatter"]["upstreamDescriptionRetained"])
+        self.assertTrue(plan["instructionCodeFingerprint"]["equal"])
+        self.assertIn("deliberately retained", plan["proposedReview"]["notes"]["en"])
+        self.assertIn("保留本地精选", plan["proposedReview"]["notes"]["zh-Hans"])
+
+    def test_opt_in_tier2_reuses_prior_proof_and_reports_retention(self):
+        local = dict(self.local)
+        local["SKILL.md"] = owned_scripted_local_skill()
+        local["floe.json"] = floe_json("fixture-guide", "1.0.0", runtime="remote",
+                                       caps=["execution.remote"], tools=["exec.shell"])
+        local["scripts/run.py"] = b"print('guest ok')\n"
+        local["references/PROVENANCE.md"] = provenance_md(
+            "fixture-guide", FIXTURE_REPO, PIN, "skills/fixture-guide", local)
+        old = {"SKILL.md": owned_scripted_upstream_skill("Old upstream description."),
+               "scripts/run.py": b"print('guest ok')\n",
+               "references/guide.md": b"# Guide\n\nupstream guide line\n",
+               "LICENSE.txt": b"MIT fixture license\n"}
+        new = dict(old)
+        new["SKILL.md"] = owned_scripted_upstream_skill(
+            "New upstream description.", extra_body=b"\nExtra safe prose paragraph.\n")
+        proof = {"available": True, "reasons": [],
+                 "reviewSha256": "f" * 64, "publicationPin": "e" * 40,
+                 "keyID": hubcore.PRODUCTION_KEY_ID,
+                 "reviewStage": "guest-execution-qualified",
+                 "execution": {"os": "linux", "arch": "riscv64",
+                               "evidence": "guest-verified"},
+                 "priorContentDigest": hubcore.content_digest(local),
+                 "priorVersion": "1.0.0"}
+        plan = self.plan_owned(old=old, new=new, local=local, runtime="remote",
+                               prior_proof=proof)
+        self.assertEqual(plan["status"], "eligible-tier2", plan["reasons"])
+        self.assertEqual(plan["tier"], 2)
+        self.assertTrue(plan["executionFingerprint"]["equal"])
+        self.assertTrue(plan["instructionCodeFingerprint"]["equal"])
+        self.assertTrue(plan["retainedFrontmatter"]["upstreamDescriptionRetained"])
+        self.assertIn("deliberately retained", plan["proposedReview"]["notes"]["en"])
+        missing = self.plan_owned(old=old, new=new, local=local, runtime="remote",
+                                  prior_proof={"available": False,
+                                               "reasons": ["record missing"]})
+        self.assertEqual(missing["status"], "held-prior-proof-unavailable",
+                         missing["reasons"])
+
+    def test_multiline_to_single_line_description_stays_held(self):
+        multiline = (b'---\nname: "fixture-guide"\ndescription: "Old description\n'
+                     b'  continues here"\nlicense: MIT\n---\n\n# Fixture Guide\n\n'
+                     b'Old upstream body line.\n')
+        old = dict(self.old)
+        old["SKILL.md"] = multiline
+        plan = self.plan_owned(old=old)
+        self.assertEqual(plan["status"], "held-conflict", plan["reasons"])
+        self.assertIn("single-line scalar", plan["reasons"][0]["detail"])
+        conflict = next(action for action in plan["fileActions"]
+                        if action.get("local") == "SKILL.md")
+        self.assertIn("retainedFrontmatterError", conflict)
+        self.assertNotIn("_candidateTree", plan)
+
+    def test_missing_description_stays_held(self):
+        new = dict(self.new)
+        new["SKILL.md"] = (b'---\nname: "fixture-guide"\nlicense: MIT\n---\n\n'
+                           b"# Fixture Guide\n\nOld upstream body line.\n")
+        plan = self.plan_owned(new=new)
+        self.assertEqual(plan["status"], "held-conflict", plan["reasons"])
+        self.assertIn("requires name and description", plan["reasons"][0]["detail"])
+
+    def test_duplicate_description_stays_held(self):
+        new = dict(self.new)
+        new["SKILL.md"] = (b'---\nname: "fixture-guide"\ndescription: "one"\n'
+                           b'description: "two"\n---\n\n# Fixture Guide\n\n'
+                           b'Old upstream body line.\n')
+        plan = self.plan_owned(new=new)
+        self.assertEqual(plan["status"], "held-conflict", plan["reasons"])
+        self.assertIn("duplicate description", plan["reasons"][0]["detail"])
+
+    def test_unknown_yaml_description_stays_held(self):
+        for value in (b"|", b"!!str New upstream description.", b"&anchor value"):
+            with self.subTest(value=value):
+                new = dict(self.new)
+                new["SKILL.md"] = (b'---\nname: "fixture-guide"\ndescription: ' + value
+                                   + b'\n---\n\n# Fixture Guide\n\nOld upstream body line.\n')
+                plan = self.plan_owned(new=new)
+                self.assertEqual(plan["status"], "held-conflict", plan["reasons"])
+                self.assertIn("unsupported YAML syntax", plan["reasons"][0]["detail"])
+
+    def test_other_frontmatter_key_edit_stays_held(self):
+        new = dict(self.new)
+        new["SKILL.md"] = (b'---\nname: "fixture-guide-renamed"\n'
+                           b'description: "New upstream description."\nlicense: MIT\n'
+                           b'metadata:\n  version: 1.0.0\n---\n\n# Fixture Guide\n\n'
+                           b'Old upstream body line.\n')
+        plan = self.plan_owned(new=new)
+        self.assertEqual(plan["status"], "held-conflict", plan["reasons"])
+        self.assertNotIn("_candidateTree", plan)
+
+    def test_upstream_name_change_is_held_under_opt_in_and_legacy_still_gates(self):
+        local = dict(self.local)
+        # Local keeps the upstream frontmatter shape (and exact name line), so the
+        # only frontmatter change is the upstream name; the declaration must not
+        # treat name as owned.
+        local["SKILL.md"] = (
+            b'---\nname: "fixture-guide"\ndescription: "Old upstream description."\n'
+            b'---\n\n## Floe runtime adaptation (read first)\n\n'
+            b'Local adaptation line.\n\n# Fixture Guide\n\nOld upstream body line.\n')
+        new = dict(self.new)
+        new["SKILL.md"] = (b'---\nname: "fixture-guide-renamed"\n'
+                           b'description: "Old upstream description."\nlicense: MIT\n'
+                           b'metadata:\n  version: 1.0.0\n  author: Fixture\n---\n\n'
+                           b"# Fixture Guide\n\nOld upstream body line.\n")
+        plan = self.plan_owned(local=local, new=new)
+        self.assertEqual(plan["status"], "held-conflict", plan["reasons"])
+        self.assertIn("non-description key(s)", plan["reasons"][0]["detail"])
+        self.assertIn("name", plan["reasons"][0]["detail"])
+        self.assertNotIn("_candidateTree", plan)
+        # Without the opt-in declaration the original line merge still runs, and
+        # the package gate still rejects a name that no longer matches floe.json.
+        legacy = self.plan_owned(cfg=self.cfg(), local=local, new=new)
+        self.assertEqual(legacy["status"], "held-unsafe", legacy["reasons"])
+        self.assertIn("name must match", legacy["reasons"][0]["detail"])
+
+    def test_non_description_frontmatter_changes_are_held_under_opt_in(self):
+        cases = [
+            ("name", b"", b"MIT", b"inline",
+             b'---\nname: "fixture-guide-renamed"\ndescription: "New upstream description."\n'
+             b'license: MIT\nmetadata: inline\n---\n\n# Fixture Guide\n\n'
+             b"Old upstream body line.\n"),
+            ("license", b"", b"Apache-2.0", b"inline", None),
+            ("metadata", b"", b"MIT", b"changed", None),
+            ("permissions", b"permissions: workspace.write\n", b"MIT", b"inline", None),
+            ("capabilities", b"capabilities: workspace.read\n", b"MIT", b"inline", None),
+            ("dependencies", b"dependencies: numpy==1.0\n", b"MIT", b"inline", None),
+            ("runtime", b"runtime: python.local\n", b"MIT", b"inline", None),
+            ("unknownField", b"unknownField: value\n", b"MIT", b"inline", None),
+        ]
+        for key, front_extra, license_value, metadata_value, explicit in cases:
+            with self.subTest(key=key):
+                if explicit is None:
+                    new_skill = same_shape_upstream(
+                        "New upstream description.", license_value=license_value,
+                        metadata_value=metadata_value, front_extra=front_extra)
+                else:
+                    new_skill = explicit
+                old, new, local = self.same_shape_trees(new_skill)
+                plan = self.plan_owned(old=old, new=new, local=local)
+                self.assertEqual(plan["status"], "held-conflict", plan["reasons"])
+                detail = plan["reasons"][0]["detail"]
+                self.assertIn("non-description key(s)", detail)
+                self.assertIn(key, detail)
+                self.assertNotIn("_candidateTree", plan)
+
+    def test_non_description_metadata_legacy_merge_is_unchanged(self):
+        new_skill = same_shape_upstream(
+            "New upstream description.", front_extra=b"permissions: workspace.write\n")
+        old, new, local = self.same_shape_trees(new_skill)
+        plan = self.plan_owned(cfg=self.cfg(), old=old, new=new, local=local)
+        self.assertEqual(plan["status"], "eligible-tier1", plan["reasons"])
+        self.assertIn(b"permissions: workspace.write",
+                      plan["_candidateTree"]["SKILL.md"])
+
+    def test_body_conflict_stays_held(self):
+        local = dict(self.local)
+        local["SKILL.md"] = OWNED_LOCAL_SKILL.replace(b"Old upstream body line.",
+                                                      b"Local body rewrite.")
+        new = dict(self.new)
+        new["SKILL.md"] = owned_upstream_skill("New upstream description.").replace(
+            b"Old upstream body line.", b"Upstream body rewrite.")
+        plan = self.plan_owned(local=local, new=new)
+        self.assertEqual(plan["status"], "held-conflict", plan["reasons"])
+        self.assertNotIn("_candidateTree", plan)
+
+    def test_new_fenced_command_stays_held(self):
+        new = dict(self.new)
+        new["SKILL.md"] = owned_upstream_skill(
+            "New upstream description.",
+            extra_body=b"\n```bash\npython3 scripts/new.py\n```\n")
+        plan = self.plan_owned(new=new)
+        self.assertEqual(plan["status"], "held-instruction-code-changed", plan["reasons"])
+        self.assertFalse(plan["instructionCodeFingerprint"]["equal"])
+        self.assertTrue(plan["retainedFrontmatter"]["upstreamDescriptionRetained"])
+
+    def test_license_and_dependency_holds_are_not_bypassed(self):
+        license_plan = self.plan_owned(
+            new=dict(self.old, **{"LICENSE.txt": b"GPL-3.0 now\n"}))
+        self.assertEqual(license_plan["status"], "held-license-drift",
+                         license_plan["reasons"])
+        cfg = self.cfg(retainedFrontmatter=["description"])
+        cfg["fileMappings"].append({"upstream": "requirements.txt",
+                                     "local": "references/requirements.lock.txt",
+                                     "kind": "doc"})
+        local = dict(self.local)
+        local["references/requirements.lock.txt"] = b"pkg==1.0\n"
+        old = dict(self.old, **{"requirements.txt": b"pkg==1.0\n"})
+        new = dict(old, **{"requirements.txt": b"pkg==2.0\n"})
+        new["SKILL.md"] = owned_upstream_skill("New upstream description.")
+        dependency_plan = self.plan_owned(cfg=cfg, old=old, new=new, local=local)
+        codes = {reason["code"] for reason in dependency_plan["reasons"]}
+        self.assertIn("held-dependency-drift", codes)
+        self.assertNotIn("_candidateTree", dependency_plan)
+
+    def test_excluded_full_catalog_link_is_held(self):
+        new = dict(self.new)
+        new["SKILL.md"] = owned_upstream_skill(
+            "New upstream description.",
+            extra_body=(b"\n## More in this skill\n\nLoad these only when the task needs "
+                        b"them.\n\n- [references/full-catalog.md]"
+                        b"(references/full-catalog.md) - Full catalog & upstream\n"))
+        cfg = self.cfg(retainedFrontmatter=["description"],
+                       excludedUpstream=["scripts/", "references/full-catalog.md"])
+        plan = self.plan_owned(cfg=cfg, new=new)
+        self.assertEqual(plan["status"], "held-adaptation-required", plan["reasons"])
+        detail = plan["reasons"][0]["detail"]
+        self.assertIn("references/full-catalog.md", detail)
+        self.assertIn("excludedUpstream", detail)
+        self.assertTrue(plan["retainedFrontmatter"]["upstreamDescriptionRetained"])
+        self.assertIn({"local": "SKILL.md", "action": "missing-link-target",
+                       "target": "references/full-catalog.md"}, plan["fileActions"])
+        self.assertNotIn("_candidateTree", plan)
+
+    def test_present_new_link_is_not_held(self):
+        new = dict(self.new)
+        new["SKILL.md"] = owned_upstream_skill(
+            "New upstream description.",
+            extra_body=b"\n- [references/guide.md](references/guide.md) - Guide\n")
+        plan = self.plan_owned(new=new)
+        self.assertEqual(plan["status"], "eligible-tier1", plan["reasons"])
+        self.assertIn(b"[references/guide.md](references/guide.md)",
+                      plan["_candidateTree"]["SKILL.md"])
+
+    def test_reference_style_excluded_link_is_held(self):
+        cfg = self.cfg(retainedFrontmatter=["description"],
+                       excludedUpstream=["scripts/", "references/full-catalog.md"])
+        syntaxes = [
+            b"\n- [catalog][full]\n\n[full]: references/full-catalog.md\n",
+            b"\n- [full][]\n\n[full]: references/full-catalog.md\n",
+            b"\n- [full]\n\n[full]: references/full-catalog.md\n",
+        ]
+        for syntax in syntaxes:
+            with self.subTest(syntax=syntax):
+                new = dict(self.new)
+                new["SKILL.md"] = owned_upstream_skill(
+                    "New upstream description.", extra_body=syntax)
+                plan = self.plan_owned(cfg=cfg, new=new)
+                self.assertEqual(plan["status"], "held-adaptation-required",
+                                 plan["reasons"])
+                self.assertIn("references/full-catalog.md",
+                              plan["reasons"][0]["detail"])
+                self.assertIn({"local": "SKILL.md", "action": "missing-link-target",
+                               "target": "references/full-catalog.md"},
+                              plan["fileActions"])
+
+    def test_present_reference_link_is_not_held(self):
+        new = dict(self.new)
+        new["SKILL.md"] = owned_upstream_skill(
+            "New upstream description.",
+            extra_body=(b"\n- [catalog][refs]\n- [refs]\n\n"
+                        b"[refs]: references/guide.md\n"))
+        plan = self.plan_owned(new=new)
+        self.assertEqual(plan["status"], "eligible-tier1", plan["reasons"])
+        self.assertIn(b"[refs]: references/guide.md",
+                      plan["_candidateTree"]["SKILL.md"])
+
+    def test_unsupported_new_definition_is_held(self):
+        new = dict(self.new)
+        new["SKILL.md"] = owned_upstream_skill(
+            "New upstream description.",
+            extra_body=b"\n- [broken]\n\n[broken]:\n")
+        plan = self.plan_owned(new=new)
+        self.assertEqual(plan["status"], "held-adaptation-required", plan["reasons"])
+        self.assertIn("definition syntax is not supported",
+                      plan["reasons"][0]["detail"])
+        self.assertIn({"local": "SKILL.md", "action": "unsupported-link-definition",
+                       "definition": "[broken]:"}, plan["fileActions"])
+
+    def test_escaping_relative_links_are_held(self):
+        escaping = [
+            b"\n- [up](../outside.md)\n",
+            b"\n- [encoded](%2e%2e/outside.md)\n",
+            b"\n- [reference][up]\n\n[up]: ../outside.md\n",
+        ]
+        for syntax in escaping:
+            with self.subTest(syntax=syntax):
+                new = dict(self.new)
+                new["SKILL.md"] = owned_upstream_skill(
+                    "New upstream description.", extra_body=syntax)
+                plan = self.plan_owned(new=new)
+                self.assertEqual(plan["status"], "held-adaptation-required",
+                                 plan["reasons"])
+                detail = plan["reasons"][0]["detail"]
+                self.assertIn("escapes the package root", detail)
+                self.assertIn("../outside.md", detail)
+                self.assertEqual(
+                    [a for a in plan["fileActions"]
+                     if a.get("action") == "escaping-link-target"],
+                    [{"local": "SKILL.md", "action": "escaping-link-target",
+                      "target": "../outside.md"}])
+                self.assertNotIn("_candidateTree", plan)
+
+    def test_non_package_references_are_ignored(self):
+        new = dict(self.new)
+        new["SKILL.md"] = owned_upstream_skill(
+            "New upstream description.",
+            extra_body=(b"\n- [external](https://example.com/x)\n"
+                        b"- [anchor](#more)\n- [absolute](/outside.md)\n"))
+        plan = self.plan_owned(new=new)
+        self.assertEqual(plan["status"], "eligible-tier1", plan["reasons"])
+
+    def test_invalid_declaration_holds_policy_before_merging(self):
+        plan = self.plan_owned(cfg=self.cfg(retainedFrontmatter=["name"]))
+        codes = {reason["code"] for reason in plan["reasons"]}
+        self.assertIn("held-policy-inconsistent", codes)
+        self.assertIn("may only declare the description key", plan["reasons"][0]["detail"])
+        self.assertNotIn("_candidateTree", plan)
+
+
+class TestRetainedFrontmatterPolicyContract(unittest.TestCase):
+    """Schema and runtime accept exactly description, opt-in, and nothing else."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.inputs = uu.load_inputs(REPO)
+        cls.schema = json.loads(POLICY_SCHEMA.read_bytes())
+
+    def policy_with(self, value):
+        policy = copy.deepcopy(self.inputs["policy"])
+        skill_id = policy["selection"]["tracked"][0]
+        policy["skills"][skill_id]["retainedFrontmatter"] = value
+        return policy
+
+    def validate(self, policy):
+        return uu.validate_policy(policy, self.inputs["registry"],
+                                  self.inputs["pinsDoc"], self.inputs["pinsModule"])
+
+    def test_absent_declaration_is_the_unchanged_default(self):
+        # Build an explicit absent-field fixture instead of asserting that the
+        # live policy never opts in: Root may legitimately enable reviewed
+        # declarations without making this default test fail.
+        original = copy.deepcopy(self.inputs["policy"])
+        policy = copy.deepcopy(self.inputs["policy"])
+        for cfg in policy["skills"].values():
+            cfg.pop("retainedFrontmatter", None)
+        self.assertTrue(all("retainedFrontmatter" not in cfg
+                            for cfg in policy["skills"].values()))
+        self.validate(policy)
+        self.assertEqual(self.inputs["policy"], original)
+
+    def test_runtime_accepts_only_description(self):
+        self.validate(self.policy_with(["description"]))
+        for value in (None, [], ["name"], ["description", "name"],
+                      ["description", "description"], "description", [1],
+                      [{}], [[]], [None], [True], ["description", {}]):
+            with self.subTest(value=value):
+                with self.assertRaises(uu.UpstreamError):
+                    self.validate(self.policy_with(value))
+        document = self.policy_with(["description"])
+        skill_id = document["selection"]["tracked"][0]
+        document["skills"][skill_id]["permissions"] = []
+        with self.assertRaises(uu.UpstreamError):
+            self.validate(document)
+
+    def test_malformed_retained_frontmatter_raises_structured_error(self):
+        for value in ([{}], [[]], [None], [1], [True], ["description", {}]):
+            with self.subTest(value=value):
+                with self.assertRaises(uu.UpstreamError) as caught:
+                    uu.retained_frontmatter_keys({"retainedFrontmatter": value})
+                self.assertIn("must be strings", str(caught.exception))
+                self.assertNotIsInstance(caught.exception, TypeError)
+
+    def test_schema_declares_the_strict_contract(self):
+        skills = (self.schema["properties"]["skills"]["additionalProperties"])
+        self.assertEqual(set(skills["properties"]), set(uu.SKILL_POLICY_KEYS))
+        self.assertEqual(set(skills["required"]),
+                         {"relocations", "fileMappings", "excludedUpstream"})
+        retained = skills["properties"]["retainedFrontmatter"]
+        self.assertEqual(retained["type"], "array")
+        self.assertIs(retained["uniqueItems"], True)
+        self.assertEqual((retained["minItems"], retained["maxItems"]), (1, 1))
+        self.assertEqual(retained["items"], {"const": "description"})
+
+    @unittest.skipUnless(jsonschema is not None,
+                         "jsonschema not installed; the structural parity test still runs")
+    def test_schema_accepts_only_the_documented_declaration(self):
+        validator = jsonschema.Draft202012Validator(self.schema)
+        validator.validate(self.policy_with(["description"]))
+        for value in (None, [], ["name"], ["description", "name"],
+                      ["description", "description"], "description", [1],
+                      [{}], [[]], [None], [True], ["description", {}]):
+            with self.subTest(value=value):
+                with self.assertRaises(jsonschema.ValidationError):
+                    validator.validate(self.policy_with(value))
+
+    def test_schema_check_rejects_skill_contract_drift(self):
+        import gen_schemas
+        gen_schemas.check_policy_schema()
+        document = json.loads(POLICY_SCHEMA.read_bytes())
+        properties = (document["properties"]["skills"]["additionalProperties"]
+                      ["properties"])
+        del properties["retainedFrontmatter"]
+        with tempfile.TemporaryDirectory() as tmp:
+            path = pathlib.Path(tmp) / "upstream-update-policy.schema.json"
+            path.write_text(json.dumps(document))
+            original = gen_schemas.POLICY_SCHEMA
+            gen_schemas.POLICY_SCHEMA = path
+            try:
+                with self.assertRaises(SystemExit):
+                    gen_schemas.check_policy_schema()
+            finally:
+                gen_schemas.POLICY_SCHEMA = original
+
+
+class TestDescriptionOwnershipRunPlan(unittest.TestCase):
+    """A description-only upstream move is a genuine no-change: no pin churn."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+
+    def build_world(self):
+        root = pathlib.Path(self.tmp.name) / "hub"
+        root.mkdir()
+        entry = make_entry("fixture-guide", subpath="skills/fixture-guide")
+        registry = make_registry([entry])
+        local = guide_local_tree("fixture-guide", "1.0.0",
+                                 subpath="skills/fixture-guide")
+        local["SKILL.md"] = OWNED_LOCAL_SKILL
+        local["references/PROVENANCE.md"] = provenance_md(
+            "fixture-guide", FIXTURE_REPO, PIN, "skills/fixture-guide", local)
+        old = {"skills/fixture-guide/SKILL.md": owned_upstream_skill(
+                   "Old upstream description."),
+               "skills/fixture-guide/references/guide.md": b"# Guide\n\nupstream guide line\n",
+               "skills/fixture-guide/LICENSE.txt": b"MIT fixture license\n",
+               "LICENSE": b"repo MIT license\n"}
+        new = dict(old)
+        new["skills/fixture-guide/SKILL.md"] = owned_upstream_skill(
+            "New upstream description.")
+        skills_cfg = {"fixture-guide": {
+            "relocations": [],
+            "fileMappings": [{"upstream": "LICENSE.txt",
+                              "local": "references/licenses/UPSTREAM-LICENSE.txt",
+                              "kind": "license"}],
+            "excludedUpstream": ["scripts/"],
+            "retainedFrontmatter": ["description"]}}
+        policy = make_policy(
+            tracked=["fixture-guide"], skills_cfg=skills_cfg,
+            repositories={FIXTURE_REPO: {"role": "corpus", "trackedRef": "HEAD",
+                                         "rootLicense": "LICENSE"}})
+        pins = {"reviewBaselineDate": "2026-10-26",
+                "repositories": {"fixture-owner/fixture-skills": PIN}}
+        write_hub_root(root, registry, policy, pins,
+                       sources={"fixture-guide": local},
+                       packages={"fixture-guide": {"1.0.0": local}})
+        source = fixture_source({FIXTURE_REPO: {
+            "head": (HEAD, "refs/heads/main"), "tags": {},
+            "commits": {PIN: commit(old), HEAD: commit(new)}}})
+        return root, source
+
+    def test_check_observes_head_and_plan_is_no_change_without_pin_or_proof_churn(self):
+        root, source = self.build_world()
+        inputs = uu.load_inputs(root, expect_counts=(1, 0, 1, 0))
+        check = uu.run_check(root, inputs, source, TODAY)
+        row = next(r for r in check["skills"] if r["id"] == "fixture-guide")
+        self.assertEqual(row["state"], "drifted")
+        self.assertEqual(row["pinnedCommit"], PIN)
+        self.assertEqual(row["headCommit"], HEAD)
+        plan = uu.run_plan(root, inputs, source, TODAY)
+        planned = next(r for r in plan["skills"] if r["id"] == "fixture-guide")
+        self.assertEqual(planned["status"], "no-change", planned["reasons"])
+        self.assertFalse(planned["contentChanged"])
+        self.assertNotIn("proposedVersion", planned)
+        self.assertNotIn("proposedReview", planned)
+        self.assertTrue(planned["retainedFrontmatter"]["upstreamDescriptionRetained"])
+        self.assertEqual(plan["acceptance"]["eligibleIds"], [])
+        self.assertEqual(plan["acceptance"]["acceptedIds"], [])
+        self.assertEqual(plan["acceptance"]["pinAdvances"], {})
+        self.assertEqual(plan["counts"]["noChange"], 1)
+
+
 class TestPriorProofLoaderFailsClosed(unittest.TestCase):
     def test_missing_records_unavailable(self):
         with tempfile.TemporaryDirectory() as tmp:
