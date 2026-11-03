@@ -1,0 +1,5 @@
+line_number,wbs_code,description,quantity,unit,unit_cost,category,source_note
+1,01.01,Site preparation,5000,SF,2.50,other,Synthetic illustrative rate - not market data
+2,03.01,Concrete foundation,200,CY,350.00,material,Synthetic illustrative rate - not market data
+3,03.02,Foundation formwork,1500,SF,8.50,labor,Synthetic illustrative rate - not market data
+4,05.01,Structural steel,50,TON,4500.00,subcontractor,Synthetic illustrative rate - not market data

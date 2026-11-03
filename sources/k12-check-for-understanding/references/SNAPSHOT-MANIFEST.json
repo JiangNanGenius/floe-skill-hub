@@ -1,0 +1,75 @@
+{
+ "package": "k12-check-for-understanding",
+ "repository": "https://github.com/anthropics/k12-teacher-skills",
+ "commit": "31fd6dbb0c07cb50bb3ce7f62a4135a393bd0e8c",
+ "retrievedAt": "2026-10-31",
+ "files": [
+  {
+   "upstreamPath": "plugin/skills/k12-check-for-understanding/SKILL.md",
+   "localPath": "source/SKILL.md",
+   "status": "adapted",
+   "upstreamSha256": "152e3272fbd108fedf2b7ee43fba71422c807b379500dabc04688b3185809e7f",
+   "upstreamSize": 8666,
+   "localSha256": "14fabe6e456b776568e8163928751027982d10e4a569ccc59d44af38af69f5c3",
+   "localSize": 10544
+  },
+  {
+   "upstreamPath": "plugin/skills/k12-check-for-understanding/references/math.md",
+   "localPath": "source/references/math.md",
+   "status": "adapted",
+   "upstreamSha256": "a2a73b86b8a6bc00e9d08d4ab4dc377cbb553387a9a7aa02bf2e57e104f5f2ef",
+   "upstreamSize": 6875,
+   "localSha256": "82f0cece52c48b146ae771d52d052c133972b950b1ef44c5cae224b711b8a09f",
+   "localSize": 6873
+  },
+  {
+   "upstreamPath": "plugin/skills/k12-check-for-understanding/references/output.md",
+   "localPath": "source/references/output.md",
+   "status": "adapted",
+   "upstreamSha256": "a45f5742f4040f383ffbf5c47b3528e0dbae913a1a96613bf965b792923b9ec5",
+   "upstreamSize": 11809,
+   "localSha256": "42153ef9c5623f7f3d62f8f8052ce7fe3e8f43259f7b21ada4eb607add8a32e0",
+   "localSize": 5198
+  },
+  {
+   "upstreamPath": "plugin/skills/k12-check-for-understanding/references/verification.md",
+   "localPath": "source/references/verification.md",
+   "status": "adapted",
+   "upstreamSha256": "5a42b87056233f406a5eaecab36b737b43194dc40b2517b3731bbc28510d5412",
+   "upstreamSize": 5170,
+   "localSha256": "fe6d355977d9d13b91efc48238f34cdaabc0d9da6529bca2b7f6e22a468ad4bf",
+   "localSize": 5242
+  },
+  {
+   "upstreamPath": "plugin/skills/k12-check-for-understanding/references/learning-commons-kg.md",
+   "localPath": "source/references/learning-commons-kg.md",
+   "status": "verbatim",
+   "upstreamSha256": "fba868d6d52e4ffe790fd356c7acfdd0ae044e12c99f0f4391397277c9d32e93",
+   "upstreamSize": 3410,
+   "localSha256": "fba868d6d52e4ffe790fd356c7acfdd0ae044e12c99f0f4391397277c9d32e93",
+   "localSize": 3410
+  },
+  {
+   "upstreamPath": "plugin/skills/k12-check-for-understanding/LICENSE",
+   "localPath": "source/references/licenses/UPSTREAM-LICENSE.txt",
+   "status": "verbatim",
+   "upstreamSha256": "58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd",
+   "upstreamSize": 11357,
+   "localSha256": "58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd",
+   "localSize": 11357
+  },
+  {
+   "upstreamPath": "plugin/skills/k12-check-for-understanding/NOTICE",
+   "localPath": "source/references/licenses/UPSTREAM-NOTICE.txt",
+   "status": "verbatim",
+   "upstreamSha256": "069fd4b90c886db2dbed74fcf5ebf45f886d7fec194b63a3f0d3186833cf2c09",
+   "upstreamSize": 320,
+   "localSha256": "069fd4b90c886db2dbed74fcf5ebf45f886d7fec194b63a3f0d3186833cf2c09",
+   "localSize": 320
+  }
+ ],
+ "notShipped": [
+  "plugin/skills/k12-check-for-understanding/rendering/claude-artifact.md",
+  "evals/k12-check-for-understanding/rubrics/math.csv"
+ ]
+}

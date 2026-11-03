@@ -1,0 +1,26 @@
+{
+ "package": "travel-points-calculator",
+ "repository": "https://github.com/borski/travel-hacking-toolkit",
+ "commit": "b46172deee14b106fc815c1d57f2587a581f8a27",
+ "retrievedAt": "2026-10-31",
+ "files": [
+  {
+   "upstreamPath": "plugins/travel-hacking-toolkit/skills/trip-calculator/SKILL.md",
+   "localPath": "source/SKILL.md",
+   "status": "adapted",
+   "upstreamSha256": "54d3b9adc0747fe019d37665f15c93186b1ccd650ec2acf702d5d579eea01e72",
+   "upstreamSize": 9832,
+   "localSha256": "ef114bb350ef579dc59171e045e877db085b470eafe32430acb2c5e932114948",
+   "localSize": 9998
+  },
+  {
+   "upstreamPath": "LICENSE",
+   "localPath": "source/references/licenses/UPSTREAM-LICENSE.txt",
+   "status": "verbatim",
+   "upstreamSha256": "155914d15e1689971c8064ed3da82db89ca4330962da7b8a6589d2f98c79c47c",
+   "upstreamSize": 1075,
+   "localSha256": "155914d15e1689971c8064ed3da82db89ca4330962da7b8a6589d2f98c79c47c",
+   "localSize": 1075
+  }
+ ]
+}

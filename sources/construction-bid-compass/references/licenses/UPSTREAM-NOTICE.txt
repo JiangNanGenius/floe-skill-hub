@@ -1,0 +1,16 @@
+procurement-skills
+Copyright (c) 2026 Maximilian Ziermann.
+
+Author and copyright holder: Maximilian Ziermann (GitHub: Maxbase91)
+Authorship fingerprint: MZ-64fe8d5a2422c150
+
+Licensed under the MIT licence (see LICENSE). The licence requires this copyright
+notice to be kept in all copies or substantial portions of the software.
+
+The fingerprint above is also embedded in the source code. It is derived from a
+secret only the author holds, so only the author can show it was issued for
+this repository. Signed commits and independent timestamps of the repository
+history are kept as further evidence of authorship and dates.
+
+This notice and the authorship marks in the source code must not be removed or
+altered in any copy or derivative of this software.

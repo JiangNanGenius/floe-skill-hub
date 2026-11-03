@@ -1,0 +1,37 @@
+{
+  "fixture": "synthetic-interview-kit-senior-data-analyst",
+  "synthetic": true,
+  "role": "Senior Data Analyst (synthetic)",
+  "company": "Meridian Retail Group (synthetic)",
+  "level": "Senior individual contributor",
+  "format": "Two 45-minute structured interviews plus a take-home work sample",
+  "panel": ["Hiring manager (business judgement, stakeholder communication)", "Senior analyst (SQL and data modelling, experimentation)", "Data engineer (data pipeline reliability)"],
+  "competencies": [
+    {"id": "sql", "name": "SQL and data modelling", "weight": 30, "roleLink": "Owns analysis on production data"},
+    {"id": "stats", "name": "Experimentation and statistics", "weight": 25, "roleLink": "Designs and interprets tests"},
+    {"id": "comms", "name": "Stakeholder communication", "weight": 20, "roleLink": "Presents decisions to non-specialists"},
+    {"id": "pipeline", "name": "Data pipeline reliability", "weight": 15, "roleLink": "Accountable for trustworthy inputs"},
+    {"id": "judgement", "name": "Business judgement", "weight": 10, "roleLink": "Prioritizes among competing questions"}
+  ],
+  "mustHaves": [
+    {"id": "M1", "name": "Work sample: correct SQL join and grain", "assessedBy": "Senior analyst", "result": {"A": "Pass", "B": "Pass", "C": "Fail"}},
+    {"id": "M2", "name": "Work sample: reproducible analysis notes", "assessedBy": "Data engineer", "result": {"A": "Pass", "B": "Pass", "C": "Pass"}}
+  ],
+  "decisionRule": "Weighted average >= 3.0 on the 1-4 anchored scale AND all must-haves pass. The result is a recommendation to the hiring manager, not a hiring decision.",
+  "candidates": {
+    "A": {"scores": {"sql": 3, "stats": 3, "comms": 4, "pipeline": 3, "judgement": 3}, "evidenceCount": 5, "mustHavesPass": true},
+    "B": {"scores": {"sql": 4, "stats": 2, "comms": 3, "pipeline": 4, "judgement": 2}, "evidenceCount": 4, "mustHavesPass": true, "provisional": true, "provisionalReason": "The pipeline score of 4 has no incident-ownership evidence; only a monitoring dashboard was described."},
+    "C": {"scores": {"sql": 2, "stats": 4, "comms": 3, "pipeline": 2, "judgement": 4}, "evidenceCount": 5, "mustHavesPass": false}
+  },
+  "processChecks": {
+    "sameCoreQuestions": true,
+    "independentScoringBeforeDebrief": true,
+    "protectedAttributesCollected": false,
+    "accommodationRequested": "Candidate B requested extra time for the work sample; granted under the organization's process.",
+    "scoreEvidenceRule": "At least one specific evidence note per competency score."
+  },
+  "processIncidents": [
+    {"type": "protected-characteristic question", "interviewer": "Panel member 2", "detail": "Asked whether the candidate planned to have children soon.", "requiredAction": "Do not record or use the answer in scoring; escalate to the organization's HR/legal process; provide interviewer retraining."},
+    {"type": "missing evidence", "interviewer": "Data engineer", "detail": "Candidate B pipeline score of 4 has no incident-ownership example.", "requiredAction": "Resolve with the evidence notes or re-score before any decision; do not average it into a recommendation as-is."}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "fixture": "synthetic-performance-calibration-2026",
+  "synthetic": true,
+  "cycle": "2026 annual review (synthetic)",
+  "team": "Commercial Analytics (synthetic)",
+  "scale": {"1": "Below expectations", "2": "Meets expectations", "3": "Exceeds expectations"},
+  "policyReference": {"exceeds": [20, 30], "meets": [60, 70], "below": [10, 15], "note": "Illustrative reference bands, not quotas; the ranges do not sum to 100 because they are separate guidance ranges."},
+  "employees": [
+    {"id": "E1", "role": "Senior analyst", "level": "L4", "tenureBand": "2-4 years", "proposedRating": 3, "evidenceCount": 3, "evidencePeriod": "full year", "promotionProposed": true, "promotionEvidence": ["Led the pricing analysis that changed the Q3 discount policy", "Owned the quarterly forecast for two categories", "Peer leadership limited to one project"]},
+    {"id": "E2", "role": "Analyst", "level": "L3", "tenureBand": "1-2 years", "proposedRating": 2, "evidenceCount": 2, "evidencePeriod": "full year", "promotionProposed": false, "note": "Both examples come from the same project; request breadth evidence."},
+    {"id": "E3", "role": "Analyst", "level": "L3", "tenureBand": "1-2 years", "proposedRating": 2, "evidenceCount": 1, "evidencePeriod": "unclear", "promotionProposed": false, "note": "Only one evidence note, phrased as 'great attitude'; rating is provisional."},
+    {"id": "E4", "role": "Data quality analyst", "level": "L3", "tenureBand": "1-2 years", "proposedRating": 1, "evidenceCount": 2, "evidencePeriod": "full year", "promotionProposed": false, "note": "Two specific examples; confirm prior feedback and support were given."},
+    {"id": "E5", "role": "Senior analyst", "level": "L4", "tenureBand": "4+ years", "proposedRating": 3, "evidenceCount": 3, "evidencePeriod": "last 6 weeks only", "promotionProposed": false, "note": "Recency risk: all examples are from the last six weeks; ask for full-period evidence."}
+  ],
+  "consistencyChecks": {
+    "sameRubricAcrossTeam": true,
+    "protectedAttributesCollected": false,
+    "cultureFitUsed": false,
+    "forcedDistribution": false,
+    "priorFeedbackAndSupportForBelowRating": "not supplied; must be confirmed before finalising E4"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "industry": "B2B SaaS — revenue analytics",
+  "deal_size_avg": 18000,
+  "customer_count": 220,
+  "value_drivers": [
+    "revenue lift from better pipeline",
+    "time saved in reporting",
+    "conversion uplift"
+  ],
+  "adoption_curve": "bottom-up",
+  "consumption_pattern": {
+    "seat-based": 0.45,
+    "usage-based": 0.55,
+    "value-based": 0.4,
+    "hybrid": 0.5
+  },
+  "competitor_pricing_models": [
+    "subscription seat-based",
+    "hybrid seat + usage overage"
+  ]
+}
