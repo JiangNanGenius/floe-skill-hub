@@ -1,0 +1,137 @@
+{
+  "fixture": "synthetic-mutual-nda-red",
+  "synthetic": true,
+  "parties": {
+    "disclosingAndReceiving": [
+      "Aster Bioworks, Inc. (synthetic, Delaware, US)",
+      "Kestrel Data Systems Ltd (synthetic, England, UK)"
+    ]
+  },
+  "userSide": "mutual (both disclosing and receiving)",
+  "purpose": "Evaluation of a potential data collaboration",
+  "governingLaw": "State of New York",
+  "forum": "Courts located in New York County, New York",
+  "arbitration": false,
+  "playbookSupplied": false,
+  "reviewBasis": "Market-standard defaults, stated as defaults",
+  "criteria": [
+    {
+      "id": 1,
+      "label": "Agreement structure",
+      "status": "PASS",
+      "clause": "Preamble and clause 1",
+      "note": "Mutual, standalone NDA for a stated evaluation purpose."
+    },
+    {
+      "id": 2,
+      "label": "Definition of confidential information",
+      "status": "FAIL",
+      "clause": "Clause 2.1",
+      "note": "Captures all information of any kind, whether or not marked, including information that is or becomes public through no fault of the recipient."
+    },
+    {
+      "id": 3,
+      "label": "Obligations of the receiving party",
+      "status": "PASS",
+      "clause": "Clauses 3.1-3.3",
+      "note": "Reasonable care, purpose limitation and need-to-know disclosure."
+    },
+    {
+      "id": 4,
+      "label": "Standard carveouts",
+      "status": "FAIL",
+      "clause": "Clause 2.2",
+      "note": "Public knowledge, prior possession, third-party receipt and legal compulsion are present; independent development is missing."
+    },
+    {
+      "id": 5,
+      "label": "Permitted disclosures",
+      "status": "PASS",
+      "clause": "Clause 3.3",
+      "note": "Employees, contractors, advisors and affiliates under similar obligations."
+    },
+    {
+      "id": 6,
+      "label": "Term and duration",
+      "status": "FLAG",
+      "clause": "Clauses 8.1-8.2",
+      "note": "Three-year term is acceptable; confidentiality survives seven years, longer than the five-year default but within a common market range."
+    },
+    {
+      "id": 7,
+      "label": "Return and destruction",
+      "status": "FLAG",
+      "clause": "Clause 7",
+      "note": "Return or destroy on request; no retention exception for legal, regulatory or backup copies."
+    },
+    {
+      "id": 8,
+      "label": "Remedies",
+      "status": "PASS",
+      "clause": "Clause 9",
+      "note": "Mutual injunctive-relief acknowledgment; no liquidated damages."
+    },
+    {
+      "id": 9,
+      "label": "Problematic provisions",
+      "status": "FAIL",
+      "clause": "Clauses 6 and 10",
+      "note": "Twelve-month employee non-solicitation; broad residuals clause granting a perpetual licence to use retained information, including for the recipient's products."
+    },
+    {
+      "id": 10,
+      "label": "Governing law and jurisdiction",
+      "status": "PASS",
+      "clause": "Clause 11",
+      "note": "New York law and New York courts; no mandatory arbitration."
+    }
+  ],
+  "redIssues": [
+    {
+      "criterion": 2,
+      "issue": "Overbroad definition",
+      "risk": "Could capture public information and material independently developed by the recipient",
+      "fix": "Limit to non-public information disclosed for the purpose and identified as confidential, or that a reasonable person would understand to be confidential; preserve the standard exclusions."
+    },
+    {
+      "criterion": 4,
+      "issue": "Missing independent-development carveout",
+      "risk": "Claims that the recipient's products or features were derived from the discloser's information",
+      "fix": "Add a carveout for information independently developed without use of or reference to the confidential information."
+    },
+    {
+      "criterion": 9,
+      "issue": "Employee non-solicitation",
+      "risk": "Restricts ordinary hiring and does not belong in an NDA",
+      "fix": "Delete clause 6. If the counterparty insists, narrow it to targeted solicitation with a short term, subject to local law."
+    },
+    {
+      "criterion": 9,
+      "issue": "Broad residuals permission",
+      "risk": "Effectively licenses the discloser's confidential information for the recipient's products",
+      "fix": "Delete clause 10. If retained, limit it to unaided memory, exclude trade secrets and patentable information, and grant no IP licence."
+    }
+  ],
+  "yellowIssues": [
+    {
+      "criterion": 6,
+      "issue": "Seven-year survival",
+      "risk": "Longer than the stated five-year default",
+      "fix": "Confirm the business need; reduce to five years unless trade-secret protection justifies longer."
+    },
+    {
+      "criterion": 7,
+      "issue": "No retention exception",
+      "risk": "Conflicts with legal, regulatory or backup retention obligations",
+      "fix": "Add a retention exception for copies required by law, regulation or bona fide backup/compliance policy."
+    }
+  ],
+  "classificationRule": "Any FAIL -> RED; otherwise any FLAG -> YELLOW; otherwise GREEN.",
+  "expectedClassification": "RED",
+  "jurisdictionFlags": [
+    "UK counterparty: UK GDPR may apply if personal data is shared; the NDA has no data-protection terms.",
+    "New York law and forum are stated consistently; no mandatory arbitration.",
+    "Non-solicitation enforceability varies by jurisdiction and should be reviewed locally.",
+    "No signature authority is established by the document; the organization's delegation policy governs."
+  ]
+}

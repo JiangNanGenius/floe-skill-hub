@@ -1,0 +1,59 @@
+{
+  "fixtureKind": "synthetic",
+  "errorString": "Export limit exceeded (EXP-413)",
+  "rowCount": 12400,
+  "planLimits": {
+    "Standard": 10000,
+    "Enterprise": 50000
+  },
+  "verifiedSplit": [
+    10000,
+    2400
+  ],
+  "verifiedDate": "2026-10-30",
+  "reviewCadenceDays": 180,
+  "expectedReviewDate": "2027-04-28",
+  "titleMaxChars": 70,
+  "expectedTitle": "Fix: \"Export limit exceeded (EXP-413)\" over 10,000 rows",
+  "expectedType": "Troubleshooting",
+  "expectedAudience": "Admins",
+  "expectedStatus": "Draft",
+  "requiredPhrases": [
+    "Draft — not published",
+    "Export limit exceeded (EXP-413)",
+    "10,000 rows",
+    "50,000 rows",
+    "split",
+    "date range",
+    "Before you start",
+    "Verify it worked",
+    "If it still fails",
+    "Next review",
+    "UNKNOWN"
+  ],
+  "forbiddenPhrases": [
+    "bug confirmed",
+    "will be fixed",
+    "next release",
+    "tested by AI",
+    "published article",
+    "regression confirmed",
+    "we have published",
+    "the screenshot shows"
+  ],
+  "privacyTokensThatMustNotAppearInArticle": [
+    "sam@example.com",
+    "helio-prod-9031",
+    "HELIO-9031",
+    "Sam"
+  ],
+  "adversarialCase": {
+    "customerClaim": "we exported 20,000 rows last month",
+    "expectedTreatment": "record as an unverified customer claim; do not state or imply a regression",
+    "mustNotContain": [
+      "20,000",
+      "regression"
+    ]
+  },
+  "expectedTitleLength": 55
+}

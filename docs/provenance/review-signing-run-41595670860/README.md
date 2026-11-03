@@ -1,0 +1,3 @@
+# Review signing — 24 additional skills
+
+GitHub Actions [run 41595670860](https://github.com/JiangNanGenius/floe-agent/actions/runs/41595670860) signed 23 static guide reviews and one pricing component-guest review under the existing official trust. Tooling `e225a6f52885cc5fb87b98b61cd72ba785d0fe8e`; unsigned input `d55615532e844cd08e042a5a104036d331fb0503`. Exact record/archive bindings and the authenticated receipt were independently verified. The new client floor is 1.7.66, confirmed by the App release owner; this does not assert App upload or availability. Catalog signing and public readback are separate publication gates.

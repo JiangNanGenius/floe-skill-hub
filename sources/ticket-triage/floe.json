@@ -1,0 +1,16 @@
+{
+  "capabilities": [
+    "workspace.read",
+    "workspace.write"
+  ],
+  "id": "ticket-triage",
+  "platforms": [
+    "ios",
+    "linux"
+  ],
+  "pythonPackages": [],
+  "schemaVersion": 1,
+  "scriptRuntime": "none",
+  "tools": [],
+  "version": "1.0.0"
+}

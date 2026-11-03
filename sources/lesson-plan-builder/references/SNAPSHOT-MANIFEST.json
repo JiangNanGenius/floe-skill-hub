@@ -1,0 +1,35 @@
+{
+ "package": "lesson-plan-builder",
+ "repository": "https://github.com/genspark-ai/genoffice",
+ "commit": "36a509e8fc16ace85ed7afa3c37acb7b9c441ad1",
+ "retrievedAt": "2026-10-31",
+ "files": [
+  {
+   "upstreamPath": "skills/recommended/lesson-plan/SKILL.md",
+   "localPath": "source/SKILL.md",
+   "status": "adapted",
+   "upstreamSha256": "770513c2c97ea490355c994541b39fc2b99d315c59bec3db8596e4ec32279829",
+   "upstreamSize": 4060,
+   "localSha256": "051540256813d29662417371ec8ca55293d3b5df2ec4a483fefd6fcb9510608d",
+   "localSize": 6179
+  },
+  {
+   "upstreamPath": "LICENSE",
+   "localPath": "source/references/licenses/UPSTREAM-LICENSE.txt",
+   "status": "verbatim",
+   "upstreamSha256": "68e32334df324ef4fc79fad3a26487e5abac36055a484bb6c8d7ecf9d8350885",
+   "upstreamSize": 11345,
+   "localSha256": "68e32334df324ef4fc79fad3a26487e5abac36055a484bb6c8d7ecf9d8350885",
+   "localSize": 11345
+  },
+  {
+   "upstreamPath": "NOTICE",
+   "localPath": "source/references/licenses/UPSTREAM-NOTICE.txt",
+   "status": "verbatim",
+   "upstreamSha256": "26fa7a458f2463af07f96af3d4b26b3cc3b4de688340838e3c9b3b958d390882",
+   "upstreamSize": 2489,
+   "localSha256": "26fa7a458f2463af07f96af3d4b26b3cc3b4de688340838e3c9b3b958d390882",
+   "localSize": 2489
+  }
+ ]
+}

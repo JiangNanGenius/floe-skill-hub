@@ -2784,6 +2784,1034 @@
         }
       },
       "gallery": []
+    },
+    "construction-estimate-builder": {
+      "overview": {
+        "zh-Hans": "把工程量清单整理成可复核的施工估算。你提供分项工程量、单位、单价和费用口径，它按人工、材料、设备、分包及其他费用汇总，再按明确的顺序计取管理费、利润和预备费，保留每一步计算。\n\n适合方案比选、预算底稿和报价前的内部复核。结果包含 WBS 编码明细、分类小计、费率说明与缺项清单；缺失单价会单独列出，不会被当成市场价补齐。",
+        "en": "Turn quantities and supplied rates into a traceable construction estimate. Line items are classified as labor, materials, equipment, subcontracting or other costs, then overhead, profit and contingency are applied in an explicit sequence.\n\nUse it for option comparisons, budget drafts and internal quote review. Receive a WBS-coded line-item table, category totals, markup calculation and missing-data checklist. Missing rates remain open rather than becoming invented market prices."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "编制施工预算初稿",
+          "en": "Draft a construction budget"
+        },
+        {
+          "zh-Hans": "比较不同施工方案的费用",
+          "en": "Compare construction options"
+        },
+        {
+          "zh-Hans": "复核分项、费率与总额",
+          "en": "Reconcile line items and markups"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "用这份工程量清单和我提供的单价做估算，分别计取 10% 管理费、8% 利润和 5% 预备费，列出计取顺序与缺失数据。",
+            "en": "Estimate these quantities using my supplied rates, with 10% overhead, 8% profit and 5% contingency. Show the calculation order and missing data."
+          },
+          "output": {
+            "zh-Hans": "工程量明细、五类费用小计、逐项费率计算和待确认问题。",
+            "en": "A quantity schedule, five cost-category totals, stepwise markups and open questions."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/construction-estimate-builder.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        }
+      },
+      "gallery": []
+    },
+    "construction-change-order-processor": {
+      "overview": {
+        "zh-Hans": "把现场变更整理成一份可追溯的费用与状态记录。你提供变更原因、增减工程量、单价、合同基准和已有审批记录，它核算直接费用及约定加成，说明变更对合同金额的影响，并整理变更台账。\n\n适合处理增项、减项和范围调整，也能检查资料与审批环节是否齐全。它只记录已有审批、标明待办事项，不会替你批准变更或向对方提交。",
+        "en": "Build a traceable cost and status record for a construction change. Provide the reason, quantity changes, rates, contract baseline and any existing approval record. The guide calculates direct costs and agreed markups, shows the contract-value effect and prepares a change log.\n\nUseful for additions, omissions and scope adjustments. It checks missing information and approval steps, transcribes existing approvals and leaves unresolved decisions open."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "核算增减项费用",
+          "en": "Cost additions and omissions"
+        },
+        {
+          "zh-Hans": "整理工程变更台账",
+          "en": "Maintain a change-order log"
+        },
+        {
+          "zh-Hans": "核对审批资料与状态",
+          "en": "Check approval records and status"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "按附件中的增减工程量和合同费率核算这份变更，只登记附件已有的审批，把待确认事项另列。",
+            "en": "Cost this change using the attached quantities and contract rates. Record only approvals already evidenced in the attachments and list open items."
+          },
+          "output": {
+            "zh-Hans": "变更费用表、合同金额影响、状态记录和补充资料清单。",
+            "en": "A change-cost table, contract-value impact, status record and evidence checklist."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/construction-change-order-processor.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        }
+      },
+      "gallery": []
+    },
+    "construction-bid-compass": {
+      "overview": {
+        "zh-Hans": "从采购需求出发，准备更清晰的询价文件和供应商评审表。它先整理范围、交付物、资格条件及需要供应商回答的问题，再依据你确认的权重设计评分口径，把不同报价放在相同标准下比较。\n\n适合工程分包、弱电系统和设备采购。结果包含询价草案、符合性检查、评分矩阵及澄清问题。没有证据的评分会标为待确认，权重也需由采购负责人确认后使用。",
+        "en": "Prepare a clear request for proposals and a consistent supplier evaluation. Define scope, deliverables, eligibility requirements and supplier questions, then use buyer-approved weights to compare bids on the same basis.\n\nUseful for construction subcontracting, low-voltage systems and equipment procurement. Outputs include a request draft, compliance checklist, scoring matrix and clarification questions. Unsupported scores and unapproved weights remain open."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "起草工程采购询价文件",
+          "en": "Draft a procurement request"
+        },
+        {
+          "zh-Hans": "建立带证据的评分表",
+          "en": "Create evidence-based bid scoring"
+        },
+        {
+          "zh-Hans": "整理供应商澄清问题",
+          "en": "Prepare supplier clarifications"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "我们要采购办公楼弱电系统，按这些范围资料起草询价和评审表。先提出权重建议，未确认前不要当成最终标准。",
+            "en": "Draft an RFP and evaluation matrix for this office-building low-voltage scope. Propose scoring weights, keeping them provisional until confirmed."
+          },
+          "output": {
+            "zh-Hans": "询价草案、资格检查、暂定权重和待澄清问题。",
+            "en": "An RFP draft, eligibility checks, provisional weights and clarification questions."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/construction-bid-compass.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        }
+      },
+      "gallery": []
+    },
+    "variance-analysis": {
+      "overview": {
+        "zh-Hans": "解释预算、预测与实际结果为什么不同。你提供同一口径的期间数据、收入成本明细，以及销量、价格或人数等驱动因素，它先核对差额，再拆分数量、价格、结构和人力成本影响，区分主要变化与次要波动。\n\n适合月度经营复盘、部门预算说明和管理层汇报。输出包含可复算的差异表、重要性判断、调查优先级与简明分析文字；数据不能解释的原因会保留为问题。",
+        "en": "Explain differences between budget, forecast and actual results. Supply comparable periods, revenue and cost lines, and available volume, price or headcount drivers. The guide reconciles the total variance, separates its drivers and applies stated materiality thresholds.\n\nUse it for monthly operating reviews, departmental budget explanations and management reporting. Receive reproducible calculations, materiality flags, investigation priorities and concise commentary, with unexplained causes left as questions."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "拆解预算与实际差异",
+          "en": "Decompose budget-to-actual variance"
+        },
+        {
+          "zh-Hans": "写月度经营分析",
+          "en": "Write a monthly operating review"
+        },
+        {
+          "zh-Hans": "定位优先调查的成本变化",
+          "en": "Prioritize cost investigations"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "比较这份预算和实际数据，按金额与比例判断重要性，拆解销量和价格影响，再给我一页月度分析。",
+            "en": "Compare this budget with actuals, apply dollar and percentage materiality, separate volume and price effects and write a one-page monthly analysis."
+          },
+          "output": {
+            "zh-Hans": "差异桥接表、重要性标记、待核实原因和管理摘要。",
+            "en": "A reconciled variance bridge, materiality flags, open causes and management summary."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/variance-analysis.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        }
+      },
+      "gallery": []
+    },
+    "review-contract": {
+      "overview": {
+        "zh-Hans": "按你的谈判手册逐条检查合同。它把付款、责任限制、知识产权、保密、期限与终止等条款和你提供的立场进行对照，以风险等级说明偏离，给出修改建议、谈判优先级和业务影响。\n\n适合在法务正式审阅前整理问题，也适合复核对方修改稿。你可以同时提供合同与内部条款标准；只有摘录时，它会明确哪些部分尚未见到。输出是审查底稿与修改建议，最终法律判断仍交由负责人员。",
+        "en": "Review a contract against your negotiation playbook. Compare payment, liability, intellectual property, confidentiality, term and termination provisions with your supplied positions, then rank deviations and propose redlines, negotiation priorities and business-impact notes.\n\nUseful for preparing a legal review or checking a counterparty draft. Provide the agreement and internal standards; when only an excerpt is available, unseen categories are identified explicitly. The result is a review working paper for the responsible legal professional."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "按内部条款标准审查合同",
+          "en": "Review against an internal playbook"
+        },
+        {
+          "zh-Hans": "整理对方修改的风险点",
+          "en": "Assess counterparty revisions"
+        },
+        {
+          "zh-Hans": "准备分级谈判问题",
+          "en": "Prepare negotiation priorities"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "根据这份谈判手册审查附件合同，用红黄绿分级，列出条款原文、偏离原因、建议修改和谈判优先级。",
+            "en": "Review this agreement against the attached playbook. Use red/yellow/green ratings and show the clause, deviation, proposed wording and negotiation priority."
+          },
+          "output": {
+            "zh-Hans": "逐条审查表、修改建议、缺失条款提示和业务摘要。",
+            "en": "A clause review table, proposed redlines, missing-clause flags and business summary."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/review-contract.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        }
+      },
+      "gallery": []
+    },
+    "proposal-builder": {
+      "overview": {
+        "zh-Hans": "把客户需求、沟通纪要和已有报价资料整理成一份完整提案。它先确认客户目标与验收条件，再组织工作范围、交付物、时间安排、价格依据、排除项和付款条件，尽量沿用你现有的模板与语气。\n\n适合服务报价、项目建议书和客户方案。信息不齐时会先列问题，不会编造价格、承诺开工日期或替你发给客户。你得到的是可继续审阅和编辑的提案草稿。",
+        "en": "Turn customer requirements, discovery notes and existing pricing into a complete proposal. Establish objectives and acceptance criteria, then structure scope, deliverables, schedule, pricing basis, exclusions and payment terms using your template and tone.\n\nUseful for service quotes, project proposals and customer solutions. Missing prices or dates become questions rather than commitments. You receive an editable draft to review before sharing."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "从需求纪要生成项目提案",
+          "en": "Create a proposal from discovery notes"
+        },
+        {
+          "zh-Hans": "整理服务范围与报价依据",
+          "en": "Clarify scope and pricing"
+        },
+        {
+          "zh-Hans": "补齐排除项与验收条件",
+          "en": "Define exclusions and acceptance"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "按我们的模板，把这份客户纪要和已确认报价整理成提案。价格未确认和设备交期不明的地方请留为待办。",
+            "en": "Use our template to turn these discovery notes and confirmed prices into a proposal. Leave unconfirmed prices and equipment lead times as open items."
+          },
+          "output": {
+            "zh-Hans": "提案草稿、范围与价格说明，以及客户确认清单。",
+            "en": "A proposal draft, scope and pricing notes, and a client-confirmation checklist."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/proposal-builder.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        }
+      },
+      "gallery": []
+    },
+    "hiring-screener": {
+      "overview": {
+        "zh-Hans": "依据岗位要求，把候选人资料整理成一致、可解释的初筛结果。你提供职位说明、必备条件和简历，它先建立评分标准，再逐项记录履历证据、评分与需要确认的问题，把缺少证据和明确不符合分开处理。\n\n适合小团队招聘和批量简历初筛。输出包含对照表、暂定候选顺序、面试追问与沟通草稿；录用、拒绝和发送消息都由招聘负责人决定。",
+        "en": "Screen candidates against a consistent, explainable rubric. Provide the job description, must-have criteria and resumes. The guide builds a scoring framework and records evidence, ratings and follow-up questions, distinguishing missing evidence from a demonstrated mismatch.\n\nUseful for small-team hiring and initial resume review. Outputs include a comparison table, provisional shortlist, interview questions and communication drafts. Hiring decisions and messages remain with the hiring owner."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "为岗位建立初筛标准",
+          "en": "Build a role-specific screening rubric"
+        },
+        {
+          "zh-Hans": "比较简历与必备条件",
+          "en": "Compare resumes with must-haves"
+        },
+        {
+          "zh-Hans": "准备有针对性的面试问题",
+          "en": "Prepare evidence-based interview questions"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "根据附件岗位要求筛选这些简历，先列必备条件，再逐项引用证据。证据不足的标为待确认，不要直接淘汰。",
+            "en": "Screen these resumes against the attached role. State must-haves first and cite evidence for each rating. Mark missing evidence for follow-up rather than automatic rejection."
+          },
+          "output": {
+            "zh-Hans": "评分标准、候选对照表、暂定顺序及核实问题。",
+            "en": "A rubric, candidate comparison, provisional ordering and verification questions."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/hiring-screener.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        }
+      },
+      "gallery": []
+    },
+    "process-mapper": {
+      "overview": {
+        "zh-Hans": "把实际业务流程画清楚，再找真正拖慢交付的环节。你提供步骤、负责人、处理时间、等待、返工和业务量，它整理流程图与数据表，计算周期时间、吞吐量和在制量，区分工作本身耗时与排队等待。\n\n适合审批、订单处理、客户交付和内部运营改进。结果会优先围绕瓶颈提出调整，而不是简单建议增加人手；估算数据和可能重叠的收益也会明确标出。",
+        "en": "Map how work actually moves and identify what constrains delivery. Supply steps, owners, processing time, waiting, rework and demand. The guide creates a process map and calculates cycle time, throughput and work in progress, separating productive time from queues.\n\nUseful for approvals, order handling, customer delivery and internal operations. Recommendations focus on the constraint, with estimated inputs and overlapping improvement benefits made explicit."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "梳理跨部门业务流程",
+          "en": "Map a cross-team process"
+        },
+        {
+          "zh-Hans": "定位等待与返工瓶颈",
+          "en": "Locate waiting and rework bottlenecks"
+        },
+        {
+          "zh-Hans": "比较改进方案及衡量指标",
+          "en": "Compare improvements and measures"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "根据这份订单流程记录，画出现状流程，分别计算处理和等待时间，找出瓶颈并给出三个可衡量的改进方案。",
+            "en": "Map this order process, calculate processing and waiting time separately, identify the bottleneck and propose three measurable improvements."
+          },
+          "output": {
+            "zh-Hans": "现状流程图、周期与产能计算、瓶颈证据及改进清单。",
+            "en": "A current-state map, cycle-time and capacity calculations, bottleneck evidence and improvement list."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/process-mapper.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        }
+      },
+      "gallery": []
+    },
+    "senior-pm": {
+      "overview": {
+        "zh-Hans": "把多个项目的进度、预算、范围、质量和风险整理成一份管理视图。你提供项目台账、风险登记和团队产能，它按公开权重计算健康度，比较资源需求与可用工时，并把需要介入的问题写成管理层可读的报告。\n\n适合项目组合周会、资源协调和季度规划。可同时使用风险预期损失、三点估算及优先级框架；数据不足的项目会标出缺口，不会把情景区间包装成已运行的概率模拟。",
+        "en": "Create a management view across multiple projects. Provide portfolio data, risks and team capacity. The guide scores schedule, budget, scope, quality and risk using explicit weights, compares demand with available hours and prepares an executive report on issues requiring intervention.\n\nUse it for portfolio reviews, resource allocation and quarterly planning. It includes expected-loss calculations, three-point estimates and prioritization frameworks. Missing data stays visible, and scenario ranges are not presented as simulated probability results."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "编制项目组合健康度报告",
+          "en": "Review portfolio health"
+        },
+        {
+          "zh-Hans": "评估风险与应对优先级",
+          "en": "Prioritize risks and responses"
+        },
+        {
+          "zh-Hans": "比较团队产能与项目需求",
+          "en": "Compare team capacity and demand"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "用这份项目、风险和产能表做组合周报，展示各项评分、RAG 状态、风险预期损失及需要管理层决定的问题。",
+            "en": "Create a portfolio review from these project, risk and capacity tables. Show dimension scores, RAG status, expected losses and management decisions needed."
+          },
+          "output": {
+            "zh-Hans": "健康度看板、风险登记、产能差距及执行摘要。",
+            "en": "A health dashboard, risk register, capacity gaps and executive summary."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/senior-pm.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        }
+      },
+      "gallery": []
+    },
+    "lesson-plan-builder": {
+      "overview": {
+        "zh-Hans": "从教学目标出发，安排一堂时间合理、能检查学习效果的课。你提供年级、学科、主题、课时与班级情况，它组织导入、讲解、练习、课堂检查和收尾，把每个活动对应到目标，并为不同学习需要提供调整。\n\n适合教师备课、辅导课和在家学习。输出包含分分钟安排、材料清单、提问与评估方式；需要课程标准时会使用你提供的依据，不会虚构标准编号。",
+        "en": "Plan a lesson around clear objectives and observable learning. Provide grade, subject, topic, duration and class context. The guide sequences an opening, instruction, practice, checks and closure, connecting activities to objectives and offering adjustments for different needs.\n\nUseful for classroom preparation, tutoring and home learning. Receive a timed plan, materials, questions and assessment approach. Curriculum alignment uses supplied evidence rather than invented standard codes."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "制作一课时教学方案",
+          "en": "Prepare a timed lesson"
+        },
+        {
+          "zh-Hans": "为不同学习需要调整活动",
+          "en": "Differentiate classroom activities"
+        },
+        {
+          "zh-Hans": "把目标与课堂检查对齐",
+          "en": "Align objectives and assessment"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "为七年级设计一堂 45 分钟的比例课，班级基础差异较大。安排活动时间、三档练习和离堂检查。",
+            "en": "Plan a 45-minute ratio lesson for a mixed-attainment seventh-grade class, with timed activities, three levels of practice and an exit check."
+          },
+          "output": {
+            "zh-Hans": "完整课时表、目标对应活动、分层练习与离堂检查。",
+            "en": "A timed lesson plan, objective-linked activities, differentiated practice and exit check."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/lesson-plan-builder.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        }
+      },
+      "gallery": []
+    },
+    "study-plan-scheduler": {
+      "overview": {
+        "zh-Hans": "把考试日期、可用时间和当前基础转成一份能持续执行的学习安排。它先梳理知识范围和薄弱项，再按阶段安排新学、复习、练习与模拟，预留缓冲，并给出漏学后的调整办法。\n\n适合备考、资格考试和长期自学。结果包含周计划、每日任务、复盘节点和进度检查；它会遵守你实际能投入的时数，不靠塞满日程或保证分数来制造进度感。",
+        "en": "Turn a deadline, available time and starting level into a sustainable study schedule. Identify topics and gaps, then allocate learning, review, practice and mock exams in phases, with buffer time and a recovery plan for missed sessions.\n\nUseful for exams, certifications and long-term self-study. Receive weekly and daily plans, review checkpoints and progress checks that respect your real time budget without promising a score."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "制定有缓冲的备考计划",
+          "en": "Build an exam plan with buffer"
+        },
+        {
+          "zh-Hans": "安排每日学习与复习",
+          "en": "Schedule daily study and review"
+        },
+        {
+          "zh-Hans": "在落后时重新分配任务",
+          "en": "Recover from missed sessions"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "我还有 8 周考试，每周最多 7 小时，周三不能学习。按薄弱项排周计划，留出缓冲和两次模拟考试。",
+            "en": "My exam is in eight weeks. I have at most seven hours per week and cannot study Wednesdays. Prioritize gaps, include buffer and schedule two mock exams."
+          },
+          "output": {
+            "zh-Hans": "按可用时间分配的周日程、每日任务、模拟节点与补课规则。",
+            "en": "A time-bounded weekly schedule, daily tasks, mock-exam checkpoints and recovery rules."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/study-plan-scheduler.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        }
+      },
+      "gallery": []
+    },
+    "k12-check-for-understanding": {
+      "overview": {
+        "zh-Hans": "围绕一个明确的学习目标，设计能看出学生是否理解的课堂检查。它先确认要观察的知识与推理，再准备任务、学生材料、预期表现及常见误解的观察线索，帮助教师决定下一步教学。\n\n适合课堂提问、短测和离堂检查。学生材料与教师观察指南分开生成；题目内容、难度和课程依据都可以由你指定。没有连接外部知识库时也能使用你提供的材料完成设计。",
+        "en": "Design a classroom check around a specific learning target. Confirm the knowledge and reasoning to observe, then prepare a task, student materials, expected evidence and signs of common misconceptions to inform the next teaching step.\n\nUseful for questions, short checks and exit tickets. Student-facing materials and a teacher observation guide are separate outputs. Specify content, difficulty and curriculum evidence; the guide can work from your materials without an external knowledge-graph connection."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "设计快速理解检查",
+          "en": "Design a quick understanding check"
+        },
+        {
+          "zh-Hans": "识别常见误解的证据",
+          "en": "Observe evidence of misconceptions"
+        },
+        {
+          "zh-Hans": "分开准备学生材料与教师指南",
+          "en": "Prepare student and teacher materials"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "给五年级分数等值设计一个 5 分钟理解检查，要能区分真正理解与只会套步骤，分别给学生页和教师观察页。",
+            "en": "Create a five-minute fifth-grade equivalent-fractions check that distinguishes understanding from procedural recall. Produce separate student and teacher-observation pages."
+          },
+          "output": {
+            "zh-Hans": "学生检查材料、预期推理、误解线索和教师后续提问。",
+            "en": "A student task, expected reasoning, misconception cues and teacher follow-up questions."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/k12-check-for-understanding.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        }
+      },
+      "gallery": []
+    },
+    "travel-points-calculator": {
+      "overview": {
+        "zh-Hans": "把现金票价、里程需求、税费和转点比例放在同一张表里，比较兑换是否划算。它计算每点价值，说明单程或往返口径、机会成本及你设定的最低价值，并把转点损耗、额外费用与未知项单独列出。\n\n适合比较机票、酒店和不同兑换方案。你需要提供当前看到的报价与可兑换数量；它不查实时库存，也不会假设能订到。输出是透明的比较表与待确认事项。",
+        "en": "Compare cash prices, points, taxes and transfer ratios on a consistent basis. Calculate cents per point, distinguish one-way from round-trip quotes, apply your stated opportunity-cost floor and expose transfer losses, fees and unknowns.\n\nUseful for flights, hotels and competing redemption options. Provide current quotes and availability; the guide does not fetch live inventory or assume a booking is possible. Receive a transparent comparison and confirmation checklist."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "比较现金与积分兑换",
+          "en": "Compare cash and points"
+        },
+        {
+          "zh-Hans": "核算转点后的实际价值",
+          "en": "Account for transfer ratios"
+        },
+        {
+          "zh-Hans": "统一税费与往返比较口径",
+          "en": "Normalize fees and trip basis"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "现金往返票 1200 美元，方案 A 要 60000 点加 180 美元，方案 B 要 45000 点加 350 美元。按每点至少 1.7 美分比较，并列出还要确认什么。",
+            "en": "A round-trip cash fare is $1,200. Option A costs 60,000 points plus $180; B costs 45,000 points plus $350. Compare them with a 1.7-cent points floor and list outstanding checks."
+          },
+          "output": {
+            "zh-Hans": "每点价值与机会成本比较、统一口径说明及库存和费用核实清单。",
+            "en": "Cents-per-point and opportunity-cost comparisons, basis notes and availability/fee checks."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/travel-points-calculator.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        }
+      },
+      "gallery": []
+    },
+    "reconciliation": {
+      "overview": {
+        "zh-Hans": "把银行流水、总账和未达账项整理成一份可复核的对账底稿。它区分时间差异、需要调整的项目和待查问题，逐项说明金额方向、账龄与对应凭据，并把两侧余额调节到同一口径。\n\n适合月末银行对账、总账与子账核对及关联方往来匹配。提供期间、币种、余额和明细后，可得到调节表、未达账项清单和调整分录草稿；缺少的凭据与需要人工确认的项目会单独列出。",
+        "en": "Turn bank statements, ledger balances and outstanding items into a reconciliation workpaper. Separate timing differences, proposed adjustments and unresolved issues, with amounts, aging and supporting records for each item.\n\nUse it for month-end bank reconciliation, control-account tie-outs and intercompany matching. Supply the period, currency, balances and transactions to receive a reconciliation table, open-item list and draft adjustments, with missing evidence clearly identified."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "月末银行对账",
+          "en": "Reconcile a bank account"
+        },
+        {
+          "zh-Hans": "核对总账与子账",
+          "en": "Tie a control account to its subledger"
+        },
+        {
+          "zh-Hans": "追踪长期未达账项",
+          "en": "Review aged outstanding items"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "按附件核对九月底银行与总账余额，区分未兑现支票和待补记费用，并列出超过 60 天的未达账项。",
+            "en": "Reconcile the September bank and ledger balances in the attachments. Separate outstanding checks from unrecorded fees and identify items older than 60 days."
+          },
+          "output": {
+            "zh-Hans": "银行余额调节表、逐项差异与凭据、账龄清单及待确认调整。",
+            "en": "A bank reconciliation, itemized differences and evidence, an aging list and adjustments for review."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/reconciliation.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "两份并列的对账工作底稿与黄铜连接件。",
+          "en": "Two reconciliation worksheets connected by a brass bridge."
+        }
+      },
+      "gallery": []
+    },
+    "close-management": {
+      "overview": {
+        "zh-Hans": "把月末结账拆成有负责人、截止时间和前置条件的工作清单。它梳理对账、计提、调整、复核与报表之间的先后关系，标出阻塞事项，并说明延误会影响哪些后续工作。\n\n适合准备结账日历、组织跨团队交接和梳理结账进度。你提供现有流程、人员分工和日期后，可得到结账计划、责任分配、依赖关系和例外事项清单；完成状态以你提供的记录为准。",
+        "en": "Organize month-end close into tasks with owners, due dates and prerequisites. Map the sequence of reconciliations, accruals, adjustments, review and reporting, then identify blockers and their downstream effects.\n\nUse it to prepare a close calendar, coordinate team handoffs or review progress. Supply your process, responsibilities and dates to receive a schedule, ownership table, dependency map and exception list. Completion status reflects the records you provide."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "编制月末结账日历",
+          "en": "Build a month-end close calendar"
+        },
+        {
+          "zh-Hans": "明确负责人和交接顺序",
+          "en": "Assign owners and handoffs"
+        },
+        {
+          "zh-Hans": "识别阻塞与延误影响",
+          "en": "Identify blockers and delay effects"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "根据这份清单安排五天结账计划。银行对账完成后才能复核现金科目，请把缺少负责人的任务和关键延误单列。",
+            "en": "Build a five-day close plan from this checklist. Cash review must follow bank reconciliation; list missing owners and critical delays separately."
+          },
+          "output": {
+            "zh-Hans": "带日期、负责人和前置任务的结账日历，以及阻塞与待办清单。",
+            "en": "A dated close calendar with owners and prerequisites, plus blockers and open actions."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/close-management.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "纸质日历、顺序排列的里程碑与钟面。",
+          "en": "A paper calendar, sequential milestones and a clock face."
+        }
+      },
+      "gallery": []
+    },
+    "financial-statements": {
+      "overview": {
+        "zh-Hans": "根据你提供的账务数据起草利润表、资产负债表和现金流量表，并核对三张报表之间的关系。它会检查资产与负债权益是否平衡、期末现金是否衔接，以及重要项目变动的解释是否有数据支持。\n\n适合内部月报、管理层汇报和报表初稿复核。先明确期间、币种、会计口径及比较数据，再整理报表、勾稽检查和差异说明；数据缺口与不平衡会保留为问题，供财务负责人复核。",
+        "en": "Draft income, balance-sheet and cash-flow statements from the accounting data you supply. Check that assets equal liabilities plus equity, cash balances reconcile and explanations of material movements have supporting figures.\n\nUse it for internal monthly reporting, management updates or first-draft review. Specify the period, currency, accounting basis and comparatives to receive statements, reconciliation checks and variance notes. Missing data and imbalances remain visible for the finance owner to review."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "起草三张主要财务报表",
+          "en": "Draft the three core financial statements"
+        },
+        {
+          "zh-Hans": "核对报表之间的关系",
+          "en": "Check statement relationships"
+        },
+        {
+          "zh-Hans": "整理重大变动说明",
+          "en": "Explain material movements"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "用附件试算平衡表起草本月三张报表，与上月比较，并单列现金衔接和资产负债不平衡的问题。",
+            "en": "Draft this month's three statements from the attached trial balance, compare them with last month and list cash-reconciliation or balance-sheet issues separately."
+          },
+          "output": {
+            "zh-Hans": "财务报表初稿、比较分析、勾稽检查和待补资料清单。",
+            "en": "Draft statements, comparative analysis, reconciliation checks and a missing-data list."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/financial-statements.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "三张带抽象图表的报表与黄铜天平。",
+          "en": "Three abstract financial reports beside a brass balance."
+        }
+      },
+      "gallery": []
+    },
+    "triage-nda": {
+      "overview": {
+        "zh-Hans": "按你的审查标准初步梳理保密协议，找出保密范围、使用目的、例外情形、期限、责任和适用法律等关键条款。它把常规条款、偏离标准的条款和需要法务判断的问题分开，帮助你更快准备复核意见。\n\n适合供应商洽谈、合作评估和法务初筛。提供协议、双方角色、业务背景及内部要求后，可得到条款摘要、问题清单和建议修改方向。结论用于辅助审查，签署及法律判断仍由相应负责人确认。",
+        "en": "Triage a confidentiality agreement against your review criteria. Identify its scope, permitted use, exclusions, duration, liability and governing law, separating routine terms from deviations and questions for legal review.\n\nUse it for vendor discussions, partnership evaluation or first-pass legal intake. Supply the agreement, party roles, business context and internal requirements to receive a clause summary, issues list and suggested revision directions. Signing and legal decisions remain with the responsible reviewer."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "梳理单向或双向保密协议",
+          "en": "Triage unilateral or mutual NDAs"
+        },
+        {
+          "zh-Hans": "对照内部条款标准",
+          "en": "Compare terms with your playbook"
+        },
+        {
+          "zh-Hans": "准备法务复核问题",
+          "en": "Prepare questions for legal review"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "按附件中的审查标准初筛这份双向 NDA，重点看保密期限、残留记忆条款和适用法律；不明确的地方列成问题。",
+            "en": "Triage this mutual NDA against the attached playbook, focusing on confidentiality duration, residuals and governing law. List unclear points as questions."
+          },
+          "output": {
+            "zh-Hans": "关键条款摘要、偏离标准的事项、需要法务确认的问题和修改建议。",
+            "en": "Key terms, playbook deviations, legal-review questions and suggested revisions."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/triage-nda.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "保密协议文件夹、纸张与透明保护板。",
+          "en": "An agreement folder, paper and a transparent protective panel."
+        }
+      },
+      "gallery": []
+    },
+    "interview-prep": {
+      "overview": {
+        "zh-Hans": "从职位要求和评价标准出发，准备结构化的面试提纲。它把岗位能力拆成可观察的问题与追问，为不同面试官分配重点，并设计便于记录事实的评分表。\n\n适合招聘经理准备首轮面试、组织跨部门面试和统一评价口径。提供职位说明、面试时长、候选人已提供的材料及流程后，可得到问题清单、时间安排和评价表；问题围绕岗位能力，资料不足时会明确列出需要补充的内容。",
+        "en": "Build a structured interview from the role requirements and evaluation criteria. Turn competencies into observable questions and follow-ups, assign focus areas to interviewers and prepare an evidence-based scorecard.\n\nUse it for first-round preparation, interview panels or consistent evaluation. Supply the job description, interview length, candidate-provided material and process to receive a question set, agenda and assessment sheet. Questions stay job-related, and information gaps remain explicit."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "设计岗位能力面试问题",
+          "en": "Design competency questions"
+        },
+        {
+          "zh-Hans": "安排面试小组分工",
+          "en": "Coordinate an interview panel"
+        },
+        {
+          "zh-Hans": "统一事实记录与评分口径",
+          "en": "Create a consistent interview scorecard"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "为这个项目经理岗位设计一场 45 分钟面试，覆盖交付、沟通和风险管理，每项给出追问及评价标准。",
+            "en": "Prepare a 45-minute interview for this project-manager role covering delivery, communication and risk management, with follow-ups and assessment criteria."
+          },
+          "output": {
+            "zh-Hans": "分时段面试提纲、能力问题与追问、事实记录表和评价标准。",
+            "en": "A timed agenda, competency questions and follow-ups, evidence notes and assessment criteria."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/interview-prep.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "两把相对的椅子与桌上的面试准备笔记。",
+          "en": "Two facing chairs and an interview-preparation notebook."
+        }
+      },
+      "gallery": []
+    },
+    "performance-review": {
+      "overview": {
+        "zh-Hans": "把目标、工作成果和具体事例整理成清晰的绩效评估初稿。它区分事实记录与判断，检查评价是否有依据，并将优势、需要改进的方面和后续发展行动连起来。\n\n适合员工自评、经理评语和绩效面谈准备。提供考核周期、岗位目标、评价标准及相关事例后，可得到分项评估、证据缺口和发展计划。评价范围以已提供的工作表现为准，帮助面谈更具体，也更便于后续跟进。",
+        "en": "Turn goals, outcomes and concrete examples into a clear performance-review draft. Separate observations from judgments, check the supporting evidence and connect strengths and improvement areas to practical development actions.\n\nUse it for self-assessments, manager reviews or review-conversation preparation. Supply the review period, role goals, criteria and examples to receive an assessment, evidence gaps and a development plan grounded in the work described."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "整理员工自评或经理评语",
+          "en": "Draft self-assessments or manager reviews"
+        },
+        {
+          "zh-Hans": "检查评价依据是否完整",
+          "en": "Check the evidence behind assessments"
+        },
+        {
+          "zh-Hans": "制定可跟进的发展计划",
+          "en": "Plan follow-up development actions"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "按附件中的季度目标和工作事例起草绩效面谈提纲。把事实与判断分开，证据不足的项目先列问题，并给出下一季度行动建议。",
+            "en": "Prepare a review-conversation outline from the attached quarterly goals and work examples. Separate facts from judgments, question unsupported assessments and suggest next-quarter actions."
+          },
+          "output": {
+            "zh-Hans": "目标回顾、带依据的优势与改进项、待确认问题和发展行动计划。",
+            "en": "A goal review, evidenced strengths and improvement areas, open questions and a development plan."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/performance-review.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "打开的发展日志与逐步上升的植物图案页签。",
+          "en": "An open development journal with ascending botanical tabs."
+        }
+      },
+      "gallery": []
+    },
+    "pricing-strategist": {
+      "overview": {
+        "zh-Hans": "把定价模型、客户愿付价格和套餐设计放在一起比较。你可以根据业务特征筛选收费方式，用调研数据分析可接受价格范围，再检查套餐的功能分配、价格锚点和升级路径。\n\n适合新产品定价讨论、套餐调整和调研结果复核。提供业务背景、成本口径、客户调研或现有套餐后，可得到模型对比、计算结果和套餐建议。计算脚本处理你提供的数据；样本范围、缺失信息与假设会随结果列明，便于团队判断。",
+        "en": "Compare pricing models, customer willingness to pay and package design together. Match charging models to your business, analyze acceptable price ranges from survey data and review feature allocation, price anchors and upgrade paths.\n\nUse it for launch pricing, package revisions or survey review. Supply the business context, cost assumptions, survey responses or existing tiers to receive model comparisons, calculations and package recommendations. The included calculators use your data and keep sample limits, gaps and assumptions visible."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "比较订阅、按量等收费方式",
+          "en": "Compare subscription and usage pricing"
+        },
+        {
+          "zh-Hans": "分析价格调研数据",
+          "en": "Analyze pricing-survey responses"
+        },
+        {
+          "zh-Hans": "检查套餐功能和升级路径",
+          "en": "Review tiers and upgrade paths"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "根据这份客户价格调研分析可接受价格区间，再检查目前三个套餐的功能分配，说明样本限制和需要补充的数据。",
+            "en": "Analyze an acceptable price range from this customer survey, then review feature allocation across our three tiers. Explain sample limits and missing data."
+          },
+          "output": {
+            "zh-Hans": "价格区间与计算说明、套餐问题清单、建议方案和假设说明。",
+            "en": "Price-range calculations, package issues, suggested options and explicit assumptions."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/pricing-strategist.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "三组定价层级、比较卡片与黄铜曲线。",
+          "en": "Three pricing tiers, comparison cards and a brass curve."
+        }
+      },
+      "gallery": []
+    },
+    "ticket-triage": {
+      "overview": {
+        "zh-Hans": "把零散的客户反馈整理成便于处理的工单摘要。它先区分已知事实、客户描述和待核实问题，再依据你提供的影响范围、紧急程度与服务标准建议优先级、分流方向和下一步。\n\n适合支持团队初筛、集中处理一批反馈，或为复杂问题准备升级材料。提供工单、组织规则、时间与已知问题记录后，可得到分类表、响应期限、关联问题建议和回复草稿，方便负责人确认后处理。",
+        "en": "Turn customer reports into clear triage summaries. Separate established facts, customer descriptions and open questions, then use your impact, urgency and service criteria to suggest priority, routing and next steps.\n\nUse it for support intake, batch review or escalation preparation. Supply tickets, organization rules, timestamps and known issues to receive a classification table, response deadlines, related-ticket suggestions and reply drafts for the owner to review."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "批量整理客户反馈",
+          "en": "Triage a batch of customer reports"
+        },
+        {
+          "zh-Hans": "核对优先级与响应期限",
+          "en": "Check priorities and response deadlines"
+        },
+        {
+          "zh-Hans": "准备分流与升级材料",
+          "en": "Prepare routing and escalation notes"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "按附件中的服务标准整理这七条工单，区分客户描述和已确认事实，标出需要立即处理、已过响应期限及可能重复的问题。",
+            "en": "Triage these seven tickets against the attached service policy. Separate reported and confirmed facts and flag urgent, overdue and potentially duplicate issues."
+          },
+          "output": {
+            "zh-Hans": "工单分类表、优先级依据、响应期限、待核实问题和分流建议。",
+            "en": "Ticket categories, priority rationale, response deadlines, open questions and routing suggestions."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/ticket-triage.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "带分类页签的工单收件盒与分流箭头。",
+          "en": "A ticket inbox with category tabs and routing arrows."
+        }
+      },
+      "gallery": []
+    },
+    "draft-response": {
+      "overview": {
+        "zh-Hans": "根据客户来信、已确认的进展和可作出的承诺，起草清楚、得体的回复。它会回应客户最关心的问题，说明当前已知情况，把仍在调查的内容和后续安排写明，避免让措辞超出事实。\n\n适合故障更新、投诉处理、退款请求的沟通准备和日常跟进。提供往来记录、组织政策、最新事实及承诺权限后，可得到适合当前渠道的回复草稿和发送前核对项，供你确认后使用。",
+        "en": "Draft a clear, considered reply from the customer's message, confirmed progress and commitments you can make. Address the main concern, explain what is known and distinguish ongoing investigation from agreed next steps.\n\nUse it for incident updates, complaints, credit-request communication or routine follow-up. Supply the conversation, policies, current facts and authorized commitments to receive a channel-appropriate draft and a short pre-send checklist for your review."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "起草故障进展更新",
+          "en": "Draft an incident update"
+        },
+        {
+          "zh-Hans": "准备投诉与补偿请求回复",
+          "en": "Respond to complaints and credit requests"
+        },
+        {
+          "zh-Hans": "调整沟通语气与后续安排",
+          "en": "Clarify tone and follow-up commitments"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "根据附件中的已确认进展起草客户回复：承认错过上次更新时间，说明临时办法的限制，并使用负责人批准的新更新时间。",
+            "en": "Draft a reply using the confirmed incident notes. Acknowledge the missed update, explain the workaround's limits and use the new update time approved by the owner."
+          },
+          "output": {
+            "zh-Hans": "客户回复草稿、事实与承诺核对表，以及发送前需要确认的事项。",
+            "en": "A reply draft, fact and commitment checklist, and points to confirm before sending."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/draft-response.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "信封、回复卡片与横放的黄铜钢笔。",
+          "en": "An envelope, response card and brass pen."
+        }
+      },
+      "gallery": []
+    },
+    "kb-article": {
+      "overview": {
+        "zh-Hans": "把已经解决的问题整理成容易查找和照做的知识库文章。它从现象、适用范围和处理记录中提炼步骤，补上前置条件、验证方法、常见失败情况和何时寻求帮助，让一次解决过程更容易复用。\n\n适合发布操作指南、故障排查文档和内部处理手册。提供经过确认的解决记录、读者对象和发布范围后，可得到文章草稿与待补材料清单；客户信息、内部记录和敏感配置会按公开范围处理。",
+        "en": "Turn a resolved issue into a knowledge article readers can find and follow. Extract the symptoms, scope and confirmed resolution, then explain prerequisites, verification, common failures and when to seek help.\n\nUse it for how-to guides, troubleshooting articles or internal runbooks. Supply confirmed resolution notes, the audience and publication scope to receive an article draft and missing-information list, with customer details and internal configuration handled for the intended readership."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "把已解决工单转成文章",
+          "en": "Turn resolved tickets into articles"
+        },
+        {
+          "zh-Hans": "编写可复用的操作指南",
+          "en": "Write reusable how-to guides"
+        },
+        {
+          "zh-Hans": "整理故障排查与验证步骤",
+          "en": "Document troubleshooting and verification"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "把这份已解决工单整理成面向客户的排查文章，写明适用条件、操作步骤和成功验证方法，并移除内部地址与客户标识。",
+            "en": "Turn this resolved ticket into a customer-facing troubleshooting article with scope, steps and success checks. Remove internal addresses and customer identifiers."
+          },
+          "output": {
+            "zh-Hans": "知识库文章草稿、适用范围、处理与验证步骤，以及待确认资料。",
+            "en": "A knowledge-article draft with scope, resolution and verification steps, plus open questions."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/kb-article.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "带章节页签的参考书、索引卡与放大镜。",
+          "en": "A tabbed reference book, index cards and a magnifying glass."
+        }
+      },
+      "gallery": []
+    },
+    "vendor-review": {
+      "overview": {
+        "zh-Hans": "把供应商方案、续约条件和实际服务记录放在同一套标准下比较。它整理多年总成本、关键要求、服务承诺、安全资料和退出条件，区分已有证据、供应商声明与需要进一步确认的内容。\n\n适合采购前比较、续约评估和供应商表现回顾。提供报价、合同、用量、预算及评价标准后，可得到成本对比、评分依据、风险清单和谈判问题。缺少证据的项目会保留待评，必须满足的条件与利益冲突也会单列。",
+        "en": "Compare vendor proposals, renewal terms and service records against consistent criteria. Review multi-year total cost, mandatory requirements, service commitments, security evidence and exit terms while separating documented evidence from vendor claims and open questions.\n\nUse it for purchase comparisons, renewals or supplier reviews. Supply quotes, contracts, usage, budgets and evaluation criteria to receive cost comparisons, scoring rationale, risks and negotiation questions. Missing evidence, must-have conditions and conflicts of interest remain explicit."
+      },
+      "useCases": [
+        {
+          "zh-Hans": "比较供应商多年总成本",
+          "en": "Compare multi-year vendor costs"
+        },
+        {
+          "zh-Hans": "评估续约条件和退出成本",
+          "en": "Review renewals and exit terms"
+        },
+        {
+          "zh-Hans": "整理证据、风险与谈判问题",
+          "en": "Prepare evidence, risks and negotiation points"
+        }
+      ],
+      "examples": [
+        {
+          "prompt": {
+            "zh-Hans": "比较这两家供应商三年的总成本，包含涨价、实施和退出费用；先检查必须满足的条件，再评分，把缺少的安全证据和利益冲突单列。",
+            "en": "Compare three-year vendor costs including escalation, implementation and exit. Check must-haves before scoring, and separately list missing security evidence and conflicts of interest."
+          },
+          "output": {
+            "zh-Hans": "分年成本表、必备条件检查、带证据覆盖率的评分表、风险与谈判问题。",
+            "en": "Year-by-year costs, must-have checks, a scorecard with evidence coverage, risks and negotiation questions."
+          }
+        }
+      ],
+      "cover": {
+        "path": "showcase/media/covers/vendor-review.jpg",
+        "kind": "illustration",
+        "credit": {
+          "zh-Hans": "Floe 原创，AI 辅助示意图。",
+          "en": "Floe original, AI-assisted illustration."
+        },
+        "alt": {
+          "zh-Hans": "三个供应商文件夹、比较天平与待填写的评审清单。",
+          "en": "Three vendor folders, a comparison balance and a review checklist."
+        }
+      },
+      "gallery": []
     }
   }
 }

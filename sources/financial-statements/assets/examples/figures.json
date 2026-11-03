@@ -1,0 +1,63 @@
+{
+  "fixture": "synthetic-three-statement-draft-2026-Q3",
+  "synthetic": true,
+  "entity": "Cedarline Analytics, Inc. (synthetic)",
+  "period": "2026-Q3",
+  "periodType": "quarterly",
+  "reportingBasis": "US GAAP-style management draft; not audited or reviewed",
+  "currency": "USD",
+  "units": "thousands",
+  "rounding": "one decimal for percentages; whole units for amounts",
+  "budgetSupplied": false,
+  "materiality": {
+    "absolute": 150,
+    "percentage": 10.0,
+    "test": "either",
+    "note": "Amounts in USD thousands; a line is flagged when |variance| >= 150 or |variance %| >= 10.0, using |prior| as the denominator."
+  },
+  "incomeStatement": {
+    "current": {
+      "revenue": {"product": 4820, "service": 1930, "other": 250},
+      "costOfRevenue": {"product": 2150, "service": 780, "other": 90},
+      "operatingExpenses": {"rnd": 1240, "sm": 1410, "ga": 690},
+      "otherIncome": {"interestIncome": 35, "interestExpense": -120, "otherNet": -15},
+      "incomeTax": 135
+    },
+    "prior": {
+      "revenue": {"product": 4100, "service": 1520, "other": 180},
+      "costOfRevenue": {"product": 1950, "service": 620, "other": 70},
+      "operatingExpenses": {"rnd": 1050, "sm": 1180, "ga": 640},
+      "otherIncome": {"interestIncome": 18, "interestExpense": -95, "otherNet": 5},
+      "incomeTax": 55
+    }
+  },
+  "balanceSheet": {
+    "asOf": "2026-09-30",
+    "currentAssets": {"cash": 2150, "shortTermInvestments": 800, "accountsReceivableNet": 1450, "inventory": 620, "prepaidAndOther": 180},
+    "nonCurrentAssets": {"ppeNet": 3300, "operatingLeaseRou": 900, "goodwill": 2400, "intangiblesNet": 350, "otherNonCurrent": 150},
+    "currentLiabilities": {"accountsPayable": 720, "accruedLiabilities": 640, "deferredRevenueCurrent": 520, "currentPortionDebt": 300, "leaseLiabilityCurrent": 210, "otherCurrent": 110},
+    "nonCurrentLiabilities": {"longTermDebt": 2800, "deferredRevenueNonCurrent": 380, "leaseLiabilityNonCurrent": 690, "otherNonCurrent": 130},
+    "equity": {"commonStock": 10, "additionalPaidInCapital": 4200, "retainedEarnings": 1615, "aoci": -25, "treasuryStock": 0},
+    "retainedEarningsRollForward": {"opening": 1290, "netIncome": 405, "dividends": 80, "closing": 1615}
+  },
+  "cashFlow": {
+    "period": "2026-Q3",
+    "netIncome": 405,
+    "nonCash": {"depreciationAmortization": 210, "stockBasedCompensation": 95, "deferredTaxes": 10},
+    "workingCapitalChanges": {"accountsReceivable": -60, "inventory": 30, "prepaidAndOther": -10, "accountsPayable": 30, "accruedLiabilities": -40, "deferredRevenue": 20, "otherLiabilities": 5},
+    "investing": {"capitalExpenditures": -180, "purchasesOfInvestments": -100, "proceedsFromInvestments": 50},
+    "financing": {"debtRepayment": -150},
+    "fxEffect": 5,
+    "cashBeginning": 1830,
+    "cashEnding": 2150
+  },
+  "priorWorkingCapital": {
+    "accountsReceivable": 1390,
+    "inventory": 650,
+    "prepaidAndOther": 170,
+    "accountsPayable": 690,
+    "accruedLiabilities": 680,
+    "deferredRevenue": 880,
+    "otherLiabilities": 105
+  }
+}

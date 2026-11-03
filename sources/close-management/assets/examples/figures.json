@@ -1,0 +1,285 @@
+{
+  "fixture": "synthetic-close-status-2026-10",
+  "synthetic": true,
+  "entity": "Northwind Components Ltd (synthetic)",
+  "period": "2026-10",
+  "periodEnd": "2026-10-31",
+  "reportingBasis": "Management accounts under the entity's local GAAP; no specific standard asserted",
+  "currency": "USD",
+  "closeTarget": "T+5 business days",
+  "snapshot": "2026-11-03T09:00 local (start of T+2)",
+  "calendar": "Monday-Friday; no public holidays in the window",
+  "tasks": [
+    {
+      "id": "T01",
+      "name": "Cash receipts and disbursements posted",
+      "owner": "Staff accountant - cash",
+      "day": 1,
+      "deps": [],
+      "status": "Complete"
+    },
+    {
+      "id": "T02",
+      "name": "Final bank statement obtained",
+      "owner": "Treasury analyst",
+      "day": 1,
+      "deps": [],
+      "status": "Complete"
+    },
+    {
+      "id": "T03",
+      "name": "Payroll posted",
+      "owner": "Payroll specialist",
+      "day": 1,
+      "deps": [],
+      "status": "Complete"
+    },
+    {
+      "id": "T04",
+      "name": "Depreciation run",
+      "owner": "Fixed-asset accountant",
+      "day": 1,
+      "deps": [],
+      "status": "Complete"
+    },
+    {
+      "id": "T05",
+      "name": "Prepaid amortization posted",
+      "owner": "Staff accountant - expenses",
+      "day": 1,
+      "deps": [],
+      "status": "Complete"
+    },
+    {
+      "id": "T06",
+      "name": "AP accrual prepared",
+      "owner": "AP supervisor",
+      "day": 1,
+      "deps": [],
+      "status": "Blocked",
+      "blocker": "Two department spend confirmations outstanding",
+      "slipDays": 1,
+      "snapshotDelayDays": 1
+    },
+    {
+      "id": "T07",
+      "name": "Intercompany transactions posted",
+      "owner": "Intercompany accountant",
+      "day": 1,
+      "deps": [],
+      "status": "Complete"
+    },
+    {
+      "id": "T08",
+      "name": "Bank reconciliation",
+      "owner": "Staff accountant - cash",
+      "day": 2,
+      "deps": [
+        "T01",
+        "T02"
+      ],
+      "status": "In Progress"
+    },
+    {
+      "id": "T09",
+      "name": "Revenue recognition entries",
+      "owner": "Revenue accountant",
+      "day": 2,
+      "deps": [
+        "T01",
+        "T03"
+      ],
+      "status": "Complete"
+    },
+    {
+      "id": "T10",
+      "name": "AR subledger reconciliation",
+      "owner": "AR supervisor",
+      "day": 2,
+      "deps": [
+        "T09"
+      ],
+      "status": "Blocked",
+      "blocker": "Billing system period close delayed",
+      "slipDays": 1,
+      "snapshotDelayDays": 1
+    },
+    {
+      "id": "T11",
+      "name": "AP subledger reconciliation",
+      "owner": "AP accountant",
+      "day": 2,
+      "deps": [
+        "T06"
+      ],
+      "status": "Not Started"
+    },
+    {
+      "id": "T12",
+      "name": "FX revaluation",
+      "owner": "Treasury analyst",
+      "day": 2,
+      "deps": [
+        "T01",
+        "T06"
+      ],
+      "status": "At Risk",
+      "blocker": "Month-end FX rates not yet received",
+      "slipDays": 1,
+      "snapshotDelayDays": 0
+    },
+    {
+      "id": "T13",
+      "name": "Remaining accrual journal entries",
+      "owner": "GL accountant",
+      "day": 2,
+      "deps": [
+        "T06",
+        "T12"
+      ],
+      "status": "Not Started"
+    },
+    {
+      "id": "T14",
+      "name": "Fixed-asset register reconciliation",
+      "owner": "Fixed-asset accountant",
+      "day": 2,
+      "deps": [
+        "T04"
+      ],
+      "status": "Complete"
+    },
+    {
+      "id": "T15",
+      "name": "Balance sheet reconciliations",
+      "owner": "Accounting team",
+      "day": 3,
+      "deps": [
+        "T08",
+        "T10",
+        "T11",
+        "T13",
+        "T14"
+      ],
+      "status": "Not Started",
+      "gate": true
+    },
+    {
+      "id": "T16",
+      "name": "Intercompany reconciliation",
+      "owner": "Intercompany accountant",
+      "day": 3,
+      "deps": [
+        "T07"
+      ],
+      "status": "Not Started"
+    },
+    {
+      "id": "T17",
+      "name": "Adjusting journal entries from reconciliations",
+      "owner": "GL accountant",
+      "day": 3,
+      "deps": [
+        "T15",
+        "T16"
+      ],
+      "status": "Not Started"
+    },
+    {
+      "id": "T18",
+      "name": "Preliminary trial balance",
+      "owner": "Controller",
+      "day": 3,
+      "deps": [
+        "T17"
+      ],
+      "status": "Not Started",
+      "gate": true
+    },
+    {
+      "id": "T19",
+      "name": "Tax provision",
+      "owner": "Tax accountant",
+      "day": 4,
+      "deps": [
+        "T18"
+      ],
+      "status": "Not Started"
+    },
+    {
+      "id": "T20",
+      "name": "Equity roll-forward",
+      "owner": "GL accountant",
+      "day": 4,
+      "deps": [
+        "T18"
+      ],
+      "status": "Not Started"
+    },
+    {
+      "id": "T21",
+      "name": "Consolidation and eliminations",
+      "owner": "Consolidation accountant",
+      "day": 4,
+      "deps": [
+        "T16",
+        "T18"
+      ],
+      "status": "Not Started"
+    },
+    {
+      "id": "T22",
+      "name": "Draft financial statements",
+      "owner": "Controller",
+      "day": 5,
+      "deps": [
+        "T18",
+        "T19",
+        "T20",
+        "T21"
+      ],
+      "status": "Not Started"
+    },
+    {
+      "id": "T23",
+      "name": "Flux analysis and variance explanations",
+      "owner": "FP&A analyst",
+      "day": 5,
+      "deps": [
+        "T22"
+      ],
+      "status": "Not Started"
+    },
+    {
+      "id": "T24",
+      "name": "Management review",
+      "owner": "Finance director",
+      "day": 5,
+      "deps": [
+        "T23"
+      ],
+      "status": "Not Started",
+      "gate": true
+    }
+  ],
+  "externalConstraints": [
+    {
+      "id": "X1",
+      "name": "Bank statement",
+      "availableDay": 1,
+      "note": "Received"
+    },
+    {
+      "id": "X2",
+      "name": "FX rates",
+      "availableDay": 2,
+      "note": "Expected end of T+2; at risk"
+    },
+    {
+      "id": "X3",
+      "name": "Billing system close",
+      "availableDay": 3,
+      "note": "Expected start of T+3"
+    }
+  ]
+}

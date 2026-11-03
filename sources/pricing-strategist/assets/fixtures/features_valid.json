@@ -1,0 +1,104 @@
+{
+  "segments": [
+    "SMB",
+    "Mid-market",
+    "Enterprise"
+  ],
+  "current_pricing": {
+    "good": 49,
+    "better": 149,
+    "best": 0
+  },
+  "features": [
+    {
+      "name": "Core dashboard",
+      "importance": 0.95,
+      "cost_to_serve": 0.5,
+      "segment_fit": {
+        "SMB": 1.0,
+        "Mid-market": 1.0,
+        "Enterprise": 1.0
+      }
+    },
+    {
+      "name": "Basic reporting",
+      "importance": 0.85,
+      "cost_to_serve": 0.8,
+      "segment_fit": {
+        "SMB": 0.9,
+        "Mid-market": 0.9,
+        "Enterprise": 0.8
+      }
+    },
+    {
+      "name": "API access",
+      "importance": 0.6,
+      "cost_to_serve": 1.5,
+      "segment_fit": {
+        "SMB": 0.3,
+        "Mid-market": 0.7,
+        "Enterprise": 0.9
+      }
+    },
+    {
+      "name": "Advanced analytics",
+      "importance": 0.65,
+      "cost_to_serve": 2.0,
+      "segment_fit": {
+        "SMB": 0.2,
+        "Mid-market": 0.8,
+        "Enterprise": 0.9
+      }
+    },
+    {
+      "name": "Custom workflows",
+      "importance": 0.55,
+      "cost_to_serve": 2.5,
+      "segment_fit": {
+        "SMB": 0.1,
+        "Mid-market": 0.5,
+        "Enterprise": 0.9
+      }
+    },
+    {
+      "name": "SSO / SAML",
+      "importance": 0.4,
+      "cost_to_serve": 1.0,
+      "segment_fit": {
+        "SMB": 0.05,
+        "Mid-market": 0.4,
+        "Enterprise": 1.0
+      }
+    },
+    {
+      "name": "SLA + dedicated CSM",
+      "importance": 0.3,
+      "cost_to_serve": 5.0,
+      "segment_fit": {
+        "SMB": 0.0,
+        "Mid-market": 0.2,
+        "Enterprise": 1.0
+      }
+    },
+    {
+      "name": "On-prem deployment",
+      "importance": 0.2,
+      "cost_to_serve": 4.0,
+      "segment_fit": {
+        "SMB": 0.0,
+        "Mid-market": 0.1,
+        "Enterprise": 0.9
+      }
+    },
+    {
+      "name": "Audit logs",
+      "importance": 0.5,
+      "cost_to_serve": 0.8,
+      "segment_fit": {
+        "SMB": 0.1,
+        "Mid-market": 0.5,
+        "Enterprise": 0.95
+      }
+    }
+  ]
+}

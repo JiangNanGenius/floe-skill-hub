@@ -1,0 +1,244 @@
+{
+  "respondents": [
+    {
+      "too_cheap": 20.0,
+      "bargain": 30.0,
+      "getting_expensive": 40.0,
+      "too_expensive": 56.0
+    },
+    {
+      "too_cheap": 25.0,
+      "bargain": 37.0,
+      "getting_expensive": 48.5,
+      "too_expensive": 67.9
+    },
+    {
+      "too_cheap": 30.0,
+      "bargain": 42.0,
+      "getting_expensive": 57.0,
+      "too_expensive": 79.8
+    },
+    {
+      "too_cheap": 32.0,
+      "bargain": 49.0,
+      "getting_expensive": 65.5,
+      "too_expensive": 91.7
+    },
+    {
+      "too_cheap": 37.0,
+      "bargain": 54.0,
+      "getting_expensive": 72.0,
+      "too_expensive": 103.6
+    },
+    {
+      "too_cheap": 42.0,
+      "bargain": 61.0,
+      "getting_expensive": 80.5,
+      "too_expensive": 112.0
+    },
+    {
+      "too_cheap": 44.0,
+      "bargain": 66.0,
+      "getting_expensive": 89.0,
+      "too_expensive": 123.9
+    },
+    {
+      "too_cheap": 49.0,
+      "bargain": 73.0,
+      "getting_expensive": 97.5,
+      "too_expensive": 135.8
+    },
+    {
+      "too_cheap": 54.0,
+      "bargain": 78.0,
+      "getting_expensive": 104.0,
+      "too_expensive": 147.7
+    },
+    {
+      "too_cheap": 56.0,
+      "bargain": 85.0,
+      "getting_expensive": 112.5,
+      "too_expensive": 159.6
+    },
+    {
+      "too_cheap": 22.5,
+      "bargain": 32.25,
+      "getting_expensive": 44.0,
+      "too_expensive": 60.2
+    },
+    {
+      "too_cheap": 27.5,
+      "bargain": 39.25,
+      "getting_expensive": 52.5,
+      "too_expensive": 72.1
+    },
+    {
+      "too_cheap": 29.5,
+      "bargain": 44.25,
+      "getting_expensive": 59.0,
+      "too_expensive": 84.0
+    },
+    {
+      "too_cheap": 34.5,
+      "bargain": 51.25,
+      "getting_expensive": 67.5,
+      "too_expensive": 95.9
+    },
+    {
+      "too_cheap": 39.5,
+      "bargain": 56.25,
+      "getting_expensive": 76.0,
+      "too_expensive": 107.8
+    },
+    {
+      "too_cheap": 41.5,
+      "bargain": 63.25,
+      "getting_expensive": 84.5,
+      "too_expensive": 116.2
+    },
+    {
+      "too_cheap": 46.5,
+      "bargain": 68.25,
+      "getting_expensive": 91.0,
+      "too_expensive": 128.1
+    },
+    {
+      "too_cheap": 51.5,
+      "bargain": 75.25,
+      "getting_expensive": 99.5,
+      "too_expensive": 140.0
+    },
+    {
+      "too_cheap": 53.5,
+      "bargain": 80.25,
+      "getting_expensive": 108.0,
+      "too_expensive": 151.9
+    },
+    {
+      "too_cheap": 58.5,
+      "bargain": 87.25,
+      "getting_expensive": 116.5,
+      "too_expensive": 163.8
+    },
+    {
+      "too_cheap": 25.0,
+      "bargain": 34.5,
+      "getting_expensive": 46.0,
+      "too_expensive": 64.4
+    },
+    {
+      "too_cheap": 27.0,
+      "bargain": 41.5,
+      "getting_expensive": 54.5,
+      "too_expensive": 76.3
+    },
+    {
+      "too_cheap": 32.0,
+      "bargain": 46.5,
+      "getting_expensive": 63.0,
+      "too_expensive": 88.2
+    },
+    {
+      "too_cheap": 37.0,
+      "bargain": 53.5,
+      "getting_expensive": 71.5,
+      "too_expensive": 100.1
+    },
+    {
+      "too_cheap": 39.0,
+      "bargain": 58.5,
+      "getting_expensive": 78.0,
+      "too_expensive": 112.0
+    },
+    {
+      "too_cheap": 44.0,
+      "bargain": 65.5,
+      "getting_expensive": 86.5,
+      "too_expensive": 120.4
+    },
+    {
+      "too_cheap": 49.0,
+      "bargain": 70.5,
+      "getting_expensive": 95.0,
+      "too_expensive": 132.3
+    },
+    {
+      "too_cheap": 51.0,
+      "bargain": 77.5,
+      "getting_expensive": 103.5,
+      "too_expensive": 144.2
+    },
+    {
+      "too_cheap": 56.0,
+      "bargain": 82.5,
+      "getting_expensive": 110.0,
+      "too_expensive": 156.1
+    },
+    {
+      "too_cheap": 61.0,
+      "bargain": 89.5,
+      "getting_expensive": 118.5,
+      "too_expensive": 168.0
+    },
+    {
+      "too_cheap": 24.5,
+      "bargain": 36.75,
+      "getting_expensive": 50.0,
+      "too_expensive": 68.6
+    },
+    {
+      "too_cheap": 29.5,
+      "bargain": 43.75,
+      "getting_expensive": 58.5,
+      "too_expensive": 80.5
+    },
+    {
+      "too_cheap": 34.5,
+      "bargain": 48.75,
+      "getting_expensive": 65.0,
+      "too_expensive": 92.4
+    },
+    {
+      "too_cheap": 36.5,
+      "bargain": 55.75,
+      "getting_expensive": 73.5,
+      "too_expensive": 104.3
+    },
+    {
+      "too_cheap": 41.5,
+      "bargain": 60.75,
+      "getting_expensive": 82.0,
+      "too_expensive": 116.2
+    },
+    {
+      "too_cheap": 46.5,
+      "bargain": 67.75,
+      "getting_expensive": 90.5,
+      "too_expensive": 124.6
+    },
+    {
+      "too_cheap": 48.5,
+      "bargain": 72.75,
+      "getting_expensive": 97.0,
+      "too_expensive": 136.5
+    },
+    {
+      "too_cheap": 53.5,
+      "bargain": 79.75,
+      "getting_expensive": 105.5,
+      "too_expensive": 148.4
+    },
+    {
+      "too_cheap": 58.5,
+      "bargain": 84.75,
+      "getting_expensive": 114.0,
+      "too_expensive": 160.3
+    },
+    {
+      "too_cheap": 60.5,
+      "bargain": 91.75,
+      "getting_expensive": 122.5,
+      "too_expensive": 172.2
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+ "package": "study-plan-scheduler",
+ "repository": "https://github.com/genspark-ai/genoffice",
+ "commit": "36a509e8fc16ace85ed7afa3c37acb7b9c441ad1",
+ "retrievedAt": "2026-10-31",
+ "files": [
+  {
+   "upstreamPath": "skills/recommended/study-plan/SKILL.md",
+   "localPath": "source/SKILL.md",
+   "status": "adapted",
+   "upstreamSha256": "7b59b5d1ded17731b2cca921d6d4bb4b1cce09e0542aba84c077a02e6fc6a8af",
+   "upstreamSize": 3860,
+   "localSha256": "03efb842ae03dc17df09b2c1c99e12c2baed745a247fdae7d6095e4521625811",
+   "localSize": 5628
+  },
+  {
+   "upstreamPath": "LICENSE",
+   "localPath": "source/references/licenses/UPSTREAM-LICENSE.txt",
+   "status": "verbatim",
+   "upstreamSha256": "68e32334df324ef4fc79fad3a26487e5abac36055a484bb6c8d7ecf9d8350885",
+   "upstreamSize": 11345,
+   "localSha256": "68e32334df324ef4fc79fad3a26487e5abac36055a484bb6c8d7ecf9d8350885",
+   "localSize": 11345
+  },
+  {
+   "upstreamPath": "NOTICE",
+   "localPath": "source/references/licenses/UPSTREAM-NOTICE.txt",
+   "status": "verbatim",
+   "upstreamSha256": "26fa7a458f2463af07f96af3d4b26b3cc3b4de688340838e3c9b3b958d390882",
+   "upstreamSize": 2489,
+   "localSha256": "26fa7a458f2463af07f96af3d4b26b3cc3b4de688340838e3c9b3b958d390882",
+   "localSize": 2489
+  }
+ ]
+}

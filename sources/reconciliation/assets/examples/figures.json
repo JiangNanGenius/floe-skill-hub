@@ -1,0 +1,46 @@
+{
+  "fixture": "synthetic-bank-reconciliation-2026-09",
+  "synthetic": true,
+  "currency": "USD",
+  "roundingUnit": "0.01",
+  "periodEnd": "2026-09-30",
+  "account": "Operating cash - USD account 1002 (synthetic)",
+  "reconciliationType": "bank",
+  "tolerance": "0.00",
+  "sources": {
+    "bank": "Synthetic statement 2026-09-30, ending balance 128450.20",
+    "gl": "Synthetic GL extract for account 1002 at 2026-09-30, balance 122000.75"
+  },
+  "balances": {
+    "bankStatement": 128450.20,
+    "generalLedger": 122000.75
+  },
+  "bankSideItems": {
+    "depositsInTransit": [
+      {"ref": "D-0918", "glDate": "2026-09-30", "amount": 3200.00},
+      {"ref": "D-0929", "glDate": "2026-09-30", "amount": 1300.00}
+    ],
+    "outstandingChecks": [
+      {"ref": "1042", "issueDate": "2026-07-15", "amount": 7420.00, "payee": "Synthetic vendor A"},
+      {"ref": "1051", "issueDate": "2026-09-24", "amount": 1580.00, "payee": "Synthetic vendor B"},
+      {"ref": "1055", "issueDate": "2026-09-29", "amount": 860.00, "payee": "Synthetic vendor C"}
+    ],
+    "bankErrors": []
+  },
+  "glSideItems": {
+    "unrecordedCredits": [
+      {"ref": "INT-09", "date": "2026-09-30", "amount": 120.45, "description": "Interest credited by bank, not recorded in GL"},
+      {"ref": "ACH-4471", "date": "2026-09-30", "amount": 1054.00, "description": "Customer receipt credited by bank, missing from GL"}
+    ],
+    "unrecordedDebits": [
+      {"ref": "BF-09", "date": "2026-09-30", "amount": 85.00, "description": "Bank service fees, not recorded in GL"}
+    ],
+    "glErrors": []
+  },
+  "thresholds": {
+    "individualItem": 10000.00,
+    "totalReconcilingItems": 100000.00,
+    "ageOverdueDays": 60,
+    "ageStaleDays": 90
+  }
+}

@@ -3096,7 +3096,7 @@
       "firstParty": null,
       "id": "construction-estimate-builder",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "Construction Estimate Builder",
         "zh-Hans": "施工估算编制"
@@ -3129,10 +3129,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -3169,7 +3169,7 @@
       "firstParty": null,
       "id": "construction-change-order-processor",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "Construction Change Order Processor",
         "zh-Hans": "施工变更单处理"
@@ -3202,10 +3202,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -3241,7 +3241,7 @@
       "firstParty": null,
       "id": "construction-bid-compass",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "Construction Bid Compass",
         "zh-Hans": "施工招标罗盘"
@@ -3274,10 +3274,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -3361,15 +3361,15 @@
         "tools": []
       },
       "versionTarget": "1.0.0",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "status": {
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "notes": {
@@ -3433,15 +3433,15 @@
         "tools": []
       },
       "versionTarget": "1.0.0",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "status": {
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "notes": {
@@ -3506,15 +3506,15 @@
         "tools": []
       },
       "versionTarget": "1.0.0",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "status": {
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "notes": {
@@ -3579,15 +3579,15 @@
         "tools": []
       },
       "versionTarget": "1.0.0",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "status": {
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "notes": {
@@ -3652,15 +3652,15 @@
         "tools": []
       },
       "versionTarget": "1.0.0",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "status": {
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "notes": {
@@ -3724,15 +3724,15 @@
         "tools": []
       },
       "versionTarget": "1.0.0",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "status": {
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "notes": {
@@ -3750,7 +3750,7 @@
       "firstParty": null,
       "id": "lesson-plan-builder",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "Lesson Plan Builder",
         "zh-Hans": "课时教案设计"
@@ -3783,10 +3783,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -3822,7 +3822,7 @@
       "firstParty": null,
       "id": "study-plan-scheduler",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "Study Plan Scheduler",
         "zh-Hans": "学习计划表"
@@ -3855,10 +3855,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -3894,7 +3894,7 @@
       "firstParty": null,
       "id": "k12-check-for-understanding",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "K-12 Check for Understanding",
         "zh-Hans": "K-12 理解检查"
@@ -3927,10 +3927,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -3966,7 +3966,7 @@
       "firstParty": null,
       "id": "travel-points-calculator",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "Travel Cash vs Points",
         "zh-Hans": "旅行现金里程比价"
@@ -3999,10 +3999,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -4038,14 +4038,14 @@
       "firstParty": null,
       "id": "reconciliation",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "Reconciliation",
         "zh-Hans": "对账"
       },
       "notes": {
-        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim. Draft package; lifecycle flags remain false until Root review.",
-        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。当前为草稿包，生命周期标记在 Root 审核前保持为否。"
+        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。"
       },
       "planNumber": 57,
       "plannedRuntime": {
@@ -4071,10 +4071,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -4111,14 +4111,14 @@
       "firstParty": null,
       "id": "close-management",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "Close Management",
         "zh-Hans": "月末结账管理"
       },
       "notes": {
-        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim. Draft package; lifecycle flags remain false until Root review.",
-        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。当前为草稿包，生命周期标记在 Root 审核前保持为否。"
+        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。"
       },
       "planNumber": 58,
       "plannedRuntime": {
@@ -4144,10 +4144,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -4184,14 +4184,14 @@
       "firstParty": null,
       "id": "financial-statements",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "Financial Statements",
         "zh-Hans": "财务报表"
       },
       "notes": {
-        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim. Draft package; lifecycle flags remain false until Root review.",
-        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。当前为草稿包，生命周期标记在 Root 审核前保持为否。"
+        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。"
       },
       "planNumber": 59,
       "plannedRuntime": {
@@ -4217,10 +4217,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -4257,14 +4257,14 @@
       "firstParty": null,
       "id": "triage-nda",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "NDA Triage",
         "zh-Hans": "保密协议分诊"
       },
       "notes": {
-        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim. Draft package; lifecycle flags remain false until Root review.",
-        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。当前为草稿包，生命周期标记在 Root 审核前保持为否。"
+        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。"
       },
       "planNumber": 60,
       "plannedRuntime": {
@@ -4290,10 +4290,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -4330,14 +4330,14 @@
       "firstParty": null,
       "id": "interview-prep",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "Interview Prep",
         "zh-Hans": "面试准备"
       },
       "notes": {
-        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim. Draft package; lifecycle flags remain false until Root review.",
-        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。当前为草稿包，生命周期标记在 Root 审核前保持为否。"
+        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。"
       },
       "planNumber": 61,
       "plannedRuntime": {
@@ -4363,10 +4363,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -4403,14 +4403,14 @@
       "firstParty": null,
       "id": "performance-review",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "Performance Review",
         "zh-Hans": "绩效评估"
       },
       "notes": {
-        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim. Draft package; lifecycle flags remain false until Root review.",
-        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。当前为草稿包，生命周期标记在 Root 审核前保持为否。"
+        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。"
       },
       "planNumber": 62,
       "plannedRuntime": {
@@ -4436,10 +4436,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -4513,7 +4513,7 @@
         ],
         "execution": {
           "arch": "riscv64",
-          "evidence": "unproven",
+          "evidence": "guest-verified",
           "os": "linux"
         },
         "installPlatforms": [
@@ -4526,15 +4526,15 @@
         ]
       },
       "versionTarget": "1.0.0",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": false,
+        "executionVerified": true,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "notes": {
@@ -4552,14 +4552,14 @@
       "firstParty": null,
       "id": "ticket-triage",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "Ticket Triage",
         "zh-Hans": "工单分诊"
       },
       "notes": {
-        "en": "Guide using pasted or workspace material and user-supplied facts. No connector, external service, bundled script or execution claim. Draft package; lifecycle flags remain false until Root review. The draft response does not create, route, merge, close, escalate or reply to a ticket; reported timing and scope remain attributed.",
-        "zh-Hans": "使用粘贴或工作区材料以及你提供的事实。不连接外部服务、不附带脚本，也不声明执行。当前为草稿包，生命周期标记在 Root 审核前保持为否。起草的回复不创建、路由、合并、关闭、升级或回复工单；客户报告的时间与范围仍按报告标注。"
+        "en": "Guide using pasted or workspace material and user-supplied facts. No connector, external service, bundled script or execution claim. The draft response does not create, route, merge, close, escalate or reply to a ticket; reported timing and scope remain attributed.",
+        "zh-Hans": "使用粘贴或工作区材料以及你提供的事实。不连接外部服务、不附带脚本，也不声明执行。起草的回复不创建、路由、合并、关闭、升级或回复工单；客户报告的时间与范围仍按报告标注。"
       },
       "planNumber": 64,
       "plannedRuntime": {
@@ -4585,10 +4585,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -4625,14 +4625,14 @@
       "firstParty": null,
       "id": "draft-response",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "Customer Response Draft",
         "zh-Hans": "客户回复草稿"
       },
       "notes": {
-        "en": "Guide using pasted or workspace material and user-supplied facts. No connector, external service, bundled script or execution claim. Draft package; lifecycle flags remain false until Root review. It never sends, writes to a CRM or support tool, grants a refund or credit, or overrides current Floe/user/organization send authority.",
-        "zh-Hans": "使用粘贴或工作区材料以及你提供的事实。不连接外部服务、不附带脚本，也不声明执行。当前为草稿包，生命周期标记在 Root 审核前保持为否。它不发送、不写 CRM 或支持系统、不批准退款或额度，也不覆盖当前 Floe、用户或组织的发送权限。"
+        "en": "Guide using pasted or workspace material and user-supplied facts. No connector, external service, bundled script or execution claim. It never sends, writes to a CRM or support tool, grants a refund or credit, or overrides current Floe/user/organization send authority.",
+        "zh-Hans": "使用粘贴或工作区材料以及你提供的事实。不连接外部服务、不附带脚本，也不声明执行。它不发送、不写 CRM 或支持系统、不批准退款或额度，也不覆盖当前 Floe、用户或组织的发送权限。"
       },
       "planNumber": 65,
       "plannedRuntime": {
@@ -4658,10 +4658,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -4698,14 +4698,14 @@
       "firstParty": null,
       "id": "kb-article",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "Knowledge Base Article",
         "zh-Hans": "知识库文章"
       },
       "notes": {
-        "en": "Guide using pasted or workspace material and user-supplied facts. No connector, external service, bundled script or execution claim. Draft package; lifecycle flags remain false until Root review. It does not publish, edit, unpublish, redirect or notify, and does not claim the model tested the steps or that a fix date exists.",
-        "zh-Hans": "使用粘贴或工作区材料以及你提供的事实。不连接外部服务、不附带脚本，也不声明执行。当前为草稿包，生命周期标记在 Root 审核前保持为否。它不发布、编辑、下架、重定向或通知，也不声称模型测试过步骤或存在修复日期。"
+        "en": "Guide using pasted or workspace material and user-supplied facts. No connector, external service, bundled script or execution claim. It does not publish, edit, unpublish, redirect or notify, and does not claim the model tested the steps or that a fix date exists.",
+        "zh-Hans": "使用粘贴或工作区材料以及你提供的事实。不连接外部服务、不附带脚本，也不声明执行。它不发布、编辑、下架、重定向或通知，也不声称模型测试过步骤或存在修复日期。"
       },
       "planNumber": 66,
       "plannedRuntime": {
@@ -4731,10 +4731,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -4771,14 +4771,14 @@
       "firstParty": null,
       "id": "vendor-review",
       "kind": "optional",
-      "minimumAppVersion": null,
+      "minimumAppVersion": "1.7.66",
       "name": {
         "en": "Vendor Review",
         "zh-Hans": "供应商评估"
       },
       "notes": {
-        "en": "Guide using pasted or workspace material and user-supplied facts. No connector, external service, bundled script or execution claim. Draft package; lifecycle flags remain false until Root review. It does not approve, purchase, pay, sign, terminate, contact a vendor or change a procurement record. E1 means a supplied primary document read by the evaluator, not independently authenticated.",
-        "zh-Hans": "使用粘贴或工作区材料以及你提供的事实。不连接外部服务、不附带脚本，也不声明执行。当前为草稿包，生命周期标记在 Root 审核前保持为否。它不批准、不采购、不付款、不签字、不终止、不联系供应商，也不修改采购记录。E1 指评估人已阅读的所提供一手文件，并不表示已独立鉴证。"
+        "en": "Guide using pasted or workspace material and user-supplied facts. No connector, external service, bundled script or execution claim. It does not approve, purchase, pay, sign, terminate, contact a vendor or change a procurement record. E1 means a supplied primary document read by the evaluator, not independently authenticated.",
+        "zh-Hans": "使用粘贴或工作区材料以及你提供的事实。不连接外部服务、不附带脚本，也不声明执行。它不批准、不采购、不付款、不签字、不终止、不联系供应商，也不修改采购记录。E1 指评估人已阅读的所提供一手文件，并不表示已独立鉴证。"
       },
       "planNumber": 67,
       "plannedRuntime": {
@@ -4804,10 +4804,10 @@
         "adaptation": "frozen",
         "executionVerified": false,
         "licenseChecked": true,
-        "packaged": false,
+        "packaged": true,
         "published": false,
-        "qualified": false,
-        "reviewed": false,
+        "qualified": true,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
