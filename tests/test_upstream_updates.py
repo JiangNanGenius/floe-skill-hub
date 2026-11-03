@@ -254,8 +254,8 @@ class TestRealPolicyCoverage(unittest.TestCase):
     def test_live_policy_is_valid_and_covers_43_rows(self):
         policy = self.inputs["policy"]
         selection = policy["selection"]
-        self.assertEqual(len(self.inputs["entries"]), 43)
-        self.assertEqual(len(selection["tracked"]), 30)
+        self.assertEqual(len(self.inputs["entries"]), 67)
+        self.assertEqual(len(selection["tracked"]), 54)
         self.assertEqual(selection["engineManaged"], ["impeccable"])
         self.assertEqual({w["id"] for w in selection["watchOnly"]},
                          {"doc-coauthoring", "writing-guidelines", "react-best-practices",
@@ -270,7 +270,7 @@ class TestRealPolicyCoverage(unittest.TestCase):
                   | set(selection["notTracked"]["builtins"])
                   | set(selection["notTracked"]["firstParty"]))
         self.assertEqual(groups, set(self.inputs["entries"]))
-        self.assertEqual(len(groups), 43)
+        self.assertEqual(len(groups), 67)
 
     def test_tracked_entries_match_registry_upstream_and_pins(self):
         policy = self.inputs["policy"]
@@ -285,9 +285,15 @@ class TestRealPolicyCoverage(unittest.TestCase):
             self.assertIn(skill_id, policy["skills"])
         self.assertEqual(set(policy["skills"]), set(policy["selection"]["tracked"]))
         self.assertTrue(repos <= set(pins))
-        # five corpus repos actually imported + engine repo; vercel-labs is watch-only
-        self.assertEqual(repos, {"anthropics/skills", "alirezarezvani/claude-skills",
-                                 "K-Dense-AI/scientific-agent-skills", "obra/superpowers"})
+        # Ten tracked corpus repositories; engine and watch-only sources are separate.
+        self.assertEqual(repos, {
+            "anthropics/skills", "alirezarezvani/claude-skills",
+            "K-Dense-AI/scientific-agent-skills", "obra/superpowers",
+            "anthropics/knowledge-work-plugins", "anthropics/k12-teacher-skills",
+            "datadrivenconstruction/DDC_Skills_for_AI_Agents_in_Construction",
+            "Maxbase91/procurement-skills", "genspark-ai/genoffice",
+            "borski/travel-hacking-toolkit",
+        })
 
     def test_excluded_and_watch_entries_have_no_upstream(self):
         policy = self.inputs["policy"]
@@ -2141,7 +2147,7 @@ class TestCliSurface(unittest.TestCase):
         self.assertEqual(rc, 0)
         report = json.loads(out.read_bytes())
         self.assertTrue(report["valid"])
-        self.assertEqual(report["selection"]["registryEntries"], 43)
+        self.assertEqual(report["selection"]["registryEntries"], 67)
 
     def test_usage_errors(self):
         rc = uu.main(["stage", "--repo-root", str(REPO), "--quiet"])

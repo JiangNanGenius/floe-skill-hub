@@ -68,8 +68,8 @@
     "repository": "JiangNanGenius/floe-skill-hub"
   },
   "notes": {
-    "en": "Candidate registry for the first release target of 43 entries (4 app-bundled + 39 optional, 9 deep adaptations). The deprecated content-creator redirect is excluded. Every entry stays a candidate until license, package and functional qualification pass; nothing here claims reviewed, packaged, qualified, published or execution-verified status. Pinned commits are the review baseline from docs/UPSTREAM-PINS.json, not a blanket license: each item needs its own per-file license audit before packaging. License blockers are recorded per entry with reasons and required actions; the launch-set count rule (at most three blocked non-required candidates) is a coordinator release decision, not this file.",
-    "zh-Hans": "首版 43 项目标候选登记（4 项内置 + 39 项按需，9 项深度适配）。已弃用的 content-creator 跳转不收录。每项在许可、打包与功能资格全部通过前都只是候选；本文件不宣称任何已审、已打包、已资格、已发布或执行验证状态。固定提交是 docs/UPSTREAM-PINS.json 的审核基线而非整体许可：每项素材仍需逐文件许可核验后方可打包。许可阻碍逐项记录原因与待办；可用数量阻碍规则（非必交付候选最多三项）由协调者在发布时决定，不由本文件宣称。"
+    "en": "Private 67-row integration proposal. The original 43 identities and lifecycle facts are retained; 24 additional entries remain unpublished candidates with no assigned minimum App version. Per-entry lifecycle fields are authoritative; presentation and source-tracking metadata confer no install offer or permission.",
+    "zh-Hans": "私有 67 项整合提案，保留原 43 项身份及生命周期事实；新增 24 项仍为未发布候选，最低 App 版本未定。状态以逐项记录为准，展示与来源跟踪信息不授予安装资格或权限。"
   },
   "publisher": "JiangNanGenius",
   "registry": "candidate",
@@ -3085,6 +3085,1755 @@
       ],
       "upstream": null,
       "versionTarget": "1.0.1"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "zh-Hans": "用于工程报价前的施工估算：整理工程量与单价，分项计取管理费、利润及预备费，形成可复核的预算底稿。",
+        "en": "Prepare a traceable construction estimate before quoting: organize quantities and rates, apply explicit overhead, profit and contingency, and produce a reviewable budget draft."
+      },
+      "firstParty": null,
+      "id": "construction-estimate-builder",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "Construction Estimate Builder",
+        "zh-Hans": "施工估算编制"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      },
+      "planNumber": 44,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "O",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "construction",
+        "estimating",
+        "cost",
+        "markup",
+        "wbs",
+        "validation"
+      ],
+      "upstream": {
+        "commit": "410ed1e71e4a5c6fd231afd0c8d1e586a9f546e8",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Pinned upstream revision. The MIT LICENSE and NOTICE.md are copied byte-for-byte under references/licenses/; the NOTICE excludes the book and CWICR data, which are not shipped. A pin is the review baseline, not a blanket licence for every asset.",
+          "zh-Hans": "固定上游提交。MIT LICENSE 与 NOTICE.md 已按字节复制到 references/licenses/；NOTICE 排除的书籍与 CWICR 数据未随包分发。固定提交是审查基线，不代表所有素材都自动获得许可。"
+        },
+        "licenseStatus": "verified",
+        "path": "2_DDC_Book/3.1-Cost-Estimation/estimate-builder",
+        "repository": "https://github.com/datadrivenconstruction/DDC_Skills_for_AI_Agents_in_Construction",
+        "repositoryLicense": "MIT for SKILL.md instructions (root LICENSE); NOTICE.md excludes the book and CC BY-NC CWICR compilation",
+        "retrievedAt": "2026-10-31",
+        "skillManifestPath": "2_DDC_Book/3.1-Cost-Estimation/estimate-builder/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Price and route construction change orders with explicit markups, schedule impact and an approval audit trail.",
+        "zh-Hans": "按明确计费规则处理施工变更单，记录工期影响与审批轨迹。"
+      },
+      "firstParty": null,
+      "id": "construction-change-order-processor",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "Construction Change Order Processor",
+        "zh-Hans": "施工变更单处理"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      },
+      "planNumber": 45,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "O",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "construction",
+        "change-orders",
+        "cost-control",
+        "approvals",
+        "schedule"
+      ],
+      "upstream": {
+        "commit": "410ed1e71e4a5c6fd231afd0c8d1e586a9f546e8",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Pinned upstream revision. The MIT LICENSE and NOTICE.md are copied byte-for-byte under references/licenses/; the NOTICE excludes the book and CWICR data, which are not shipped. A pin is the review baseline, not a blanket licence for every asset.",
+          "zh-Hans": "固定上游提交。MIT LICENSE 与 NOTICE.md 已按字节复制到 references/licenses/；NOTICE 排除的书籍与 CWICR 数据未随包分发。固定提交是审查基线，不代表所有素材都自动获得许可。"
+        },
+        "licenseStatus": "verified",
+        "path": "1_DDC_Toolkit/Cost-Management/change-order-processor",
+        "repository": "https://github.com/datadrivenconstruction/DDC_Skills_for_AI_Agents_in_Construction",
+        "repositoryLicense": "MIT for SKILL.md instructions (root LICENSE); NOTICE.md excludes the book and CC BY-NC CWICR compilation",
+        "retrievedAt": "2026-10-31",
+        "skillManifestPath": "1_DDC_Toolkit/Cost-Management/change-order-processor/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Run an RFP from demand and quality gates to a weighted, evidence-based bid evaluation.",
+        "zh-Hans": "从需求与质量门推进招标，完成加权、基于证据的评标。"
+      },
+      "firstParty": null,
+      "id": "construction-bid-compass",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "Construction Bid Compass",
+        "zh-Hans": "施工招标罗盘"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      },
+      "planNumber": 46,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "O",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "procurement",
+        "rfp",
+        "bid-evaluation",
+        "sourcing",
+        "scoring",
+        "construction"
+      ],
+      "upstream": {
+        "commit": "d0dda5b201df30bc714520b2cee6f39038f1a1b6",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Pinned upstream revision. The MIT LICENSE and NOTICE are copied byte-for-byte under references/licenses/; the NOTICE's authorship marks are retained. A pin is the review baseline, not a blanket licence for every asset.",
+          "zh-Hans": "固定上游提交。MIT LICENSE 与 NOTICE 已按字节复制到 references/licenses/，NOTICE 中的作者署名标识保留。固定提交是审查基线，不代表所有素材都自动获得许可。"
+        },
+        "licenseStatus": "verified",
+        "path": "bid-compass",
+        "repository": "https://github.com/Maxbase91/procurement-skills",
+        "repositoryLicense": "MIT (root LICENSE; NOTICE retained)",
+        "retrievedAt": "2026-10-31",
+        "skillManifestPath": "bid-compass/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "id": "variance-analysis",
+      "planNumber": 47,
+      "kind": "optional",
+      "source": "A",
+      "name": {
+        "en": "Variance Analysis",
+        "zh-Hans": "差异分析"
+      },
+      "description": {
+        "en": "Decompose budget, forecast and period variances into price, volume, mix and spend drivers, with materiality thresholds, quantified commentary and waterfall tables.",
+        "zh-Hans": "将预算、预测与期间差异拆解为价格、数量、结构和费用驱动，给出重要性阈值、量化说明与瀑布表。"
+      },
+      "category": "research-data",
+      "tags": [
+        "finance",
+        "fpa",
+        "variance",
+        "budget",
+        "forecast",
+        "waterfall"
+      ],
+      "deepAdaptation": false,
+      "upstream": {
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "path": "finance/skills/variance-analysis",
+        "skillManifestPath": "finance/skills/variance-analysis/SKILL.md",
+        "licenseEvidencePath": "finance/LICENSE",
+        "licenseStatus": "verified",
+        "repositoryLicense": "Apache-2.0",
+        "licenseNote": {
+          "en": "Upstream repository license and the named license evidence path were read at the pinned commit; the package preserves the full license text under references/licenses/. This is not a per-file legal opinion.",
+          "zh-Hans": "已在固定提交读取上游仓库许可及所列许可证据路径；包在 references/licenses/ 保留完整许可文本。这不构成逐文件法律意见。"
+        },
+        "retrievedAt": "2026-10-31"
+      },
+      "firstParty": null,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "versionTarget": "1.0.0",
+      "minimumAppVersion": null,
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      }
+    },
+    {
+      "id": "review-contract",
+      "planNumber": 48,
+      "kind": "optional",
+      "source": "A",
+      "name": {
+        "en": "Contract Review",
+        "zh-Hans": "合同审查"
+      },
+      "description": {
+        "en": "Review a contract against an uploaded negotiation playbook; flag clause deviations, generate prioritized redlines and summarize business impact.",
+        "zh-Hans": "依据上传的谈判手册审查合同，标记条款偏离，生成分级红线建议并总结业务影响。"
+      },
+      "category": "office-documents",
+      "tags": [
+        "legal",
+        "contracts",
+        "redlines",
+        "playbook",
+        "negotiation"
+      ],
+      "deepAdaptation": false,
+      "upstream": {
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "path": "legal/skills/review-contract",
+        "skillManifestPath": "legal/skills/review-contract/SKILL.md",
+        "licenseEvidencePath": "legal/LICENSE",
+        "licenseStatus": "verified",
+        "repositoryLicense": "Apache-2.0",
+        "licenseNote": {
+          "en": "Upstream repository license and the named license evidence path were read at the pinned commit; the package preserves the full license text under references/licenses/. This is not a per-file legal opinion.",
+          "zh-Hans": "已在固定提交读取上游仓库许可及所列许可证据路径；包在 references/licenses/ 保留完整许可文本。这不构成逐文件法律意见。"
+        },
+        "retrievedAt": "2026-10-31"
+      },
+      "firstParty": null,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "versionTarget": "1.0.0",
+      "minimumAppVersion": null,
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      }
+    },
+    {
+      "id": "proposal-builder",
+      "planNumber": 49,
+      "kind": "optional",
+      "source": "A",
+      "name": {
+        "en": "Proposal Builder",
+        "zh-Hans": "提案生成"
+      },
+      "description": {
+        "en": "Turn discovery notes, transcripts, photos, drawings or an RFP into a scoped, costed proposal or SOW using the owner's rate card and past proposals.",
+        "zh-Hans": "把发现记录、转写、照片、图纸或 RFP 转化为有范围、有报价的提案或工作说明书，并使用负责人的费率卡和历史提案。"
+      },
+      "category": "writing-communication",
+      "tags": [
+        "sales",
+        "proposals",
+        "smb",
+        "pricing",
+        "scope",
+        "sow"
+      ],
+      "deepAdaptation": false,
+      "upstream": {
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "path": "small-business/skills/proposal-builder",
+        "skillManifestPath": "small-business/skills/proposal-builder/SKILL.md",
+        "licenseEvidencePath": "LICENSE",
+        "licenseStatus": "verified",
+        "repositoryLicense": "Apache-2.0",
+        "licenseNote": {
+          "en": "Upstream repository license and the named license evidence path were read at the pinned commit; the package preserves the full license text under references/licenses/. This is not a per-file legal opinion.",
+          "zh-Hans": "已在固定提交读取上游仓库许可及所列许可证据路径；包在 references/licenses/ 保留完整许可文本。这不构成逐文件法律意见。"
+        },
+        "retrievedAt": "2026-10-31"
+      },
+      "firstParty": null,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "versionTarget": "1.0.0",
+      "minimumAppVersion": null,
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      }
+    },
+    {
+      "id": "hiring-screener",
+      "planNumber": 50,
+      "kind": "optional",
+      "source": "A",
+      "name": {
+        "en": "Hiring Screener",
+        "zh-Hans": "招聘筛选"
+      },
+      "description": {
+        "en": "Screen applications against a job-derived rubric, produce an evidenced ranked shortlist, candidate reply drafts and an onboarding checklist.",
+        "zh-Hans": "按岗位评分表筛选申请，产出有证据的排序名单、候选人回复草稿与入职清单。"
+      },
+      "category": "office-documents",
+      "tags": [
+        "hr",
+        "hiring",
+        "screening",
+        "rubric",
+        "shortlist",
+        "onboarding"
+      ],
+      "deepAdaptation": false,
+      "upstream": {
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "path": "small-business/skills/hiring-screener",
+        "skillManifestPath": "small-business/skills/hiring-screener/SKILL.md",
+        "licenseEvidencePath": "LICENSE",
+        "licenseStatus": "verified",
+        "repositoryLicense": "Apache-2.0",
+        "licenseNote": {
+          "en": "Upstream repository license and the named license evidence path were read at the pinned commit; the package preserves the full license text under references/licenses/. This is not a per-file legal opinion.",
+          "zh-Hans": "已在固定提交读取上游仓库许可及所列许可证据路径；包在 references/licenses/ 保留完整许可文本。这不构成逐文件法律意见。"
+        },
+        "retrievedAt": "2026-10-31"
+      },
+      "firstParty": null,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "versionTarget": "1.0.0",
+      "minimumAppVersion": null,
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      }
+    },
+    {
+      "id": "process-mapper",
+      "planNumber": 51,
+      "kind": "optional",
+      "source": "R",
+      "name": {
+        "en": "Process Mapper",
+        "zh-Hans": "流程映射"
+      },
+      "description": {
+        "en": "Document a business process as a BPMN-style swimlane, compute cycle time and value-add ratio, and rank bottlenecks with deterministic rules and constraint-focused actions.",
+        "zh-Hans": "以 BPMN 风格泳道记录业务流程，计算周期时间与增值比，并用确定性规则排序瓶颈，给出聚焦约束的行动。"
+      },
+      "category": "productivity-organization",
+      "tags": [
+        "operations",
+        "bpmn",
+        "process",
+        "bottleneck",
+        "cycle-time",
+        "lean"
+      ],
+      "deepAdaptation": false,
+      "upstream": {
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "path": "business-operations/skills/process-mapper",
+        "skillManifestPath": "business-operations/skills/process-mapper/SKILL.md",
+        "licenseEvidencePath": "LICENSE",
+        "licenseStatus": "verified",
+        "repositoryLicense": "MIT",
+        "licenseNote": {
+          "en": "Upstream repository license and the named license evidence path were read at the pinned commit; the package preserves the full license text under references/licenses/. This is not a per-file legal opinion.",
+          "zh-Hans": "已在固定提交读取上游仓库许可及所列许可证据路径；包在 references/licenses/ 保留完整许可文本。这不构成逐文件法律意见。"
+        },
+        "retrievedAt": "2026-10-31"
+      },
+      "firstParty": null,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "versionTarget": "1.0.0",
+      "minimumAppVersion": null,
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      }
+    },
+    {
+      "id": "senior-pm",
+      "planNumber": 52,
+      "kind": "optional",
+      "source": "R",
+      "name": {
+        "en": "Senior PM",
+        "zh-Hans": "高级项目管理"
+      },
+      "description": {
+        "en": "Run portfolio health reviews, quantitative risk analysis, capacity planning and executive reporting for multi-project programs using deterministic scoring and templates.",
+        "zh-Hans": "使用确定性评分与模板，为多项目组合执行健康度评审、量化风险分析、容量规划与高管报告。"
+      },
+      "category": "productivity-organization",
+      "tags": [
+        "project-management",
+        "portfolio",
+        "risk",
+        "capacity",
+        "executive-reporting"
+      ],
+      "deepAdaptation": false,
+      "upstream": {
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "path": "project-management/skills/senior-pm",
+        "skillManifestPath": "project-management/skills/senior-pm/SKILL.md",
+        "licenseEvidencePath": "LICENSE",
+        "licenseStatus": "verified",
+        "repositoryLicense": "MIT",
+        "licenseNote": {
+          "en": "Upstream repository license and the named license evidence path were read at the pinned commit; the package preserves the full license text under references/licenses/. This is not a per-file legal opinion.",
+          "zh-Hans": "已在固定提交读取上游仓库许可及所列许可证据路径；包在 references/licenses/ 保留完整许可文本。这不构成逐文件法律意见。"
+        },
+        "retrievedAt": "2026-10-31"
+      },
+      "firstParty": null,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "versionTarget": "1.0.0",
+      "minimumAppVersion": null,
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      }
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Build a classroom-ready lesson plan with timed stages, observable objectives, assessment and differentiated homework.",
+        "zh-Hans": "根据课题与班级情况生成可直接使用的课时教案，包含分段时间、可观察目标、评价与分层作业。"
+      },
+      "firstParty": null,
+      "id": "lesson-plan-builder",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "Lesson Plan Builder",
+        "zh-Hans": "课时教案设计"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      },
+      "planNumber": 53,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "O",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "education",
+        "lesson-planning",
+        "teaching",
+        "assessment",
+        "classroom"
+      ],
+      "upstream": {
+        "commit": "36a509e8fc16ace85ed7afa3c37acb7b9c441ad1",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Pinned upstream revision. The Apache-2.0 LICENSE and NOTICE are copied byte-for-byte under references/licenses/; no upstream application code, fonts or binaries are shipped. A pin is the review baseline, not a blanket licence for every asset.",
+          "zh-Hans": "固定上游提交。Apache-2.0 LICENSE 与 NOTICE 已按字节复制到 references/licenses/；不分发上游应用代码、字体或二进制。固定提交是审查基线，不代表所有素材都自动获得许可。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/recommended/lesson-plan",
+        "repository": "https://github.com/genspark-ai/genoffice",
+        "repositoryLicense": "Apache-2.0 (root LICENSE and NOTICE)",
+        "retrievedAt": "2026-10-31",
+        "skillManifestPath": "skills/recommended/lesson-plan/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Turn a learning goal and available time into a weekly and daily study schedule with review, mocks and adjustment rules.",
+        "zh-Hans": "把学习目标与可用时间整理为周计划和日计划，包含复习、模拟考试与调整规则。"
+      },
+      "firstParty": null,
+      "id": "study-plan-scheduler",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "Study Plan Scheduler",
+        "zh-Hans": "学习计划表"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      },
+      "planNumber": 54,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "O",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "education",
+        "study-planning",
+        "learning",
+        "schedule",
+        "exams"
+      ],
+      "upstream": {
+        "commit": "36a509e8fc16ace85ed7afa3c37acb7b9c441ad1",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Pinned upstream revision. The Apache-2.0 LICENSE and NOTICE are copied byte-for-byte under references/licenses/; no upstream application code, fonts or binaries are shipped. A pin is the review baseline, not a blanket licence for every asset.",
+          "zh-Hans": "固定上游提交。Apache-2.0 LICENSE 与 NOTICE 已按字节复制到 references/licenses/；不分发上游应用代码、字体或二进制。固定提交是审查基线，不代表所有素材都自动获得许可。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/recommended/study-plan",
+        "repository": "https://github.com/genspark-ai/genoffice",
+        "repositoryLicense": "Apache-2.0 (root LICENSE and NOTICE)",
+        "retrievedAt": "2026-10-31",
+        "skillManifestPath": "skills/recommended/study-plan/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Create a short diagnostic math check with misconception-based distractors and a teacher guide for next steps.",
+        "zh-Hans": "设计简短的数学诊断性理解检查，干扰项对应常见错误，并附教师下一步教学指南。"
+      },
+      "firstParty": null,
+      "id": "k12-check-for-understanding",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "K-12 Check for Understanding",
+        "zh-Hans": "K-12 理解检查"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      },
+      "planNumber": 55,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "education",
+        "formative-assessment",
+        "math",
+        "misconceptions",
+        "teaching"
+      ],
+      "upstream": {
+        "commit": "31fd6dbb0c07cb50bb3ce7f62a4135a393bd0e8c",
+        "licenseEvidencePath": "plugin/skills/k12-check-for-understanding/LICENSE",
+        "licenseNote": {
+          "en": "Pinned upstream revision. The per-skill Apache-2.0 LICENSE and NOTICE are copied byte-for-byte under references/licenses/; upstream rendering/eval material is not shipped. A pin is the review baseline, not a blanket licence for every asset.",
+          "zh-Hans": "固定上游提交。单项 Apache-2.0 LICENSE 与 NOTICE 已按字节复制到 references/licenses/；上游 rendering/eval 材料未随包分发。固定提交是审查基线，不代表所有素材都自动获得许可。"
+        },
+        "licenseStatus": "verified",
+        "path": "plugin/skills/k12-check-for-understanding",
+        "repository": "https://github.com/anthropics/k12-teacher-skills",
+        "repositoryLicense": "Apache-2.0 (root and per-skill LICENSE/NOTICE)",
+        "retrievedAt": "2026-10-31",
+        "skillManifestPath": "plugin/skills/k12-check-for-understanding/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Compare cash fares with award redemptions using cents-per-point, taxes, transfer ratios and opportunity cost.",
+        "zh-Hans": "用每万里程价值、税费、转点比例与机会成本比较现金购票和里程兑换。"
+      },
+      "firstParty": null,
+      "id": "travel-points-calculator",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "Travel Cash vs Points",
+        "zh-Hans": "旅行现金里程比价"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      },
+      "planNumber": 56,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "O",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "travel",
+        "points",
+        "redemption",
+        "budget",
+        "comparison"
+      ],
+      "upstream": {
+        "commit": "b46172deee14b106fc815c1d57f2587a581f8a27",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Pinned upstream revision. The MIT LICENSE is copied byte-for-byte under references/licenses/; no separate NOTICE is present upstream, and time-sensitive data files and booking integrations are not shipped. A pin is the review baseline, not a blanket licence for every asset.",
+          "zh-Hans": "固定上游提交。MIT LICENSE 已按字节复制到 references/licenses/；上游没有单独的 NOTICE，时效性数据文件与预订集成未随包分发。固定提交是审查基线，不代表所有素材都自动获得许可。"
+        },
+        "licenseStatus": "verified",
+        "path": "plugins/travel-hacking-toolkit/skills/trip-calculator",
+        "repository": "https://github.com/borski/travel-hacking-toolkit",
+        "repositoryLicense": "MIT (root LICENSE)",
+        "retrievedAt": "2026-10-31",
+        "skillManifestPath": "plugins/travel-hacking-toolkit/skills/trip-calculator/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Reconcile GL balances to subledgers, bank statements or third-party data; categorize and age reconciling items, prove the arithmetic and prepare a review-ready reconciliation.",
+        "zh-Hans": "将总账与子账、银行账单或第三方数据核对，分类并计算未达账项账龄，展示核对运算并形成可供人工复核的对账表。"
+      },
+      "firstParty": null,
+      "id": "reconciliation",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "Reconciliation",
+        "zh-Hans": "对账"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim. Draft package; lifecycle flags remain false until Root review.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。当前为草稿包，生命周期标记在 Root 审核前保持为否。"
+      },
+      "planNumber": 57,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "finance",
+        "accounting",
+        "reconciliation",
+        "bank-rec",
+        "aging",
+        "close"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "finance/LICENSE",
+        "licenseNote": {
+          "en": "The pinned finance/LICENSE or legal/LICENSE was read at the pinned commit; its exact bytes are preserved under references/licenses/. The repository root LICENSE is Apache-2.0 but is not the copied license and is not relied on.",
+          "zh-Hans": "已在固定提交读取 finance/LICENSE 或 legal/LICENSE；其完整字节保存在 references/licenses/ 下。仓库根 LICENSE 同为 Apache-2.0，但不是所复制的许可文件，也未作为依据。"
+        },
+        "licenseStatus": "verified",
+        "path": "finance/skills/reconciliation",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-01",
+        "skillManifestPath": "finance/skills/reconciliation/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Plan and track a month-end close: sequence tasks and dependencies, surface blockers, project gate impact and report honest status and metrics.",
+        "zh-Hans": "规划并跟踪月末结账：安排任务与依赖顺序、暴露阻塞、推演关键节点影响，并报告真实状态与结账指标。"
+      },
+      "firstParty": null,
+      "id": "close-management",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "Close Management",
+        "zh-Hans": "月末结账管理"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim. Draft package; lifecycle flags remain false until Root review.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。当前为草稿包，生命周期标记在 Root 审核前保持为否。"
+      },
+      "planNumber": 58,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "finance",
+        "month-end",
+        "close",
+        "checklist",
+        "dependencies",
+        "status"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "finance/LICENSE",
+        "licenseNote": {
+          "en": "The pinned finance/LICENSE or legal/LICENSE was read at the pinned commit; its exact bytes are preserved under references/licenses/. The repository root LICENSE is Apache-2.0 but is not the copied license and is not relied on.",
+          "zh-Hans": "已在固定提交读取 finance/LICENSE 或 legal/LICENSE；其完整字节保存在 references/licenses/ 下。仓库根 LICENSE 同为 Apache-2.0，但不是所复制的许可文件，也未作为依据。"
+        },
+        "licenseStatus": "verified",
+        "path": "finance/skills/close-management",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-01",
+        "skillManifestPath": "finance/skills/close-management/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Prepare income statement, balance sheet and cash-flow drafts from supplied trial-balance data, with variance analysis, proof checks and presentation notes.",
+        "zh-Hans": "根据提供的试算平衡数据编制利润表、资产负债表和现金流量表草稿，附差异分析、勾稽校验和列报说明。"
+      },
+      "firstParty": null,
+      "id": "financial-statements",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "Financial Statements",
+        "zh-Hans": "财务报表"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim. Draft package; lifecycle flags remain false until Root review.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。当前为草稿包，生命周期标记在 Root 审核前保持为否。"
+      },
+      "planNumber": 59,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "finance",
+        "accounting",
+        "statements",
+        "variance",
+        "reporting",
+        "gaap"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "finance/LICENSE",
+        "licenseNote": {
+          "en": "The pinned finance/LICENSE or legal/LICENSE was read at the pinned commit; its exact bytes are preserved under references/licenses/. The repository root LICENSE is Apache-2.0 but is not the copied license and is not relied on.",
+          "zh-Hans": "已在固定提交读取 finance/LICENSE 或 legal/LICENSE；其完整字节保存在 references/licenses/ 下。仓库根 LICENSE 同为 Apache-2.0，但不是所复制的许可文件，也未作为依据。"
+        },
+        "licenseStatus": "verified",
+        "path": "finance/skills/financial-statements",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-01",
+        "skillManifestPath": "finance/skills/financial-statements/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Screen an incoming NDA against a playbook and classify it GREEN, YELLOW or RED with clause-level issues, jurisdiction flags and a routing recommendation.",
+        "zh-Hans": "依据提供的保密协议手册筛查 NDA，按条款问题、司法辖区提示与流转建议分级为绿、黄、红。"
+      },
+      "firstParty": null,
+      "id": "triage-nda",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "NDA Triage",
+        "zh-Hans": "保密协议分诊"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim. Draft package; lifecycle flags remain false until Root review.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。当前为草稿包，生命周期标记在 Root 审核前保持为否。"
+      },
+      "planNumber": 60,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "legal",
+        "nda",
+        "contracts",
+        "triage",
+        "risk",
+        "compliance"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "legal/LICENSE",
+        "licenseNote": {
+          "en": "The pinned finance/LICENSE or legal/LICENSE was read at the pinned commit; its exact bytes are preserved under references/licenses/. The repository root LICENSE is Apache-2.0 but is not the copied license and is not relied on.",
+          "zh-Hans": "已在固定提交读取 finance/LICENSE 或 legal/LICENSE；其完整字节保存在 references/licenses/ 下。仓库根 LICENSE 同为 Apache-2.0，但不是所复制的许可文件，也未作为依据。"
+        },
+        "licenseStatus": "verified",
+        "path": "legal/skills/triage-nda",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-01",
+        "skillManifestPath": "legal/skills/triage-nda/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Build a structured, job-related interview kit with competencies, behavioural questions, an anchored scorecard, a debrief method and bias safeguards.",
+        "zh-Hans": "构建结构化、与岗位相关的面试套件，包含能力项、行为题、锚定评分卡、复盘方法与反偏见措施。"
+      },
+      "firstParty": null,
+      "id": "interview-prep",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "Interview Prep",
+        "zh-Hans": "面试准备"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim. Draft package; lifecycle flags remain false until Root review.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。当前为草稿包，生命周期标记在 Root 审核前保持为否。"
+      },
+      "planNumber": 61,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "hr",
+        "hiring",
+        "interview",
+        "scorecard",
+        "competencies",
+        "bias"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "No human-resources/LICENSE exists at the pin; the exact root LICENSE bytes are preserved under references/licenses/. Only the Apache-2.0 text is relied on; the file's unrelated trailing fragment is retained byte-for-byte.",
+          "zh-Hans": "该提交下不存在 human-resources/LICENSE；仓库根 LICENSE 的完整字节保存在 references/licenses/ 下。仅依据其中的 Apache-2.0 文本，文件末尾与许可无关的片段按原字节保留。"
+        },
+        "licenseStatus": "verified",
+        "path": "human-resources/skills/interview-prep",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-01",
+        "skillManifestPath": "human-resources/skills/interview-prep/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Structure self-assessments, evidence-based manager reviews and calibration packs with distribution arithmetic, bias checks and development plans.",
+        "zh-Hans": "组织自评、以证据为基础的经理评估和校准包，包含分布计算、偏见检查与发展计划。"
+      },
+      "firstParty": null,
+      "id": "performance-review",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "Performance Review",
+        "zh-Hans": "绩效评估"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, connector, live-data source or execution claim. Draft package; lifecycle flags remain false until Root review.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接、实时数据源或执行声明。当前为草稿包，生命周期标记在 Root 审核前保持为否。"
+      },
+      "planNumber": 62,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "hr",
+        "performance",
+        "reviews",
+        "calibration",
+        "feedback",
+        "development"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "No human-resources/LICENSE exists at the pin; the exact root LICENSE bytes are preserved under references/licenses/. Only the Apache-2.0 text is relied on; the file's unrelated trailing fragment is retained byte-for-byte.",
+          "zh-Hans": "该提交下不存在 human-resources/LICENSE；仓库根 LICENSE 的完整字节保存在 references/licenses/ 下。仅依据其中的 Apache-2.0 文本，文件末尾与许可无关的片段按原字节保留。"
+        },
+        "licenseStatus": "verified",
+        "path": "human-resources/skills/performance-review",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-01",
+        "skillManifestPath": "human-resources/skills/performance-review/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "id": "pricing-strategist",
+      "planNumber": 63,
+      "kind": "optional",
+      "source": "R",
+      "name": {
+        "en": "Pricing Strategist",
+        "zh-Hans": "定价策略"
+      },
+      "description": {
+        "en": "Choose a pricing model, analyze willingness to pay and design Good/Better/Best tiers with deterministic calculations and reviewable trade-offs.",
+        "zh-Hans": "选择定价模型、分析支付意愿，并用确定性计算与可复核的取舍设计 Good/Better/Best 套餐。"
+      },
+      "category": "product-requirements",
+      "tags": [
+        "pricing",
+        "packaging",
+        "monetization",
+        "willingness-to-pay",
+        "van-westendorp",
+        "tiers",
+        "saas"
+      ],
+      "deepAdaptation": false,
+      "upstream": {
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "path": "commercial/skills/pricing-strategist",
+        "skillManifestPath": "commercial/skills/pricing-strategist/SKILL.md",
+        "licenseEvidencePath": "LICENSE",
+        "licenseStatus": "verified",
+        "repositoryLicense": "MIT",
+        "licenseNote": {
+          "en": "Pinned upstream MIT license and skill path were read at the exact commit; the full license is preserved under references/licenses/ and the three reference documents are byte-identical. This is not a per-file legal opinion.",
+          "zh-Hans": "已在固定提交读取上游 MIT 许可与技能路径；完整许可保存在 references/licenses/，三份参考文档逐字节一致。这不构成逐文件法律意见。"
+        },
+        "retrievedAt": "2026-11-01"
+      },
+      "firstParty": null,
+      "plannedRuntime": {
+        "capabilities": [
+          "execution.remote",
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "riscv64",
+          "evidence": "unproven",
+          "os": "linux"
+        },
+        "installPlatforms": [
+          "ios"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "remote",
+        "tools": [
+          "exec.shell"
+        ]
+      },
+      "versionTarget": "1.0.0",
+      "minimumAppVersion": null,
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "notes": {
+        "en": "Runs three standard-library calculators in the task's Linux environment: pricing-model fit, Van Westendorp willingness to pay and Good/Better/Best packaging. Reports stay in the workspace; no network or data service is called.",
+        "zh-Hans": "在任务的 Linux 环境中运行三个标准库计算器：定价模型匹配、Van Westendorp 支付意愿与 Good/Better/Best 套餐设计。报告保存在工作区，不调用网络或数据服务。"
+      }
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Triage an incoming support ticket: separate reported facts from claims, classify by root-cause evidence, assign a P1-P4 priority with an SLA clock, check duplicates against supplied lists and recommend a queue without creating, routing or replying to the ticket.",
+        "zh-Hans": "分诊新支持工单：区分客户报告与已核实事实，按根因证据分类，结合 SLA 计时给出 P1-P4 优先级，只用提供的清单查重并建议队列，但不创建、路由或回复工单。"
+      },
+      "firstParty": null,
+      "id": "ticket-triage",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "Ticket Triage",
+        "zh-Hans": "工单分诊"
+      },
+      "notes": {
+        "en": "Guide using pasted or workspace material and user-supplied facts. No connector, external service, bundled script or execution claim. Draft package; lifecycle flags remain false until Root review. The draft response does not create, route, merge, close, escalate or reply to a ticket; reported timing and scope remain attributed.",
+        "zh-Hans": "使用粘贴或工作区材料以及你提供的事实。不连接外部服务、不附带脚本，也不声明执行。当前为草稿包，生命周期标记在 Root 审核前保持为否。起草的回复不创建、路由、合并、关闭、升级或回复工单；客户报告的时间与范围仍按报告标注。"
+      },
+      "planNumber": 64,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "customer-support",
+        "triage",
+        "priority",
+        "sla",
+        "routing",
+        "duplicate"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "customer-support/LICENSE",
+        "licenseNote": {
+          "en": "The pinned customer-support/LICENSE was read at the pinned commit; its exact bytes are preserved under references/licenses/. The repository root LICENSE is also Apache-2.0 but is not the copied file. No NOTICE exists at this pin.",
+          "zh-Hans": "已在固定提交读取 customer-support/LICENSE，其完整字节保存在 references/licenses/ 下。仓库根 LICENSE 同为 Apache-2.0，但不是所复制的许可文件。该固定提交没有 NOTICE。"
+        },
+        "licenseStatus": "verified",
+        "path": "customer-support/skills/ticket-triage",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-01",
+        "skillManifestPath": "customer-support/skills/ticket-triage/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "writing-communication",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Draft a customer-facing support response from verified facts and approved commitments, with a fact/commitment ledger, tone and channel guidance, and explicit no-send, no-CRM-write and approval boundaries.",
+        "zh-Hans": "根据已核实事实和已批准承诺起草客户支持回复，包含事实与承诺台账、语气与渠道建议，并明确不发送、不写 CRM 及审批边界。"
+      },
+      "firstParty": null,
+      "id": "draft-response",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "Customer Response Draft",
+        "zh-Hans": "客户回复草稿"
+      },
+      "notes": {
+        "en": "Guide using pasted or workspace material and user-supplied facts. No connector, external service, bundled script or execution claim. Draft package; lifecycle flags remain false until Root review. It never sends, writes to a CRM or support tool, grants a refund or credit, or overrides current Floe/user/organization send authority.",
+        "zh-Hans": "使用粘贴或工作区材料以及你提供的事实。不连接外部服务、不附带脚本，也不声明执行。当前为草稿包，生命周期标记在 Root 审核前保持为否。它不发送、不写 CRM 或支持系统、不批准退款或额度，也不覆盖当前 Floe、用户或组织的发送权限。"
+      },
+      "planNumber": 65,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "customer-support",
+        "response",
+        "drafting",
+        "escalation",
+        "communication",
+        "sla"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "customer-support/LICENSE",
+        "licenseNote": {
+          "en": "The pinned customer-support/LICENSE was read at the pinned commit; its exact bytes are preserved under references/licenses/. The repository root LICENSE is also Apache-2.0 but is not the copied file. No NOTICE exists at this pin.",
+          "zh-Hans": "已在固定提交读取 customer-support/LICENSE，其完整字节保存在 references/licenses/ 下。仓库根 LICENSE 同为 Apache-2.0，但不是所复制的许可文件。该固定提交没有 NOTICE。"
+        },
+        "licenseStatus": "verified",
+        "path": "customer-support/skills/draft-response",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-01",
+        "skillManifestPath": "customer-support/skills/draft-response/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Turn a resolved support issue or recurring question into a structured, searchable knowledge-base draft with an evidence gate, verified steps, metadata, known-issue lifecycle and a review date; it does not publish.",
+        "zh-Hans": "把已解决的支持问题或常见问题写成结构化、可搜索的知识库草稿，包含证据门槛、经核实步骤、元数据、已知问题生命周期和复核日期；不执行发布。"
+      },
+      "firstParty": null,
+      "id": "kb-article",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "Knowledge Base Article",
+        "zh-Hans": "知识库文章"
+      },
+      "notes": {
+        "en": "Guide using pasted or workspace material and user-supplied facts. No connector, external service, bundled script or execution claim. Draft package; lifecycle flags remain false until Root review. It does not publish, edit, unpublish, redirect or notify, and does not claim the model tested the steps or that a fix date exists.",
+        "zh-Hans": "使用粘贴或工作区材料以及你提供的事实。不连接外部服务、不附带脚本，也不声明执行。当前为草稿包，生命周期标记在 Root 审核前保持为否。它不发布、编辑、下架、重定向或通知，也不声称模型测试过步骤或存在修复日期。"
+      },
+      "planNumber": 66,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "customer-support",
+        "knowledge-base",
+        "documentation",
+        "troubleshooting",
+        "search",
+        "review"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "customer-support/LICENSE",
+        "licenseNote": {
+          "en": "The pinned customer-support/LICENSE was read at the pinned commit; its exact bytes are preserved under references/licenses/. The repository root LICENSE is also Apache-2.0 but is not the copied file. No NOTICE exists at this pin.",
+          "zh-Hans": "已在固定提交读取 customer-support/LICENSE，其完整字节保存在 references/licenses/ 下。仓库根 LICENSE 同为 Apache-2.0，但不是所复制的许可文件。该固定提交没有 NOTICE。"
+        },
+        "licenseStatus": "verified",
+        "path": "customer-support/skills/kb-article",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-01",
+        "skillManifestPath": "customer-support/skills/kb-article/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Evaluate a vendor proposal, renewal or comparison with must-have gates, a three-year TCO, an evidence-based weighted scorecard with coverage, risk and conflict-of-interest checks, and negotiation points; no approval or purchase authority.",
+        "zh-Hans": "用必须条件门槛、三年总成本、带覆盖率的证据化加权评分、风险与利益冲突检查以及谈判要点评估供应商方案、续约或比较；不授予批准或采购权限。"
+      },
+      "firstParty": null,
+      "id": "vendor-review",
+      "kind": "optional",
+      "minimumAppVersion": null,
+      "name": {
+        "en": "Vendor Review",
+        "zh-Hans": "供应商评估"
+      },
+      "notes": {
+        "en": "Guide using pasted or workspace material and user-supplied facts. No connector, external service, bundled script or execution claim. Draft package; lifecycle flags remain false until Root review. It does not approve, purchase, pay, sign, terminate, contact a vendor or change a procurement record. E1 means a supplied primary document read by the evaluator, not independently authenticated.",
+        "zh-Hans": "使用粘贴或工作区材料以及你提供的事实。不连接外部服务、不附带脚本，也不声明执行。当前为草稿包，生命周期标记在 Root 审核前保持为否。它不批准、不采购、不付款、不签字、不终止、不联系供应商，也不修改采购记录。E1 指评估人已阅读的所提供一手文件，并不表示已独立鉴证。"
+      },
+      "planNumber": 67,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": false,
+        "published": false,
+        "qualified": false,
+        "reviewed": false,
+        "sourcePinned": true
+      },
+      "tags": [
+        "vendor",
+        "procurement",
+        "evaluation",
+        "tco",
+        "risk",
+        "scoring",
+        "conflict-of-interest"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The operations plugin has no directory LICENSE at the pin; the repository root LICENSE is the applicable file. Its exact bytes are preserved under references/licenses/. The root file carries an unrelated trailing fragment; only the Apache-2.0 text is relied on. No NOTICE exists at this pin.",
+          "zh-Hans": "固定提交中的 operations 插件没有目录级 LICENSE，因此以仓库根 LICENSE 为依据；其完整字节保存在 references/licenses/ 下。根文件在 Apache-2.0 文本后带有一段无关尾注，仅依据 Apache-2.0 文本。该固定提交没有 NOTICE。"
+        },
+        "licenseStatus": "verified",
+        "path": "operations/skills/vendor-review",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-01",
+        "skillManifestPath": "operations/skills/vendor-review/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
     }
   ]
 }

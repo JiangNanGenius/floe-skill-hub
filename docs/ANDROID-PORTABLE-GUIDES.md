@@ -19,7 +19,7 @@ instruction-only content whose only requirement is a working
 workspace-read/write grant. The user explicitly asked for a shorter Android
 qualification path with many direct installs.
 
-## The rule (2026-10-28)
+## The rule (updated 2026-11-03)
 
 A production Android feed entry projects
 `minimumAppVersion="0.0.0"` — a valid strict `X.Y.Z` string, never `null`,
@@ -29,10 +29,11 @@ joined** (re-hashed against the feed's own
 `package.sha256/size/contentDigest` and `review.sha256` bindings; any
 disagreement aborts the build fail-closed):
 
-1. the id is one of the **28 literal ids** frozen in trusted tooling
-   (`ANDROID_PORTABLE_GUIDE_IDS`) — derived from the immutable B registry as
-   exactly the optional rows whose planned `scriptRuntime` is `none`
-   (43 rows = 4 App-provided builtins + 39 optional; 39 = 28 + 11 scripted).
+1. the id is one of the **51 literal ids** frozen in trusted tooling
+   (`ANDROID_PORTABLE_GUIDE_IDS`) — exactly the optional instruction-only
+   rows in the 67-entry registry (4 App-provided builtins, 51 guides and
+   12 scripted skills). The 23 newly selected guides remain unpublished
+   candidates until their actual packages, reviews and new-App floor are admitted.
    New or unrecognized curated ids never inherit the waiver automatically;
 2. the bound package manifest (`floe.json`) declares the **linux** platform;
 3. its `scriptRuntime` is `none`;
@@ -110,7 +111,7 @@ signing keys only):
 PYTHONDONTWRITEBYTECODE=1 python3 tests/test_android_guide_projection.py
 ```
 
-They cover: the frozen 28-id set equals the immutable-B optional-none rows;
+They cover: the frozen 51-id set equals the registry optional-none rows;
 per-feed integration (iOS floor retained; Android `0.0.0` for a
 linux-declared guide whose binding passes the full unchanged gates; the FINAL
 projected bytes re-validated by the unchanged `hubcore.validate_catalog` and

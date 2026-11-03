@@ -22,15 +22,17 @@ and CI emulation never counts as guest-verified. Normal eligible updates flow
 check → plan → stage → build → verify → sign → publish end-to-end in the cloud
 using the existing credentials, scoped tokens and fixed reviewed code.
 
-## Coverage (43 registry rows, exact partition)
+## Coverage (67 registry rows, exact partition)
 
 | Group | Count | Behaviour |
 | --- | --- | --- |
-| tracked external skills | 30 | full automatic tracking + candidate construction |
+| tracked external skills | 54 | full automatic tracking + candidate construction |
 | engine-managed (`impeccable`) | 1 | signals only; candidates exclusively via the `engines/impeccable` pipeline + `impeccable-engine-updater.yml` (stable `engine-v*` tags, never main HEAD) |
 | watch-only replacements | 5 | license-appearance signals for the license-blocked originals of `doc-coauthoring`, `writing-guidelines`, `react-best-practices`, `composition-patterns`, `web-design-guidelines`; copying upstream bytes is structurally impossible for these ids and re-adoption is a maintainer curation decision |
 | excluded builtins | 4 | App-provided (`floe-pdf/office/network/video`), first-party pins, never tracked |
 | excluded first-party optionals | 3 | `floe-email-drafting`, `floe-file-organizer`, `floe-invoice-organizer`; upstream=null by design |
+
+The 24 new selections are prepared candidates, not additional install offers. Tracking coverage does not approve a package or invent execution qualification; version floors, real review signatures and publication remain separate admission gates.
 
 `validate-policy` (and `tests/test_upstream_updates.py`) enforce the partition
 against the live registry fail-closed: an id in two groups, a missing id, a

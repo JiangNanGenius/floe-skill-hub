@@ -219,6 +219,17 @@ ANDROID_PORTABLE_GUIDE_IDS = frozenset({
     "systematic-debugging", "test-driven-development", "theme-factory",
     "ui-design-system", "ux-researcher-designer", "web-design-guidelines",
     "writing-guidelines",
+    # Reviewed instruction-only admission batch
+    "reconciliation",
+    "close-management",
+    "financial-statements",
+    "triage-nda",
+    "interview-prep",
+    "performance-review",
+    "ticket-triage",
+    "draft-response",
+    "kb-article",
+    "vendor-review",
 })
 ANDROID_PORTABLE_GUIDE_CAPABILITY_CEILING = frozenset(
     {"workspace.read", "workspace.write"})

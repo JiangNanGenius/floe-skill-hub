@@ -1,11 +1,17 @@
 {
-  "reviewBaselineDate": "2026-10-26",
+  "reviewBaselineDate": "2026-10-31",
   "repositories": {
     "pbakaus/impeccable": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
     "anthropics/skills": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
     "vercel-labs/agent-skills": "063bee94c3f4df8453406c830b0a7df0f2860278",
     "alirezarezvani/claude-skills": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
     "K-Dense-AI/scientific-agent-skills": "593377bb048752abb0152deab9fbb1083a6087df",
-    "obra/superpowers": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b"
+    "obra/superpowers": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+    "datadrivenconstruction/DDC_Skills_for_AI_Agents_in_Construction": "410ed1e71e4a5c6fd231afd0c8d1e586a9f546e8",
+    "Maxbase91/procurement-skills": "d0dda5b201df30bc714520b2cee6f39038f1a1b6",
+    "anthropics/knowledge-work-plugins": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+    "genspark-ai/genoffice": "36a509e8fc16ace85ed7afa3c37acb7b9c441ad1",
+    "anthropics/k12-teacher-skills": "31fd6dbb0c07cb50bb3ce7f62a4135a393bd0e8c",
+    "borski/travel-hacking-toolkit": "b46172deee14b106fc815c1d57f2587a581f8a27"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "policyId": "floe-skill-hub-upstream-update-policy",
-  "updatedAt": "2026-10-28",
+  "updatedAt": "2026-11-01",
   "description": {
     "en": "Declarative tracking policy for scripts/upstream_updates.py: which registry entries automatically track upstream, how each tracked skill's local layout maps to its upstream subtree, what is intentionally excluded, how the engine and the license-blocked replacements are tracked, and which gates decide eligibility versus hold. The registry (catalog/skills.json) stays authoritative for pins/paths/licenses; docs/UPSTREAM-PINS.json stays the pin authority. This file never grants publication: eligible candidates flow to the Root-owned signing/publishing pipeline, held candidates preserve the published version with an actionable repair state.",
     "zh-Hans": "scripts/upstream_updates.py 的声明式跟踪策略：哪些登记条目自动跟踪上游、每个被跟踪技能的本地布局如何映射到其上游子树、哪些内容被有意排除、引擎与因许可证受阻的替代品如何跟踪，以及哪些门槛决定可发布还是暂缓。登记文件（catalog/skills.json）仍是固定提交/路径/许可证的权威；docs/UPSTREAM-PINS.json 仍是固定提交权威。本文件从不授予发布权：合格候选进入 Root 拥有的签名/发布流水线，暂缓候选保留已发布版本并给出可执行的修复状态。"
@@ -52,6 +52,68 @@
       "trackedRef": "HEAD",
       "rootLicense": null,
       "licenseNote": "no license at the reviewed pin; pinned in docs/UPSTREAM-PINS.json but referenced by no admitted entry: curation/license-signal only, never auto-admits a skill and never copies bytes"
+    },
+    "https://github.com/datadrivenconstruction/DDC_Skills_for_AI_Agents_in_Construction": {
+      "role": "corpus",
+      "trackedRef": "HEAD",
+      "rootLicense": "LICENSE",
+      "licenseEvidencePaths": [
+        "NOTICE.md"
+      ],
+      "licenseNote": "MIT root LICENSE plus root NOTICE.md; the NOTICE excludes the book and CC BY-NC CWICR compilation. Both are compared between the entry pin and the resolved head; local UPSTREAM-* copies stay Floe-owned bytes."
+    },
+    "https://github.com/Maxbase91/procurement-skills": {
+      "role": "corpus",
+      "trackedRef": "HEAD",
+      "rootLicense": "LICENSE",
+      "licenseEvidencePaths": [
+        "NOTICE"
+      ],
+      "licenseNote": "MIT root LICENSE plus root NOTICE (author copyright and authorship marks). Both are compared between the entry pin and the resolved head; local UPSTREAM-* copies stay Floe-owned bytes."
+    },
+    "https://github.com/anthropics/knowledge-work-plugins": {
+      "role": "corpus",
+      "trackedRef": "HEAD",
+      "rootLicense": "LICENSE",
+      "licenseEvidencePaths": [
+        "finance/LICENSE",
+        "finance/NOTICE",
+        "legal/LICENSE",
+        "legal/NOTICE",
+        "human-resources/LICENSE",
+        "human-resources/NOTICE",
+        "customer-support/LICENSE",
+        "customer-support/NOTICE",
+        "operations/LICENSE",
+        "operations/NOTICE",
+        "NOTICE"
+      ],
+      "licenseNote": "Apache-2.0 root LICENSE plus finance/LICENSE and legal/LICENSE; the directory license is the copied evidence for those guides and the root LICENSE (which carries an unrelated trailing fragment) is the evidence for human-resources guides. finance/NOTICE, legal/NOTICE, human-resources/LICENSE and human-resources/NOTICE are declared prospective watch paths: absent at the pin, watched for appearance, removal or drift. Data-only; no connector or command is carried. Customer-support guides carry customer-support/LICENSE. Operations vendor-review carries the root LICENSE. customer-support/NOTICE, operations/LICENSE, operations/NOTICE and root NOTICE are absent at the reviewed pin and explicitly watched for appearance/removal/drift."
+    },
+    "https://github.com/genspark-ai/genoffice": {
+      "role": "corpus",
+      "trackedRef": "HEAD",
+      "rootLicense": "LICENSE",
+      "licenseEvidencePaths": [
+        "NOTICE"
+      ],
+      "licenseNote": "Apache-2.0 root LICENSE plus root NOTICE. Both are compared between the entry pin and the resolved head; local UPSTREAM-* copies stay Floe-owned bytes."
+    },
+    "https://github.com/anthropics/k12-teacher-skills": {
+      "role": "corpus",
+      "trackedRef": "HEAD",
+      "rootLicense": "LICENSE",
+      "licenseEvidencePaths": [
+        "NOTICE"
+      ],
+      "licenseNote": "Apache-2.0 root LICENSE plus root NOTICE; the selected skill subtree also carries its own LICENSE/NOTICE, mapped as license fileMappings. All four byte streams are watched."
+    },
+    "https://github.com/borski/travel-hacking-toolkit": {
+      "role": "corpus",
+      "trackedRef": "HEAD",
+      "rootLicense": "LICENSE",
+      "licenseEvidencePaths": [],
+      "licenseNote": "MIT root LICENSE only; the skill file carries no separate license declaration."
     }
   },
   "engineTracking": {
@@ -63,7 +125,10 @@
       "stableReleaseTagPattern": "engine-v<semver>, non-prerelease only, tag must agree with the ENGINE_VERSION in its own tree (validated by the engine updater workflow, not here)",
       "genericMergeProhibited": true,
       "route": "sources/impeccable is regenerated only by the pinned two-stage engines/impeccable pipeline; engine updates run through .github/workflows/impeccable-engine-updater.yml; this tracker reports signals and holds, it never constructs an impeccable candidate",
-      "ownedPaths": ["sources/impeccable", "engines/impeccable"]
+      "ownedPaths": [
+        "sources/impeccable",
+        "engines/impeccable"
+      ]
     }
   },
   "selection": {
@@ -97,9 +162,35 @@
       "sympy",
       "systematic-debugging",
       "test-driven-development",
-      "requesting-code-review"
+      "requesting-code-review",
+      "construction-estimate-builder",
+      "construction-change-order-processor",
+      "construction-bid-compass",
+      "variance-analysis",
+      "review-contract",
+      "proposal-builder",
+      "hiring-screener",
+      "process-mapper",
+      "senior-pm",
+      "lesson-plan-builder",
+      "study-plan-scheduler",
+      "k12-check-for-understanding",
+      "travel-points-calculator",
+      "reconciliation",
+      "close-management",
+      "financial-statements",
+      "triage-nda",
+      "interview-prep",
+      "performance-review",
+      "pricing-strategist",
+      "ticket-triage",
+      "draft-response",
+      "kb-article",
+      "vendor-review"
     ],
-    "engineManaged": ["impeccable"],
+    "engineManaged": [
+      "impeccable"
+    ],
     "watchOnly": [
       {
         "id": "doc-coauthoring",
@@ -133,9 +224,18 @@
       }
     ],
     "notTracked": {
-      "builtins": ["floe-pdf", "floe-office", "floe-network", "floe-video"],
-      "firstParty": ["floe-email-drafting", "floe-file-organizer", "floe-invoice-organizer"],
-      "note": "the 4 builtins carry firstParty pins and ship inside the App; the 3 firstParty optionals and the 5 watchOnly replacements have upstream=null by design. None of the 12 is ever imported from any upstream repository; the coverage invariant tracked(30)+engineManaged(1)+watchOnly(5)+builtins(4)+firstParty(3)=43 is enforced by scripts/upstream_updates.py validate-policy and by tests/test_upstream_updates.py."
+      "builtins": [
+        "floe-pdf",
+        "floe-office",
+        "floe-network",
+        "floe-video"
+      ],
+      "firstParty": [
+        "floe-email-drafting",
+        "floe-file-organizer",
+        "floe-invoice-organizer"
+      ],
+      "note": "Exact partition: tracked(54)+engineManaged(1)+watchOnly(5)+builtins(4)+firstParty(3)=67. Private preparation only; no lifecycle, pin or publication promotion."
     }
   },
   "layoutDefaults": {
@@ -171,63 +271,165 @@
   },
   "skills": {
     "internal-comms": {
-      "relocations": [{"upstreamPrefix": "examples/", "localPrefix": "references/examples/"}],
-      "fileMappings": [{"upstream": "LICENSE.txt", "local": "references/licenses/UPSTREAM-LICENSE.txt", "kind": "license"}],
+      "relocations": [
+        {
+          "upstreamPrefix": "examples/",
+          "localPrefix": "references/examples/"
+        }
+      ],
+      "fileMappings": [
+        {
+          "upstream": "LICENSE.txt",
+          "local": "references/licenses/UPSTREAM-LICENSE.txt",
+          "kind": "license"
+        }
+      ],
       "excludedUpstream": []
     },
     "algorithmic-art": {
       "relocations": [],
-      "fileMappings": [{"upstream": "LICENSE.txt", "local": "references/licenses/UPSTREAM-LICENSE.txt", "kind": "license"}],
-      "excludedUpstream": ["templates/"],
+      "fileMappings": [
+        {
+          "upstream": "LICENSE.txt",
+          "local": "references/licenses/UPSTREAM-LICENSE.txt",
+          "kind": "license"
+        }
+      ],
+      "excludedUpstream": [
+        "templates/"
+      ],
       "notes": "deep adaptation: local assets (floegart.js, shell-template.html, viewer-ui.js) and scripts are Floe-authored; upstream templates/ intentionally not carried"
     },
     "canvas-design": {
       "relocations": [],
       "fileMappings": [
-        {"upstream": "LICENSE.txt", "local": "references/licenses/UPSTREAM-LICENSE.txt", "kind": "license"},
-        {"upstream": "canvas-fonts/BigShoulders-Bold.ttf", "local": "assets/fonts/BigShoulders-Bold.ttf", "kind": "asset"},
-        {"upstream": "canvas-fonts/BigShoulders-Regular.ttf", "local": "assets/fonts/BigShoulders-Regular.ttf", "kind": "asset"},
-        {"upstream": "canvas-fonts/BigShoulders-OFL.txt", "local": "assets/fonts/BigShoulders-OFL.txt", "kind": "asset"},
-        {"upstream": "canvas-fonts/Italiana-Regular.ttf", "local": "assets/fonts/Italiana-Regular.ttf", "kind": "asset"},
-        {"upstream": "canvas-fonts/Italiana-OFL.txt", "local": "assets/fonts/Italiana-OFL.txt", "kind": "asset"},
-        {"upstream": "canvas-fonts/Outfit-Bold.ttf", "local": "assets/fonts/Outfit-Bold.ttf", "kind": "asset"},
-        {"upstream": "canvas-fonts/Outfit-Regular.ttf", "local": "assets/fonts/Outfit-Regular.ttf", "kind": "asset"},
-        {"upstream": "canvas-fonts/Outfit-OFL.txt", "local": "assets/fonts/Outfit-OFL.txt", "kind": "asset"},
-        {"upstream": "canvas-fonts/RedHatMono-Bold.ttf", "local": "assets/fonts/RedHatMono-Bold.ttf", "kind": "asset"},
-        {"upstream": "canvas-fonts/RedHatMono-Regular.ttf", "local": "assets/fonts/RedHatMono-Regular.ttf", "kind": "asset"},
-        {"upstream": "canvas-fonts/RedHatMono-OFL.txt", "local": "assets/fonts/RedHatMono-OFL.txt", "kind": "asset"}
+        {
+          "upstream": "LICENSE.txt",
+          "local": "references/licenses/UPSTREAM-LICENSE.txt",
+          "kind": "license"
+        },
+        {
+          "upstream": "canvas-fonts/BigShoulders-Bold.ttf",
+          "local": "assets/fonts/BigShoulders-Bold.ttf",
+          "kind": "asset"
+        },
+        {
+          "upstream": "canvas-fonts/BigShoulders-Regular.ttf",
+          "local": "assets/fonts/BigShoulders-Regular.ttf",
+          "kind": "asset"
+        },
+        {
+          "upstream": "canvas-fonts/BigShoulders-OFL.txt",
+          "local": "assets/fonts/BigShoulders-OFL.txt",
+          "kind": "asset"
+        },
+        {
+          "upstream": "canvas-fonts/Italiana-Regular.ttf",
+          "local": "assets/fonts/Italiana-Regular.ttf",
+          "kind": "asset"
+        },
+        {
+          "upstream": "canvas-fonts/Italiana-OFL.txt",
+          "local": "assets/fonts/Italiana-OFL.txt",
+          "kind": "asset"
+        },
+        {
+          "upstream": "canvas-fonts/Outfit-Bold.ttf",
+          "local": "assets/fonts/Outfit-Bold.ttf",
+          "kind": "asset"
+        },
+        {
+          "upstream": "canvas-fonts/Outfit-Regular.ttf",
+          "local": "assets/fonts/Outfit-Regular.ttf",
+          "kind": "asset"
+        },
+        {
+          "upstream": "canvas-fonts/Outfit-OFL.txt",
+          "local": "assets/fonts/Outfit-OFL.txt",
+          "kind": "asset"
+        },
+        {
+          "upstream": "canvas-fonts/RedHatMono-Bold.ttf",
+          "local": "assets/fonts/RedHatMono-Bold.ttf",
+          "kind": "asset"
+        },
+        {
+          "upstream": "canvas-fonts/RedHatMono-Regular.ttf",
+          "local": "assets/fonts/RedHatMono-Regular.ttf",
+          "kind": "asset"
+        },
+        {
+          "upstream": "canvas-fonts/RedHatMono-OFL.txt",
+          "local": "assets/fonts/RedHatMono-OFL.txt",
+          "kind": "asset"
+        }
       ],
-      "excludedUpstream": ["canvas-fonts/"],
+      "excludedUpstream": [
+        "canvas-fonts/"
+      ],
       "notes": "deep adaptation: only the four curated font families are carried (explicit fileMappings take precedence over the canvas-fonts/ exclusion); fonts are runtime assets, any byte change is a fingerprint change and holds"
     },
     "theme-factory": {
-      "relocations": [{"upstreamPrefix": "themes/", "localPrefix": "references/themes/"}],
+      "relocations": [
+        {
+          "upstreamPrefix": "themes/",
+          "localPrefix": "references/themes/"
+        }
+      ],
       "fileMappings": [
-        {"upstream": "LICENSE.txt", "local": "references/licenses/UPSTREAM-LICENSE.txt", "kind": "license"},
-        {"upstream": "theme-showcase.pdf", "local": "assets/theme-showcase.pdf", "kind": "asset"}
+        {
+          "upstream": "LICENSE.txt",
+          "local": "references/licenses/UPSTREAM-LICENSE.txt",
+          "kind": "license"
+        },
+        {
+          "upstream": "theme-showcase.pdf",
+          "local": "assets/theme-showcase.pdf",
+          "kind": "asset"
+        }
       ],
       "excludedUpstream": []
     },
     "webapp-testing": {
       "relocations": [],
-      "fileMappings": [{"upstream": "LICENSE.txt", "local": "references/licenses/UPSTREAM-LICENSE.txt", "kind": "license"}],
-      "excludedUpstream": ["examples/", "scripts/"],
+      "fileMappings": [
+        {
+          "upstream": "LICENSE.txt",
+          "local": "references/licenses/UPSTREAM-LICENSE.txt",
+          "kind": "license"
+        }
+      ],
+      "excludedUpstream": [
+        "examples/",
+        "scripts/"
+      ],
       "notes": "deep adaptation: Floe browser-tool scripts and fixtures replace the upstream Playwright examples; upstream scripts/with_server.py intentionally not carried"
     },
     "copywriting": {
       "relocations": [],
       "fileMappings": [],
-      "excludedUpstream": ["scripts/"]
+      "excludedUpstream": [
+        "scripts/"
+      ]
     },
     "copy-editing": {
       "relocations": [],
       "fileMappings": [],
-      "excludedUpstream": ["scripts/"]
+      "excludedUpstream": [
+        "scripts/"
+      ]
     },
     "content-production": {
-      "relocations": [{"upstreamPrefix": "templates/", "localPrefix": "references/templates/"}],
+      "relocations": [
+        {
+          "upstreamPrefix": "templates/",
+          "localPrefix": "references/templates/"
+        }
+      ],
       "fileMappings": [],
-      "excludedUpstream": ["scripts/"]
+      "excludedUpstream": [
+        "scripts/"
+      ]
     },
     "social-content": {
       "relocations": [],
@@ -237,63 +439,99 @@
     "deep-research": {
       "relocations": [],
       "fileMappings": [],
-      "excludedUpstream": ["references/full-catalog.md"]
+      "excludedUpstream": [
+        "references/full-catalog.md"
+      ]
     },
     "deepread": {
       "relocations": [],
       "fileMappings": [],
-      "excludedUpstream": [".claude-plugin/"]
+      "excludedUpstream": [
+        ".claude-plugin/"
+      ]
     },
     "research-summarizer": {
       "relocations": [],
       "fileMappings": [],
-      "excludedUpstream": ["scripts/"]
+      "excludedUpstream": [
+        "scripts/"
+      ]
     },
     "ui-design-system": {
       "relocations": [],
       "fileMappings": [],
-      "excludedUpstream": ["scripts/"]
+      "excludedUpstream": [
+        "scripts/"
+      ]
     },
     "ux-researcher-designer": {
       "relocations": [],
       "fileMappings": [],
-      "excludedUpstream": ["scripts/"]
+      "excludedUpstream": [
+        "scripts/"
+      ]
     },
     "a11y-audit": {
-      "relocations": [{"upstreamPrefix": "expected_outputs/", "localPrefix": "references/expected-outputs/"}],
+      "relocations": [
+        {
+          "upstreamPrefix": "expected_outputs/",
+          "localPrefix": "references/expected-outputs/"
+        }
+      ],
       "fileMappings": [],
-      "excludedUpstream": ["scripts/"]
+      "excludedUpstream": [
+        "scripts/"
+      ]
     },
     "product-manager-toolkit": {
       "relocations": [],
       "fileMappings": [],
-      "excludedUpstream": ["scripts/"]
+      "excludedUpstream": [
+        "scripts/"
+      ]
     },
     "product-discovery": {
       "relocations": [],
       "fileMappings": [],
-      "excludedUpstream": ["scripts/"]
+      "excludedUpstream": [
+        "scripts/"
+      ]
     },
     "code-to-prd": {
-      "relocations": [{"upstreamPrefix": "expected_outputs/", "localPrefix": "references/expected-outputs/"}],
+      "relocations": [
+        {
+          "upstreamPrefix": "expected_outputs/",
+          "localPrefix": "references/expected-outputs/"
+        }
+      ],
       "fileMappings": [],
-      "excludedUpstream": ["scripts/"]
+      "excludedUpstream": [
+        "scripts/"
+      ]
     },
     "meetings": {
       "relocations": [],
       "fileMappings": [],
-      "excludedUpstream": ["scripts/"]
+      "excludedUpstream": [
+        "scripts/"
+      ]
     },
     "literature-review": {
       "relocations": [],
       "fileMappings": [],
-      "excludedUpstream": ["scripts/generate_pdf.py", "scripts/generate_schematic.py", "scripts/generate_schematic_ai.py"],
+      "excludedUpstream": [
+        "scripts/generate_pdf.py",
+        "scripts/generate_schematic.py",
+        "scripts/generate_schematic_ai.py"
+      ],
       "notes": "deep adaptation: carried upstream scripts (search_databases.py, verify_citations.py) plus the Floe lit_verify.py and fixtures; the three generate_* scripts were audited out at curation"
     },
     "citation-management": {
       "relocations": [],
       "fileMappings": [],
-      "excludedUpstream": ["scripts/search_google_scholar.py"]
+      "excludedUpstream": [
+        "scripts/search_google_scholar.py"
+      ]
     },
     "scientific-critical-thinking": {
       "relocations": [],
@@ -303,7 +541,10 @@
     "exploratory-data-analysis": {
       "relocations": [],
       "fileMappings": [],
-      "excludedUpstream": ["scripts/image_inspector.py", "scripts/sequence_inspector.py"],
+      "excludedUpstream": [
+        "scripts/image_inspector.py",
+        "scripts/sequence_inspector.py"
+      ],
       "notes": "deep adaptation: inspector scripts audited out at curation; carried scripts are locally edited, so upstream script changes normally need a three-way merge or hold"
     },
     "statistical-analysis": {
@@ -319,7 +560,10 @@
     "markitdown": {
       "relocations": [],
       "fileMappings": [],
-      "excludedUpstream": ["references/", "scripts/"],
+      "excludedUpstream": [
+        "references/",
+        "scripts/"
+      ],
       "notes": "deep adaptation: NO upstream file bytes are shipped except the adapted SKILL.md lineage (see references/PROVENANCE.md); upstream references and scripts target the Microsoft markitdown package and external services, re-implemented first-party"
     },
     "sympy": {
@@ -330,27 +574,243 @@
     "systematic-debugging": {
       "relocations": [],
       "fileMappings": [
-        {"upstream": "condition-based-waiting.md", "local": "references/condition-based-waiting.md", "kind": "doc"},
-        {"upstream": "condition-based-waiting-example.ts", "local": "references/condition-based-waiting-example.ts", "kind": "doc"},
-        {"upstream": "defense-in-depth.md", "local": "references/defense-in-depth.md", "kind": "doc"},
-        {"upstream": "root-cause-tracing.md", "local": "references/root-cause-tracing.md", "kind": "doc"}
+        {
+          "upstream": "condition-based-waiting.md",
+          "local": "references/condition-based-waiting.md",
+          "kind": "doc"
+        },
+        {
+          "upstream": "condition-based-waiting-example.ts",
+          "local": "references/condition-based-waiting-example.ts",
+          "kind": "doc"
+        },
+        {
+          "upstream": "defense-in-depth.md",
+          "local": "references/defense-in-depth.md",
+          "kind": "doc"
+        },
+        {
+          "upstream": "root-cause-tracing.md",
+          "local": "references/root-cause-tracing.md",
+          "kind": "doc"
+        }
       ],
-      "excludedUpstream": ["CREATION-LOG.md", "find-polluter.sh", "test-academic.md", "test-pressure-*.md"],
+      "excludedUpstream": [
+        "CREATION-LOG.md",
+        "find-polluter.sh",
+        "test-academic.md",
+        "test-pressure-*.md"
+      ],
       "notes": "upstream root-level technique docs are carried under references/; find-polluter.sh is excluded and its bytes are preserved as a fenced reference inside the Floe-authored references/find-polluter-example.md"
     },
     "test-driven-development": {
       "relocations": [],
       "fileMappings": [
-        {"upstream": "writing-good-tests.md", "local": "references/writing-good-tests.md", "kind": "doc"}
+        {
+          "upstream": "writing-good-tests.md",
+          "local": "references/writing-good-tests.md",
+          "kind": "doc"
+        }
       ],
       "excludedUpstream": []
     },
     "requesting-code-review": {
       "relocations": [],
       "fileMappings": [
-        {"upstream": "code-reviewer.md", "local": "references/code-reviewer.md", "kind": "doc"}
+        {
+          "upstream": "code-reviewer.md",
+          "local": "references/code-reviewer.md",
+          "kind": "doc"
+        }
       ],
       "excludedUpstream": []
+    },
+    "construction-estimate-builder": {
+      "relocations": [],
+      "fileMappings": [
+        {
+          "upstream": "instructions.md",
+          "local": "references/UPSTREAM-METHOD.md",
+          "kind": "doc"
+        }
+      ],
+      "excludedUpstream": [
+        "claw.json"
+      ],
+      "notes": "guide-only adaptation: upstream SKILL.md and instructions.md carry the method; the Python code blocks are not shipped. claw.json is vendor packaging metadata and is not carried."
+    },
+    "construction-change-order-processor": {
+      "relocations": [],
+      "fileMappings": [
+        {
+          "upstream": "instructions.md",
+          "local": "references/UPSTREAM-METHOD.md",
+          "kind": "doc"
+        }
+      ],
+      "excludedUpstream": [
+        "claw.json"
+      ],
+      "notes": "guide-only adaptation: upstream SKILL.md and instructions.md carry the method; the Python code blocks are not shipped. claw.json is vendor packaging metadata and is not carried."
+    },
+    "construction-bid-compass": {
+      "relocations": [
+        {
+          "upstreamPrefix": "examples/",
+          "localPrefix": "assets/examples/"
+        }
+      ],
+      "fileMappings": [
+        {
+          "upstream": "config.yaml",
+          "local": "references/config.yaml",
+          "kind": "doc"
+        }
+      ],
+      "excludedUpstream": [
+        "README.md"
+      ],
+      "notes": "guide-only adaptation: upstream examples are relocated to assets/examples/ and annotated; config.yaml is carried as a reference; README.md is repository documentation and is not carried."
+    },
+    "variance-analysis": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "review-contract": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "proposal-builder": {
+      "relocations": [
+        {
+          "upstreamPrefix": "reference/",
+          "localPrefix": "references/"
+        }
+      ],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "hiring-screener": {
+      "relocations": [
+        {
+          "upstreamPrefix": "reference/",
+          "localPrefix": "references/"
+        }
+      ],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "process-mapper": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": [
+        "scripts/"
+      ],
+      "notes": "guide-only adaptation: the three upstream stdlib helpers are excluded; their deterministic formulas are restated in the guide. Root statistical corrections and synthetic fixtures are Floe-owned and preserved byte-identically."
+    },
+    "senior-pm": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": [
+        "scripts/"
+      ],
+      "notes": "guide-only adaptation: the three upstream analysis helpers are excluded; their frameworks are restated in the guide. Root statistical corrections and synthetic fixtures are Floe-owned and preserved byte-identically."
+    },
+    "lesson-plan-builder": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "study-plan-scheduler": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "k12-check-for-understanding": {
+      "relocations": [],
+      "fileMappings": [
+        {
+          "upstream": "LICENSE",
+          "local": "references/licenses/UPSTREAM-LICENSE.txt",
+          "kind": "license"
+        },
+        {
+          "upstream": "NOTICE",
+          "local": "references/licenses/UPSTREAM-NOTICE.txt",
+          "kind": "license"
+        }
+      ],
+      "excludedUpstream": [
+        "rendering/"
+      ],
+      "notes": "guide-only adaptation: the platform-specific rendering/ artifact and the evals rubric are not shipped; the carried per-skill LICENSE/NOTICE are license mappings."
+    },
+    "travel-points-calculator": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "reconciliation": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "close-management": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "financial-statements": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "triage-nda": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "interview-prep": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "performance-review": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": []
+    },
+    "pricing-strategist": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": [],
+      "notes": "scripted tier-2 candidate prepared by the commercial-runtime lane. The three upstream calculators are carried as adapted scripts; scripts/_pricing_io.py, scripts/verify_pricing_skills.py and assets/fixtures/** are Floe-owned and are never regenerated by a mapping. Any script, instruction-code or dependency change holds for a real guest qualification; this preparation never supplies that proof."
+    },
+    "ticket-triage": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": [],
+      "notes": "Guide-only adaptation; local SKILL.md corresponds to the upstream SKILL.md by path identity and is adapted, not a byte-identical carry. A change to the upstream SKILL.md is an editorial re-adaptation for review, not an automatic merge. No scripts, dependencies or connectors. Floe fixtures and editorial are Floe-owned. License evidence is repository-level customer-support/LICENSE."
+    },
+    "draft-response": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": [],
+      "notes": "Guide-only adaptation; local SKILL.md corresponds to the upstream SKILL.md by path identity and is adapted, not a byte-identical carry. A change to the upstream SKILL.md is an editorial re-adaptation for review, not an automatic merge. No scripts, dependencies or connectors. Floe fixtures and editorial are Floe-owned. License evidence is repository-level customer-support/LICENSE."
+    },
+    "kb-article": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": [],
+      "notes": "Guide-only adaptation; local SKILL.md corresponds to the upstream SKILL.md by path identity and is adapted, not a byte-identical carry. A change to the upstream SKILL.md is an editorial re-adaptation for review, not an automatic merge. No scripts, dependencies or connectors. Floe fixtures and editorial are Floe-owned. License evidence is repository-level customer-support/LICENSE."
+    },
+    "vendor-review": {
+      "relocations": [],
+      "fileMappings": [],
+      "excludedUpstream": [],
+      "notes": "Guide-only adaptation and substantial expansion from a 3,170-byte upstream; local SKILL.md corresponds by path identity but is not a byte-identical carry. A change to the upstream SKILL.md is an editorial re-adaptation for review, not an automatic merge. No scripts, dependencies or connectors. Floe fixtures and editorial are Floe-owned. License evidence is the repository root LICENSE because operations has no directory LICENSE."
     }
   },
   "versioning": {

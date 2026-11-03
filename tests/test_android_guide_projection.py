@@ -254,7 +254,7 @@ class ProjectionTest(unittest.TestCase):
     # identity of the frozen set (trusted tooling == immutable B facts)
     # ------------------------------------------------------------------
 
-    def test_frozen_set_is_exactly_the_28_optional_none_rows(self):
+    def test_frozen_set_is_exactly_the_51_optional_none_rows(self):
         registry = json.loads((REPO / "catalog" / "skills.json").read_bytes())
         none_ids = {e["id"] for e in registry["skills"]
                     if e["kind"] == "optional"
@@ -263,11 +263,12 @@ class ProjectionTest(unittest.TestCase):
                     if e["kind"] == "optional"
                     and e["plannedRuntime"]["scriptRuntime"] != "none"}
         builtins = {e["id"] for e in registry["skills"] if e["kind"] == "builtin"}
-        self.assertEqual(len(build_catalog.ANDROID_PORTABLE_GUIDE_IDS), 28)
+        self.assertEqual(len(build_catalog.ANDROID_PORTABLE_GUIDE_IDS), 51)
         self.assertEqual(build_catalog.ANDROID_PORTABLE_GUIDE_IDS, none_ids)
-        self.assertEqual(len(scripted), 11)
+        self.assertNotIn("pricing-strategist", build_catalog.ANDROID_PORTABLE_GUIDE_IDS)
+        self.assertEqual(len(scripted), 12)
         self.assertEqual(len(builtins), 4)
-        self.assertEqual(len(none_ids | scripted | builtins), 43)
+        self.assertEqual(len(none_ids | scripted | builtins), 67)
         self.assertFalse(build_catalog.ANDROID_PORTABLE_GUIDE_IDS
                          & (scripted | builtins | set(hubcore.RESERVED_BUILTIN_IDS)))
         self.assertEqual(build_catalog.ANDROID_PORTABLE_GUIDE_CAPABILITY_CEILING,
