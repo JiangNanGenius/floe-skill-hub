@@ -1,15 +1,15 @@
 {
-  "engineId": "impeccable-0.1.17+floe.1.1.1",
-  "status": "candidate-build-not-qualified",
+  "engineId": "impeccable-0.1.18+floe.1.1.1",
+  "status": "candidate-update-not-qualified",
   "upstream": {
     "project": "pbakaus/impeccable",
     "repository": "https://github.com/pbakaus/impeccable",
-    "commit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
-    "tree": "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72",
-    "engineVersion": "0.1.17",
+    "commit": "f29cd24fdecfa5612e35e34c1c868d4a3fca930c",
+    "tree": "dd704e4fe593e595f274637332aa1ee35060bace",
+    "engineVersion": "0.1.18",
     "packageVersion": "4.7.1",
-    "commitDate": "2026-10-25T22:28:14+08:00",
-    "commitSubject": "Fix: judge only plain radius lengths, not math-function operands (#1168) (#1171)",
+    "commitDate": "2026-10-26T13:18:20-07:00",
+    "commitSubject": "Engine 0.1.18",
     "license": "Apache-2.0",
     "pinAuthority": "floe-skill-hub docs/UPSTREAM-PINS.json (reviewBaselineDate 2026-10-26)",
     "skillEnginePairing": "the skill package under sources/impeccable and every engine artifact are produced from this one commit",
@@ -23,6 +23,12 @@
         ".github/workflows/release-engine.yml (draft-first engine releases)",
         "tests/release-engine-workflow.test.js"
       ]
+    },
+    "supersededPin": {
+      "commit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
+      "tree": "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72",
+      "engineVersion": "0.1.17",
+      "note": "the pin this update replaces; artifacts built from it stay valid until reviewed out"
     }
   },
   "floe": {
@@ -97,5 +103,6 @@
     "artifactBytes": 5594368,
     "captureContractSha256": "099cd85703a5ec7b7f8bd1d13e091421a09e4faf40a42240138cba9cbbc75bac",
     "evidence": "see the 1.1.1 candidate package SHA256SUMS.txt and the Floe private engine111 acceptance records"
-  }
+  },
+  "resolvedVia": "local clone"
 }
