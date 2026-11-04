@@ -1,3 +1,18 @@
+# Current 1.2.0 ARM64 provenance amendment
+
+The current package targets the declared Debian 13 ARM64 profile, minimum App
+1.7.70. Script bytes are unchanged from the authenticated prior 1.1.0 package;
+permissions, tools and upstream pins are unchanged. Actual read-only ARM APT
+candidate pins (including Debian epoch/build) are: python3-numpy=1:2.2.4+ds-1, python3-scipy=1.15.3-1, python3-pandas=2.2.3+dfsg-9, python3-statsmodels=0.14.4+dfsg-1, python3-matplotlib=3.10.1+dfsg1-4.
+APT index availability is not installation, import or Skill-execution proof.
+The static source/dependency/version delta is reviewed; current full ARM64
+workflow and installation qualification remain pending.
+
+## Historical source and qualification records
+
+The following records earlier versions and environments. Their inventories and
+execution observations are history, not current 1.2.0 ARM64 qualifications:
+
 # Provenance — statistical-analysis (Floe adaptation, 1.0.0)
 
 - Upstream repository: https://github.com/K-Dense-AI/scientific-agent-skills

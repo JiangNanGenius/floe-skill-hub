@@ -1,3 +1,16 @@
+# ARM64 1.2.0 modification record
+
+The current component is static Linux ARM64 0.1.17+floe.1.2.0, minimum App 1.7.70.
+The launcher maps Linux arm64 to aarch64-unknown-linux-musl and keeps the existing
+no-download and timeout/cancellation policy. This review also corrects current
+architecture/provenance text and its read-only engine-data mirror. No new tool,
+permission, installer or host fallback was introduced. Current hashes are in
+SOURCE-LOCK.json and the frozen engine descriptor.
+
+## Historical normalization/canonicalization record (1.1.1)
+
+The following is retained history, not the current engine binding:
+
 # Modification record — canonical Floe Impeccable package
 
 Stage 1 (normalize) records are embedded verbatim in `MODIFICATIONS.json`

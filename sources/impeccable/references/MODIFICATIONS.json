@@ -611,6 +611,11 @@
     }
   ],
   "arm64Transition": {
+    "documentationCorrections": [
+      "current SKILL and engine-data mirror identify ARM64",
+      "PROVENANCE binds actual current ARM64 descriptor/engine/capture hashes",
+      "historical regeneration and execution evidence are explicitly separated"
+    ],
     "fromSkillVersion": "1.1.1",
     "guestQualification": "pending; not claimed by this unsigned candidate",
     "launcherChange": "Linux arm64 now resolves aarch64-unknown-linux-musl",
@@ -855,7 +860,7 @@
       "normalized": "name + description scalars only; allowed-tools/Bash/argument-hint/user-invocable/license fields removed (Floe grants come from floe.json and the runtime; the upstream license is preserved under references/licenses/)"
     },
     "launcher": {
-      "canonicalSha256": "6fa39c083ba449209b3731bf5e67e5797282dbde353702ae9f544558f2e53901",
+      "canonicalSha256": "96593d537f05c338f37be10bc8da92dd37e6f6fede98005003ea6880e9491a8d",
       "change": "IMPECCABLE_SKILL_DIR default moved to the canonical read-only data root references/engine-data, with explicit-value override first and a dev-checkout fallback; comments updated; resolution order, digest gate and no-download behaviour unchanged. The snapshot-scan default route now appends `--no-timeout` ONLY when the caller chose no timeout flag (explicit `--timeout-ms` including 0, the `--timeout-ms=` form and explicit `--no-timeout` pass through untouched; the engine still refuses the mutual exclusion; the raw CLI default 120000 ms and every hit-test/round/byte cap are unchanged; pre-1.1.1 engines fail closed on the appended flag)",
       "parentSha256": "b317617bb9f473a4d80b3477543d015f8d7d2645f63f0998acbce43bcbf58cc4"
     },

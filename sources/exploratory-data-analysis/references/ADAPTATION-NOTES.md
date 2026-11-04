@@ -1,3 +1,10 @@
+# Current ARM64 1.2.0 amendment
+
+Only package metadata, dependency profile and provenance changed; runtime scripts
+are byte-identical to the authenticated prior source. See PROVENANCE.md and
+ARM64-MIGRATION.json for current pins. Earlier observations below remain historical,
+not proof of execution in the new ARM64 project environment.
+
 # Adaptation notes — exploratory-data-analysis 1.0.0 (Floe)
 
 Upstream: K-Dense-AI/scientific-agent-skills `skills/exploratory-data-analysis`

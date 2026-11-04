@@ -10,7 +10,7 @@ description: "Use when the user wants to design, redesign, shape, critique, audi
 ## Floe v1 engine surface
 
 This skill runs the Floe Impeccable engine (`scripts/floe-impeccable.sh`), a static
-riscv64 Linux binary built from the pinned upstream commit. It has **no network,
+ARM64 Linux binary built from the pinned upstream commit. It has **no network,
 no Chromium, no DevTools endpoint and no arbitrary JavaScript evaluation**.
 
 Available verbs: `context`, `detect`, `ignores`, `detect-csp`, `palette`,

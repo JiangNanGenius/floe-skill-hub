@@ -22,13 +22,13 @@
   },
   "derivedFileCount": 50,
   "derivedFiles": {
-    "SKILL.md": "120db48f5a37c762c7e2fdec4dc52756a31b0efc468388d3fd6425cec2d6ca3c",
+    "SKILL.md": "ed80543e974d233d59a65704b1727b59f8164e5a962f38192c7d0ee5c1323eeb",
     "floe.json": "cbeb161ba1d542cd15b41a94aa217190de5244ff1bf00f8d1e6d49497554b55b",
     "references/ARM64-ADAPTATION.json": "f0f8d866adb3a51f68701e98023332d0d500a073892e6e557ac0d07a40243041",
-    "references/MODIFICATIONS.json": "cf431af504b92b9fbc61876a7bbe8b1b8fe4935c39e22d775b9cbd3cb4e2d375",
-    "references/MODIFICATIONS.md": "1457c3ebb55268ffceef1bfb0043a470e3aec2caf983f5e8280fead68041d968",
-    "references/PROVENANCE.md": "a0dacaf1101c391402138d55828611f33a51da292b1c23dc63457cd2dac3fdc2",
-    "references/engine-data/SKILL.md": "120db48f5a37c762c7e2fdec4dc52756a31b0efc468388d3fd6425cec2d6ca3c",
+    "references/MODIFICATIONS.json": "c192d74276041361a4af1d47407abf2c98a852b2119e017daefddd5ef5418bdb",
+    "references/MODIFICATIONS.md": "1bef4a30a55420248b0a3e8260b458d3ec2553ce95d397b29db655fed0a912cf",
+    "references/PROVENANCE.md": "4ca7db0b68a85679776742557254a540c07b6d1b76ecb8f3006a1ad85cd23af7",
+    "references/engine-data/SKILL.md": "ed80543e974d233d59a65704b1727b59f8164e5a962f38192c7d0ee5c1323eeb",
     "references/engine-data/VERSION": "bd270b0ddecef6c53cde260e7964048b1186147606e6643d2ccb8cf04e167bd1",
     "references/engine-data/reference/adapt.md": "a68906bd347dab63a36ede8f80e863c207bf9da2160478276405016e5a551709",
     "references/engine-data/reference/adapt.native.md": "70ab0d9c71f298f423ce7998220dc3f43151f5328def778218074bde7318d25c",
@@ -71,7 +71,7 @@
     "references/licenses/LICENSE": "02bb8c3b4e70190e3986c0404ad2fd8d639b4f534252d82379cc1b502b6d1812",
     "references/licenses/LICENSE-NOTE.md": "7c9edf0e628c06c574b8923843c110da3ce3b81e46deff495ed581be75a922d2",
     "references/licenses/NOTICE.md": "c60a093c2845fd9fb82f9c6f742ece31f379f8190b535309d32d66c45ccffdcb",
-    "scripts/floe-impeccable.sh": "6fa39c083ba449209b3731bf5e67e5797282dbde353702ae9f544558f2e53901"
+    "scripts/floe-impeccable.sh": "96593d537f05c338f37be10bc8da92dd37e6f6fede98005003ea6880e9491a8d"
   },
   "notVendored": [
     "browser-bundle/",
@@ -128,7 +128,8 @@
     },
     "skillVersionFile": "0.1.17"
   },
-  "regenerate": "sh <hub>/engines/impeccable/build/skill-source/run_pipeline.sh <pinned-upstream-clone-dir> <hub-root> <new-empty-work-root> (stage1 + stage2 + authoritative Hub helper gate; canonical bytes are emitted at <work-root>/canonical and adopted into <hub>/sources/impeccable only by a reviewed manual copy; existing non-empty output is refused, never deleted)",
+  "previousRegenerate": "sh <hub>/engines/impeccable/build/skill-source/run_pipeline.sh <pinned-upstream-clone-dir> <hub-root> <new-empty-work-root> (stage1 + stage2 + authoritative Hub helper gate; canonical bytes are emitted at <work-root>/canonical and adopted into <hub>/sources/impeccable only by a reviewed manual copy; existing non-empty output is refused, never deleted)",
+  "regenerate": "Current reviewed sources/impeccable at the audited Hub source commit are authoritative; previousRegenerate describes the historical two-stage baseline, with the ARM64 delta recorded in MODIFICATIONS.json.",
   "role": "source lock for the canonical Floe Impeccable skill package and its paired engine",
   "upstream": {
     "commit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",

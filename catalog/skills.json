@@ -1353,7 +1353,7 @@
         "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1433,7 +1433,7 @@
         "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1512,7 +1512,7 @@
         "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1589,7 +1589,7 @@
         "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [
@@ -1742,7 +1742,7 @@
         "packaged": true,
         "published": false,
         "qualified": false,
-        "reviewed": false,
+        "reviewed": true,
         "sourcePinned": true
       },
       "tags": [

@@ -1,3 +1,18 @@
+# Current 1.2.0 ARM64 provenance amendment
+
+The current package targets the declared Debian 13 ARM64 profile, minimum App
+1.7.70. Script bytes are unchanged from the authenticated prior 1.1.0 package;
+permissions, tools and upstream pins are unchanged. Actual read-only ARM APT
+candidate pins (including Debian epoch/build) are: python3-openpyxl=3.1.5+dfsg-2, python3-pdfminer=20221105+dfsg-1.1~deb13u1.
+APT index availability is not installation, import or Skill-execution proof.
+The static source/dependency/version delta is reviewed; current full ARM64
+workflow and installation qualification remain pending.
+
+## Historical source and qualification records
+
+The following records earlier versions and environments. Their inventories and
+execution observations are history, not current 1.2.0 ARM64 qualifications:
+
 # Provenance — markitdown (Floe adaptation, 1.0.0)
 
 - Upstream repository: https://github.com/K-Dense-AI/scientific-agent-skills
@@ -6,7 +21,7 @@
 - License: MIT (root `LICENSE.md` at the pinned commit, Copyright (c) 2025 K-Dense Inc.) — full text at references/licenses/UPSTREAM-LICENSE.txt; per-file audit in references/licenses/LICENSE-NOTE.md
 - IMPORTANT character of this adaptation: NO upstream file bytes are shipped. The upstream skill documents and scripts target the Microsoft MarkItDown pip package (0.1.8) plus Azure/OpenAI/Google external services — none provisionable or permitted here. The upstream MIT material is used as GUIDANCE (routing-table presentation, quality-check discipline, untrusted-text security model, batch safety skeleton), restated/re-implemented first-party with attribution per MIT terms. Full reasoning per file in references/ADAPTATION-NOTES.md.
 - Declared dependency layer (floe.json): openpyxl==3.1.5, pdfminer.six==20221105 — the exact versions the resolved Debian 13 (trixie) riscv64 guest provides as python3-openpyxl (3.1.5+dfsg-2) and python3-pdfminer (20221105+dfsg-1.1~deb13u1). Microsoft markitdown is NOT packaged in trixie and ad-hoc pip at chat time is prohibited; PPTX/CSV/TSV/JSON/TXT paths are pure stdlib.
-- Native routing basis: tool names/semantics resolved from the ACTIVE native source (Local/Worktrees/ios-pencil-live-20261019: FloeAgent/FloeApp/Files/DocumentConversionTool.swift `DocumentConvertTool`/`PDFConvertTool` registrations and the bundled floe-pdf/floe-office contracts) on 2026-10-26 — recorded in references/format-routing.md.
+- Native routing basis: tool names/semantics resolved from the ACTIVE native source (FloeAgent/FloeApp/Files/DocumentConversionTool.swift `DocumentConvertTool`/`PDFConvertTool` registrations and the bundled floe-pdf/floe-office contracts) on 2026-10-26 — recorded in references/format-routing.md.
 - First-release version: 1.0.0 (no previously published id/version exists for this skill; registry versionTarget 1.0.0. The id `markitdown` is kept from the frozen registry row; the SKILL.md states plainly that the Microsoft package is not bundled).
 
 ## Host development evidence (NOT guest execution evidence)

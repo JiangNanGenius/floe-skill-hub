@@ -1,15 +1,11 @@
 #!/bin/sh
 # Floe Impeccable launcher.
 #
-# Runs the Floe engine binary for THIS machine's OS and architecture, including
-# the riscv64 Linux guest that the upstream launcher does not know about
-# (upstream maps only arm64 and x64 and otherwise tries to download a release
-# asset from github.com).
+# Runs the separately installed engine for the resolved machine architecture.
+# The current managed Linux component is aarch64-unknown-linux-musl.
 #
 # Differences from the upstream launcher, all deliberate:
 #
-#   * riscv64 is a first-class architecture (linux-riscv64), so the Floe Linux
-#     guest resolves a real binary instead of failing with "unknown arch";
 #   * there is NO download path and NO user cache. Skill and engine installation
 #     and updates are owned by the Floe Skill Hub (signed catalog, digest-bound
 #     engine). A missing binary is a hard failure that names the expected
