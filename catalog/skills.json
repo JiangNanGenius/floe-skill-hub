@@ -1722,7 +1722,7 @@
         ],
         "execution": {
           "arch": "aarch64",
-          "evidence": "unproven",
+          "evidence": "guest-verified",
           "os": "linux"
         },
         "installPlatforms": [
@@ -1737,7 +1737,7 @@
       "source": "I",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": false,
+        "executionVerified": true,
         "licenseChecked": true,
         "packaged": true,
         "published": false,

@@ -1,0 +1,59 @@
+{
+  "AppAndTestsUnchangedBetweenReportedSources": true,
+  "appBuild": "311",
+  "appVersion": "1.7.70",
+  "cleanVerdictClaimed": false,
+  "compiledSource": "93467386204c588adebdfbac66bf0285a8310f56",
+  "contentDigest": "92be953dcfde593e848f08158ce7b44470e56ce0ef9515c6ec7c159dc394d6be",
+  "contextExit": 0,
+  "engineSHA256": "8221227bf0702fb6f50f9db0f36a7cc15a98bfe1fc1c46e6dc0b1b6d34523213",
+  "finalStatus": "inconclusive",
+  "hashes": {
+    "APP-IMPECCABLE-WORKFLOW.json": {
+      "bytes": 1435,
+      "sha256": "cc974203747069e112ce3fb476b17d5b914d75a71bd81c64801db2a44d21744a"
+    },
+    "facts-round1.json": {
+      "bytes": 7004,
+      "sha256": "bccea78fde87033adc6b040f4ece47b8f0f8e951d965a4c809366cedc79ab1b2"
+    },
+    "identity.v1.json": {
+      "bytes": 837,
+      "sha256": "232fc1ffae9e5ee03ee15fe8e62f4005ba52f0a0b7546b450cc326a85bba0790"
+    },
+    "round1.json": {
+      "bytes": 17885,
+      "sha256": "4dda6880b7a46a70f7440106f1eb36245bd9c466b05f6ec36dd9413615f8a2c3"
+    },
+    "round2.json": {
+      "bytes": 10274,
+      "sha256": "4d033d53e83ece55d88e6975c89379c99be3bc14a33c3781b629fbc07fb5c6ec"
+    },
+    "skill-workflow.json": {
+      "bytes": 863,
+      "sha256": "4f17881d6df538a1ec3226d88c25c1ee997ca50ba2a03130363a50292f7c9b07"
+    },
+    "snapshot.v1.json": {
+      "bytes": 7236,
+      "sha256": "c6a1e93e574247d53aa12b6743ad8a95196a0a9ce021b2a21b8526bbcce37584"
+    }
+  },
+  "identityRejections": [],
+  "identityVerified": true,
+  "nativeHitsAnswered": 58,
+  "officialHubInstallationAccepted": false,
+  "packageSHA256": "1667517c22ea2e2288d6a807e3fe21605fa66390ace16ec46e9a4cb7d9e62bce",
+  "rawEvidence": "Retained privately by the release owner; hashes identify the exact reviewed artifacts.",
+  "runnerCheckoutSource": "211d33cef54934dc1b133c1699e722e5ec757402",
+  "scan1Exit": 3,
+  "scan2Exit": 4,
+  "scope": "Actual App-hosted ARM64 reviewed candidate context and live WebKit native needs/facts, not official Hub install or physical device",
+  "uncoveredRequired": [
+    "pixel-contrast",
+    "reveal-sweep",
+    "content-hidden-at-rest-measure",
+    "script-errors",
+    "cross-origin-iframe",
+    "same-origin-iframe"
+  ]
+}
