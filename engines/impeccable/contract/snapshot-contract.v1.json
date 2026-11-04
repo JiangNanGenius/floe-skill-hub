@@ -15,9 +15,9 @@
     "upstreamCommit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
     "upstreamTree": "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72",
     "pinAuthority": "floe-skill-hub docs/UPSTREAM-PINS.json (reviewBaselineDate 2026-10-26)",
-    "floeAdapterVersion": "1.1.1",
-    "engineId": "impeccable-0.1.17+floe.1.1.1",
-    "targetTriple": "riscv64gc-unknown-linux-musl",
+    "floeAdapterVersion": "1.2.0",
+    "engineId": "impeccable-0.1.17+floe.1.2.0",
+    "targetTriple": "aarch64-unknown-linux-musl",
     "abi": "static ELF, no dynamic loader dependency"
   },
   "transport": {
@@ -239,7 +239,7 @@
     {
       "name": "engine-probe",
       "purpose": "launcher handshake",
-      "stdout": "impeccable-engine 0.1.17+floe.1.1.1\n",
+      "stdout": "impeccable-engine 0.1.17+floe.1.2.0\n",
       "exit": 0
     },
     {

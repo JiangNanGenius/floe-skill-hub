@@ -1,0 +1,22 @@
+{
+  "AppAccepted": false,
+  "FloeAuthoredLicense": "MPL-2.0",
+  "componentVersion": "0.1.17+floe.1.2.0",
+  "engineArtifactSha256": "8221227bf0702fb6f50f9db0f36a7cc15a98bfe1fc1c46e6dc0b1b6d34523213",
+  "guestExecuted": false,
+  "minimumAppVersion": "1.7.70",
+  "nativeBinaryInsideSkillZip": false,
+  "published": false,
+  "runtimeDescriptorSha256": "5beff22108c72cec5835c8e5fa20c89f936ced598cd329f33d40593c4aae86c4",
+  "schemaVersion": 1,
+  "signed": false,
+  "sourceHubCommit": "2b131de49bd44925720cd6e03c6e4dd25b79e21d",
+  "state": "unsigned-signoff-candidate",
+  "upstream": {
+    "commit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
+    "engineVersion": "0.1.17",
+    "project": "pbakaus/impeccable",
+    "tree": "1363fadfb2141db1cf22b4ba171d6fc4dbf5cd72"
+  },
+  "upstreamLicense": "Apache-2.0"
+}

@@ -61,6 +61,26 @@ ADAPTATION_STAGES = ("awaiting-implementation", "planned", "in-progress", "froze
 EXECUTION_EVIDENCE = ("unproven", "guest-verified")
 INSTALL_OFFERS = ("none", "qualified", "fixture-simulated")
 
+# Guest execution planes (ARM64 transition, Root architecture correction
+# 2026-11-05). Both arch values already exist in the review-record execution
+# vocabulary used by validate_review below; no new wire field is introduced.
+#
+# CURRENT_GUEST_PLANE is what NEW guest-execution qualifications attest: the
+# resident Floe Linux guest is AArch64. GUEST_VERIFIED_PLANES is the
+# acceptance set when BINDING already-signed review evidence: portable-source
+# skills keep their truthful historical riscv64 reviews unchanged (existing
+# (id, version) review bytes are immutable and stay data), while new ARM64
+# attestations use "aarch64". Accepting a truthful historical plane here adds
+# no RISC backend and no binary execution: actual execution compatibility is
+# governed by the dependency profiles' target architectures and, for the
+# native engine, by the runtime-dependency descriptor/ELF gate — never by
+# relabeling old evidence. Note the deliberate alias distinction: review
+# records use wire arch "aarch64"; the runtime dependency descriptor uses
+# target arch "arm64".
+CURRENT_GUEST_PLANE = {"os": "linux", "arch": "aarch64", "evidence": "guest-verified"}
+LEGACY_GUEST_PLANE_RISCV64 = {"os": "linux", "arch": "riscv64", "evidence": "guest-verified"}
+GUEST_VERIFIED_PLANES = (CURRENT_GUEST_PLANE, LEGACY_GUEST_PLANE_RISCV64)
+
 # package gates: the strictest active value between the native validator and
 # the signed-archive staging limits.
 MAX_PACKAGE_FILES = 128

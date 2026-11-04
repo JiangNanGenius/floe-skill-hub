@@ -97,7 +97,7 @@ every offered channel and every gate below stays fully enforced:
   always refused;
 - every offered scripted package still requires `status.executionVerified`
   true, frozen adaptation, and its actually bound review
-  `guest-execution-qualified` with execution `linux/riscv64/guest-verified`;
+  `guest-execution-qualified` with truthful guest-verified execution evidence: new ARM64 attestations use `linux/aarch64/guest-verified`, while unchanged portable-source historical proofs retain `linux/riscv64/guest-verified`;
   guide-only packages keep `static-content-reviewed` with
   `{os:null, arch:"n/a", evidence:"unproven"}` and no invented guest claim;
 - the nine mandatory deep-adaptation IDs remain pinned as constants inside

@@ -56,6 +56,12 @@ PATCH_DIR = ENGINE_ROOT / "patches"
 LOCK_PATH = ENGINE_ROOT / "ENGINE-LOCK.json"
 
 CROSS_TARGETS = {
+    "aarch64-unknown-linux-musl": {
+        "zigTarget": "aarch64-linux-musl",
+        "elfMachine": "AArch64",
+        "elfClass": "ELF64",
+        "envPrefix": "AARCH64_UNKNOWN_LINUX_MUSL",
+    },
     "riscv64gc-unknown-linux-musl": {
         "zigTarget": "riscv64-linux-musl",
         "elfMachine": "RISC-V",
@@ -401,13 +407,37 @@ def zig_wrappers(zig_python: Path, work: Path, zig_target: str) -> dict:
     bindir.mkdir(parents=True, exist_ok=True)
     env = {}
     scripts = {}
+    # rustc passes -Wl,--fix-cortex-a53-843419 when linking aarch64 musl
+    # (a workaround for an old Cortex-A53 core erratum). zig cc does not
+    # support that flag, and the Floe ARM64 guest is not an A53 core, so the
+    # cc/cxx drivers filter it (in both -Wl, and bare forms) before invoking
+    # zig. The driver stays a /bin/sh script (a shebang path with a space
+    # cannot be exec'd on macOS); newline-joined argv rebuild preserves
+    # arguments containing spaces; linker argv never contains newlines.
+    filter_block = (
+        'new_args=\n'
+        'for arg in "$@"; do\n'
+        '  case "$arg" in\n'
+        '    --fix-cortex-a53-843419|-Wl,--fix-cortex-a53-843419) continue ;;\n'
+        '  esac\n'
+        '  if [ -z "$new_args" ]; then new_args=$arg; else new_args="$new_args\n$arg"; fi\n'
+        'done\n'
+        "saveIFS=$IFS\n"
+        "IFS='\n'\n"
+        'set -f\n'
+        'set -- $new_args\n'
+        'IFS=$saveIFS\n'
+        'set +f\n'
+    )
     for name, mode in (("cc", "cc"), ("cxx", "c++"), ("ar", "ar")):
         script = bindir / f"zig-{mode}-{'cxx' if name == 'cxx' else name}"
-        script.write_text(
-            f'#!/bin/sh\nexec "{zig_python}" -m ziglang {name} -target {zig_target} "$@"\n'
-            if name != "ar"
-            else f'#!/bin/sh\nexec "{zig_python}" -m ziglang ar "$@"\n'
-        )
+        if name == "ar":
+            script.write_text(f'#!/bin/sh\nexec "{zig_python}" -m ziglang ar "$@"\n')
+        else:
+            script.write_text(
+                f'#!/bin/sh\n{filter_block}'
+                f'exec "{zig_python}" -m ziglang {name} -target {zig_target} "$@"\n'
+            )
         script.chmod(0o755)
         scripts[name] = script
     env["CC"] = str(scripts["cc"])
@@ -696,8 +726,15 @@ def write_dist(args, artifact: Path, target: str, receipt: dict, pin: dict, patc
     upstream_notice = Path(args.build_dir) / "NOTICE.md"
     shutil.copyfile(upstream_license, dist_root / "LICENSE-impeccable-apache-2.0")
     shutil.copyfile(upstream_notice, dist_root / "NOTICE-impeccable.md")
+    # The adapter license is the Hub's MPL-2.0 text. In the curated Hub the
+    # builder finds it at the repository root (ENGINE_ROOT.parent.parent);
+    # standalone or task-private engine checkouts may carry a byte-identical
+    # copy next to the lock instead. Fail closed if neither exists.
+    adapter_license = next((p for p in (ENGINE_ROOT / "LICENSE", HUB_ROOT / "LICENSE") if p.is_file()), None)
+    if adapter_license is None:
+        fail("no MPL-2.0 adapter license found next to the engine lock or at the Hub root")
     (dist_root / "LICENSE-adapter").write_text(
-        (HUB_ROOT / "LICENSE").read_text(encoding="utf-8"), encoding="utf-8"
+        adapter_license.read_text(encoding="utf-8"), encoding="utf-8"
     )
 
     provenance = {

@@ -1,7 +1,7 @@
 # Floe ↔ Impeccable snapshot/facts contract v1
 
-Status: **schema frozen v1** — native (A2) may implement against this document and the
-artifacts listed below while the riscv64 engine build continues in this lane. Engine-observed
+Status: **schema frozen v1** — this private copy carries the 1.2.0 identity for the aarch64-unknown-linux-musl
+candidate build of 2026-11-05; the 1.1.1 riscv64 lineage bytes stay frozen in the Hub. Engine-observed
 golden outputs are still pending (see `engineValidation` in the machine-readable contract).
 
 Contract name: `floe.impeccable.snapshot`, `contractVersion: 1`.
@@ -85,7 +85,7 @@ Binary: `floe-impeccable` (Floe adapter over the pinned engine crates).
 
 | Verb | Purpose |
 | --- | --- |
-| `engine-probe` | launcher handshake; prints `impeccable-engine 0.1.17+floe.1.1.1` |
+| `engine-probe` | launcher handshake; prints `impeccable-engine 0.1.17+floe.1.2.0` |
 | `contract` | prints `snapshot-contract.v1.json` |
 | `snapshot-schema` | prints the producer-facing capture contract (columns, limits, shapes) |
 | `snapshot-scan` | runs the rule pass over a snapshot, answers Needs from supplied facts, writes the result |
@@ -260,4 +260,4 @@ WebKit-vs-Chrome parity signal for A2.
 * The two page fixtures give a deterministic positive path and a deterministic Needs path;
   `tools/fill_facts_from_needs.py` converts an observed Needs into a facts skeleton.
 * Pending from this lane (does not block native implementation): engine-observed goldens under
-  `contract/expected/`, the built riscv64 binary and its receipt, and the launcher.
+  `contract/expected/`, the built aarch64 binary and its receipt, and the launcher.

@@ -61,7 +61,19 @@ fn scan(args: &[&str], out: &Path) -> Scan {
 }
 
 fn doc(scan: &Scan) -> &Value {
-    scan.doc.as_ref().expect("a result document was written")
+    let result = scan.doc.as_ref().expect("a result document was written");
+    // Golden comparisons normalize environment identity below. Check the
+    // actual result independently first, so normalization cannot hide a
+    // guest/host or contract-target mislabel.
+    assert_eq!(result["engine"]["contractTargetTriple"], json!("aarch64-unknown-linux-musl"));
+    assert_eq!(result["engine"]["targetTriple"], json!(env!("FLOE_TARGET_TRIPLE")));
+    let runtime = if cfg!(all(target_arch = "aarch64", target_os = "linux")) {
+        "aarch64-linux"
+    } else {
+        "host-comparison-build"
+    };
+    assert_eq!(result["engine"]["runtimeExecution"], json!(runtime));
+    result
 }
 
 /// Strip the fields that legitimately differ between the pre-patch reference
@@ -70,7 +82,13 @@ fn doc(scan: &Scan) -> &Value {
 fn normalize(mut d: Value) -> Value {
     d["budget"]["elapsedMs"] = json!(0);
     if let Some(engine) = d["engine"].as_object_mut() {
-        for key in ["engineId", "floeAdapterVersion", "adapterCrateVersion"] {
+        // Identity and environment descriptors are not scan behaviour: the
+        // goldens are pre-patch references recorded under earlier adapter
+        // versions and the riscv64 contract triple, so every identity,
+        // target-triple and runtime-execution key is stripped before the
+        // findings/Needs-order/coverage comparison.
+        for key in ["engineId", "floeAdapterVersion", "adapterCrateVersion",
+                    "contractTargetTriple", "targetTriple", "runtimeExecution"] {
             engine.remove(key);
         }
     }

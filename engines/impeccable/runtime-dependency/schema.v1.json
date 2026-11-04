@@ -42,13 +42,13 @@
           "const": "linux"
         },
         "arch": {
-          "const": "riscv64"
+          "const": "arm64"
         },
         "triple": {
-          "const": "riscv64gc-unknown-linux-musl"
+          "const": "aarch64-unknown-linux-musl"
         },
         "format": {
-          "const": "elf64-little-riscv-exec-static"
+          "const": "elf64-little-aarch64-exec-static"
         }
       }
     },
@@ -64,7 +64,7 @@
         "path": {
           "type": "string",
           "maxLength": 256,
-          "pattern": "^engines/impeccable/dist/impeccable-[0-9]+\\.[0-9]+\\.[0-9]+\\+floe\\.[0-9]+\\.[0-9]+\\.[0-9]+/riscv64gc-unknown-linux-musl/floe-impeccable$"
+          "pattern": "^engines/impeccable/dist/impeccable-[0-9]+\\.[0-9]+\\.[0-9]+\\+floe\\.[0-9]+\\.[0-9]+\\.[0-9]+/aarch64-unknown-linux-musl/floe-impeccable$"
         },
         "size": {
           "type": "integer",

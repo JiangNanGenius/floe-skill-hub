@@ -70,10 +70,13 @@ Modes (fixed; there is no arbitrary script/command input):
                 builtins are iOS-only by contract); an empty feed is
                 always refused;
               * every offered scripted manifest requires
-                status.executionVerified true, adaptation frozen, its actual
-                bound review guest-execution-qualified with execution
-                linux/riscv64/guest-verified; guide-only packages keep
-                static-content-reviewed and no invented guest claim;
+                 status.executionVerified true, adaptation frozen, its actual
+                 bound review guest-execution-qualified with a truthful
+                 guest-verified linux plane (hubcore.GUEST_VERIFIED_PLANES:
+                 aarch64 for new attestations, or the retained historical
+                 riscv64 evidence for portable-source skills); guide-only
+                 packages keep static-content-reviewed and no invented guest
+                 claim;
               * the nine pinned mandatory deep-adaptation IDs (constants in
                 this trusted tooling; registry deepAdaptation relabeling can
                 never satisfy the gate) keep their full per-offered contract:
@@ -85,9 +88,9 @@ Modes (fixed; there is no arbitrary script/command input):
                 channel only and no channel may be invented for it; in every
                 offered channel it ships with actual manifest scriptRuntime
                 remote, frozen adaptation, status.executionVerified true and
-                a guest-execution-qualified review bound to
-                linux/riscv64/guest-verified execution — a guide-only
-                replacement of a mandatory slot is refused;
+                 a guest-execution-qualified review bound to a truthful
+                 guest-verified linux plane (hubcore.GUEST_VERIFIED_PLANES)
+                 — a guide-only replacement of a mandatory slot is refused;
                 impeccable must additionally retain its real embedded
                 ``references/engine-dependency.json`` with the builder-
                 validated frozen descriptor and raw engine bytes staged in
@@ -175,6 +178,13 @@ MANDATORY_DEEP_IDS = frozenset({
     "impeccable", "literature-review", "markitdown",
     "scientific-visualization", "statistical-analysis", "webapp-testing",
 })
+# Guest-verified execution acceptance for bound review evidence (ARM64
+# transition, Root architecture correction 2026-11-05): the single authority
+# is hubcore.GUEST_VERIFIED_PLANES. Portable-source skills keep truthful
+# historical riscv64 reviews; new ARM64 attestations use aarch64. This binds
+# already-signed evidence only — it grants no execution path: the native
+# engine stays behind the ARM64 runtime-dependency descriptor/ELF gate, and
+# dependency profiles govern where scripts may run.
 COMMIT_RE = re.compile(r"[0-9a-f]{40}")
 REVIEW_REL_RE = re.compile(
     r"^([a-z][a-z0-9]*(?:-[a-z0-9]+)*)/((?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*))\.review\.json$")
@@ -672,11 +682,12 @@ def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
         and never Hub download offers, so they are excluded by exact ID
         (a kind/display/source relabel can never hide an arbitrary mandatory
         ID behind the builtin name); the builtins are iOS-only by contract;
-      * every offered scripted entry requires status.executionVerified true,
-        frozen adaptation and its actually bound review
-        guest-execution-qualified with execution linux/riscv64/guest-verified;
-        guide-only entries keep static-content-reviewed with an empty
-        execution claim (no invented guest claim, no guide/script relabel);
+       * every offered scripted entry requires status.executionVerified true,
+         frozen adaptation and its actually bound review
+         guest-execution-qualified with a truthful guest-verified linux plane
+         (hubcore.GUEST_VERIFIED_PLANES);
+         guide-only entries keep static-content-reviewed with an empty
+         execution claim (no invented guest claim, no guide/script relabel);
       * the nine mandatory deep IDs stay pinned in this trusted tooling
         (registry relabeling can never satisfy the gate): whenever such an ID
         is actually offered it ships as a real remote-script package matching
@@ -742,11 +753,12 @@ def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
                 if registry_entry["status"]["adaptation"] != "frozen":
                     raise SigningError(f"{entry['id']}: offered script package requires "
                                        "frozen adaptation")
-                if record["reviewStage"] != "guest-execution-qualified" or record["execution"] != {
-                        "os": "linux", "arch": "riscv64", "evidence": "guest-verified"}:
+                if record["reviewStage"] != "guest-execution-qualified" or record["execution"] not in hubcore.GUEST_VERIFIED_PLANES:
                     raise SigningError(f"{entry['id']}: offered script package requires "
-                                       "a guest-execution-qualified review bound to "
-                                       "linux/riscv64/guest-verified execution")
+                                       "a guest-execution-qualified review bound to a "
+                                       "truthful guest-verified linux plane "
+                                       "(aarch64, or the retained historical riscv64 "
+                                       "evidence); see hubcore.GUEST_VERIFIED_PLANES")
             else:
                 if record["reviewStage"] != "static-content-reviewed":
                     raise SigningError(f"{entry['id']}: guide-only package must keep a "

@@ -69,7 +69,11 @@ def apply(text: str, expected: dict[str, str]) -> tuple[str, list[str]]:
             raise SystemExit(
                 f"cannot safely {label}: expected exactly one matching line, found {len(hits)}"
             )
-        new_text, n = re.subn(pattern, repl, text, count=1, flags=re.MULTILINE)
+        # A plain replacement template interprets backslash escapes (the
+        # engine-probe stdout ends in a literal "\n" two-character JSON escape,
+        # which re would rewrite as a real newline and corrupt the JSON), so
+        # substitute through a function: the computed text is inserted verbatim.
+        new_text, n = re.subn(pattern, lambda _m, r=repl: r, text, count=1, flags=re.MULTILINE)
         if n != 1:
             raise SystemExit(f"cannot safely {label}: substitution failed")
         if new_text != text:

@@ -1929,8 +1929,9 @@ def load_prior_proof(root, skill_id, prior_version, prior_content_digest, prior_
         return refuse(f"prior review stage is {record.get('reviewStage')!r}, not "
                       "guest-execution-qualified")
     execution = record.get("execution")
-    if execution != {"os": "linux", "arch": "riscv64", "evidence": "guest-verified"}:
-        return refuse(f"prior execution plane is {execution}, not the real guest proof shape")
+    if execution not in hubcore.GUEST_VERIFIED_PLANES:
+        return refuse(f"prior execution plane is {execution}, not a truthful "
+                      "guest-verified proof shape (hubcore.GUEST_VERIFIED_PLANES)")
     if record.get("contentDigest") != prior_content_digest:
         return refuse("prior review contentDigest does not match the published package")
     if record.get("packageSha256") != prior_package_sha256:
@@ -2538,7 +2539,10 @@ def _proposed_review(skill_id, version, content_digest, package_sha256, manifest
                         f"（{proof.get('keyID')}）；本记录不声明任何新的执行。变更路径："
                         f"{', '.join(changed_paths) or '无'}。"),
         }
-        execution = {"os": "linux", "arch": "riscv64", "evidence": "guest-verified"}
+        # Carry the reused prior proof's plane forward unchanged: historical
+        # riscv64 evidence stays riscv64, new ARM64 attestations stay aarch64
+        # (the record claims NO new execution). hubcore.GUEST_VERIFIED_PLANES.
+        execution = dict(proof["execution"])
         stage = "guest-execution-qualified"
     if (retained_frontmatter or {}).get("upstreamDescriptionRetained"):
         notes["en"] += (" The upstream description change was deliberately retained: the local "

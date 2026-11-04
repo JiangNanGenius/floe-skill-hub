@@ -85,6 +85,8 @@ pub fn actual_target_triple() -> &'static str {
 pub fn runtime_execution_state() -> &'static str {
     if cfg!(all(target_arch = "riscv64", target_os = "linux")) {
         "riscv64-linux"
+    } else if cfg!(all(target_arch = "aarch64", target_os = "linux")) {
+        "aarch64-linux"
     } else {
         "host-comparison-build"
     }

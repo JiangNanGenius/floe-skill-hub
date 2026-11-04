@@ -761,9 +761,9 @@ def prior_published_proof(root, base_commit, trust, baseline, id_, prior_version
     if record["decision"] != "approve" or record["id"] != id_ \
             or record["version"] != prior_version:
         _hold(f"{id_}: prior review identity/decision drift")
-    if record["execution"] != {"os": "linux", "arch": "riscv64",
-                               "evidence": "guest-verified"}:
-        _hold(f"{id_}: prior review execution is not the real guest plane")
+    if record["execution"] not in hubcore.GUEST_VERIFIED_PLANES:
+        _hold(f"{id_}: prior review execution is not a truthful "
+              "guest-verified plane (hubcore.GUEST_VERIFIED_PLANES)")
     pins = sorted({row["publication"] for row in ledger_rows_at(root, base_commit)
                    for offer in row["offers"]
                    if offer["id"] == id_ and offer["version"] == prior_version
@@ -774,7 +774,11 @@ def prior_published_proof(root, base_commit, trust, baseline, id_, prior_version
             "recordSha256": hubcore.sha256_hex(record_bytes),
             "contentDigest": record["contentDigest"],
             "packageSha256": record["packageSha256"],
-            "publicationPins": pins}
+            "publicationPins": pins,
+            # Truthful exact reuse: the reused plane is a COPY of the signed
+            # prior record's execution, so a staged record can never relabel
+            # the prior proof across architectures.
+            "execution": dict(record["execution"])}
 
 
 # ---------------------------------------------------------------------------
@@ -1282,10 +1286,12 @@ def derive_expected_apply_set(repo_root, base_commit, stage_root, *, today,
         guide = manifest["scriptRuntime"] == "none"
         expected_stage = "static-content-reviewed" if guide \
             else "guest-execution-qualified"
+        # Scripted offers verify against the EXACT plane of the reused prior
+        # proof (loaded below): the accepted-plane set is used only to
+        # validate the signed prior proof itself, never to accept a staged
+        # record that relabels the reused plane. (Root review 2026-11-05.)
         expected_execution = ({"os": None, "arch": "n/a", "evidence": "unproven"}
-                              if guide else
-                              {"os": "linux", "arch": "riscv64",
-                               "evidence": "guest-verified"})
+                              if guide else None)
         staged_tier = entry["candidate"].get("tier")
         if (staged_tier == 1) != guide or (staged_tier == 2) == guide:
             _hold(f"{id_}: staged tier flag contradicts the recomputed runtime")
@@ -1301,6 +1307,7 @@ def derive_expected_apply_set(repo_root, base_commit, stage_root, *, today,
                       "qualification and never auto-published")
             proof = prior_published_proof(repo_root, base_commit, trust,
                                           ensure_baseline(), id_, bump["from"])
+            expected_execution = proof["execution"]  # exact truthful reuse
             executable_digests[id_].update({
                 "fingerprint": candidate_fp,
                 "instructionCodeFingerprint": candidate_icf,

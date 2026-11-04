@@ -1,0 +1,12 @@
+{
+  "changes": [
+    "ARM64 Debian package identities/versions from the actual read-only APT query"
+  ],
+  "fromSkillVersion": "1.1.0",
+  "fullSkillExecutionQualified": false,
+  "minimumAppVersion": "1.7.70",
+  "newInstallOrModuleImportClaimed": false,
+  "permissionOrToolExpansion": false,
+  "profile": "debian13-arm64",
+  "toSkillVersion": "1.2.0"
+}

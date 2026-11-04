@@ -172,11 +172,11 @@ fn the_probe_and_version_identify_the_floe_adapter() {
     // example while the binary printed 1.1.0).
     let (code, stdout, _) = run(&["engine-probe"]);
     assert_eq!(code, 0);
-    assert_eq!(stdout, "impeccable-engine 0.1.17+floe.1.1.1\n");
+    assert_eq!(stdout, "impeccable-engine 0.1.17+floe.1.2.0\n");
 
     let (code, stdout, _) = run(&["--version"]);
     assert_eq!(code, 0);
-    assert_eq!(stdout, "0.1.17+floe.1.1.1\n");
+    assert_eq!(stdout, "0.1.17+floe.1.2.0\n");
 }
 
 #[test]

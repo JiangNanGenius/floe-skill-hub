@@ -35,9 +35,10 @@ Safety invariants enforced here (fail closed):
     environment fields (unknown keys are rejected); no traversal, absolute,
     backslash, NUL, empty or dot paths;
   * artifact: bounded read, exact size+SHA-256 match, ELF64 little-endian
-    RISC-V EXEC static only (no PT_INTERP), bounded program-header table with
-    in-file offsets. The binary is NEVER executed on the host and no producer
-    code is invoked;
+    AArch64 EXEC static only (no PT_INTERP; e_machine 183), bounded
+    program-header table with in-file offsets. A legacy RISC-V (e_machine 243)
+    artifact can never pass. The binary is NEVER executed on the host and no
+    producer code is invoked;
   * filesystem: no symlinks at the artifact path or any ancestor, and the
     frozen descriptor is likewise read without symlink indirection.
 
@@ -57,11 +58,15 @@ CAPTURE_CONTRACT_SUPPORTED_VERSION = 1
 MAX_RUNTIME_ARTIFACT_BYTES = 16 * 1024 * 1024  # 16 MiB native hard cap, known component only
 
 KNOWN_COMPONENT_ID = "impeccable-engine"
+# Frozen managed runtime-component target (ARM64 transition, 2026-11-05):
+# the resident Floe Linux guest executes AArch64; this is the verified guest
+# fact, never the build host CPU. The legacy RISC-V tuple is deliberately not
+# allowlisted: the retired RISC-V native engine can never pass this gate.
 KNOWN_TARGET = {
     "os": "linux",
-    "arch": "riscv64",
-    "triple": "riscv64gc-unknown-linux-musl",
-    "format": "elf64-little-riscv-exec-static",
+    "arch": "arm64",
+    "triple": "aarch64-unknown-linux-musl",
+    "format": "elf64-little-aarch64-exec-static",
 }
 DESCRIPTOR_KEYS = {"schemaVersion", "componentID", "componentVersion",
                    "minimumAppVersion", "target", "artifact", "captureContract"}
@@ -74,8 +79,8 @@ FLOE_COMPONENT_VERSION_PATTERN = re.compile(
     r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\+floe\."
     r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)")
 
-# ELF64 little-endian RISC-V EXEC static invariants
-EM_RISCV = 243
+# ELF64 little-endian AArch64 EXEC static invariants
+EM_AARCH64 = 183
 ET_EXEC = 2
 ELFCLASS64 = 2
 ELFDATA2LSB = 1
@@ -185,8 +190,8 @@ def parse_descriptor(data, field="engine-dependency"):
     """Parse raw descriptor bytes and validate the value strictly.
 
     Only the exact canonical UTF-8 JSON bytes accepted: the frozen
-    descriptor is canonical, exactly 563 bytes, with no trailing newline
-    and no duplicate keys. So:
+    descriptor is canonical (the published component's is 563 bytes), with
+    no trailing newline and no duplicate keys. So:
 
       * the raw material must be valid strict UTF-8 (no UTF-16/UTF-32 or
         other sniffable encodings, and no UTF-8 BOM);
@@ -227,7 +232,7 @@ def parse_descriptor(data, field="engine-dependency"):
 
 
 def _validate_elf(data, field):
-    """ELF64 little-endian RISC-V EXEC static, bounded headers, no PT_INTERP."""
+    """ELF64 little-endian AArch64 EXEC static, bounded headers, no PT_INTERP."""
     if len(data) < ELF64_EHDR_SIZE:
         raise hubcore.HubError(f"{field}: artifact smaller than an ELF64 header")
     if not data.startswith(b"\x7fELF"):
@@ -241,9 +246,10 @@ def _validate_elf(data, field):
         raise hubcore.HubError(
             f"{field}: artifact must be an EXEC binary, not shared/relocatable/PIE "
             f"(e_type={e_type})")
-    if e_machine != EM_RISCV:
+    if e_machine != EM_AARCH64:
         raise hubcore.HubError(
-            f"{field}: artifact machine is not RISC-V (e_machine={e_machine})")
+            f"{field}: artifact machine is not AArch64 (e_machine={e_machine}; "
+            f"expected {EM_AARCH64})")
     if e_version != EV_CURRENT:
         raise hubcore.HubError(f"{field}: artifact e_version must be {EV_CURRENT}")
     (e_entry, e_phoff, e_shoff, e_flags, e_ehsize, e_phentsize, e_phnum,

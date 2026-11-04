@@ -610,6 +610,16 @@
       "upstreamSha256": "00a0f810e67c82540ffc549f3b2012a27a1720a4271c0a82f315325517a7afca"
     }
   ],
+  "arm64Transition": {
+    "fromSkillVersion": "1.1.1",
+    "guestQualification": "pending; not claimed by this unsigned candidate",
+    "launcherChange": "Linux arm64 now resolves aarch64-unknown-linux-musl",
+    "minimumAppVersion": "1.7.70",
+    "noNewOldBackendCompatibility": true,
+    "previousLauncherSha256": "227161bd43a09b05cb949e5750c1037ca34e06968f9ed3979052bbb1d3f8a1b8",
+    "runtimeDescriptorSha256": "5beff22108c72cec5835c8e5fa20c89f936ced598cd329f33d40593c4aae86c4",
+    "toSkillVersion": "1.2.0"
+  },
   "canonicalization": {
     "descriptor": {
       "authority": "frozen managed runtime artifact descriptor v1 for 0.1.17+floe.1.1.1 (engines/impeccable/runtime-dependency/, Root engine111 public-source acceptance 2026-10-27)",
@@ -845,7 +855,7 @@
       "normalized": "name + description scalars only; allowed-tools/Bash/argument-hint/user-invocable/license fields removed (Floe grants come from floe.json and the runtime; the upstream license is preserved under references/licenses/)"
     },
     "launcher": {
-      "canonicalSha256": "227161bd43a09b05cb949e5750c1037ca34e06968f9ed3979052bbb1d3f8a1b8",
+      "canonicalSha256": "6fa39c083ba449209b3731bf5e67e5797282dbde353702ae9f544558f2e53901",
       "change": "IMPECCABLE_SKILL_DIR default moved to the canonical read-only data root references/engine-data, with explicit-value override first and a dev-checkout fallback; comments updated; resolution order, digest gate and no-download behaviour unchanged. The snapshot-scan default route now appends `--no-timeout` ONLY when the caller chose no timeout flag (explicit `--timeout-ms` including 0, the `--timeout-ms=` form and explicit `--no-timeout` pass through untouched; the engine still refuses the mutual exclusion; the raw CLI default 120000 ms and every hit-test/round/byte cap are unchanged; pre-1.1.1 engines fail closed on the appended flag)",
       "parentSha256": "b317617bb9f473a4d80b3477543d015f8d7d2645f63f0998acbce43bcbf58cc4"
     },

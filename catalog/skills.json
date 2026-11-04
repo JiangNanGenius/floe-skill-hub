@@ -1311,7 +1311,7 @@
       "firstParty": null,
       "id": "exploratory-data-analysis",
       "kind": "optional",
-      "minimumAppVersion": "1.7.60",
+      "minimumAppVersion": "1.7.70",
       "name": {
         "en": "EDA",
         "zh-Hans": "数据探索"
@@ -1328,8 +1328,8 @@
           "workspace.write"
         ],
         "execution": {
-          "arch": "riscv64",
-          "evidence": "guest-verified",
+          "arch": "aarch64",
+          "evidence": "unproven",
           "os": "linux"
         },
         "installPlatforms": [
@@ -1348,12 +1348,12 @@
       "source": "K",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": true,
+        "executionVerified": false,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
-        "qualified": true,
-        "reviewed": true,
+        "qualified": false,
+        "reviewed": false,
         "sourcePinned": true
       },
       "tags": [
@@ -1376,7 +1376,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "skills/exploratory-data-analysis/SKILL.md"
       },
-      "versionTarget": "1.1.0"
+      "versionTarget": "1.2.0"
     },
     {
       "category": "research-data",
@@ -1388,7 +1388,7 @@
       "firstParty": null,
       "id": "statistical-analysis",
       "kind": "optional",
-      "minimumAppVersion": "1.7.60",
+      "minimumAppVersion": "1.7.70",
       "name": {
         "en": "Statistical Analysis",
         "zh-Hans": "统计分析"
@@ -1405,8 +1405,8 @@
           "workspace.write"
         ],
         "execution": {
-          "arch": "riscv64",
-          "evidence": "guest-verified",
+          "arch": "aarch64",
+          "evidence": "unproven",
           "os": "linux"
         },
         "installPlatforms": [
@@ -1428,12 +1428,12 @@
       "source": "K",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": true,
+        "executionVerified": false,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
-        "qualified": true,
-        "reviewed": true,
+        "qualified": false,
+        "reviewed": false,
         "sourcePinned": true
       },
       "tags": [
@@ -1456,7 +1456,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "skills/statistical-analysis/SKILL.md"
       },
-      "versionTarget": "1.1.0"
+      "versionTarget": "1.2.0"
     },
     {
       "category": "research-data",
@@ -1468,7 +1468,7 @@
       "firstParty": null,
       "id": "scientific-visualization",
       "kind": "optional",
-      "minimumAppVersion": "1.7.60",
+      "minimumAppVersion": "1.7.70",
       "name": {
         "en": "Scientific Visualization",
         "zh-Hans": "数据可视化"
@@ -1485,8 +1485,8 @@
           "workspace.write"
         ],
         "execution": {
-          "arch": "riscv64",
-          "evidence": "guest-verified",
+          "arch": "aarch64",
+          "evidence": "unproven",
           "os": "linux"
         },
         "installPlatforms": [
@@ -1507,12 +1507,12 @@
       "source": "K",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": true,
+        "executionVerified": false,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
-        "qualified": true,
-        "reviewed": true,
+        "qualified": false,
+        "reviewed": false,
         "sourcePinned": true
       },
       "tags": [
@@ -1535,7 +1535,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "skills/scientific-visualization/SKILL.md"
       },
-      "versionTarget": "1.1.0"
+      "versionTarget": "1.2.0"
     },
     {
       "category": "office-documents",
@@ -1547,7 +1547,7 @@
       "firstParty": null,
       "id": "markitdown",
       "kind": "optional",
-      "minimumAppVersion": "1.7.60",
+      "minimumAppVersion": "1.7.70",
       "name": {
         "en": "MarkItDown",
         "zh-Hans": "格式转 Markdown"
@@ -1564,8 +1564,8 @@
           "workspace.write"
         ],
         "execution": {
-          "arch": "riscv64",
-          "evidence": "guest-verified",
+          "arch": "aarch64",
+          "evidence": "unproven",
           "os": "linux"
         },
         "installPlatforms": [
@@ -1584,12 +1584,12 @@
       "source": "K",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": true,
+        "executionVerified": false,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
-        "qualified": true,
-        "reviewed": true,
+        "qualified": false,
+        "reviewed": false,
         "sourcePinned": true
       },
       "tags": [
@@ -1613,7 +1613,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "skills/markitdown/SKILL.md"
       },
-      "versionTarget": "1.1.0"
+      "versionTarget": "1.2.0"
     },
     {
       "category": "research-data",
@@ -1702,7 +1702,7 @@
       "firstParty": null,
       "id": "impeccable",
       "kind": "optional",
-      "minimumAppVersion": "1.7.60",
+      "minimumAppVersion": "1.7.70",
       "name": {
         "en": "Impeccable",
         "zh-Hans": "Impeccable"
@@ -1721,8 +1721,8 @@
           "browser.interact"
         ],
         "execution": {
-          "arch": "riscv64",
-          "evidence": "guest-verified",
+          "arch": "aarch64",
+          "evidence": "unproven",
           "os": "linux"
         },
         "installPlatforms": [
@@ -1737,12 +1737,12 @@
       "source": "I",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": true,
+        "executionVerified": false,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
-        "qualified": true,
-        "reviewed": true,
+        "qualified": false,
+        "reviewed": false,
         "sourcePinned": true
       },
       "tags": [
@@ -1767,7 +1767,7 @@
         "retrievedAt": "2026-10-26",
         "skillManifestPath": "plugin/skills/impeccable/SKILL.md"
       },
-      "versionTarget": "1.1.1"
+      "versionTarget": "1.2.0"
     },
     {
       "category": "design-creation",
@@ -3090,8 +3090,8 @@
       "category": "office-documents",
       "deepAdaptation": false,
       "description": {
-        "zh-Hans": "用于工程报价前的施工估算：整理工程量与单价，分项计取管理费、利润及预备费，形成可复核的预算底稿。",
-        "en": "Prepare a traceable construction estimate before quoting: organize quantities and rates, apply explicit overhead, profit and contingency, and produce a reviewable budget draft."
+        "en": "Prepare a traceable construction estimate before quoting: organize quantities and rates, apply explicit overhead, profit and contingency, and produce a reviewable budget draft.",
+        "zh-Hans": "用于工程报价前的施工估算：整理工程量与单价，分项计取管理费、利润及预备费，形成可复核的预算底稿。"
       },
       "firstParty": null,
       "id": "construction-estimate-builder",
@@ -3305,19 +3305,54 @@
       "versionTarget": "1.0.0"
     },
     {
-      "id": "variance-analysis",
-      "planNumber": 47,
-      "kind": "optional",
-      "source": "A",
-      "name": {
-        "en": "Variance Analysis",
-        "zh-Hans": "差异分析"
-      },
+      "category": "research-data",
+      "deepAdaptation": false,
       "description": {
         "en": "Decompose budget, forecast and period variances into price, volume, mix and spend drivers, with materiality thresholds, quantified commentary and waterfall tables.",
         "zh-Hans": "将预算、预测与期间差异拆解为价格、数量、结构和费用驱动，给出重要性阈值、量化说明与瀑布表。"
       },
-      "category": "research-data",
+      "firstParty": null,
+      "id": "variance-analysis",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.66",
+      "name": {
+        "en": "Variance Analysis",
+        "zh-Hans": "差异分析"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      },
+      "planNumber": 47,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
       "tags": [
         "finance",
         "fpa",
@@ -3326,22 +3361,42 @@
         "forecast",
         "waterfall"
       ],
-      "deepAdaptation": false,
       "upstream": {
-        "repository": "https://github.com/anthropics/knowledge-work-plugins",
         "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
-        "path": "finance/skills/variance-analysis",
-        "skillManifestPath": "finance/skills/variance-analysis/SKILL.md",
         "licenseEvidencePath": "finance/LICENSE",
-        "licenseStatus": "verified",
-        "repositoryLicense": "Apache-2.0",
         "licenseNote": {
           "en": "Upstream repository license and the named license evidence path were read at the pinned commit; the package preserves the full license text under references/licenses/. This is not a per-file legal opinion.",
           "zh-Hans": "已在固定提交读取上游仓库许可及所列许可证据路径；包在 references/licenses/ 保留完整许可文本。这不构成逐文件法律意见。"
         },
-        "retrievedAt": "2026-10-31"
+        "licenseStatus": "verified",
+        "path": "finance/skills/variance-analysis",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-10-31",
+        "skillManifestPath": "finance/skills/variance-analysis/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Review a contract against an uploaded negotiation playbook; flag clause deviations, generate prioritized redlines and summarize business impact.",
+        "zh-Hans": "依据上传的谈判手册审查合同，标记条款偏离，生成分级红线建议并总结业务影响。"
       },
       "firstParty": null,
+      "id": "review-contract",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.66",
+      "name": {
+        "en": "Contract Review",
+        "zh-Hans": "合同审查"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      },
+      "planNumber": 48,
       "plannedRuntime": {
         "capabilities": [
           "workspace.read",
@@ -3360,8 +3415,7 @@
         "scriptRuntime": "none",
         "tools": []
       },
-      "versionTarget": "1.0.0",
-      "minimumAppVersion": "1.7.66",
+      "source": "A",
       "status": {
         "adaptation": "frozen",
         "executionVerified": false,
@@ -3372,25 +3426,6 @@
         "reviewed": true,
         "sourcePinned": true
       },
-      "notes": {
-        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
-        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
-      }
-    },
-    {
-      "id": "review-contract",
-      "planNumber": 48,
-      "kind": "optional",
-      "source": "A",
-      "name": {
-        "en": "Contract Review",
-        "zh-Hans": "合同审查"
-      },
-      "description": {
-        "en": "Review a contract against an uploaded negotiation playbook; flag clause deviations, generate prioritized redlines and summarize business impact.",
-        "zh-Hans": "依据上传的谈判手册审查合同，标记条款偏离，生成分级红线建议并总结业务影响。"
-      },
-      "category": "office-documents",
       "tags": [
         "legal",
         "contracts",
@@ -3398,22 +3433,42 @@
         "playbook",
         "negotiation"
       ],
-      "deepAdaptation": false,
       "upstream": {
-        "repository": "https://github.com/anthropics/knowledge-work-plugins",
         "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
-        "path": "legal/skills/review-contract",
-        "skillManifestPath": "legal/skills/review-contract/SKILL.md",
         "licenseEvidencePath": "legal/LICENSE",
-        "licenseStatus": "verified",
-        "repositoryLicense": "Apache-2.0",
         "licenseNote": {
           "en": "Upstream repository license and the named license evidence path were read at the pinned commit; the package preserves the full license text under references/licenses/. This is not a per-file legal opinion.",
           "zh-Hans": "已在固定提交读取上游仓库许可及所列许可证据路径；包在 references/licenses/ 保留完整许可文本。这不构成逐文件法律意见。"
         },
-        "retrievedAt": "2026-10-31"
+        "licenseStatus": "verified",
+        "path": "legal/skills/review-contract",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-10-31",
+        "skillManifestPath": "legal/skills/review-contract/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "writing-communication",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Turn discovery notes, transcripts, photos, drawings or an RFP into a scoped, costed proposal or SOW using the owner's rate card and past proposals.",
+        "zh-Hans": "把发现记录、转写、照片、图纸或 RFP 转化为有范围、有报价的提案或工作说明书，并使用负责人的费率卡和历史提案。"
       },
       "firstParty": null,
+      "id": "proposal-builder",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.66",
+      "name": {
+        "en": "Proposal Builder",
+        "zh-Hans": "提案生成"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      },
+      "planNumber": 49,
       "plannedRuntime": {
         "capabilities": [
           "workspace.read",
@@ -3432,8 +3487,7 @@
         "scriptRuntime": "none",
         "tools": []
       },
-      "versionTarget": "1.0.0",
-      "minimumAppVersion": "1.7.66",
+      "source": "A",
       "status": {
         "adaptation": "frozen",
         "executionVerified": false,
@@ -3444,25 +3498,6 @@
         "reviewed": true,
         "sourcePinned": true
       },
-      "notes": {
-        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
-        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
-      }
-    },
-    {
-      "id": "proposal-builder",
-      "planNumber": 49,
-      "kind": "optional",
-      "source": "A",
-      "name": {
-        "en": "Proposal Builder",
-        "zh-Hans": "提案生成"
-      },
-      "description": {
-        "en": "Turn discovery notes, transcripts, photos, drawings or an RFP into a scoped, costed proposal or SOW using the owner's rate card and past proposals.",
-        "zh-Hans": "把发现记录、转写、照片、图纸或 RFP 转化为有范围、有报价的提案或工作说明书，并使用负责人的费率卡和历史提案。"
-      },
-      "category": "writing-communication",
       "tags": [
         "sales",
         "proposals",
@@ -3471,22 +3506,42 @@
         "scope",
         "sow"
       ],
-      "deepAdaptation": false,
       "upstream": {
-        "repository": "https://github.com/anthropics/knowledge-work-plugins",
         "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
-        "path": "small-business/skills/proposal-builder",
-        "skillManifestPath": "small-business/skills/proposal-builder/SKILL.md",
         "licenseEvidencePath": "LICENSE",
-        "licenseStatus": "verified",
-        "repositoryLicense": "Apache-2.0",
         "licenseNote": {
           "en": "Upstream repository license and the named license evidence path were read at the pinned commit; the package preserves the full license text under references/licenses/. This is not a per-file legal opinion.",
           "zh-Hans": "已在固定提交读取上游仓库许可及所列许可证据路径；包在 references/licenses/ 保留完整许可文本。这不构成逐文件法律意见。"
         },
-        "retrievedAt": "2026-10-31"
+        "licenseStatus": "verified",
+        "path": "small-business/skills/proposal-builder",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-10-31",
+        "skillManifestPath": "small-business/skills/proposal-builder/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Screen applications against a job-derived rubric, produce an evidenced ranked shortlist, candidate reply drafts and an onboarding checklist.",
+        "zh-Hans": "按岗位评分表筛选申请，产出有证据的排序名单、候选人回复草稿与入职清单。"
       },
       "firstParty": null,
+      "id": "hiring-screener",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.66",
+      "name": {
+        "en": "Hiring Screener",
+        "zh-Hans": "招聘筛选"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      },
+      "planNumber": 50,
       "plannedRuntime": {
         "capabilities": [
           "workspace.read",
@@ -3505,8 +3560,7 @@
         "scriptRuntime": "none",
         "tools": []
       },
-      "versionTarget": "1.0.0",
-      "minimumAppVersion": "1.7.66",
+      "source": "A",
       "status": {
         "adaptation": "frozen",
         "executionVerified": false,
@@ -3517,25 +3571,6 @@
         "reviewed": true,
         "sourcePinned": true
       },
-      "notes": {
-        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
-        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
-      }
-    },
-    {
-      "id": "hiring-screener",
-      "planNumber": 50,
-      "kind": "optional",
-      "source": "A",
-      "name": {
-        "en": "Hiring Screener",
-        "zh-Hans": "招聘筛选"
-      },
-      "description": {
-        "en": "Screen applications against a job-derived rubric, produce an evidenced ranked shortlist, candidate reply drafts and an onboarding checklist.",
-        "zh-Hans": "按岗位评分表筛选申请，产出有证据的排序名单、候选人回复草稿与入职清单。"
-      },
-      "category": "office-documents",
       "tags": [
         "hr",
         "hiring",
@@ -3544,22 +3579,42 @@
         "shortlist",
         "onboarding"
       ],
-      "deepAdaptation": false,
       "upstream": {
-        "repository": "https://github.com/anthropics/knowledge-work-plugins",
         "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
-        "path": "small-business/skills/hiring-screener",
-        "skillManifestPath": "small-business/skills/hiring-screener/SKILL.md",
         "licenseEvidencePath": "LICENSE",
-        "licenseStatus": "verified",
-        "repositoryLicense": "Apache-2.0",
         "licenseNote": {
           "en": "Upstream repository license and the named license evidence path were read at the pinned commit; the package preserves the full license text under references/licenses/. This is not a per-file legal opinion.",
           "zh-Hans": "已在固定提交读取上游仓库许可及所列许可证据路径；包在 references/licenses/ 保留完整许可文本。这不构成逐文件法律意见。"
         },
-        "retrievedAt": "2026-10-31"
+        "licenseStatus": "verified",
+        "path": "small-business/skills/hiring-screener",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-10-31",
+        "skillManifestPath": "small-business/skills/hiring-screener/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Document a business process as a BPMN-style swimlane, compute cycle time and value-add ratio, and rank bottlenecks with deterministic rules and constraint-focused actions.",
+        "zh-Hans": "以 BPMN 风格泳道记录业务流程，计算周期时间与增值比，并用确定性规则排序瓶颈，给出聚焦约束的行动。"
       },
       "firstParty": null,
+      "id": "process-mapper",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.66",
+      "name": {
+        "en": "Process Mapper",
+        "zh-Hans": "流程映射"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      },
+      "planNumber": 51,
       "plannedRuntime": {
         "capabilities": [
           "workspace.read",
@@ -3578,8 +3633,7 @@
         "scriptRuntime": "none",
         "tools": []
       },
-      "versionTarget": "1.0.0",
-      "minimumAppVersion": "1.7.66",
+      "source": "R",
       "status": {
         "adaptation": "frozen",
         "executionVerified": false,
@@ -3590,25 +3644,6 @@
         "reviewed": true,
         "sourcePinned": true
       },
-      "notes": {
-        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
-        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
-      }
-    },
-    {
-      "id": "process-mapper",
-      "planNumber": 51,
-      "kind": "optional",
-      "source": "R",
-      "name": {
-        "en": "Process Mapper",
-        "zh-Hans": "流程映射"
-      },
-      "description": {
-        "en": "Document a business process as a BPMN-style swimlane, compute cycle time and value-add ratio, and rank bottlenecks with deterministic rules and constraint-focused actions.",
-        "zh-Hans": "以 BPMN 风格泳道记录业务流程，计算周期时间与增值比，并用确定性规则排序瓶颈，给出聚焦约束的行动。"
-      },
-      "category": "productivity-organization",
       "tags": [
         "operations",
         "bpmn",
@@ -3617,22 +3652,42 @@
         "cycle-time",
         "lean"
       ],
-      "deepAdaptation": false,
       "upstream": {
-        "repository": "https://github.com/alirezarezvani/claude-skills",
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
-        "path": "business-operations/skills/process-mapper",
-        "skillManifestPath": "business-operations/skills/process-mapper/SKILL.md",
         "licenseEvidencePath": "LICENSE",
-        "licenseStatus": "verified",
-        "repositoryLicense": "MIT",
         "licenseNote": {
           "en": "Upstream repository license and the named license evidence path were read at the pinned commit; the package preserves the full license text under references/licenses/. This is not a per-file legal opinion.",
           "zh-Hans": "已在固定提交读取上游仓库许可及所列许可证据路径；包在 references/licenses/ 保留完整许可文本。这不构成逐文件法律意见。"
         },
-        "retrievedAt": "2026-10-31"
+        "licenseStatus": "verified",
+        "path": "business-operations/skills/process-mapper",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT",
+        "retrievedAt": "2026-10-31",
+        "skillManifestPath": "business-operations/skills/process-mapper/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Run portfolio health reviews, quantitative risk analysis, capacity planning and executive reporting for multi-project programs using deterministic scoring and templates.",
+        "zh-Hans": "使用确定性评分与模板，为多项目组合执行健康度评审、量化风险分析、容量规划与高管报告。"
       },
       "firstParty": null,
+      "id": "senior-pm",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.66",
+      "name": {
+        "en": "Senior PM",
+        "zh-Hans": "高级项目管理"
+      },
+      "notes": {
+        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
+        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
+      },
+      "planNumber": 52,
       "plannedRuntime": {
         "capabilities": [
           "workspace.read",
@@ -3651,8 +3706,7 @@
         "scriptRuntime": "none",
         "tools": []
       },
-      "versionTarget": "1.0.0",
-      "minimumAppVersion": "1.7.66",
+      "source": "R",
       "status": {
         "adaptation": "frozen",
         "executionVerified": false,
@@ -3663,25 +3717,6 @@
         "reviewed": true,
         "sourcePinned": true
       },
-      "notes": {
-        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
-        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
-      }
-    },
-    {
-      "id": "senior-pm",
-      "planNumber": 52,
-      "kind": "optional",
-      "source": "R",
-      "name": {
-        "en": "Senior PM",
-        "zh-Hans": "高级项目管理"
-      },
-      "description": {
-        "en": "Run portfolio health reviews, quantitative risk analysis, capacity planning and executive reporting for multi-project programs using deterministic scoring and templates.",
-        "zh-Hans": "使用确定性评分与模板，为多项目组合执行健康度评审、量化风险分析、容量规划与高管报告。"
-      },
-      "category": "productivity-organization",
       "tags": [
         "project-management",
         "portfolio",
@@ -3689,56 +3724,21 @@
         "capacity",
         "executive-reporting"
       ],
-      "deepAdaptation": false,
       "upstream": {
-        "repository": "https://github.com/alirezarezvani/claude-skills",
         "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
-        "path": "project-management/skills/senior-pm",
-        "skillManifestPath": "project-management/skills/senior-pm/SKILL.md",
         "licenseEvidencePath": "LICENSE",
-        "licenseStatus": "verified",
-        "repositoryLicense": "MIT",
         "licenseNote": {
           "en": "Upstream repository license and the named license evidence path were read at the pinned commit; the package preserves the full license text under references/licenses/. This is not a per-file legal opinion.",
           "zh-Hans": "已在固定提交读取上游仓库许可及所列许可证据路径；包在 references/licenses/ 保留完整许可文本。这不构成逐文件法律意见。"
         },
-        "retrievedAt": "2026-10-31"
+        "licenseStatus": "verified",
+        "path": "project-management/skills/senior-pm",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT",
+        "retrievedAt": "2026-10-31",
+        "skillManifestPath": "project-management/skills/senior-pm/SKILL.md"
       },
-      "firstParty": null,
-      "plannedRuntime": {
-        "capabilities": [
-          "workspace.read",
-          "workspace.write"
-        ],
-        "execution": {
-          "arch": "n/a",
-          "evidence": "unproven",
-          "os": null
-        },
-        "installPlatforms": [
-          "ios",
-          "android"
-        ],
-        "pythonPackagesPlan": [],
-        "scriptRuntime": "none",
-        "tools": []
-      },
-      "versionTarget": "1.0.0",
-      "minimumAppVersion": "1.7.66",
-      "status": {
-        "adaptation": "frozen",
-        "executionVerified": false,
-        "licenseChecked": true,
-        "packaged": true,
-        "published": false,
-        "qualified": true,
-        "reviewed": true,
-        "sourcePinned": true
-      },
-      "notes": {
-        "en": "Guide using user-supplied workspace data. No bundled script, external connector or live-data source.",
-        "zh-Hans": "使用你提供的工作区资料，不附带脚本、外部连接或实时数据源。"
-      }
+      "versionTarget": "1.0.0"
     },
     {
       "category": "productivity-organization",
@@ -4467,44 +4467,25 @@
       "versionTarget": "1.0.0"
     },
     {
-      "id": "pricing-strategist",
-      "planNumber": 63,
-      "kind": "optional",
-      "source": "R",
-      "name": {
-        "en": "Pricing Strategist",
-        "zh-Hans": "定价策略"
-      },
+      "category": "product-requirements",
+      "deepAdaptation": false,
       "description": {
         "en": "Choose a pricing model, analyze willingness to pay and design Good/Better/Best tiers with deterministic calculations and reviewable trade-offs.",
         "zh-Hans": "选择定价模型、分析支付意愿，并用确定性计算与可复核的取舍设计 Good/Better/Best 套餐。"
       },
-      "category": "product-requirements",
-      "tags": [
-        "pricing",
-        "packaging",
-        "monetization",
-        "willingness-to-pay",
-        "van-westendorp",
-        "tiers",
-        "saas"
-      ],
-      "deepAdaptation": false,
-      "upstream": {
-        "repository": "https://github.com/alirezarezvani/claude-skills",
-        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
-        "path": "commercial/skills/pricing-strategist",
-        "skillManifestPath": "commercial/skills/pricing-strategist/SKILL.md",
-        "licenseEvidencePath": "LICENSE",
-        "licenseStatus": "verified",
-        "repositoryLicense": "MIT",
-        "licenseNote": {
-          "en": "Pinned upstream MIT license and skill path were read at the exact commit; the full license is preserved under references/licenses/ and the three reference documents are byte-identical. This is not a per-file legal opinion.",
-          "zh-Hans": "已在固定提交读取上游 MIT 许可与技能路径；完整许可保存在 references/licenses/，三份参考文档逐字节一致。这不构成逐文件法律意见。"
-        },
-        "retrievedAt": "2026-11-01"
-      },
       "firstParty": null,
+      "id": "pricing-strategist",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.66",
+      "name": {
+        "en": "Pricing Strategist",
+        "zh-Hans": "定价策略"
+      },
+      "notes": {
+        "en": "Runs three standard-library calculators in the task's Linux environment: pricing-model fit, Van Westendorp willingness to pay and Good/Better/Best packaging. Reports stay in the workspace; no network or data service is called.",
+        "zh-Hans": "在任务的 Linux 环境中运行三个标准库计算器：定价模型匹配、Van Westendorp 支付意愿与 Good/Better/Best 套餐设计。报告保存在工作区，不调用网络或数据服务。"
+      },
+      "planNumber": 63,
       "plannedRuntime": {
         "capabilities": [
           "execution.remote",
@@ -4525,8 +4506,7 @@
           "exec.shell"
         ]
       },
-      "versionTarget": "1.0.0",
-      "minimumAppVersion": "1.7.66",
+      "source": "R",
       "status": {
         "adaptation": "frozen",
         "executionVerified": true,
@@ -4537,10 +4517,30 @@
         "reviewed": true,
         "sourcePinned": true
       },
-      "notes": {
-        "en": "Runs three standard-library calculators in the task's Linux environment: pricing-model fit, Van Westendorp willingness to pay and Good/Better/Best packaging. Reports stay in the workspace; no network or data service is called.",
-        "zh-Hans": "在任务的 Linux 环境中运行三个标准库计算器：定价模型匹配、Van Westendorp 支付意愿与 Good/Better/Best 套餐设计。报告保存在工作区，不调用网络或数据服务。"
-      }
+      "tags": [
+        "pricing",
+        "packaging",
+        "monetization",
+        "willingness-to-pay",
+        "van-westendorp",
+        "tiers",
+        "saas"
+      ],
+      "upstream": {
+        "commit": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Pinned upstream MIT license and skill path were read at the exact commit; the full license is preserved under references/licenses/ and the three reference documents are byte-identical. This is not a per-file legal opinion.",
+          "zh-Hans": "已在固定提交读取上游 MIT 许可与技能路径；完整许可保存在 references/licenses/，三份参考文档逐字节一致。这不构成逐文件法律意见。"
+        },
+        "licenseStatus": "verified",
+        "path": "commercial/skills/pricing-strategist",
+        "repository": "https://github.com/alirezarezvani/claude-skills",
+        "repositoryLicense": "MIT",
+        "retrievedAt": "2026-11-01",
+        "skillManifestPath": "commercial/skills/pricing-strategist/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
     },
     {
       "category": "productivity-organization",

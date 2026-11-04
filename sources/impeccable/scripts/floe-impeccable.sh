@@ -94,7 +94,7 @@ esac
 
 case "$os-$arch" in
   linux-riscv64) triple=riscv64gc-unknown-linux-musl ;;
-  linux-arm64) triple=aarch64-unknown-linux-gnu ;;
+  linux-arm64) triple=aarch64-unknown-linux-musl ;;
   linux-x64) triple=x86_64-unknown-linux-gnu ;;
   darwin-arm64) triple=aarch64-apple-darwin ;;
   darwin-x64) triple=x86_64-apple-darwin ;;

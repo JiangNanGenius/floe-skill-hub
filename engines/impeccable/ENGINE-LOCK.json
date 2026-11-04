@@ -1,6 +1,7 @@
 {
-  "engineId": "impeccable-0.1.17+floe.1.1.1",
+  "engineId": "impeccable-0.1.17+floe.1.2.0",
   "status": "candidate-build-not-qualified",
+  "lane": "arm64 transition candidate 1.2.0 built from this lock against the unchanged upstream pin; the published 1.1.1 riscv64 record and its bytes are preserved unchanged",
   "upstream": {
     "project": "pbakaus/impeccable",
     "repository": "https://github.com/pbakaus/impeccable",
@@ -11,7 +12,7 @@
     "commitDate": "2026-10-25T22:28:14+08:00",
     "commitSubject": "Fix: judge only plain radius lengths, not math-function operands (#1168) (#1171)",
     "license": "Apache-2.0",
-    "pinAuthority": "floe-skill-hub docs/UPSTREAM-PINS.json (reviewBaselineDate 2026-10-26)",
+    "pinAuthority": "floe-skill-hub docs/UPSTREAM-PINS.json (reviewBaselineDate 2026-10-26); unchanged from the 1.1.1 lineage",
     "skillEnginePairing": "the skill package under sources/impeccable and every engine artifact are produced from this one commit",
     "earlierObservedCommit": {
       "commit": "936867543ac2576920d663cc9803597f6044f3ac",
@@ -26,7 +27,7 @@
     }
   },
   "floe": {
-    "adapterVersion": "1.1.1",
+    "adapterVersion": "1.2.0",
     "contractVersion": 1,
     "adapterCrate": "crates/floe-impeccable",
     "adapterSourceOfTruth": "engines/impeccable/adapter",
@@ -35,7 +36,13 @@
       "patches/0001-floe-context-network-and-updater-trim.patch",
       "patches/0002-floe-rule-pass-limiter.patch"
     ],
-    "identityGate": "the adapter crate Cargo.toml version is the single component version constant; build/build_engine.py derives the receipt, dist directory name and the contract engine identity from it and refuses to compile on any drift (Root contract review 2026-10-27: the 1.1.0 contract carried a stale 1.0.0 engine-probe example)"
+    "identityGate": "the adapter crate Cargo.toml version is the single component version constant; build/build_engine.py derives the receipt, dist directory name and the contract engine identity from it and refuses to compile on any drift",
+    "adapterChangesFrom1.1.1": [
+      "adapter/src/error.rs runtime_execution_state gains the aarch64-linux branch so the shipped arm64 guest artifact self-describes as aarch64-linux instead of host-comparison-build",
+      "adapter/tests/contract_embedded.rs and adapter/tests/snapshot_scan.rs pinned 1.1.1 literals move to 1.2.0",
+      "adapter/tools/sync_contract_identity.py substitutes through a function so the engine-probe stdout's literal backslash-n JSON escape is not rewritten as a real newline (latent re-template escape bug, found while bumping this candidate)",
+      "adapter/tests/data expected-* goldens keep their recorded 1.1.0 identity: normalize() strips engineId/adapter version before golden comparison and they are deliberate pre-patch references"
+    ]
   },
   "vendoring": "the full upstream source tree is never committed to this repository; build_engine.py exports it from the pinned commit into task scratch, applies the tracked patches and stages the tracked adapter crate",
   "toolchain": {
@@ -43,19 +50,20 @@
     "rustcCommitHash": "48a229ceaefd4985c50990b14116b6d856af0985",
     "rustupTargets": [
       "aarch64-apple-darwin",
+      "aarch64-unknown-linux-musl",
       "riscv64gc-unknown-linux-musl",
       "riscv64gc-unknown-linux-gnu"
     ],
     "zig": "0.17.0",
-    "zigRole": "C compiler and linker driver for the riscv64 musl target only; the engine dependency graph is pure Rust after patch 0001, so no C or assembly is compiled",
+    "zigRole": "C compiler and linker driver for the aarch64 musl target only; the engine dependency graph is pure Rust after patch 0001, so no C or assembly is compiled",
     "buildHost": "aarch64-apple-darwin"
   },
   "targets": {
-    "riscv64gc-unknown-linux-musl": {
-      "purpose": "the Floe Linux guest (Debian 13 riscv64 userland on the pinned 4.15 kernel, TinyEMU)",
-      "linkage": "static (crt-static, Rust self-contained musl runtime); no dynamic loader or glibc version dependency",
-      "rustflags": "-C target-feature=+crt-static",
-      "guestExecution": "pending; a static ABI check and a host-side behavioral run are not guest execution"
+    "aarch64-unknown-linux-musl": {
+      "purpose": "the Floe Linux ARM64 guest (Debian 13 arm64 userland on the App-owned ARM64 VM; TinyEMU riscv64 is superseded for this transition round)",
+      "linkage": "static (crt-static, Rust self-contained musl runtime disabled in favour of the zig musl sysroot startup files); no dynamic loader or glibc version dependency",
+      "rustflags": "-C target-feature=+crt-static -C link-self-contained=no",
+      "guestExecution": "pending; a static ABI check and any host-side emulated run are not guest execution and must not be claimed as such"
     },
     "aarch64-apple-darwin": {
       "purpose": "host behavioral comparison and the adapter test suite; never shipped as the guest engine",
@@ -92,10 +100,10 @@
   ],
   "component": {
     "componentID": "impeccable-engine",
-    "componentVersion": "0.1.17+floe.1.1.1",
-    "artifactSha256": "774333d30d6e54604342182e49853851c7e0ebfa9e92fc4216f4a68872d00a1a",
-    "artifactBytes": 5594368,
-    "captureContractSha256": "099cd85703a5ec7b7f8bd1d13e091421a09e4faf40a42240138cba9cbbc75bac",
-    "evidence": "see the 1.1.1 candidate package SHA256SUMS.txt and the Floe private engine111 acceptance records"
+    "componentVersion": "0.1.17+floe.1.2.0",
+    "artifactSha256": "8221227bf0702fb6f50f9db0f36a7cc15a98bfe1fc1c46e6dc0b1b6d34523213",
+    "artifactBytes": 6003320,
+    "captureContractSha256": "4e1f032d46d84eb3eabbe4eaf90b39798950f7b442e92135270d48aadf191706",
+    "evidence": "FACTS.json + dist/ receipt in this private scope; no publication, no App, no guest claim"
   }
 }
