@@ -40,6 +40,7 @@ PY_VERSION_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._+!-]*$")
 CAPABILITIES = (
     "workspace.read", "workspace.write", "workspace.delete", "network",
     "browser.observe", "browser.interact", "credentials",
+    "device.observe", "device.interact",
     "javascript.local", "python.local", "execution.remote",
 )
 PLATFORMS = ("ios", "macos", "linux")
@@ -411,13 +412,61 @@ def parse_frontmatter(markdown_bytes):
     return values, body
 
 
+def _validate_native_ios_configuration(manifest):
+    """Curated admission for the already compiled local iOS Bridge contract.
+
+    This does not declare new native authority. Other configuration shapes
+    stay outside this deliberately narrow authoring contract.
+    """
+    device_caps = {"device.observe", "device.interact"}
+    caps = set(manifest.get("capabilities", []))
+    if (manifest.get("id") != "floe-ios-automation"
+            and "configuration" not in manifest and not caps & device_caps):
+        return
+    required_fields = {"schemaVersion", "id", "version", "capabilities", "tools",
+                       "platforms", "scriptRuntime", "pythonPackages", "configuration"}
+    if set(manifest) != required_fields:
+        raise HubError("native iOS manifest requires its exact declared fields")
+    if (type(manifest.get("schemaVersion")) is not int
+            or manifest.get("schemaVersion") != 1
+            or manifest.get("id") != "floe-ios-automation"
+            or caps != device_caps | {"credentials"}
+            or manifest.get("platforms") != ["ios"]
+            or manifest.get("scriptRuntime", "none") != "none"
+            or manifest.get("tools", []) or manifest.get("pythonPackages", [])):
+        raise HubError("native iOS configuration requires the fixed device Skill, grants and script-free iOS shape")
+    config = manifest.get("configuration")
+    if not isinstance(config, dict) or set(config) != {"fields"}:
+        raise HubError("native iOS configuration requires exactly fields")
+    fields = config["fields"]
+    keys = {"key", "title", "description", "kind", "valueType", "required",
+            "sensitive", "connectionKind"}
+    if (not isinstance(fields, list) or len(fields) != 1
+            or not isinstance(fields[0], dict) or set(fields[0]) != keys):
+        raise HubError("native iOS configuration requires one exact bridge field")
+    field = fields[0]
+    if (field["key"] != "bridge" or field["kind"] != "connection"
+            or field["valueType"] != "string" or field["required"] is not True
+            or field["sensitive"] is not False
+            or field["connectionKind"] != "ios.bridge.local"):
+        raise HubError("native iOS bridge connection declaration is invalid")
+    for name, limit in (("title", 120), ("description", 600)):
+        text = field[name]
+        if not isinstance(text, dict) or set(text) != {"en", "zh-Hans"}:
+            raise HubError(f"native iOS {name} requires bilingual display text")
+        for value in text.values():
+            if (not isinstance(value, str) or not 1 <= len(value.encode("utf-8")) <= limit
+                    or any(unicodedata.category(ch).startswith("C") for ch in value)):
+                raise HubError(f"native iOS {name} is outside the display-text bounds")
+
+
 def parse_manifest(manifest_bytes):
     """floe.json: native schemaVersion-1 contract with an exact key set."""
     object_value = json.loads(manifest_bytes)
     if not isinstance(object_value, dict):
         raise HubError("floe.json top level must be an object")
     allowed = {"schemaVersion", "id", "version", "capabilities", "tools",
-               "platforms", "scriptRuntime", "pythonPackages"}
+               "platforms", "scriptRuntime", "pythonPackages", "configuration"}
     unknown = set(object_value) - allowed
     if unknown:
         raise HubError(f"floe.json unknown fields: {sorted(unknown)}")
@@ -473,6 +522,7 @@ def parse_manifest(manifest_bytes):
             or (runtime == "remote" and "execution.remote" in capabilities_set
                 and "exec.shell" in tools)):
         raise HubError("pythonPackages require a declared script runtime and its execution tool")
+    _validate_native_ios_configuration(object_value)
     return object_value
 
 

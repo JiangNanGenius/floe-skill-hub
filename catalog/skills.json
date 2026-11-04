@@ -4834,6 +4834,64 @@
         "skillManifestPath": "operations/skills/vendor-review/SKILL.md"
       },
       "versionTarget": "1.0.0"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Connect the local Bridge in chat, then observe and control this iPhone or iPad with the device tools.",
+        "zh-Hans": "在聊天中连接本机 Bridge，再通过设备工具观察和操作当前 iPhone 或 iPad。"
+      },
+      "firstParty": null,
+      "id": "floe-ios-automation",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.70",
+      "name": {
+        "en": "iOS Automation",
+        "zh-Hans": "iOS 本机自动化"
+      },
+      "notes": {
+        "en": "Optional first-party native guide/configuration; source pin and MPL-2.0 evidence are in packaged PROVENANCE.md. Chat pairing uses the compiled device tools, not a script or browser grant. Physical-device workflow is not attested by static review.",
+        "zh-Hans": "可选的第一方原生工具说明与配置；来源提交及 MPL-2.0 许可见包内 PROVENANCE.md。聊天配对使用已实现的设备工具，不借用脚本或浏览器权限。静态审核不证明真实设备工作流。"
+      },
+      "planNumber": 68,
+      "plannedRuntime": {
+        "capabilities": [
+          "credentials",
+          "device.observe",
+          "device.interact"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "F",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "ios",
+        "automation",
+        "device",
+        "bridge"
+      ],
+      "upstream": null,
+      "versionTarget": "1.0.2"
     }
   ]
 }

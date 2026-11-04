@@ -56,7 +56,9 @@
           "credentials",
           "javascript.local",
           "python.local",
-          "execution.remote"
+          "execution.remote",
+          "device.observe",
+          "device.interact"
         ]
       }
     },
