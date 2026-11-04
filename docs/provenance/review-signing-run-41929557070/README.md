@@ -1,0 +1,3 @@
+# ARM64 Impeccable execution review
+
+The existing [GitHub Actions signing run](https://github.com/JiangNanGenius/floe-agent/actions/runs/41929557070) signed one exact Impeccable review. Trusted tooling `1480ef11deaf29c663321b8ebc78e06035f6a3a3`; unsigned data-only input `6dba9295363a877e800d7f448a0f16dff570c22c`. Execution qualification covers the App-hosted Simulator with a real ARM64 Linux guest. The final scan was inconclusive and retained uncovered passes; it is not a clean-page verdict, physical-device test or final official Hub installation acceptance. The script-free native iOS automation guide retains its separately signed static-content review. Four data adaptations remain static-reviewed and are not admitted as executed.
