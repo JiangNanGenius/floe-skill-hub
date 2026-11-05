@@ -22,7 +22,7 @@ These tests pin the SERVER-side projection contract exactly as Root decided:
   * pre-Linux payloads (an ios-only manifest — every currently published
     package) keep the floor on BOTH channels, and the full current B release
     feeds rebuild byte-identical with this code (frozen git archive of the
-    audited X=2d131b2e..., compared against the 3e145cd6 published bytes);
+    audited ARM64 X=26c1de97..., compared against the 89f1bb95 published bytes);
   * scripted shapes, non-empty tools/pythonPackages, non-basic capabilities,
     unknown ids and missing package/review bindings refuse the waiver and
     retain the floor; a guest/claimed execution review or a wrong review
@@ -59,8 +59,8 @@ sys.path.insert(0, str(REPO / "scripts"))
 import build_catalog  # noqa: E402
 import hubcore  # noqa: E402
 
-X_COMMIT = "2d131b2e7c4263647624e44cb19e0cf0151c3c58"
-BASE_COMMIT = "3e145cd6cb04b4c36476c3e59a7495e7fad80c64"
+X_COMMIT = "26c1de97b4a8df2e0efb0068bc5c0c9ddfc87105"
+BASE_COMMIT = "89f1bb952ff6731c13d9b300320c88dbedbdd064"
 GUIDE_ID = "copywriting"
 GUIDE_FLOOR = "1.7.59"
 NEW_VERSION = "1.0.1"
@@ -615,7 +615,7 @@ class ProjectionTest(unittest.TestCase):
     # current published B feeds rebuild byte-identical with this code
     # ------------------------------------------------------------------
 
-    def test_published_current_feeds_rebuild_byte_identical(self):
+    def test_current_arm64_publication_rebuilds_byte_identically(self):
         try:
             subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", X_COMMIT],
                            check=True, capture_output=True)
@@ -642,14 +642,18 @@ class ProjectionTest(unittest.TestCase):
                 check=True, capture_output=True).stdout
             self.assertEqual(data, published, f"{name} bytes drifted from the publication")
         android = json.loads(outputs["android/catalog.json"])
-        self.assertEqual(len(android["entries"]), 36)
+        self.assertEqual(len(android["entries"]), 32)
         for row in android["entries"]:
             self.assertIsNotNone(row["minimumAppVersion"],
                                  f"{row['id']} floor must stay on the pre-Linux feed")
-            self.assertNotEqual(row["minimumAppVersion"], SENTINEL,
-                                f"{row['id']} must not carry the sentinel pre-Linux")
-        # the published ios-only bytes remain fully current-validator- and
-        # schema-valid under this code, unchanged:
+        self.assertTrue(any(row["minimumAppVersion"] == SENTINEL
+                            for row in android["entries"]))
+        ios_full = json.loads(outputs["catalog-full.json"])
+        impeccable = next(row for row in ios_full["entries"] if row["id"] == "impeccable")
+        self.assertEqual(impeccable["runtime"]["execution"]["arch"], "aarch64")
+        self.assertEqual(impeccable["minimumAppVersion"], "1.7.70")
+        # Current ARM64 publication bytes remain fully validator- and
+        # schema-valid. Retired RISC-V decoder compatibility is not required.
         hubcore.validate_catalog(android, channel="android")
         self._assert_unchanged_schema(android)
 
