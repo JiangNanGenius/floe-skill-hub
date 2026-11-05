@@ -1,0 +1,20 @@
+{
+  "candidateChecks": 9,
+  "channels": [
+    "ios"
+  ],
+  "dataCommit": "f0ba5848e34a0d234b22ec276a846f238a0938d7",
+  "kind": "authenticated-guest-review-not-catalog-publication",
+  "minimumAppVersion": "1.7.74",
+  "officialInstallAttested": false,
+  "oldPackageBytesUnchanged": true,
+  "review": {
+    "contentDigest": "d26a5a82af83366d4423e275a5335b2218d9dc11a0a4844c6bff027782e20094",
+    "id": "markitdown",
+    "packageSHA256": "5d7716a7d71b2557a06f1f2cc08381dff4bf25e98b3e6ae0b0487d9ae0251fb5",
+    "reviewSHA256": "79f753ecec2a7b8a0c46a9049dc78d93737a14f5cfa32812521045777f75b5d2",
+    "version": "1.2.0"
+  },
+  "runID": 42043288324,
+  "toolingCommit": "5b2673d2481014a0e20d3e7432a7ad37011dcdab"
+}
