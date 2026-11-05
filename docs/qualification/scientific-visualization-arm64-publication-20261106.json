@@ -1,0 +1,36 @@
+{
+  "all77OptionalIOSOffersPresent": true,
+  "candidateChecks": 7,
+  "catalogSigningRun": 42060661736,
+  "channel": "ios",
+  "counts": {
+    "android": 32,
+    "android-full": 68,
+    "ios": 39,
+    "ios-full": 77
+  },
+  "feedCommit": "594b72047056c2e522df3d890feb77ed1258d57f",
+  "firstRemoteRefUpdateFailed": true,
+  "fourBuiltinFeaturesRemainAppProvided": true,
+  "historicalLedgerRowsPreserved": 46,
+  "kind": "authenticated-scientific-visualization-publication-and-public-readback",
+  "ledgerRows": 50,
+  "manualSourceReview": "The previously unpublished static review was upgraded after full real-guest evidence and authenticated signing. That reviewed source checkpoint was published before catalog signing. The unchanged B->X->Y->H mutation guard passed with the independently resolved live baseline. Earlier package bytes and all prior ledger rows remain intact.",
+  "minimumAppVersion": "1.7.75",
+  "notAttested": [
+    "official App installation and native automatic dependency preparation",
+    "Android/x86 script execution",
+    "physical-device or UI acceptance"
+  ],
+  "packageBytesChanged": false,
+  "publicFilesReadBack": 13,
+  "publicationCommit": "fb95af91fe0e75e772e3e0c239ab437c6a30c0c9",
+  "qualifiedSource": "4f3b1d22670b6f4c943cbc97025452ebee717bc6",
+  "recovery": "Verified remote was unchanged and pushed the same immutable publication commit; original error is retained.",
+  "reviewSigningRun": 42059831104,
+  "reviewedPublicationBaseline": "4f3b1d22670b6f4c943cbc97025452ebee717bc6",
+  "signedOutputsVerified": 309,
+  "skillID": "scientific-visualization",
+  "toolingCommit": "b21ebce13b3729f7b4ef6e725812bacb6dd59192",
+  "version": "1.2.0"
+}
