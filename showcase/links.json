@@ -159,6 +159,10 @@
       "auditStatus": "audited",
       "links": []
     },
+    "cash-flow-snapshot": {
+      "auditStatus": "audited",
+      "links": []
+    },
     "citation-management": {
       "auditStatus": "audited",
       "links": [
@@ -922,6 +926,10 @@
       "auditStatus": "audited",
       "links": []
     },
+    "grant-rfp-writer": {
+      "auditStatus": "audited",
+      "links": []
+    },
     "hiring-screener": {
       "auditStatus": "audited",
       "links": []
@@ -935,6 +943,14 @@
       "links": []
     },
     "interview-prep": {
+      "auditStatus": "audited",
+      "links": []
+    },
+    "inventory-planner": {
+      "auditStatus": "audited",
+      "links": []
+    },
+    "job-post-builder": {
       "auditStatus": "audited",
       "links": []
     },

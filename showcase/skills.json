@@ -284,6 +284,51 @@
         }
       ]
     },
+    "cash-flow-snapshot": {
+      "cover": {
+        "alt": {
+          "en": "A cream cash-planning ledger with layered paper arches and restrained brass coin stacks.",
+          "zh-Hans": "奶油色现金规划账册、层叠纸拱和黄铜钱币。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe原创，AI辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/cash-flow-snapshot.jpg"
+      },
+      "examples": [
+        {
+          "output": {
+            "en": "Period totals, a dated cash schedule, scenario assumptions and source-visible risks.",
+            "zh-Hans": "分期汇总、按日期的资金表、情景假设和可追溯的风险说明。"
+          },
+          "prompt": {
+            "en": "Use this opening balance and AR/AP export to draft a 90-day cash plan, including payment-date gaps and a delayed-customer scenario.",
+            "zh-Hans": "根据期初余额和应收应付导出，整理90天现金流，标出具体付款日期的缺口，并比较客户延期付款的情景。"
+          }
+        }
+      ],
+      "gallery": [],
+      "overview": {
+        "en": "See how your available cash may move across the next 30, 60 and 90 days. Supply a dated opening balance, receivables, payables and known costs; each period reconciles to its transaction detail and carries its closing balance forward.\n\nA date-ordered schedule can reveal a payroll or supplier gap even when month-end cash looks positive. Compare named payment-delay scenarios and keep unknown inputs visible. Without an opening balance the result stays a net-change report, with no invented cash-on-hand figure.",
+        "zh-Hans": "把当前可用余额、应收应付和已知费用整理成未来30、60、90天的现金流草稿。每期的收入、支出与结余都能对应到明细，期末余额会继续带入下一期。\n\n按日期排列的资金变化，还能找出月末看似有结余、发薪或付款当天却不足的情况。可以比较客户延期付款等明确情景；缺少期初余额时，只展示净变动，不补造账上金额。"
+      },
+      "useCases": [
+        {
+          "en": "Prepare a short-term cash plan",
+          "zh-Hans": "准备近期资金计划"
+        },
+        {
+          "en": "Check cash around payroll dates",
+          "zh-Hans": "查看发薪日期附近的资金缺口"
+        },
+        {
+          "en": "Compare delayed-payment scenarios",
+          "zh-Hans": "比较客户延迟付款的影响"
+        }
+      ]
+    },
     "citation-management": {
       "cover": {
         "alt": {
@@ -1801,6 +1846,51 @@
         }
       ]
     },
+    "grant-rfp-writer": {
+      "cover": {
+        "alt": {
+          "en": "A burgundy proposal folio with cream checklist sheets and a brass binder clip.",
+          "zh-Hans": "酒红色申请文件夹、米白核对页和黄铜夹。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe原创，AI辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/grant-rfp-writer.jpg"
+      },
+      "examples": [
+        {
+          "output": {
+            "en": "An eligibility screen, evidence matrix, response outline and dated open questions.",
+            "zh-Hans": "资格检查、证据对照表、响应提纲和带日期的待确认事项。"
+          },
+          "prompt": {
+            "en": "Review this tender pack and organization profile. Identify mandatory gaps, build a compliance matrix and outline the response using the stated scoring weights.",
+            "zh-Hans": "检查这份招标文件和机构资料，列出必须补齐的条件，整理合规对照表，并按评分权重安排响应提纲。"
+          }
+        }
+      ],
+      "gallery": [],
+      "overview": {
+        "en": "Turn a solicitation and your organization’s records into a clear response plan. First separate mandatory eligibility from scored preferences, then map every requirement, attachment and deadline to evidence and an owner.\n\nOnce the gates are supported, organize the draft around the actual evaluation weights and supplied past performance. Missing certificates, figures and qualifications remain named gaps. Use it for a tender, grant or formal request for proposal with the current notice and amendments provided.",
+        "zh-Hans": "把招标文件、资助要求和机构资料整理成清楚的响应计划：先区分必须满足的资格与评分偏好，再把每项条款、附件和期限对应到证据与负责人。\n\n资格有依据后，再按照实际评分权重和已有项目经验组织草稿。缺少的证照、金额或履历会保留为具体待办。适合正式投标、资助申请和RFP响应，使用时提供当前文件及其补遗。"
+      },
+      "useCases": [
+        {
+          "en": "Decide whether a bid is ready to pursue",
+          "zh-Hans": "判断当前是否具备响应条件"
+        },
+        {
+          "en": "Build a requirements and evidence matrix",
+          "zh-Hans": "建立条款与证据对照表"
+        },
+        {
+          "en": "Draft from verified organization material",
+          "zh-Hans": "根据机构现有材料组织草稿"
+        }
+      ]
+    },
     "hiring-screener": {
       "cover": {
         "credit": {
@@ -2027,6 +2117,96 @@
         {
           "en": "Create a consistent interview scorecard",
           "zh-Hans": "统一事实记录与评分口径"
+        }
+      ]
+    },
+    "inventory-planner": {
+      "cover": {
+        "alt": {
+          "en": "Ivory and sage stock boxes on a dark green shelf with a replenishment folio.",
+          "zh-Hans": "深绿色货架、米白和鼠尾草绿储物盒与补货手册。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe原创，AI辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/inventory-planner.jpg"
+      },
+      "examples": [
+        {
+          "output": {
+            "en": "A dated buy list, calculation details, slow-stock review and open questions.",
+            "zh-Hans": "带日期的补货清单、计算明细、滞销库存分析和待确认问题。"
+          },
+          "prompt": {
+            "en": "Use this stock count and sales export to prepare a replenishment plan with pack rounding, inbound arrivals and a separate slow-stock list.",
+            "zh-Hans": "根据这份库存和销量导出，整理补货计划，考虑在途到货和整箱采购，另列滞销清单。"
+          }
+        }
+      ],
+      "gallery": [],
+      "overview": {
+        "en": "Bring sales history, stock counts and supplier terms into one replenishment plan. Compare recent demand with the longer baseline, account for inbound stock and pack sizes, and see both quantities and proposed spend.\n\nThe plan separates urgent purchases from slow movers and missing facts. Use it for a workshop, shop or small warehouse; provide a dated count, sales export and known lead times. Supplier messages and purchase-order lines stay drafts for your review.",
+        "zh-Hans": "把销量记录、库存盘点和供应商条件整理成一份补货计划：比较近期需求与长期基线，算清在途库存、整箱规格和最低采购量，列出建议数量与预计支出。\n\n它会把紧急补货、滞销库存和资料缺口分开说明。适合门店、车间和小型仓库；提供有日期的库存、销量导出和已知交期，就能逐项核对建议。需要时还可整理采购单与供应商邮件草稿。"
+      },
+      "useCases": [
+        {
+          "en": "Plan the next stock order",
+          "zh-Hans": "安排下一轮补货"
+        },
+        {
+          "en": "Find slow stock and tied-up cash",
+          "zh-Hans": "找出滞销库存及占用资金"
+        },
+        {
+          "en": "Prepare supplier draft lines",
+          "zh-Hans": "整理供应商采购草稿"
+        }
+      ]
+    },
+    "job-post-builder": {
+      "cover": {
+        "alt": {
+          "en": "A midnight-blue hiring folio, cream candidate cards and a brass interview-rubric medallion.",
+          "zh-Hans": "深蓝色招聘手册、米白候选人卡片和黄铜面试评分图章。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe原创，AI辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/job-post-builder.jpg"
+      },
+      "examples": [
+        {
+          "output": {
+            "en": "A job-post draft, staged interview guide, blank rubrics and intake gaps.",
+            "zh-Hans": "招聘说明草稿、分轮面试指南、空白评分表和资料缺口。"
+          },
+          "prompt": {
+            "en": "Use this role brief to prepare a job post and two-stage interview guide, including concrete scoring anchors and missing employer details.",
+            "zh-Hans": "根据岗位需求准备招聘说明和两轮面试指南，写清评分依据，并列出仍需确认的雇主信息。"
+          }
+        }
+      ],
+      "gallery": [],
+      "overview": {
+        "en": "Prepare a consistent hiring packet from the role’s real responsibilities and intended outcomes. The job post keeps essential and preferred criteria separate, while the interview guide assigns competencies and questions to the actual stages.\n\nRole-specific scoring anchors help interviewers gather comparable evidence. Approved templates and supplied compensation stay visible, and unanswered details remain a short intake list. Use it when opening a role or refreshing an uneven set of hiring documents.",
+        "zh-Hans": "从岗位的真实职责和预期成果出发，整理一套口径一致的招聘材料。招聘说明会区分必备条件与优先项，面试指南则按实际轮次分配考察重点和问题。\n\n针对岗位写清评分依据，帮助面试官收集可比较的证据；已有模板和提供的薪酬信息会被保留，尚未明确的事项另列清单。适合新开岗位，也适合统一已有但分散的招聘文档。"
+      },
+      "useCases": [
+        {
+          "en": "Draft a clear job post",
+          "zh-Hans": "起草清楚的招聘说明"
+        },
+        {
+          "en": "Coordinate interview stages and criteria",
+          "zh-Hans": "统一各轮面试的考察内容"
+        },
+        {
+          "en": "Prepare blank evaluation rubrics",
+          "zh-Hans": "准备空白的评估标准表"
         }
       ]
     },

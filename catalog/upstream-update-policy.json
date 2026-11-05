@@ -111,9 +111,11 @@
         "operations/NOTICE",
         "NOTICE",
         "sales/LICENSE",
-        "sales/NOTICE"
+        "sales/NOTICE",
+        "small-business/LICENSE",
+        "small-business/NOTICE"
       ],
-      "licenseNote": "Apache-2.0 root LICENSE plus finance/LICENSE and legal/LICENSE; the directory license is the copied evidence for those guides and the root LICENSE (which carries an unrelated trailing fragment) is the evidence for human-resources guides. finance/NOTICE, legal/NOTICE, human-resources/LICENSE and human-resources/NOTICE are declared prospective watch paths: absent at the pin, watched for appearance, removal or drift. Data-only; no connector or command is carried. Customer-support guides carry customer-support/LICENSE. Operations vendor-review carries the root LICENSE. customer-support/NOTICE, operations/LICENSE, operations/NOTICE and root NOTICE are absent at the reviewed pin and explicitly watched for appearance/removal/drift. Sales guides carry exact sales/LICENSE bytes; sales/NOTICE is absent at the reviewed pin and watched for appearance, removal or drift.",
+      "licenseNote": "Apache-2.0 root LICENSE plus finance/LICENSE and legal/LICENSE; the directory license is the copied evidence for those guides and the root LICENSE (which carries an unrelated trailing fragment) is the evidence for human-resources guides. finance/NOTICE, legal/NOTICE, human-resources/LICENSE and human-resources/NOTICE are declared prospective watch paths: absent at the pin, watched for appearance, removal or drift. Data-only; no connector or command is carried. Customer-support guides carry customer-support/LICENSE. Operations vendor-review carries the root LICENSE. customer-support/NOTICE, operations/LICENSE, operations/NOTICE and root NOTICE are absent at the reviewed pin and explicitly watched for appearance/removal/drift. Sales guides carry exact sales/LICENSE bytes; sales/NOTICE is absent at the reviewed pin and watched for appearance, removal or drift. Small-business guides use the exact root LICENSE; small-business/LICENSE and small-business/NOTICE are absent at the pin and watched for appearance/removal/drift.",
       "role": "corpus",
       "rootLicense": "LICENSE",
       "trackedRef": "HEAD"
@@ -187,7 +189,7 @@
         "floe-invoice-organizer",
         "floe-ios-automation"
       ],
-      "note": "Exact registry partition: tracked(60)+engineManaged(1)+watchOnly(5)+builtins(4)+firstParty(4)=74. Native first-party guides have no external upstream; external skills retain scheduled GitHub Actions tracking."
+      "note": "Exact registry partition: tracked(64)+engineManaged(1)+watchOnly(5)+builtins(4)+firstParty(4)=78. Native first-party guides have no external upstream; external skills retain scheduled GitHub Actions tracking."
     },
     "tracked": [
       "internal-comms",
@@ -249,7 +251,11 @@
       "customer-health",
       "onboarding",
       "risk-assessment",
-      "audit-support"
+      "audit-support",
+      "inventory-planner",
+      "cash-flow-snapshot",
+      "grant-rfp-writer",
+      "job-post-builder"
     ],
     "watchOnly": [
       {
@@ -390,6 +396,14 @@
         }
       ],
       "notes": "deep adaptation: only the four curated font families are carried (explicit fileMappings take precedence over the canvas-fonts/ exclusion); fonts are runtime assets, any byte change is a fingerprint change and holds",
+      "relocations": []
+    },
+    "cash-flow-snapshot": {
+      "excludedUpstream": [
+        "reference/"
+      ],
+      "fileMappings": [],
+      "notes": "Reviewed portable guide adaptation. Track the exact upstream SKILL.md; upstream reference/ files and shared-plugin connector flows are intentionally not shipped. Body changes need re-adaptation review. Local manifest, provenance, license evidence and synthetic examples remain Floe-owned; no scripts, runtime dependencies, connectors or external actions.",
       "relocations": []
     },
     "citation-management": {
@@ -535,6 +549,14 @@
       "fileMappings": [],
       "relocations": []
     },
+    "grant-rfp-writer": {
+      "excludedUpstream": [
+        "reference/"
+      ],
+      "fileMappings": [],
+      "notes": "Reviewed portable guide adaptation. Track the exact upstream SKILL.md; upstream reference/ files and shared-plugin connector flows are intentionally not shipped. Body changes need re-adaptation review. Local manifest, provenance, license evidence and synthetic examples remain Floe-owned; no scripts, runtime dependencies, connectors or external actions.",
+      "relocations": []
+    },
     "hiring-screener": {
       "excludedUpstream": [],
       "fileMappings": [],
@@ -564,6 +586,22 @@
     "interview-prep": {
       "excludedUpstream": [],
       "fileMappings": [],
+      "relocations": []
+    },
+    "inventory-planner": {
+      "excludedUpstream": [
+        "reference/"
+      ],
+      "fileMappings": [],
+      "notes": "Reviewed portable guide adaptation. Track the exact upstream SKILL.md; upstream reference/ files and shared-plugin connector flows are intentionally not shipped. Body changes need re-adaptation review. Local manifest, provenance, license evidence and synthetic examples remain Floe-owned; no scripts, runtime dependencies, connectors or external actions.",
+      "relocations": []
+    },
+    "job-post-builder": {
+      "excludedUpstream": [
+        "reference/"
+      ],
+      "fileMappings": [],
+      "notes": "Reviewed portable guide adaptation. Track the exact upstream SKILL.md; upstream reference/ files and shared-plugin connector flows are intentionally not shipped. Body changes need re-adaptation review. Local manifest, provenance, license evidence and synthetic examples remain Floe-owned; no scripts, runtime dependencies, connectors or external actions.",
       "relocations": []
     },
     "k12-check-for-understanding": {

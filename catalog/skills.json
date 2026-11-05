@@ -5330,6 +5330,294 @@
         "skillManifestPath": "finance/skills/audit-support/SKILL.md"
       },
       "versionTarget": "1.0.0"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Turn sales and stock records into a dated replenishment plan, with order quantities, costs and slow-stock review.",
+        "zh-Hans": "根据销量和库存记录安排补货时间、数量与成本，同时找出滞销库存和待确认的数据。"
+      },
+      "firstParty": null,
+      "id": "inventory-planner",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.70",
+      "name": {
+        "en": "Inventory Planner",
+        "zh-Hans": "库存补货计划"
+      },
+      "notes": {
+        "en": "Builds a review-ready draft from the records you provide, with assumptions and missing information made clear.",
+        "zh-Hans": "根据你提供的记录整理可核对的草稿，清楚列出假设和缺少的信息。"
+      },
+      "planNumber": 75,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "inventory",
+        "replenishment",
+        "procurement",
+        "stock",
+        "operations"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Exact root LICENSE bytes are preserved. No directory-level small-business/LICENSE or applicable NOTICE exists at this pin. The Apache-2.0 text is relied upon; the unrelated trailing fragment is preserved, not interpreted as instructions.",
+          "zh-Hans": "保留了根目录LICENSE的精确字节。该固定提交没有small-business/LICENSE或适用NOTICE。依据其中的Apache-2.0正文；无关尾部片段保留原样，不作为指令。"
+        },
+        "licenseStatus": "verified",
+        "path": "small-business/skills/inventory-planner",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-05",
+        "skillManifestPath": "small-business/skills/inventory-planner/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Draft a 30/60/90-day cash plan from supplied records, with reconciled balances, explicit scenarios and dated cash gaps.",
+        "zh-Hans": "根据余额与收付款记录整理30/60/90天现金流，核对逐期结余，并显示具体付款日期的资金缺口。"
+      },
+      "firstParty": null,
+      "id": "cash-flow-snapshot",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.70",
+      "name": {
+        "en": "Cash Flow Snapshot",
+        "zh-Hans": "现金流快照"
+      },
+      "notes": {
+        "en": "Builds a review-ready draft from the records you provide, with assumptions and missing information made clear.",
+        "zh-Hans": "根据你提供的记录整理可核对的草稿，清楚列出假设和缺少的信息。"
+      },
+      "planNumber": 76,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "cash-flow",
+        "finance",
+        "forecast",
+        "receivables",
+        "payables"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Exact root LICENSE bytes are preserved. No directory-level small-business/LICENSE or applicable NOTICE exists at this pin. The Apache-2.0 text is relied upon; the unrelated trailing fragment is preserved, not interpreted as instructions.",
+          "zh-Hans": "保留了根目录LICENSE的精确字节。该固定提交没有small-business/LICENSE或适用NOTICE。依据其中的Apache-2.0正文；无关尾部片段保留原样，不作为指令。"
+        },
+        "licenseStatus": "verified",
+        "path": "small-business/skills/cash-flow-snapshot",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-05",
+        "skillManifestPath": "small-business/skills/cash-flow-snapshot/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "writing-communication",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Screen supplied tender or grant requirements, map the evidence and prepare a response draft with unresolved gaps kept visible.",
+        "zh-Hans": "核对招标或资助申请的资格要求，建立材料对照表，再组织有依据的响应草稿。"
+      },
+      "firstParty": null,
+      "id": "grant-rfp-writer",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.70",
+      "name": {
+        "en": "Tender and Grant Response",
+        "zh-Hans": "招标与资助申请"
+      },
+      "notes": {
+        "en": "Builds a review-ready draft from the records you provide, with assumptions and missing information made clear.",
+        "zh-Hans": "根据你提供的记录整理可核对的草稿，清楚列出假设和缺少的信息。"
+      },
+      "planNumber": 77,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "tender",
+        "rfp",
+        "grants",
+        "proposal",
+        "compliance"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Exact root LICENSE bytes are preserved. No directory-level small-business/LICENSE or applicable NOTICE exists at this pin. The Apache-2.0 text is relied upon; the unrelated trailing fragment is preserved, not interpreted as instructions.",
+          "zh-Hans": "保留了根目录LICENSE的精确字节。该固定提交没有small-business/LICENSE或适用NOTICE。依据其中的Apache-2.0正文；无关尾部片段保留原样，不作为指令。"
+        },
+        "licenseStatus": "verified",
+        "path": "small-business/skills/grant-rfp-writer",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-05",
+        "skillManifestPath": "small-business/skills/grant-rfp-writer/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Turn a role brief into a job post and structured interview packet, with checkable criteria and role-specific scoring anchors.",
+        "zh-Hans": "把岗位需求整理成招聘说明和分阶段面试材料，明确任职条件、问题及评分依据。"
+      },
+      "firstParty": null,
+      "id": "job-post-builder",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.70",
+      "name": {
+        "en": "Hiring Packet",
+        "zh-Hans": "招聘材料包"
+      },
+      "notes": {
+        "en": "Builds a review-ready draft from the records you provide, with assumptions and missing information made clear.",
+        "zh-Hans": "根据你提供的记录整理可核对的草稿，清楚列出假设和缺少的信息。"
+      },
+      "planNumber": 78,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "hiring",
+        "job-description",
+        "interviews",
+        "rubric",
+        "recruiting"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Exact root LICENSE bytes are preserved. No directory-level small-business/LICENSE or applicable NOTICE exists at this pin. The Apache-2.0 text is relied upon; the unrelated trailing fragment is preserved, not interpreted as instructions.",
+          "zh-Hans": "保留了根目录LICENSE的精确字节。该固定提交没有small-business/LICENSE或适用NOTICE。依据其中的Apache-2.0正文；无关尾部片段保留原样，不作为指令。"
+        },
+        "licenseStatus": "verified",
+        "path": "small-business/skills/job-post-builder",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-05",
+        "skillManifestPath": "small-business/skills/job-post-builder/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
     }
   ]
 }
