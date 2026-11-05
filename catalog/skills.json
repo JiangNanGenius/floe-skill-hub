@@ -1311,7 +1311,7 @@
       "firstParty": null,
       "id": "exploratory-data-analysis",
       "kind": "optional",
-      "minimumAppVersion": "1.7.70",
+      "minimumAppVersion": "1.7.74",
       "name": {
         "en": "EDA",
         "zh-Hans": "数据探索"
@@ -1329,12 +1329,11 @@
         ],
         "execution": {
           "arch": "aarch64",
-          "evidence": "unproven",
+          "evidence": "guest-verified",
           "os": "linux"
         },
         "installPlatforms": [
-          "ios",
-          "android"
+          "ios"
         ],
         "pythonPackagesPlan": [
           "numpy==2.2.4",
@@ -1348,7 +1347,7 @@
       "source": "K",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": false,
+        "executionVerified": true,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
@@ -1388,7 +1387,7 @@
       "firstParty": null,
       "id": "statistical-analysis",
       "kind": "optional",
-      "minimumAppVersion": "1.7.70",
+      "minimumAppVersion": "1.7.74",
       "name": {
         "en": "Statistical Analysis",
         "zh-Hans": "统计分析"
@@ -1406,12 +1405,11 @@
         ],
         "execution": {
           "arch": "aarch64",
-          "evidence": "unproven",
+          "evidence": "guest-verified",
           "os": "linux"
         },
         "installPlatforms": [
-          "ios",
-          "android"
+          "ios"
         ],
         "pythonPackagesPlan": [
           "numpy==2.2.4",
@@ -1428,7 +1426,7 @@
       "source": "K",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": false,
+        "executionVerified": true,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
