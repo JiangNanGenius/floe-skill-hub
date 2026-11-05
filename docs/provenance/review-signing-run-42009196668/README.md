@@ -1,0 +1,3 @@
+# Four portable small-business guide reviews
+
+[Existing GitHub Actions signing run](https://github.com/JiangNanGenius/floe-agent/actions/runs/42009196668) signed exactly four static-content reviews. Trusted tooling `1c44ea55f64f7c0b891163cd3502a6675b9b9e31`; unsigned data input `1547ffff7dd9860ca45fc530622f4243ec04ef9f`. Receipt and review envelopes were independently verified against the existing official key, exact source records, both channel archives and all output hashes. No code/guest/model/device execution is claimed. These source qualifications require the separate signed-catalog publication before becoming download offers.
