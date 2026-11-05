@@ -1,0 +1,62 @@
+{
+  "fixture": "deal-review synthetic example",
+  "invented": true,
+  "asOf": "2026-10-30",
+  "framework": "MEDDIC",
+  "opportunities": [
+    {
+      "name": "Harborview expansion (synthetic)",
+      "stage": "Negotiation",
+      "amount": 200000,
+      "closeDate": "2026-12-20",
+      "createdDate": "2026-06-02",
+      "lastActivityDate": "2026-10-27",
+      "baseProbability": 0.60,
+      "baseProbabilitySource": "CRM export",
+      "signals": [
+        {"id": "champion-engaged", "deltaPoints": 10, "evidence": "P.D. email 2026-10-27"},
+        {"id": "multi-threaded", "deltaPoints": 5, "evidence": "3 contacts active (P.D., K.N., V.B.) - distinct from the champion's own engagement"},
+        {"id": "single-threaded", "deltaPoints": -10, "evidence": null, "applied": false},
+        {"id": "no-activity-14d", "deltaPoints": -10, "evidence": null, "applied": false},
+        {"id": "close-slipped-2plus", "deltaPoints": -10, "evidence": "slipped once (was 2026-11-30)", "applied": false}
+      ],
+      "appliedAdjustmentsPoints": [10, 5],
+      "expectedAdjustedProbability": 0.75,
+      "qualification": [
+        {"element": "Metrics", "status": "confirmed", "evidence": "payback model shared 2026-10-15"},
+        {"element": "Economic buyer", "status": "unknown", "evidence": null},
+        {"element": "Decision criteria", "status": "confirmed", "evidence": "security questionnaire named as last gate"},
+        {"element": "Decision process", "status": "assumed", "evidence": "procurement engaged 2026-10-24"},
+        {"element": "Identify pain", "status": "confirmed", "evidence": "scaling limits from 2026-09-28 call"},
+        {"element": "Champion", "status": "confirmed", "evidence": "P.D. active through 2026-10-27"}
+      ],
+      "stageReality": {
+        "tag": "ahead-of-evidence",
+        "evidence": "no written proposal exists and pricing appears only in one 2026-09-28 call note"
+      }
+    },
+    {
+      "name": "Lakeside pilot (synthetic)",
+      "stage": "Proposal",
+      "amount": 35000,
+      "closeDate": "2027-02-10",
+      "createdDate": "2026-09-15",
+      "lastActivityDate": "2026-10-05",
+      "baseProbability": null,
+      "baseProbabilitySource": null,
+      "signalsVisible": ["single contact", "no pricing discussion recorded"],
+      "qualification": [
+        {"element": "Metrics", "status": "unknown", "evidence": null},
+        {"element": "Champion", "status": "unknown", "evidence": "single contact only"}
+      ],
+      "stageReality": {
+        "tag": "ahead-of-evidence",
+        "evidence": "stage Proposal but no proposal document supplied and no pricing on record"
+      }
+    }
+  ],
+  "floorPoints": 5,
+  "ceilingPoints": 95,
+  "adjustmentNature": "heuristic percentage-point lens, not a calibrated forecast; each visible signal counted once",
+  "privacyTokensThatMustNotAppearInOutput": ["Harborview Dental", "Priya Desai", "Kurt Nielsen"]
+}

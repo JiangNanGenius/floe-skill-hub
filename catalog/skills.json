@@ -4892,6 +4892,444 @@
       ],
       "upstream": null,
       "versionTarget": "1.0.2"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Turn account background, call notes and opportunities into an account plan, with stakeholder gaps and a quarterly action list.",
+        "zh-Hans": "把客户背景、沟通记录和商机资料整理成客户计划，找出关键联系人缺口，安排季度推进动作。"
+      },
+      "firstParty": null,
+      "id": "account-plan",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.70",
+      "name": {
+        "en": "Account Plan",
+        "zh-Hans": "客户计划"
+      },
+      "notes": {
+        "en": "Drafts from the material you provide, keeping missing information visible and formal decisions and approvals with the responsible owners.",
+        "zh-Hans": "根据你提供的材料整理草稿；缺失信息会单独列出，正式决定与审批由相应责任人完成。"
+      },
+      "planNumber": 69,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "sales",
+        "account-planning",
+        "stakeholders",
+        "coverage",
+        "opportunities",
+        "qbr"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "sales/LICENSE",
+        "licenseNote": {
+          "en": "The pinned sales/LICENSE was read at the pinned commit; its exact bytes are preserved under references/licenses/. This sales domain license evidence is new with this batch. No NOTICE exists at this pin.",
+          "zh-Hans": "已在固定提交读取 sales/LICENSE，其完整字节保存在 references/licenses/ 下。该 sales 域许可证据为本批新增。该固定提交没有 NOTICE。"
+        },
+        "licenseStatus": "verified",
+        "path": "sales/skills/account-plan",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-03",
+        "skillManifestPath": "sales/skills/account-plan/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Review an opportunity’s customer needs, decision process and supporting evidence to identify risks, gaps and next actions.",
+        "zh-Hans": "复盘商机的客户需求、决策过程与推进证据，找出风险和信息缺口，明确下一步。"
+      },
+      "firstParty": null,
+      "id": "deal-review",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.70",
+      "name": {
+        "en": "Deal Review",
+        "zh-Hans": "商机复盘"
+      },
+      "notes": {
+        "en": "Drafts from the material you provide, keeping missing information visible and formal decisions and approvals with the responsible owners.",
+        "zh-Hans": "根据你提供的材料整理草稿；缺失信息会单独列出，正式决定与审批由相应责任人完成。"
+      },
+      "planNumber": 70,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "sales",
+        "deal-review",
+        "qualification",
+        "meddic",
+        "probability",
+        "forecast"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "sales/LICENSE",
+        "licenseNote": {
+          "en": "The pinned sales/LICENSE was read at the pinned commit; its exact bytes are preserved under references/licenses/. This sales domain license evidence is new with this batch. No NOTICE exists at this pin.",
+          "zh-Hans": "已在固定提交读取 sales/LICENSE，其完整字节保存在 references/licenses/ 下。该 sales 域许可证据为本批新增。该固定提交没有 NOTICE。"
+        },
+        "licenseStatus": "verified",
+        "path": "sales/skills/deal-review",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-03",
+        "skillManifestPath": "sales/skills/deal-review/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Assess account health, renewal risks and follow-up actions from customer usage, business value and relationship evidence.",
+        "zh-Hans": "结合客户使用情况、业务价值和合作记录，梳理客户健康度、续约风险与跟进行动。"
+      },
+      "firstParty": null,
+      "id": "customer-health",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.70",
+      "name": {
+        "en": "Customer Health",
+        "zh-Hans": "客户健康度"
+      },
+      "notes": {
+        "en": "Drafts from the material you provide, keeping missing information visible and formal decisions and approvals with the responsible owners.",
+        "zh-Hans": "根据你提供的材料整理草稿；缺失信息会单独列出，正式决定与审批由相应责任人完成。"
+      },
+      "planNumber": 71,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "customer-success",
+        "health",
+        "qbr",
+        "engagement",
+        "renewal",
+        "trend"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "sales/LICENSE",
+        "licenseNote": {
+          "en": "The pinned sales/LICENSE was read at the pinned commit; its exact bytes are preserved under references/licenses/. This sales domain license evidence is new with this batch. No NOTICE exists at this pin.",
+          "zh-Hans": "已在固定提交读取 sales/LICENSE，其完整字节保存在 references/licenses/ 下。该 sales 域许可证据为本批新增。该固定提交没有 NOTICE。"
+        },
+        "licenseStatus": "verified",
+        "path": "sales/skills/customer-health",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-03",
+        "skillManifestPath": "sales/skills/customer-health/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Build role-specific pre-start, day-one, first-week and 30/60/90-day plans with training, owners and access requests.",
+        "zh-Hans": "按岗位准备入职前、首日、首周与30/60/90天计划，明确培训安排、负责人和权限申请。"
+      },
+      "firstParty": null,
+      "id": "onboarding",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.70",
+      "name": {
+        "en": "Onboarding",
+        "zh-Hans": "入职引导"
+      },
+      "notes": {
+        "en": "Drafts from the material you provide, keeping missing information visible and formal decisions and approvals with the responsible owners.",
+        "zh-Hans": "根据你提供的材料整理草稿；缺失信息会单独列出，正式决定与审批由相应责任人完成。"
+      },
+      "planNumber": 72,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "human-resources",
+        "onboarding",
+        "checklist",
+        "access",
+        "30-60-90",
+        "planning"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "There is no directory-level LICENSE for this plugin at the pin; the repository root LICENSE is the applicable file. Its exact bytes are preserved under references/licenses/. The root file carries an unrelated trailing fragment; only the Apache-2.0 text is relied on. No NOTICE exists at this pin.",
+          "zh-Hans": "固定提交中的该插件没有目录级 LICENSE，因此以仓库根 LICENSE 为依据；其完整字节保存在 references/licenses/ 下。根文件在 Apache-2.0 文本后带有一段无关尾注，仅依据 Apache-2.0 文本。该固定提交没有 NOTICE。"
+        },
+        "licenseStatus": "verified",
+        "path": "human-resources/skills/onboarding",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-03",
+        "skillManifestPath": "human-resources/skills/onboarding/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Organize project and operational risks by likelihood and impact, with response actions and questions to resolve.",
+        "zh-Hans": "从项目和运营资料中整理风险，比较发生可能性与影响，形成应对动作和待确认问题。"
+      },
+      "firstParty": null,
+      "id": "risk-assessment",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.70",
+      "name": {
+        "en": "Risk Assessment",
+        "zh-Hans": "风险评估"
+      },
+      "notes": {
+        "en": "Drafts from the material you provide, keeping missing information visible and formal decisions and approvals with the responsible owners.",
+        "zh-Hans": "根据你提供的材料整理草稿；缺失信息会单独列出，正式决定与审批由相应责任人完成。"
+      },
+      "planNumber": 73,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "risk",
+        "risk-register",
+        "matrix",
+        "mitigation",
+        "controls",
+        "operations"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "There is no directory-level LICENSE for this plugin at the pin; the repository root LICENSE is the applicable file. Its exact bytes are preserved under references/licenses/. The root file carries an unrelated trailing fragment; only the Apache-2.0 text is relied on. No NOTICE exists at this pin.",
+          "zh-Hans": "固定提交中的该插件没有目录级 LICENSE，因此以仓库根 LICENSE 为依据；其完整字节保存在 references/licenses/ 下。根文件在 Apache-2.0 文本后带有一段无关尾注，仅依据 Apache-2.0 文本。该固定提交没有 NOTICE。"
+        },
+        "licenseStatus": "verified",
+        "path": "operations/skills/risk-assessment",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-03",
+        "skillManifestPath": "operations/skills/risk-assessment/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Organize control testing, sample plans and audit workpapers, checking material completeness and highlighting items for professional review.",
+        "zh-Hans": "协助整理控制测试、抽样计划和审计底稿，核对材料完整性，列出需专业复核的问题。"
+      },
+      "firstParty": null,
+      "id": "audit-support",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.70",
+      "name": {
+        "en": "Audit Support",
+        "zh-Hans": "审计支持"
+      },
+      "notes": {
+        "en": "Drafts from the material you provide, keeping missing information visible and formal decisions and approvals with the responsible owners.",
+        "zh-Hans": "根据你提供的材料整理草稿；缺失信息会单独列出，正式决定与审批由相应责任人完成。"
+      },
+      "planNumber": 74,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "audit",
+        "sox",
+        "control-testing",
+        "sampling",
+        "workpaper",
+        "deficiency"
+      ],
+      "upstream": {
+        "commit": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+        "licenseEvidencePath": "finance/LICENSE",
+        "licenseNote": {
+          "en": "The pinned finance/LICENSE was read at the pinned commit (evidence preserved from the prior finance lane); its exact bytes are preserved under references/licenses/. No NOTICE exists at this pin.",
+          "zh-Hans": "已在固定提交读取 finance/LICENSE（证据由前一批财务通道保留），其完整字节保存在 references/licenses/ 下。该固定提交没有 NOTICE。"
+        },
+        "licenseStatus": "verified",
+        "path": "finance/skills/audit-support",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-03",
+        "skillManifestPath": "finance/skills/audit-support/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
     }
   ]
 }

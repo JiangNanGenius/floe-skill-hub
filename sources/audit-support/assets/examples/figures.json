@@ -1,0 +1,43 @@
+{
+  "fixture": "audit-support synthetic example",
+  "invented": true,
+  "noRealComplianceClaim": true,
+  "control": {
+    "id": "P2P-TWM-04 (synthetic)",
+    "description": "three-way match verification before payment release",
+    "type": "automated with IT-dependent manual review of exceptions",
+    "frequency": "per-transaction-large-population",
+    "assertion": "accuracy and existence of accounts payable",
+    "riskRating": "moderate"
+  },
+  "population": {"definition": "payment-release events 2026-01-01 to 2026-06-30", "size": 1000, "sequentiallyNumbered": true},
+  "sampling": {
+    "approach": "systematic",
+    "randomStart": 11,
+    "interval": 25,
+    "sampleSize": 40,
+    "populationCompleteness": "reported as supplied by the process owner; not independently verified",
+    "sizeCapNote": "applied size = min(table size, population size) = min(40, 1000) = 40",
+    "tableNote": "the upstream size table is illustrative guidance, not a statistically derived or assurance-backed justification",
+    "firstItem": 11,
+    "lastItem": 986,
+    "items": [11, 36, 61, 86, 111, 136, 161, 186, 211, 236, 261, 286, 311, 336, 361, 386, 411, 436, 461, 486, 511, 536, 561, 586, 611, 636, 661, 686, 711, 736, 761, 786, 811, 836, 861, 886, 911, 936, 961, 986]
+  },
+  "sizeTableRow": {"frequency": "per-transaction (large pop.)", "expectedPopulation": "250+", "low": 25, "moderate": 40, "high": 60},
+  "evidenceItems": [
+    {"id": "E1", "what": "screenshot of the match enforcement config", "dated": true, "attributed": true, "expectedClass": "structurally-complete", "authenticity": "tester authenticates; not established by structure alone"},
+    {"id": "E2", "what": "email approval of an exception write-off", "dated": false, "attributed": false, "expectedClass": "structurally-incomplete", "missing": ["date", "identifiable approver"]},
+    {"id": "E3", "what": "audit log extract for matched items 500-520", "dated": true, "attributed": true, "expectedClass": "structurally-complete", "authenticity": "tester authenticates; not established by structure alone"},
+    {"id": "E4", "what": "verbal note from the AP supervisor", "dated": false, "attributed": false, "expectedClass": "structurally-incomplete", "missing": ["corroboration", "date", "attribution"]}
+  ],
+  "expectedEvidenceCounts": {"structurallyComplete": 2, "structurallyIncomplete": 2},
+  "deficiency": {
+    "indicator": "manual exception review undocumented for the sampled period (E2/E4 insufficient; prior-period deficiency in the same control)",
+    "classification": "deficiency",
+    "indicatorsCited": ["insufficient exception-review evidence", "prior-period deficiency in the same control"],
+    "notClassifiedAs": ["significant deficiency", "material weakness"],
+    "aggregation": "one other minor documentation gap noted in the same cycle; combined effect documented and evaluated as not more than inconsequential on the supplied facts"
+  },
+  "conclusionState": "pending - tester completes per-item results and sign-off",
+  "privacyTokensThatMustNotAppearInOutput": ["Deloitte", "Acme Corp"]
+}

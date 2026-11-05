@@ -1,0 +1,187 @@
+{
+  "archived": false,
+  "defaultBranch": "main",
+  "forks": 3832,
+  "licenseWatch": [
+    {
+      "bytes": 11607,
+      "existsAtObservedHead": true,
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "path": "LICENSE",
+      "sha256": "a6946284993aeec75c7d75906064b66210c46051e562077efb30eb6dcfe72e26",
+      "sourceURL": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/d900840716eb262e1feb17c6f4406c9ce0e06bcf/LICENSE"
+    },
+    {
+      "existsAtObservedHead": false,
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "path": "NOTICE"
+    },
+    {
+      "bytes": 11358,
+      "existsAtObservedHead": true,
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "path": "sales/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "sourceURL": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/d900840716eb262e1feb17c6f4406c9ce0e06bcf/sales/LICENSE"
+    },
+    {
+      "existsAtObservedHead": false,
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "path": "sales/NOTICE"
+    },
+    {
+      "bytes": 11358,
+      "existsAtObservedHead": true,
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "path": "finance/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "sourceURL": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/d900840716eb262e1feb17c6f4406c9ce0e06bcf/finance/LICENSE"
+    },
+    {
+      "existsAtObservedHead": false,
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "path": "finance/NOTICE"
+    },
+    {
+      "bytes": 11358,
+      "existsAtObservedHead": true,
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "path": "legal/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "sourceURL": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/d900840716eb262e1feb17c6f4406c9ce0e06bcf/legal/LICENSE"
+    },
+    {
+      "existsAtObservedHead": false,
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "path": "legal/NOTICE"
+    },
+    {
+      "existsAtObservedHead": false,
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "path": "human-resources/LICENSE"
+    },
+    {
+      "existsAtObservedHead": false,
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "path": "human-resources/NOTICE"
+    },
+    {
+      "bytes": 11358,
+      "existsAtObservedHead": true,
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "path": "customer-support/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "sourceURL": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/d900840716eb262e1feb17c6f4406c9ce0e06bcf/customer-support/LICENSE"
+    },
+    {
+      "existsAtObservedHead": false,
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "path": "customer-support/NOTICE"
+    },
+    {
+      "existsAtObservedHead": false,
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "path": "operations/LICENSE"
+    },
+    {
+      "existsAtObservedHead": false,
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "path": "operations/NOTICE"
+    }
+  ],
+  "maintenanceInterpretation": "Repository stars/activity are repository-wide. Exact path changes and stable guide ages are separately reported; no per-skill popularity or recent-edit claim is inferred.",
+  "observedAt": "2026-11-05T01:24:15.218140+00:00",
+  "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+  "pushedAt": "2026-11-04T07:26:14Z",
+  "repository": "https://github.com/anthropics/knowledge-work-plugins",
+  "repositoryURL": "https://github.com/anthropics/knowledge-work-plugins",
+  "reusePreparedPackages": true,
+  "reviewDecision": "Retain reviewed source pin: all six manifest hashes and copied license bytes are unchanged. Repository activity is not per-skill maintenance evidence.",
+  "skills": [
+    {
+      "historyURL": "https://github.com/anthropics/knowledge-work-plugins/commits/main/sales/skills/account-plan/SKILL.md",
+      "id": "account-plan",
+      "lastPathChangeSubject": "feat(sales): show the source of every line with a link to check it (2.1.0) (#1351)",
+      "lastPathChangedAt": "2026-10-21T22:32:20Z",
+      "lastPathCommit": "2d97716bced3a843bcc3add4356ce0cecc5a0dab",
+      "manifestPath": "sales/skills/account-plan/SKILL.md",
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "observedManifestSha256": "b9facd0dfe322873e43757167b93bf3a312f0d0629c4cb9afa031912b64f5162",
+      "reviewedManifestSha256": "b9facd0dfe322873e43757167b93bf3a312f0d0629c4cb9afa031912b64f5162",
+      "reviewedPin": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+      "sourceURL": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/d900840716eb262e1feb17c6f4406c9ce0e06bcf/sales/skills/account-plan/SKILL.md",
+      "unchanged": true
+    },
+    {
+      "historyURL": "https://github.com/anthropics/knowledge-work-plugins/commits/main/sales/skills/deal-review/SKILL.md",
+      "id": "deal-review",
+      "lastPathChangeSubject": "feat(sales): show the source of every line with a link to check it (2.1.0) (#1351)",
+      "lastPathChangedAt": "2026-10-21T22:32:20Z",
+      "lastPathCommit": "2d97716bced3a843bcc3add4356ce0cecc5a0dab",
+      "manifestPath": "sales/skills/deal-review/SKILL.md",
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "observedManifestSha256": "a78f8382d1f65ae57f8468bd4c76c2ccfec2a7d0f47ac15db44b31aa53568700",
+      "reviewedManifestSha256": "a78f8382d1f65ae57f8468bd4c76c2ccfec2a7d0f47ac15db44b31aa53568700",
+      "reviewedPin": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+      "sourceURL": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/d900840716eb262e1feb17c6f4406c9ce0e06bcf/sales/skills/deal-review/SKILL.md",
+      "unchanged": true
+    },
+    {
+      "historyURL": "https://github.com/anthropics/knowledge-work-plugins/commits/main/sales/skills/customer-health/SKILL.md",
+      "id": "customer-health",
+      "lastPathChangeSubject": "feat(sales): show the source of every line with a link to check it (2.1.0) (#1351)",
+      "lastPathChangedAt": "2026-10-21T22:32:20Z",
+      "lastPathCommit": "2d97716bced3a843bcc3add4356ce0cecc5a0dab",
+      "manifestPath": "sales/skills/customer-health/SKILL.md",
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "observedManifestSha256": "dcfcae0bce25de315e575a783c66fc7509d479cab4045d5f9ce53831ed2363d1",
+      "reviewedManifestSha256": "dcfcae0bce25de315e575a783c66fc7509d479cab4045d5f9ce53831ed2363d1",
+      "reviewedPin": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+      "sourceURL": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/d900840716eb262e1feb17c6f4406c9ce0e06bcf/sales/skills/customer-health/SKILL.md",
+      "unchanged": true
+    },
+    {
+      "historyURL": "https://github.com/anthropics/knowledge-work-plugins/commits/main/human-resources/skills/onboarding/SKILL.md",
+      "id": "onboarding",
+      "lastPathChangeSubject": "Migrate commands to skills across all plugins",
+      "lastPathChangedAt": "2026-03-13T15:57:57Z",
+      "lastPathCommit": "2d6f7e22dd25593f0f748010430ef86f19659735",
+      "manifestPath": "human-resources/skills/onboarding/SKILL.md",
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "observedManifestSha256": "c9210cdd00f8c2998a01c6d1310a8742aafa82a5861fb7c1c18686b72a56da97",
+      "reviewedManifestSha256": "c9210cdd00f8c2998a01c6d1310a8742aafa82a5861fb7c1c18686b72a56da97",
+      "reviewedPin": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+      "sourceURL": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/d900840716eb262e1feb17c6f4406c9ce0e06bcf/human-resources/skills/onboarding/SKILL.md",
+      "unchanged": true
+    },
+    {
+      "historyURL": "https://github.com/anthropics/knowledge-work-plugins/commits/main/operations/skills/risk-assessment/SKILL.md",
+      "id": "risk-assessment",
+      "lastPathChangeSubject": "Big round of pushes",
+      "lastPathChangedAt": "2026-02-24T00:08:12Z",
+      "lastPathCommit": "4fa3cb92e2942d6594200fa8d2c800708e086072",
+      "manifestPath": "operations/skills/risk-assessment/SKILL.md",
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "observedManifestSha256": "82e29810a762c396a56f92bbd5c5afd252f7a07c6be69a246c28f7b82c4086d9",
+      "reviewedManifestSha256": "82e29810a762c396a56f92bbd5c5afd252f7a07c6be69a246c28f7b82c4086d9",
+      "reviewedPin": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+      "sourceURL": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/d900840716eb262e1feb17c6f4406c9ce0e06bcf/operations/skills/risk-assessment/SKILL.md",
+      "unchanged": true
+    },
+    {
+      "historyURL": "https://github.com/anthropics/knowledge-work-plugins/commits/main/finance/skills/audit-support/SKILL.md",
+      "id": "audit-support",
+      "lastPathChangeSubject": "Migrate commands to skills across all plugins",
+      "lastPathChangedAt": "2026-03-13T15:57:57Z",
+      "lastPathCommit": "2d6f7e22dd25593f0f748010430ef86f19659735",
+      "manifestPath": "finance/skills/audit-support/SKILL.md",
+      "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+      "observedManifestSha256": "6e53c9529c42bb92c11d00a58af5119f7383903d9cb3b911625089fec2ff4784",
+      "reviewedManifestSha256": "6e53c9529c42bb92c11d00a58af5119f7383903d9cb3b911625089fec2ff4784",
+      "reviewedPin": "2574e29377c7173d0cecffef29a6ecbd7f8ccb5d",
+      "sourceURL": "https://raw.githubusercontent.com/anthropics/knowledge-work-plugins/d900840716eb262e1feb17c6f4406c9ce0e06bcf/finance/skills/audit-support/SKILL.md",
+      "unchanged": true
+    }
+  ],
+  "stars": 34737
+}

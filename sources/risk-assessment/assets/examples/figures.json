@@ -1,0 +1,38 @@
+{
+  "fixture": "risk-assessment synthetic example",
+  "invented": true,
+  "scope": "Project Ledger inventory-count rollout (synthetic)",
+  "asOf": "2026-10-30",
+  "scale": "default-3x3-unconfirmed",
+  "matrix": {
+    "high": {"low": "Medium", "medium": "High", "high": "Critical"},
+    "medium": {"low": "Low", "medium": "Medium", "high": "High"},
+    "low": {"low": "Low", "medium": "Low", "high": "Medium"}
+  },
+  "risks": [
+    {"id": "R1", "category": "operational", "likelihood": "high", "impact": "high", "expectedLevel": "Critical", "evidenceClass": "observed", "owner": "warehouse ops lead"},
+    {"id": "R2", "category": "financial", "likelihood": null, "impact": "medium", "expectedLevel": "unknown (impact medium)", "evidenceClass": "unknown", "owner": "project manager"},
+    {"id": "R3", "category": "compliance", "likelihood": "medium", "impact": "high", "expectedLevel": "High", "evidenceClass": "observed", "owner": "site safety officer"},
+    {"id": "R4", "category": "strategic", "likelihood": null, "impact": "medium", "expectedLevel": "unknown (impact medium)", "evidenceClass": "reported", "owner": "product lead"},
+    {"id": "R5", "category": "reputational", "likelihood": "low", "impact": "high", "expectedLevel": "Medium", "evidenceClass": "unknown", "owner": "comms lead"},
+    {"id": "R6", "category": "security", "likelihood": "medium", "impact": "high", "expectedLevel": "High", "evidenceClass": "observed", "owner": "IT lead"}
+  ],
+  "expectedCounts": {"Critical": 1, "High": 2, "Medium": 1, "Low": 0, "unknown": 2},
+  "factFindingQueue": [
+    {"risk": "R2", "question": "what do the contractor quotes say about total cost vs the 10% buffer?"},
+    {"risk": "R4", "question": "is there any launch-date evidence beyond the dated analyst note?"}
+  ],
+  "controls": [
+    {"id": "C1", "shouldDo": "nightly auto-sync with failure alerts", "evidenceClass": "tested-exception", "period": "September test records", "detail": "alerts fired on 2 of 3 failures"},
+    {"id": "C2", "shouldDo": "contractor budget approval gate", "evidenceClass": "untested", "period": null, "detail": "approval policy PDF only"},
+    {"id": "C3", "shouldDo": "device encryption", "evidenceClass": "untested", "period": null, "detail": "Q2 audit attestation (dated, signed) is reported assurance about the control, not supplied test results of operation; contents observed as supplied, not externally verified"},
+    {"id": "C4", "shouldDo": "manual sync check by shift supervisor", "evidenceClass": "untested", "period": null, "detail": "no test records supplied"}
+  ],
+  "controlCounts": {"tested-effective": 0, "tested-exception": 1, "untested": 3},
+  "residualView": [
+    {"risk": "R1", "testedControls": ["C1 (exception)"], "untestedControls": ["C4"], "residual": "pending"},
+    {"risk": "R3", "testedControls": [], "untestedControls": ["C2"], "residual": "pending"},
+    {"risk": "R6", "testedControls": [], "untestedControls": ["C3"], "residual": "pending - reported attestation is assurance for the organization to assess; no impact reduction inferred"}
+  ],
+  "acceptanceThreshold": "UNKNOWN"
+}

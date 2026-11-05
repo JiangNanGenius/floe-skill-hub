@@ -1,0 +1,31 @@
+{
+  "fixture": "customer-health synthetic example",
+  "invented": true,
+  "account": "Cascade Retail Group (synthetic)",
+  "mode": "health-check",
+  "period": {"current": "Q3 2026", "prior": "Q2 2026"},
+  "asOf": "2026-10-30",
+  "renewalDate": "2026-12-28",
+  "engagement": {
+    "meetings": {"prior": 8, "current": 5},
+    "emails": {"prior": 40, "current": 22},
+    "expectedMeetingChangePct": -37.5,
+    "expectedEmailChangePct": -45.0
+  },
+  "dimensions": [
+    {"id": "relationship", "status": "yellow", "evidence": "champion in seat and engaged; no executive sponsor supplied", "visible": true},
+    {"id": "engagement-trend", "status": "red", "evidence": "meetings 8 -> 5 (-37.5%), emails 40 -> 22 (-45.0%)", "visible": true},
+    {"id": "commercial", "status": "yellow", "evidence": "renewal 2026-12-28 within ~60 days; loyalty integration lost 2026-09-05", "visible": true},
+    {"id": "support", "status": "not visible", "evidence": null, "visible": false},
+    {"id": "value-delivery", "status": "not visible", "evidence": null, "visible": false}
+  ],
+  "visibleCount": 3,
+  "notVisibleCount": 2,
+  "drivingDimensions": ["engagement-trend", "commercial"],
+  "overallVerdict": "yellow trending red",
+  "watchItems": [
+    {"signal": "meeting volume down 37.5% quarter over quarter", "why": "engagement falling ahead of a December renewal", "action": "propose an executive touchpoint before renewal paperwork"},
+    {"signal": "loyalty integration lost 2026-09-05", "why": "second consecutive competitive loss", "action": "schedule a win-loss debrief"}
+  ],
+  "privacyTokensThatMustNotAppearInOutput": ["Cascade Grocery Co", "Helena Grant"]
+}

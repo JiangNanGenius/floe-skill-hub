@@ -1,0 +1,41 @@
+{
+  "fixture": "account-plan synthetic example",
+  "invented": true,
+  "account": "Northwind Traders (synthetic)",
+  "asOf": "2026-10-30",
+  "horizon": "quarter",
+  "mode": "refresh",
+  "openOpportunities": [
+    {"name": "Fleet tracking expansion", "stage": "Negotiation", "amount": 120000, "closeDate": "2026-12-15"},
+    {"name": "Warehouse analytics pilot", "stage": "Proposal", "amount": 45000, "closeDate": "2027-01-20"},
+    {"name": "Support renewal", "stage": "Verbal commitment", "amount": 80000, "closeDate": "2026-11-30"}
+  ],
+  "openOpportunityTotal": 245000,
+  "functionsInScope": ["economic buyer", "champion", "decision maker", "influencer / user group", "procurement / legal"],
+  "functionSet": "generic-unconfirmed",
+  "stakeholders": [
+    {"initials": "M.A.", "function": "champion", "relationship": "strong", "verified": true},
+    {"initials": "R.S.", "function": "influencer / user group", "relationship": "moderate", "verified": true},
+    {"initials": "T.K.", "function": null, "relationship": "new", "verified": false},
+    {"initials": "L.W.", "function": "procurement / legal", "relationship": "moderate", "verified": true}
+  ],
+  "coveredFunctions": ["champion", "influencer / user group", "procurement / legal"],
+  "uncoveredFunctions": ["economic buyer", "decision maker"],
+  "expectedCoverage": {"covered": 3, "inScope": 5, "fraction": 0.6, "percent": 60},
+  "reportedGoals": [
+    "Live depot visibility by March (ops director, 2026-10-21 call notes)",
+    "Payback period answers for the CFO (2026-10-21 call notes)"
+  ],
+  "reportedLossReason": "Integration time (reported by customer, 2026-09-30 email)",
+  "whitespace": [
+    {"hypothesis": "Depot visibility expansion beyond the pilot fleet", "evidence": "stated goal in 2026-10-21 notes", "kind": "evidence-backed"},
+    {"hypothesis": "Cross-sell into their air freight arm", "evidence": null, "kind": "question"}
+  ],
+  "risks": [
+    {"risk": "No economic buyer identified", "evidence": "absent from supplied stakeholder list", "mitigationOwner": "account executive"},
+    {"risk": "Renewal paperwork not started with 30 days to close", "evidence": "support renewal next step is paperwork", "mitigationOwner": "account manager"}
+  ],
+  "priorPlanReviewDate": "2026-07-31",
+  "nextReviewDate": "2027-01-31",
+  "privacyTokensThatMustNotAppearInOutput": ["Northwind Logistics", "Maria Alvarez", "Robert Singh"]
+}

@@ -1,0 +1,21 @@
+{
+  "fixture": "onboarding synthetic example",
+  "invented": true,
+  "newHire": {"initials": "A.R.", "role": "support engineer", "team": "customer operations", "startDate": "2026-11-10", "manager": "D.O.", "buddy": null},
+  "workingPattern": "office Tue-Thu, UTC+11",
+  "accessRequests": [
+    {"system": "company email + calendar", "level": "standard user", "approver": "IT lead", "blocked": false},
+    {"system": "CRM", "level": "standard user", "approver": "CRM system owner", "blocked": false},
+    {"system": "staging knowledge base", "level": "read", "approver": "knowledge base owner", "blocked": false},
+    {"system": "production database", "level": "read-only, time-boxed", "approver": null, "blocked": true, "blockReason": "approver UNKNOWN - production data needs a named approver"},
+    {"system": "expense tool", "level": "submitter", "approver": null, "blocked": true, "blockReason": "approver UNKNOWN - payment-related access needs a named approver"}
+  ],
+  "expectedCounts": {"total": 5, "approverNamed": 3, "blocked": 2},
+  "equipment": ["laptop", "monitor", "headset"],
+  "training": ["support handbook v3", "incident-response SOP", "security awareness training (Week 1, required)"],
+  "goalsSuppliedByManager": false,
+  "proposedGoals30": ["triage tickets with buddy review", "run the incident-response drill"],
+  "proposedGoals60": ["own a queue solo", "draft one KB article from a resolved ticket"],
+  "proposedGoals90": ["own escalation follow-ups end to end", "present one retro item"],
+  "privacyTokensThatMustNotAppearInOutput": ["Alicia Rivera", "Daniel Okafor"]
+}
