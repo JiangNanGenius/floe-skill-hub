@@ -90,6 +90,15 @@
     }
   ],
   "maintenanceInterpretation": "Repository stars/activity are repository-wide. Exact path changes and stable guide ages are separately reported; no per-skill popularity or recent-edit claim is inferred.",
+  "nativeGuideCover": {
+    "credit": "Official first-party Floe App icon; image bytes unchanged.",
+    "license": "MPL-2.0",
+    "path": "showcase/media/covers/floe-ios-automation.png",
+    "sha256": "19547864334816dbcf0b423bd755d18daeace86cd93ed897b8806a25509d25e2",
+    "sourceCommit": "8b79471dc458ed005e6dc9fccd13e27243614dca",
+    "sourcePath": "FloeAgent/FloeApp/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png",
+    "sourceURL": "https://github.com/JiangNanGenius/floe-agent/blob/8b79471dc458ed005e6dc9fccd13e27243614dca/FloeAgent/FloeApp/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png"
+  },
   "observedAt": "2026-11-05T01:24:15.218140+00:00",
   "observedHead": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
   "pushedAt": "2026-11-04T07:26:14Z",

@@ -1451,6 +1451,51 @@
         }
       ]
     },
+    "floe-ios-automation": {
+      "cover": {
+        "alt": {
+          "en": "The official Floe App icon.",
+          "zh-Hans": "Floe App 官方图标。"
+        },
+        "credit": {
+          "en": "Official Floe App icon.",
+          "zh-Hans": "Floe 官方 App 图标。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/floe-ios-automation.png"
+      },
+      "examples": [
+        {
+          "output": {
+            "en": "Connection status, any required authorization steps and device observations after connecting.",
+            "zh-Hans": "连接状态、需要完成的授权步骤，以及连接后的设备观察结果。"
+          },
+          "prompt": {
+            "en": "Check whether the local Bridge is connected. Guide me through setup if needed, then inspect the current screen state.",
+            "zh-Hans": "帮我检查本机 Bridge 是否已连接；需要连接时引导我完成，再查看当前屏幕状态。"
+          }
+        }
+      ],
+      "gallery": [],
+      "overview": {
+        "en": "Connect the local Bridge in chat, then use device tools to observe and interact with the current iPhone or iPad. Use it to inspect screen state, work through interface flows and carry out authorized actions.\n\nFollow the connection and authorization prompts, check status within the task and describe your goal. The guide helps configure the connection; available actions depend on the device’s current connection and permissions.",
+        "zh-Hans": "在对话中连接本机 Bridge，再通过设备工具观察和操作当前 iPhone 或 iPad。适合查看屏幕状态、梳理界面流程，以及在你授权后完成设备上的操作。\n\n先按照提示连接并授权，再在任务中检查连接状态、说明目标并执行操作。指南会引导你完成连接配置；实际可用的操作以设备当前连接和授权为准。"
+      },
+      "useCases": [
+        {
+          "en": "Connect and check the local Bridge in chat",
+          "zh-Hans": "在聊天中连接并检查本机 Bridge"
+        },
+        {
+          "en": "Inspect device state and plan interface steps",
+          "zh-Hans": "查看设备状态并梳理操作步骤"
+        },
+        {
+          "en": "Perform actions through authorized device tools",
+          "zh-Hans": "通过已授权的设备工具完成操作"
+        }
+      ]
+    },
     "floe-network": {
       "cover": {
         "alt": {

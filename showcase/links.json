@@ -902,6 +902,10 @@
       "auditStatus": "audited",
       "links": []
     },
+    "floe-ios-automation": {
+      "auditStatus": "audited",
+      "links": []
+    },
     "floe-network": {
       "auditStatus": "audited",
       "links": []
@@ -1097,9 +1101,9 @@
             },
             {
               "file": "sources/markitdown/references/ADAPTATION-NOTES.md",
-              "lineEnd": 67,
-              "lineStart": 64,
-              "sha256": "1da1953929cb86b27e98a8b764347bce6aa4406230923d17276f110ec1555a5e"
+              "lineEnd": 73,
+              "lineStart": 67,
+              "sha256": "4aef874cfa85003c6ed0630ae282884004cddf050384fb1325854a2ed14e7e8e"
             }
           ],
           "relation": "references",
@@ -1745,22 +1749,22 @@
           "evidence": [
             {
               "file": "sources/statistical-analysis/SKILL.md",
-              "lineEnd": 76,
-              "lineStart": 73,
+              "lineEnd": 12,
+              "lineStart": 12,
               "sha256": "02c2b2f0272da8928d50fb3a163be861609fd7ec6ce118ea2cb227ba179f0e67"
             },
             {
               "file": "sources/statistical-analysis/references/ADAPTATION-NOTES.md",
-              "lineEnd": 38,
-              "lineStart": 37,
-              "sha256": "e4a5648a19964c9270c6ca18cc2790ff6270ad6c5bd20d152491fa469c38e57b"
+              "lineEnd": 45,
+              "lineStart": 44,
+              "sha256": "b92afd2b335dfe11de5c16fb308a3bbebb2ec18d33bbdad70698860afe186c3c"
             }
           ],
           "notes": {
-            "en": "Scientific Visualization is an optional companion for charting. This skill's numeric analysis and diagnostic plots work independently.",
-            "zh-Hans": "可搭配「科学可视化」制作图表；本技能的数值分析和诊断图也可以独立使用。"
+            "en": "The historical validation notes mention Scientific Visualization; this does not require installing that skill.",
+            "zh-Hans": "历史验证说明提及科学可视化；这不表示需要额外安装该技能。"
           },
-          "relation": "optional",
+          "relation": "references",
           "target": {
             "id": "scientific-visualization",
             "kind": "hub"
