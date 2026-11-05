@@ -1,0 +1,32 @@
+{
+  "candidateChecks": 9,
+  "catalogSigningRun": 42043691591,
+  "channel": "ios",
+  "counts": {
+    "android": 32,
+    "android-full": 65,
+    "ios": 38,
+    "ios-full": 73
+  },
+  "feedCommit": "2dc77fc603a6ac3eba3831b183c10c611804a711",
+  "historicalLedgerRowsPreserved": 38,
+  "kind": "authenticated-catalog-publication-and-public-readback",
+  "ledgerRows": 42,
+  "manualSourceReview": "The previously unpublished static review was upgraded after complete real-guest evidence and authenticated signing. The reviewed source checkpoint was deliberately published before catalog signing; the unchanged automatic B->X->Y->H mutation guard then used that exact live baseline. Earlier package bytes, frozen Git objects and all prior published ledger rows remain intact.",
+  "minimumAppVersion": "1.7.74",
+  "notAttested": [
+    "official App installation and native automatic dependency preparation",
+    "Android/x86 execution",
+    "physical device or UI acceptance"
+  ],
+  "packageBytesChanged": false,
+  "publicFilesReadBack": 13,
+  "publicationCommit": "e079f8e8c071593eacd42978d44da20e47eb61e3",
+  "qualifiedSource": "a85aaf904dcbcc8a43025abb400037042b480b52",
+  "reviewSigningRun": 42043288324,
+  "reviewedPublicationBaseline": "a85aaf904dcbcc8a43025abb400037042b480b52",
+  "signedOutputsVerified": 294,
+  "skillID": "markitdown",
+  "toolingCommit": "5b2673d2481014a0e20d3e7432a7ad37011dcdab",
+  "version": "1.2.0"
+}
