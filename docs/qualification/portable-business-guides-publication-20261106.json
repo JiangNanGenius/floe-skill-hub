@@ -1,0 +1,58 @@
+{
+  "AndroidContentFloor": "0.0.0",
+  "androidScope": "Reviewed instruction-only portability; no Android App/runtime execution attested",
+  "baseline": "80df99ea3f6eddc95dfef5da5796bf0ec8058f3c",
+  "catalogSigningRun": 42055886896,
+  "counts": {
+    "android": 68,
+    "ios": 76
+  },
+  "covers": "Floe original AI-assisted illustrations; official source has no matching covers",
+  "feedCommit": "9483e51962320f287b2b244f0eb4ab92bafde23c",
+  "iOSMinimumAppVersion": "1.7.75",
+  "ids": [
+    "invoice-chase",
+    "payroll-prep",
+    "business-pulse"
+  ],
+  "kind": "signed-portable-guide-publication-and-public-readback",
+  "ledgerRows": 46,
+  "modelOrAppExecutionAttested": false,
+  "newDependencies": false,
+  "original42LedgerRowsRetained": true,
+  "permissions": [
+    "workspace.read",
+    "workspace.write"
+  ],
+  "publicFilesReadBack": 26,
+  "publicationCommit": "dc01885e949b4c642d6d5633af79e20ceb4334c3",
+  "publicationDiffProof": {
+    "changedPathsBtoH": [
+      "android/catalog-full.json",
+      "android/catalog-full.sig",
+      "android/catalog.json",
+      "android/catalog.sig",
+      "catalog-full.json",
+      "catalog-full.sig",
+      "catalog.json",
+      "catalog.sig",
+      "catalog/publication-ledger.json",
+      "catalog/skills.json",
+      "docs/provenance/review-signing-run-42054772682/README.md",
+      "docs/provenance/review-signing-run-42054772682/signing-receipt.json",
+      "docs/provenance/review-signing-run-42054772682/signing-receipt.json.sig",
+      "reviews/business-pulse/1.0.0.review.json.sig",
+      "reviews/invoice-chase/1.0.0.review.json.sig",
+      "reviews/payroll-prep/1.0.0.review.json.sig"
+    ],
+    "ledgerRowsAppended": 4,
+    "mainAdvance": "B->H exactly once",
+    "status": "publication-diffs-ok"
+  },
+  "qualifiedSource": "ef20ca21916f32a560b18caaeddc9b5a6b03b027",
+  "registryCount": 81,
+  "reviewSigningRun": 42054772682,
+  "toolingCommit": "80df99ea3f6eddc95dfef5da5796bf0ec8058f3c",
+  "verifiedSignedOutputs": 306,
+  "version": "1.0.0"
+}
