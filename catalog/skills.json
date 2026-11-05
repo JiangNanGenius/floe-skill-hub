@@ -1351,7 +1351,7 @@
         "licenseChecked": true,
         "packaged": true,
         "published": false,
-        "qualified": false,
+        "qualified": true,
         "reviewed": true,
         "sourcePinned": true
       },
@@ -1430,7 +1430,7 @@
         "licenseChecked": true,
         "packaged": true,
         "published": false,
-        "qualified": false,
+        "qualified": true,
         "reviewed": true,
         "sourcePinned": true
       },
