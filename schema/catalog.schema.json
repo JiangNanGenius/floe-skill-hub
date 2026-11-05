@@ -358,11 +358,11 @@
                     "browser.observe",
                     "browser.interact",
                     "credentials",
+                    "device.observe",
+                    "device.interact",
                     "javascript.local",
                     "python.local",
-                    "execution.remote",
-                    "device.observe",
-                    "device.interact"
+                    "execution.remote"
                   ]
                 }
               },
