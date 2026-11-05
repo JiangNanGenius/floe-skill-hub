@@ -189,7 +189,7 @@
         "floe-invoice-organizer",
         "floe-ios-automation"
       ],
-      "note": "Exact registry partition: tracked(64)+engineManaged(1)+watchOnly(5)+builtins(4)+firstParty(4)=78. Native first-party guides have no external upstream; external skills retain scheduled GitHub Actions tracking."
+      "note": "Exact registry partition: tracked(67)+engineManaged(1)+watchOnly(5)+builtins(4)+firstParty(4)=81. Native first-party guides have no external upstream; external skills retain scheduled GitHub Actions tracking."
     },
     "tracked": [
       "internal-comms",
@@ -255,7 +255,10 @@
       "inventory-planner",
       "cash-flow-snapshot",
       "grant-rfp-writer",
-      "job-post-builder"
+      "job-post-builder",
+      "invoice-chase",
+      "payroll-prep",
+      "business-pulse"
     ],
     "watchOnly": [
       {
@@ -327,6 +330,14 @@
       "excludedUpstream": [],
       "fileMappings": [],
       "notes": "Guide-only editorial adaptation. Upstream SKILL.md is tracked by exact path; content changes require re-adaptation review, never replacement of the Floe guide with unreviewed upstream instructions. Synthetic examples and local provenance are Floe-owned. No scripts, runtime dependencies or connectors.",
+      "relocations": []
+    },
+    "business-pulse": {
+      "excludedUpstream": [
+        "reference/"
+      ],
+      "fileMappings": [],
+      "notes": "Reviewed portable guide adaptation. Track the exact upstream SKILL.md; upstream reference/ files and shared-plugin connector flows are intentionally not shipped. Body changes need re-adaptation review. Local manifest, provenance, license evidence and synthetic examples remain Floe-owned; no scripts, runtime dependencies, connectors or external actions.",
       "relocations": []
     },
     "canvas-design": {
@@ -596,6 +607,14 @@
       "notes": "Reviewed portable guide adaptation. Track the exact upstream SKILL.md; upstream reference/ files and shared-plugin connector flows are intentionally not shipped. Body changes need re-adaptation review. Local manifest, provenance, license evidence and synthetic examples remain Floe-owned; no scripts, runtime dependencies, connectors or external actions.",
       "relocations": []
     },
+    "invoice-chase": {
+      "excludedUpstream": [
+        "reference/"
+      ],
+      "fileMappings": [],
+      "notes": "Reviewed portable guide adaptation. Track the exact upstream SKILL.md; upstream reference/ files and shared-plugin connector flows are intentionally not shipped. Body changes need re-adaptation review. Local manifest, provenance, license evidence and synthetic examples remain Floe-owned; no scripts, runtime dependencies, connectors or external actions.",
+      "relocations": []
+    },
     "job-post-builder": {
       "excludedUpstream": [
         "reference/"
@@ -664,6 +683,14 @@
       "excludedUpstream": [],
       "fileMappings": [],
       "notes": "Guide-only editorial adaptation. Upstream SKILL.md is tracked by exact path; content changes require re-adaptation review, never replacement of the Floe guide with unreviewed upstream instructions. Synthetic examples and local provenance are Floe-owned. No scripts, runtime dependencies or connectors.",
+      "relocations": []
+    },
+    "payroll-prep": {
+      "excludedUpstream": [
+        "reference/"
+      ],
+      "fileMappings": [],
+      "notes": "Reviewed portable guide adaptation. Track the exact upstream SKILL.md; upstream reference/ files and shared-plugin connector flows are intentionally not shipped. Body changes need re-adaptation review. Local manifest, provenance, license evidence and synthetic examples remain Floe-owned; no scripts, runtime dependencies, connectors or external actions.",
       "relocations": []
     },
     "performance-review": {

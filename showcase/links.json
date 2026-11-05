@@ -155,6 +155,10 @@
       "auditStatus": "audited",
       "links": []
     },
+    "business-pulse": {
+      "auditStatus": "audited",
+      "links": []
+    },
     "canvas-design": {
       "auditStatus": "audited",
       "links": []
@@ -950,6 +954,10 @@
       "auditStatus": "audited",
       "links": []
     },
+    "invoice-chase": {
+      "auditStatus": "audited",
+      "links": []
+    },
     "job-post-builder": {
       "auditStatus": "audited",
       "links": []
@@ -1201,6 +1209,10 @@
       ]
     },
     "onboarding": {
+      "auditStatus": "audited",
+      "links": []
+    },
+    "payroll-prep": {
       "auditStatus": "audited",
       "links": []
     },

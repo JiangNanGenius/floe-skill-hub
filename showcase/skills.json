@@ -221,6 +221,51 @@
         }
       ]
     },
+    "business-pulse": {
+      "cover": {
+        "alt": {
+          "en": "Forest-green briefing folio, ivory summary panels and a brass bar sculpture.",
+          "zh-Hans": "森林绿简报手册、米白摘要页与黄铜柱状摆件。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe原创，AI辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/business-pulse.jpg"
+      },
+      "examples": [
+        {
+          "output": {
+            "en": "A one-page snapshot, comparable metrics, source-linked watch list and coverage gaps.",
+            "zh-Hans": "一页经营快照、可比较指标、有来源的关注清单与资料缺口。"
+          },
+          "prompt": {
+            "en": "Use these supplied sales, cash and commitments to prepare a dated brief. Keep metric definitions distinct and identify the next priority.",
+            "zh-Hans": "根据这些销售、现金和近期事项整理带日期的简报，保留各指标口径，并指出下一步重点。"
+          }
+        }
+      ],
+      "gallery": [],
+      "overview": {
+        "en": "Combine supplied sales, cash, receivables and upcoming commitments into a dated one-page brief. Each metric keeps its currency, source cut-off and accounting basis, with comparisons only across matching reporting windows. Orders, revenue, receipts and processor settlements remain distinct.\n\nLead with a concrete priority supported by a named record, then show comparable metrics and a short watch list. Missing baselines and unresolved discrepancies stay visible. Provide only the relevant exports or figures: the brief explains the coverage actually available instead of pretending to be a complete live dashboard.",
+        "zh-Hans": "将销售、现金、应收款和近期事项整理成带日期的一页经营简报。每个指标保留币种、资料截止时间和统计口径，只比较相同期间与口径的数据，避免把订单、收入、收款和支付平台结算重复相加。\n\n先给出有具体记录支撑的当前重点，再列指标变化和简短关注清单。缺少的基线、资料冲突和无法判断的指标会保留说明。提供与问题有关的导出或数字即可，简报会明确本次覆盖范围。"
+      },
+      "useCases": [
+        {
+          "en": "Prepare a weekly business brief",
+          "zh-Hans": "准备每周经营简报"
+        },
+        {
+          "en": "Compare metrics on the same basis",
+          "zh-Hans": "比较相同口径的指标"
+        },
+        {
+          "en": "Choose a dated next priority",
+          "zh-Hans": "确定有期限依据的下一步重点"
+        }
+      ]
+    },
     "canvas-design": {
       "cover": {
         "alt": {
@@ -2165,6 +2210,51 @@
         }
       ]
     },
+    "invoice-chase": {
+      "cover": {
+        "alt": {
+          "en": "Ivory invoice folio and paper slips with a brass clip on burgundy fabric.",
+          "zh-Hans": "酒红色背景上的米白发票手册、纸页与黄铜夹。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe原创，AI辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/invoice-chase.jpg"
+      },
+      "examples": [
+        {
+          "output": {
+            "en": "Currency-separated balances, invoice reconciliation, copyable drafts and verification gaps.",
+            "zh-Hans": "按币种区分的余额、发票核对明细、可复制草稿和待核实清单。"
+          },
+          "prompt": {
+            "en": "Reconcile these dated invoices, payments and credits, then draft reminders only for confirmed overdue balances.",
+            "zh-Hans": "核对这些发票、收款和贷项，只为已确认的逾期余额准备提醒草稿。"
+          }
+        }
+      ],
+      "gallery": [],
+      "overview": {
+        "en": "Turn a dated invoice export and supplied payment/credit records into a reconciled overdue list and individual customer reminders. Gross invoices and already-netted balances are handled separately so a receipt is not deducted twice. Amounts remain separated by currency, with source references for each adjustment.\n\nDrafts consolidate eligible invoices by customer. Uncertain payments, missing dates and conflicting records stay on a verification list; the output shows what was withheld. Provide the cut-off date, invoice export and any later confirmed adjustments. You receive a summary and copyable messages for review.",
+        "zh-Hans": "把有日期的发票、收款与贷项记录整理成应收清单，再按客户准备提醒草稿。逐笔核对原始金额、已结算款项和贷项；如果导出已经给出净余额，就不会再次扣减同一笔款。不同币种分开汇总，每项调整都能对应到原记录。\n\n同一客户的合格发票会合并成一封草稿；可能已付款、日期缺失或记录冲突的项目单独列为待核实，不会直接声称对方欠款。提供截止日期、发票导出及后续调整记录，即可得到汇总表与便于复制的消息。"
+      },
+      "useCases": [
+        {
+          "en": "Reconcile overdue invoice balances",
+          "zh-Hans": "核对逾期发票余额"
+        },
+        {
+          "en": "Prepare customer reminder drafts",
+          "zh-Hans": "准备客户提醒草稿"
+        },
+        {
+          "en": "Separate uncertain payments",
+          "zh-Hans": "筛出待核实收款"
+        }
+      ]
+    },
     "job-post-builder": {
       "cover": {
         "alt": {
@@ -2568,6 +2658,51 @@
         {
           "en": "Define access requests and 30/60/90-day goals",
           "zh-Hans": "明确权限申请和30/60/90天目标"
+        }
+      ]
+    },
+    "payroll-prep": {
+      "cover": {
+        "alt": {
+          "en": "Navy payroll folio with ivory timecards and a brass clock on slate blue.",
+          "zh-Hans": "灰蓝色背景上的深蓝薪资手册、米白工时卡与黄铜时钟。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe原创，AI辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/payroll-prep.jpg"
+      },
+      "examples": [
+        {
+          "output": {
+            "en": "A person-by-person review worksheet, line reconciliation and unresolved pay inputs.",
+            "zh-Hans": "逐人复核表、逐行金额核对和待确认的计薪资料。"
+          },
+          "prompt": {
+            "en": "Review these timesheets with the supplied rates and pay rules. Reconcile the known gross pay and list each unresolved issue.",
+            "zh-Hans": "使用提供的费率与计薪规则核对工时表，算清已确认工资，并逐项列出待确认问题。"
+          }
+        }
+      ],
+      "gallery": [],
+      "overview": {
+        "en": "Review a pay period from supplied timesheets, employee aliases and effective-dated compensation. The worksheet separates regular, overtime and leave hours according to the rules you provide, reconciles line amounts and flags missing punches, overlaps, duplicate entries and rate changes.\n\nUnknown hours and rules stay unresolved instead of being replaced with assumed values. Compare against a supplied prior period, track confirmed corrections, and distinguish gross pay from deductions, net pay and funding. The result is a draft worksheet for review and manual use in your payroll system.",
+        "zh-Hans": "根据工时表、人员代号和带生效日期的费率，核对一个发薪周期。按你提供的规则区分普通工时、加班和休假，逐行核算金额，并检查漏打卡、工时重叠、重复记录与费率变化。\n\n缺少的时间与规则保留为待确认，不会用猜测补齐。可以对照上一周期说明变化，记录已经确认的更正；工资总额、扣款、实发与所需资金会明确分开。最终得到供你复核、再交给薪资系统使用的草稿表。"
+      },
+      "useCases": [
+        {
+          "en": "Review timesheets before payroll",
+          "zh-Hans": "在发薪前核对工时表"
+        },
+        {
+          "en": "Find missing and overlapping entries",
+          "zh-Hans": "找出缺失及重叠记录"
+        },
+        {
+          "en": "Compare confirmed gross pay by period",
+          "zh-Hans": "比较各期已确认工资总额"
         }
       ]
     },

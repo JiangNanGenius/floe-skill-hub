@@ -1,0 +1,43 @@
+{
+  "androidProjectionContractTests": 16,
+  "arithmeticChecks": 11,
+  "binaries": false,
+  "connectorsOrExternalActions": false,
+  "covers": "Floe original AI-assisted illustration",
+  "dependencies": false,
+  "executionAttested": false,
+  "ids": [
+    "invoice-chase",
+    "payroll-prep",
+    "business-pulse"
+  ],
+  "kind": "static-guide-source-preparation-not-published",
+  "license": "Apache-2.0",
+  "originalExpectedCountFailureRetained": true,
+  "packageDigests": {
+    "business-pulse": {
+      "bytes": 17056,
+      "contentDigest": "d302a9fdc4bb062c0b1fc66919c9f27d91ce6d787d2904c1ca310d3926be736d",
+      "sha256": "bd5202e50c962162b8c2382e7b20777ac86f45526f17456b7b2b30a6f456c4e7"
+    },
+    "invoice-chase": {
+      "bytes": 16570,
+      "contentDigest": "be8b7c701fc437bb58d1437bdf347ea2c9040e5588952a9a95ae63c4e3e4a9fe",
+      "sha256": "209b3708a2d5864b321369ee7c3e6d7d2f7c71ac904db728ad9f0809c264f936"
+    },
+    "payroll-prep": {
+      "bytes": 16912,
+      "contentDigest": "ef8e262c49e3f76c8f20c7f67898a428385aba89eec02b06c54636e4ff37c843",
+      "sha256": "dbb8def91594668349253487a52b5f7d475f1fcf49e5c13b4d1b218a6741a3ac"
+    }
+  },
+  "permissions": [
+    "workspace.read",
+    "workspace.write"
+  ],
+  "previousReleaseRebuildByteIdentical": true,
+  "registryCount": 81,
+  "scripts": false,
+  "sourceCommit": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+  "upstream": "https://github.com/anthropics/knowledge-work-plugins"
+}

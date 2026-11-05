@@ -5615,6 +5615,219 @@
         "skillManifestPath": "small-business/skills/job-post-builder/SKILL.md"
       },
       "versionTarget": "1.0.0"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Reconcile overdue balances and prepare individual customer reminders from supplied invoices and payment records.",
+        "zh-Hans": "核对应收余额、部分收款和贷项，再按客户整理逾期提醒草稿。"
+      },
+      "firstParty": null,
+      "id": "invoice-chase",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.75",
+      "name": {
+        "en": "Invoice Reminder Drafts",
+        "zh-Hans": "应收款提醒草稿"
+      },
+      "notes": {
+        "en": "Builds a review-ready draft from the records you provide, with assumptions and missing information made clear.",
+        "zh-Hans": "根据你提供的记录整理可核对的草稿，清楚列出假设和缺少的信息。"
+      },
+      "planNumber": 79,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "invoices",
+        "receivables",
+        "payments",
+        "reminders"
+      ],
+      "upstream": {
+        "commit": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Exact root LICENSE bytes are preserved. No directory-level small-business/LICENSE or applicable NOTICE exists at this pin. The Apache-2.0 text is relied upon; the unrelated trailing fragment is preserved, not interpreted as instructions.",
+          "zh-Hans": "保留了根目录LICENSE的精确字节。该固定提交没有small-business/LICENSE或适用NOTICE。依据其中的Apache-2.0正文；无关尾部片段保留原样，不作为指令。"
+        },
+        "licenseStatus": "verified",
+        "path": "small-business/skills/invoice-chase",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-06",
+        "skillManifestPath": "small-business/skills/invoice-chase/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Reconcile supplied timesheets, agreed rates and pay-period records into a flagged gross-pay worksheet.",
+        "zh-Hans": "根据工时、已确认费率和发薪周期核对薪资，逐人列明金额与待确认事项。"
+      },
+      "firstParty": null,
+      "id": "payroll-prep",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.75",
+      "name": {
+        "en": "Timesheet and Payroll Review",
+        "zh-Hans": "工时与薪资核对"
+      },
+      "notes": {
+        "en": "Builds a review-ready draft from the records you provide, with assumptions and missing information made clear.",
+        "zh-Hans": "根据你提供的记录整理可核对的草稿，清楚列出假设和缺少的信息。"
+      },
+      "planNumber": 80,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "timesheets",
+        "payroll",
+        "hours",
+        "reconciliation"
+      ],
+      "upstream": {
+        "commit": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Exact root LICENSE bytes are preserved. No directory-level small-business/LICENSE or applicable NOTICE exists at this pin. The Apache-2.0 text is relied upon; the unrelated trailing fragment is preserved, not interpreted as instructions.",
+          "zh-Hans": "保留了根目录LICENSE的精确字节。该固定提交没有small-business/LICENSE或适用NOTICE。依据其中的Apache-2.0正文；无关尾部片段保留原样，不作为指令。"
+        },
+        "licenseStatus": "verified",
+        "path": "small-business/skills/payroll-prep",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-06",
+        "skillManifestPath": "small-business/skills/payroll-prep/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "productivity-organization",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Build a dated one-page business brief with comparable metrics, source-linked risks and a concrete next priority.",
+        "zh-Hans": "把用户提供的经营资料整理成一页简报，比较同口径指标并标出风险与下一步重点。"
+      },
+      "firstParty": null,
+      "id": "business-pulse",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.75",
+      "name": {
+        "en": "Business Snapshot",
+        "zh-Hans": "经营简报"
+      },
+      "notes": {
+        "en": "Builds a review-ready draft from the records you provide, with assumptions and missing information made clear.",
+        "zh-Hans": "根据你提供的记录整理可核对的草稿，清楚列出假设和缺少的信息。"
+      },
+      "planNumber": 81,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "business",
+        "operations",
+        "briefing",
+        "metrics"
+      ],
+      "upstream": {
+        "commit": "d900840716eb262e1feb17c6f4406c9ce0e06bcf",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Exact root LICENSE bytes are preserved. No directory-level small-business/LICENSE or applicable NOTICE exists at this pin. The Apache-2.0 text is relied upon; the unrelated trailing fragment is preserved, not interpreted as instructions.",
+          "zh-Hans": "保留了根目录LICENSE的精确字节。该固定提交没有small-business/LICENSE或适用NOTICE。依据其中的Apache-2.0正文；无关尾部片段保留原样，不作为指令。"
+        },
+        "licenseStatus": "verified",
+        "path": "small-business/skills/business-pulse",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-06",
+        "skillManifestPath": "small-business/skills/business-pulse/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
     }
   ]
 }
