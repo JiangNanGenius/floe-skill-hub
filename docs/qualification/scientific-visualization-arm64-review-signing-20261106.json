@@ -1,0 +1,20 @@
+{
+  "candidateChecks": 7,
+  "channels": [
+    "ios"
+  ],
+  "dataCommit": "384326b7ef1290ad66dcc0c5fb4a24abe8cf134a",
+  "kind": "authenticated-guest-review-not-catalog-publication",
+  "minimumAppVersion": "1.7.75",
+  "officialInstallAttested": false,
+  "oldPackageBytesUnchanged": true,
+  "review": {
+    "contentDigest": "a24fb055e33907928c02acb341852047ca2c8f9e732472585933516a27de1f1b",
+    "id": "scientific-visualization",
+    "packageSHA256": "15f9c78512cf38d1ef0e67d4a32bde7ab5782db0cf3690d11a8deeb47fd19d17",
+    "reviewSHA256": "f1bad906e68303773a1aaea4a0809a55398bcf2a75e77fdb3ceeaff5072b2d64",
+    "version": "1.2.0"
+  },
+  "runID": 42059831104,
+  "toolingCommit": "b21ebce13b3729f7b4ef6e725812bacb6dd59192"
+}
