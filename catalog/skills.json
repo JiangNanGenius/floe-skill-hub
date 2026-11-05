@@ -1545,7 +1545,7 @@
       "firstParty": null,
       "id": "markitdown",
       "kind": "optional",
-      "minimumAppVersion": "1.7.70",
+      "minimumAppVersion": "1.7.74",
       "name": {
         "en": "MarkItDown",
         "zh-Hans": "格式转 Markdown"
@@ -1563,12 +1563,11 @@
         ],
         "execution": {
           "arch": "aarch64",
-          "evidence": "unproven",
+          "evidence": "guest-verified",
           "os": "linux"
         },
         "installPlatforms": [
-          "ios",
-          "android"
+          "ios"
         ],
         "pythonPackagesPlan": [
           "openpyxl==3.1.5",
@@ -1582,7 +1581,7 @@
       "source": "K",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": false,
+        "executionVerified": true,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
