@@ -1466,7 +1466,7 @@
       "firstParty": null,
       "id": "scientific-visualization",
       "kind": "optional",
-      "minimumAppVersion": "1.7.70",
+      "minimumAppVersion": "1.7.75",
       "name": {
         "en": "Scientific Visualization",
         "zh-Hans": "数据可视化"
@@ -1484,12 +1484,11 @@
         ],
         "execution": {
           "arch": "aarch64",
-          "evidence": "unproven",
+          "evidence": "guest-verified",
           "os": "linux"
         },
         "installPlatforms": [
-          "ios",
-          "android"
+          "ios"
         ],
         "pythonPackagesPlan": [
           "matplotlib==3.10.1",
@@ -1505,7 +1504,7 @@
       "source": "K",
       "status": {
         "adaptation": "frozen",
-        "executionVerified": false,
+        "executionVerified": true,
         "licenseChecked": true,
         "packaged": true,
         "published": false,
