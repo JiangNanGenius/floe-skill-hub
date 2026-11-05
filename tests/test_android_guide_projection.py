@@ -254,7 +254,7 @@ class ProjectionTest(unittest.TestCase):
     # identity of the frozen set (trusted tooling == immutable B facts)
     # ------------------------------------------------------------------
 
-    def test_frozen_set_is_exactly_the_51_optional_none_rows(self):
+    def test_frozen_set_is_exactly_the_57_portable_guides_and_excludes_native(self):
         registry = json.loads((REPO / "catalog" / "skills.json").read_bytes())
         none_ids = {e["id"] for e in registry["skills"]
                     if e["kind"] == "optional"
@@ -263,12 +263,18 @@ class ProjectionTest(unittest.TestCase):
                     if e["kind"] == "optional"
                     and e["plannedRuntime"]["scriptRuntime"] != "none"}
         builtins = {e["id"] for e in registry["skills"] if e["kind"] == "builtin"}
-        self.assertEqual(len(build_catalog.ANDROID_PORTABLE_GUIDE_IDS), 51)
-        self.assertEqual(build_catalog.ANDROID_PORTABLE_GUIDE_IDS, none_ids)
+        self.assertEqual(len(build_catalog.ANDROID_PORTABLE_GUIDE_IDS), 57)
+        self.assertEqual(build_catalog.ANDROID_PORTABLE_GUIDE_IDS,
+                         none_ids - {"floe-ios-automation"})
+        native = next(e for e in registry["skills"] if e["id"] == "floe-ios-automation")
+        self.assertEqual(native["plannedRuntime"]["installPlatforms"], ["ios"])
+        self.assertFalse(set(native["plannedRuntime"]["capabilities"])
+                         <= build_catalog.ANDROID_PORTABLE_GUIDE_CAPABILITY_CEILING)
+        self.assertNotIn("floe-ios-automation", build_catalog.ANDROID_PORTABLE_GUIDE_IDS)
         self.assertNotIn("pricing-strategist", build_catalog.ANDROID_PORTABLE_GUIDE_IDS)
         self.assertEqual(len(scripted), 12)
         self.assertEqual(len(builtins), 4)
-        self.assertEqual(len(none_ids | scripted | builtins), 67)
+        self.assertEqual(len(none_ids | scripted | builtins), 74)
         self.assertFalse(build_catalog.ANDROID_PORTABLE_GUIDE_IDS
                          & (scripted | builtins | set(hubcore.RESERVED_BUILTIN_IDS)))
         self.assertEqual(build_catalog.ANDROID_PORTABLE_GUIDE_CAPABILITY_CEILING,
