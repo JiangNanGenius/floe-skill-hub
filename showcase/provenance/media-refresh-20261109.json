@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "scope": "Presentation assets only. No package, permission, install offer or execution qualification is changed.",
+  "assessmentDate": "2026-11-09",
+  "supersedes": "The byte metadata for these three files in docs/SHOWCASE_MEDIA_SOURCES.md describes their earlier versions. This record describes the current distributed originals.",
+  "originals": [
+    {
+      "path": "showcase/media/covers/impeccable-promo-small.png",
+      "kind": "illustration",
+      "description": "High-resolution rendering of the unchanged official Impeccable browser-extension promo SVG template; not a Floe screenshot or execution result.",
+      "sourceRepository": "pbakaus/impeccable",
+      "sourceCommit": "4fc2f83e1c8710dba772bfd4523d0efab57737b6",
+      "sourceURL": "https://raw.githubusercontent.com/pbakaus/impeccable/4fc2f83e1c8710dba772bfd4523d0efab57737b6/scripts/generate-promo-tile.js",
+      "sourceSHA256": "e4d5f6af9eb5d8d9f007a2e80acae10a2e217f60b81e678867b3acb009bde7eb",
+      "license": "Apache-2.0",
+      "retainedLicense": "sources/impeccable/references/licenses/LICENSE",
+      "rendering": "The official 440 by 280 SVG template was rendered at device scale 3 with unchanged text and geometry. No bitmap upscaling, redraw or AI generation.",
+      "mime": "image/png",
+      "size": 120909,
+      "width": 1320,
+      "height": 840,
+      "sha256": "81144bcea3f6b16be2c96ee3f5fbfd75b1b063f8224382619a5e142c05517506",
+      "previousSHA256": "fe18b4065238d6e59c0b106b03a246482ef01ab31665e90c53b7ede2e258c0db"
+    },
+    {
+      "path": "showcase/media/covers/floe-network.png",
+      "kind": "illustration",
+      "description": "Floe-owned AI-assisted concept illustration; source and permission remain as recorded in docs/SHOWCASE_MEDIA_SOURCES.md.",
+      "transformation": "Lossless PNG IDAT recompression only. Decoded pixels and every non-IDAT metadata chunk are unchanged.",
+      "mime": "image/png",
+      "size": 1482688,
+      "width": 1254,
+      "height": 1254,
+      "sha256": "9ba92cacc9a8fd02d6a1f6d30facf8344a2d1090a13baf0d359d8885832c4a38",
+      "previousSHA256": "bbf3f72ef540f58f04aad243e584955bf84e9ecdb2f604cf507ef73742b9406e",
+      "decodedPixelSHA256": "3d8e45d53580b6f6f4117dda38173ff853b2450bd2ba702ee1f238ce32a6e71d"
+    },
+    {
+      "path": "showcase/media/covers/markitdown.png",
+      "kind": "illustration",
+      "description": "Floe-owned AI-assisted concept illustration; source and permission remain as recorded in docs/SHOWCASE_MEDIA_SOURCES.md.",
+      "transformation": "Lossless PNG IDAT recompression only. Decoded pixels and every non-IDAT metadata chunk are unchanged.",
+      "mime": "image/png",
+      "size": 1519226,
+      "width": 1254,
+      "height": 1254,
+      "sha256": "0548eeabfb725380e1d9738a26281d7800bad22f1ddd50ee23a3d9d41b552391",
+      "previousSHA256": "c94df186ab37a141e1d6bcbd03ba54986e9a4e7efb32fd441d09a2a9995955d3",
+      "decodedPixelSHA256": "6a12a2f2d8b950b2cacb6d40d53272dd05320f3387fd621e1962fe573ffc6be0"
+    }
+  ],
+  "derivatives": {
+    "manifest": "showcase/thumbnails.v1.json",
+    "manifestSHA256": "c0dc7511c17f63ce3955690a347711fb02a23b1a4b0f78b223a21f33b1b04d2b",
+    "sourceImages": 84,
+    "files": 84,
+    "size": 3879476,
+    "mime": "image/webp",
+    "coverMaxLongEdge": 800,
+    "galleryMaxLongEdge": 1280,
+    "transformation": "Proportionally resized and encoded as WebP without enlargement. Each derivative inherits the source image attribution and license; it has no independent App screenshot or execution claim.",
+    "identity": "Read the manifest, source Git blobs and derivative files from the same immutable publication commit. Validate source bindings and derivative bytes; the manifest cannot grant permissions or install eligibility."
+  }
+}
