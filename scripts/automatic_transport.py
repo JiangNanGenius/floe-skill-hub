@@ -113,6 +113,7 @@ import catalog_views as cv
 import publication_immutability as pi
 import runtime_dependency
 import sign_publication as sp
+import transport_manifest as transport_mirrors
 
 # ---------------------------------------------------------------------------
 # fixed official identity (trusted constants; branch names are workflow config)
@@ -377,6 +378,9 @@ DATA_EXACT_PATHS = frozenset({
     "catalog-full.json", "catalog-full.sig",
     "android/catalog-full.json", "android/catalog-full.sig",
     "docs/UPSTREAM-PINS.json",           # upstream pin data (JSON-parsed)
+    # These are DATA only after verify_transport_history below proves every
+    # effective first-parent pair transition. No directory-wide exception.
+    transport_mirrors.PAYLOAD_PATH, transport_mirrors.SIGNATURE_PATH,
 })
 DATA_DIR_PREFIXES = (
     "sources/", "frozen/", "reviews/", "packages/",
@@ -659,6 +663,7 @@ def verify_history_refresh(root, anchor_commit, live_commit):
               f"{trusted_drift[:MAX_CHANGED_LIST]}")
 
     _verify_changed_data_content(root_path, live_commit, modified, added)
+    transport_states_verified = verify_transport_history(root_path, anchor_commit, live_commit)
 
     anchor_ledger_raw = read_blob(root_path, anchor_commit, pi.LEDGER_REL, "anchor")
     live_ledger_raw = read_blob(root_path, live_commit, pi.LEDGER_REL, "live")
@@ -712,9 +717,77 @@ def verify_history_refresh(root, anchor_commit, live_commit):
         "appendedLedgerRows": len(live_rows) - len(anchor_rows),
         "ledgerTransitions": transitions,
         "ledgerStatesVerified": ledger_states_verified,
+        "transportStatesVerified": transport_states_verified,
         "baselineHistoricalFacts": len(merged),
         "baselineProvenance": provenance,
     }
+
+
+def verify_transport_history(root, anchor_commit, live_commit):
+    """Verify the fixed mirror pair at EVERY main-first-parent transition.
+
+    A signed endpoint may not hide an unsigned/rollback intermediate state.
+    Expired signatures are historical proof only, never an active policy.
+    Ordinary Skill candidate/publication allowlists remain unchanged.
+    """
+    _require_commit(anchor_commit, "transport anchor")
+    _require_commit(live_commit, "transport live")
+    trust_raw = read_blob(root, anchor_commit, "public-key.json", "anchor")
+    try:
+        trust_doc = json.loads(trust_raw) if trust_raw is not None else None
+        if (not isinstance(trust_doc, dict) or trust_doc.get("keyID") != hubcore.PRODUCTION_KEY_ID
+                or not isinstance(trust_doc.get("publicKey"), str)):
+            _hold("transport history requires the anchor's official public trust")
+        trust = {hubcore.PRODUCTION_KEY_ID: trust_doc["publicKey"]}
+    except (ValueError, TypeError):
+        _hold("transport history anchor public trust is malformed")
+    states = [anchor_commit]
+    if live_commit != anchor_commit:
+        changed = _git_text(root, ["rev-list", "--reverse", "--first-parent", "--full-history",
+            f"{anchor_commit}..{live_commit}", "--", transport_mirrors.PAYLOAD_PATH,
+            transport_mirrors.SIGNATURE_PATH], "transport history transitions").splitlines()
+        if len(changed) > 4096:
+            _hold("transport history exceeds the bounded transition budget; reviewed repin required")
+        states.extend(changed)
+        if states[-1] != live_commit:
+            states.append(live_commit)
+    previous = None
+    count = 0
+    for commit in states:
+        entries = _git_text(root, ["ls-tree", "-r", commit, "--",
+            transport_mirrors.PAYLOAD_PATH, transport_mirrors.SIGNATURE_PATH], "transport pair modes").splitlines()
+        if not entries:
+            if previous is not None:
+                _hold("signed transport history may not disappear")
+            continue
+        if len(entries) != 2:
+            _hold("transport history contains a partial signed pair")
+        bounds = {transport_mirrors.PAYLOAD_PATH: transport_mirrors.MAX_PAYLOAD,
+                  transport_mirrors.SIGNATURE_PATH: transport_mirrors.MAX_SIGNATURE}
+        for entry in entries:
+            meta, rel = entry.split("\t", 1)
+            mode, kind, oid = meta.split()
+            if mode != "100644" or kind != "blob" or rel not in bounds:
+                _hold("transport history pair requires two ordinary non-executable blobs")
+            size = int(_git_text(root, ["cat-file", "-s", oid], "bounded transport blob size"))
+            if not 1 <= size <= bounds[rel]:
+                _hold("transport history pair exceeds its byte bounds")
+        raw = read_blob(root, commit, transport_mirrors.PAYLOAD_PATH, "transport")
+        signature = read_blob(root, commit, transport_mirrors.SIGNATURE_PATH, "transport")
+        if raw is None or signature is None:
+            _hold("transport history pair cannot be read")
+        try:
+            value, _ = transport_mirrors.verify_manifest(raw, signature, trust, allow_expired=True)
+            if previous is not None:
+                prior_raw, prior_signature, prior = previous
+                transport_mirrors.enforce_generation(raw, value, prior_raw, prior)
+                if value["generation"] == prior["generation"] and signature != prior_signature:
+                    _hold("transport signature changed under the same generation")
+        except hubcore.HubError as error:
+            _hold(f"transport history refused at {commit[:10]}: {error}")
+        previous = raw, signature, value
+        count += 1
+    return count
 
 
 def run_history_refresh(tooling_root, anchor_commit):

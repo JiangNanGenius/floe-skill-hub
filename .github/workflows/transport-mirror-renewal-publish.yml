@@ -1,0 +1,128 @@
+name: transport-mirror-renewal-publish
+on:
+  schedule:
+    - cron: '52 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Verify and construct local objects only; never push or CAS
+        type: boolean
+        default: true
+permissions:
+  contents: read
+concurrency:
+  group: floe-skill-hub-auto-publication
+  cancel-in-progress: false
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main' && (vars.FLOE_TRANSPORT_MIRROR_RENEWAL == 'enabled' || inputs.dry_run == true)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.11'
+      - run: python3 -m pip install --disable-pip-version-check cryptography==46.0.6
+      - name: Resolve the fixed official metadata relay and verify its immutable bytes
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=$(git rev-parse HEAD)
+          [[ "$base" =~ ^[0-9a-f]{40}$ ]]
+          if git ls-remote --exit-code https://github.com/JiangNanGenius/floe-agent.git \
+              refs/heads/transport-mirror-signing-relay > "$RUNNER_TEMP/relay-ref"; then
+            relay=$(cut -f1 "$RUNNER_TEMP/relay-ref")
+          else
+            rc=$?
+            if [[ "$rc" != 2 ]]; then exit "$rc"; fi
+            echo 'action=relay-absent' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          [[ "$relay" =~ ^[0-9a-f]{40}$ ]]
+          git fetch --no-tags https://github.com/JiangNanGenius/floe-agent.git "$relay"
+          python3 -I scripts/transport_renewal.py publish --root "$GITHUB_WORKSPACE" \
+            --base "$base" --relay-commit "$relay" --out "$RUNNER_TEMP/publication-plan"
+          python3 - "$RUNNER_TEMP/publication-plan/status.json" "$GITHUB_OUTPUT" <<'PY'
+          import json,sys
+          value=json.load(open(sys.argv[1]))
+          with open(sys.argv[2],'a') as output:
+              for key in ['action','baseCommit','commit','publicationCommit','candidateRef']:
+                  if key in value: output.write(key+'='+value[key]+'\n')
+          PY
+          echo "relay=$relay" >> "$GITHUB_OUTPUT"
+      - name: Upload the verified two-file candidate objects to the one scoped ref
+        if: vars.FLOE_TRANSPORT_MIRROR_RENEWAL == 'enabled' && inputs.dry_run != true && steps.plan.outputs.action == 'publish'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COMMIT: ${{ steps.plan.outputs.commit }}
+          CANDIDATE_REF: ${{ steps.plan.outputs.candidateRef }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$COMMIT" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$CANDIDATE_REF" =~ ^refs/heads/auto/transport-renewal-[0-9a-f]{64}$ ]]
+          git -c credential.helper= -c credential.helper='!gh auth git-credential' \
+            push origin "$COMMIT:$CANDIDATE_REF"
+      - name: Advance main once through the existing exact GraphQL CAS
+        if: vars.FLOE_TRANSPORT_MIRROR_RENEWAL == 'enabled' && inputs.dry_run != true && steps.plan.outputs.action == 'publish'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          BASE: ${{ steps.plan.outputs.baseCommit }}
+          COMMIT: ${{ steps.plan.outputs.commit }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B scripts/automatic_publication.py cas --base-commit "$BASE" \
+            --head-commit "$COMMIT" --token-env GITHUB_TOKEN > "$RUNNER_TEMP/renewal-cas.json"
+      - name: Read the immutable public pair back anonymously
+        id: readback
+        if: vars.FLOE_TRANSPORT_MIRROR_RENEWAL == 'enabled' && inputs.dry_run != true && (steps.plan.outputs.action == 'publish' || steps.plan.outputs.action == 'already-published')
+        env:
+          PUBLICATION: ${{ steps.plan.outputs.publicationCommit }}
+          RELAY: ${{ steps.plan.outputs.relay }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -I scripts/transport_renewal.py readback --root "$GITHUB_WORKSPACE" \
+            --base "$PUBLICATION" --relay-commit "$RELAY" --out "$RUNNER_TEMP/public-readback"
+      - name: Retire the exact task-owned candidate ref after public read-back
+        if: steps.readback.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COMMIT: ${{ steps.plan.outputs.commit }}
+          PUBLICATION: ${{ steps.plan.outputs.publicationCommit }}
+          CANDIDATE_REF: ${{ steps.plan.outputs.candidateRef }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$COMMIT" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$CANDIDATE_REF" =~ ^refs/heads/auto/transport-renewal-[0-9a-f]{64}$ ]]
+          git merge-base --is-ancestor "$COMMIT" "$PUBLICATION"
+          if git ls-remote --exit-code origin "$CANDIDATE_REF" > "$RUNNER_TEMP/candidate-ref"; then
+            test "$(cut -f1 "$RUNNER_TEMP/candidate-ref")" = "$COMMIT"
+            git -c credential.helper= -c credential.helper='!gh auth git-credential' \
+              push --force-with-lease="$CANDIDATE_REF:$COMMIT" origin ":$CANDIDATE_REF"
+          else
+            rc=$?
+            if [[ "$rc" != 2 ]]; then exit "$rc"; fi
+          fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: transport-renewal-publication
+          path: |
+            ${{ runner.temp }}/publication-plan
+            ${{ runner.temp }}/renewal-cas.json
+            ${{ runner.temp }}/public-readback
+          if-no-files-found: warn
+          retention-days: 30

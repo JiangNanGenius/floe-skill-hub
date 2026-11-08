@@ -158,7 +158,7 @@ def maintenance(root, output, publication_commit, now=None, probe=None):
                 return error.code, b''
     for role, ids in value['roles'].items():
         if role == 'releaseAssets':
-            if ids: report['health'].append({'role': role, 'status': 'caller-not-qualified'})
+            if ids: report['health'].append({'role': role, 'status': 'not-probed-by-maintenance'})
             continue
         original = (f'https://raw.githubusercontent.com/JiangNanGenius/floe-skill-hub/{publication_commit}/catalog-full.sig'
                     if role == 'rawFiles' else 'https://github.com/JiangNanGenius/floe-skill-hub/commits/main.atom')

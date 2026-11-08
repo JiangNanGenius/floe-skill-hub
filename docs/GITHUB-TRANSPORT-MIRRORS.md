@@ -2,7 +2,7 @@
 
 The one discovery pair is `transport/mirrors.v1.json` and `transport/mirrors.v1.json.sig` in this repository. A website may cache these exact small signed bytes for display and separately maintain its authorized bounded website-image cache. It does not become an App discovery root or an App SkillHub package/image acceleration proxy.
 
-The list orders or disables the two App-approved IDs `ghfast.top` and `gh-proxy.com`. URLs, templates, repositories, keys, content hashes, permissions and new hosts cannot be supplied by the list. GitHub primary is always first. Role defaults are `rawFiles=[ghfast.top,gh-proxy.com]`, `atom=[gh-proxy.com]`, `releaseAssets=[]`. GHFast did not support the probed Atom path; release downloads/VM images are not claimed to consume this list.
+The list orders or disables the two App-approved IDs `ghfast.top` and `gh-proxy.com`. URLs, templates, repositories, keys, content hashes, permissions and new hosts cannot be supplied by the list. GitHub primary is always first. Compiled fallback defaults are `rawFiles=[ghfast.top,gh-proxy.com]`, `atom=[gh-proxy.com]`, `releaseAssets=[]`. GHFast did not support the probed Atom path. Release-asset role admission requires complete byte/digest verification in the actual caller; website and native App integration are separate evidence.
 
 ## Wire and trust
 
@@ -24,6 +24,56 @@ Only transport availability errors may switch an existing content request to the
 `transport-mirror-maintenance.yml` runs daily in GitHub Actions, entirely independently of a developer Mac. It verifies the published list, probes only listed approved hosts/roles using fixed sample URLs and bounded requests, and retains a short report. Health is observed from the Actions runner, not from the user's device, and never changes signed role order or replaces the user's actual download result. Redirects are refused. It holds no signing secret or repository write/approval/merge permissions.
 
 When expiry is within seven days (including an expired verified historical list), maintenance emits only an **unsigned** same-role renewal candidate at generation+1 with 14-day validity. It does not sign, merge, publish, add a host or automatically disable one based on health. That candidate follows the same controlled data-only signing and public read-back path above. A failed check leaves the published pair untouched, retaining the original diagnostic in the run/report. A missing initial signed pair is reported as not initialized; no substitute trusted list is fabricated. The initial transport mode must be added to the existing App-repository signing workflow by its owner; no additional private key is requested or copied into this repository.
+
+## Separate unattended same-role renewal
+
+`automation/workflows/floe-transport-mirror-renewal.yml` is a Root-reviewed
+App-repository template. It is not enabled by committing this template to the
+Hub. Root must render its immutable tooling pin, install that workflow and
+review activation. Both repositories require the explicit
+`FLOE_TRANSPORT_MIRROR_RENEWAL=enabled` variable; default is disabled. Manual
+`dry_run=true` may verify/plan while disabled and never reads the key or
+writes a ref. The advisory workflow above stays read-only/unsigned.
+
+The Root scheduled workflow independently reads one already signed immutable
+Hub base B. When due it derives only generation B+1, the current UTC second
+and fourteen-day expiry; every role array, approved ID and order is identical
+to B. A stale main is refused before loading the existing official key.
+Only one isolated read-only step receives that key; candidate data never
+executes. The normal catalog/review signer and its strict request parsers
+remain unchanged.
+
+A separate key-free job writes exactly four bounded public metadata files
+on the App repository's fixed `transport-mirror-signing-relay` data ref. This
+ref carries no App source. The payload uses the existing transport signature;
+the renewal receipt has its own `FLOE-GITHUB-TRANSPORT-RENEWAL-RECEIPT-V1` plus
+LF domain and binds B/tree, original pair hashes, tooling/tree, workflow/run,
+request identity and exact output hashes. Each repository uses only its own
+default Actions token; no cross-repository credential or local daemon is
+introduced.
+
+The Hub publisher verifies that receipt and the full same-role derivation,
+refuses stale baselines and verification-code drift, uploads one immutable
+two-file candidate ref, then advances main with the existing exact GraphQL
+CAS. Catalogs, packages, reviews and their ledger are preserved byte-for-byte.
+It reads both files anonymously at the immutable publication pin and retires
+only its exact merged candidate ref. Retries recognize an already published
+pair and finish read-back without incrementing again. Original relay commits
+remain reachable through data-ref history. A failed read-back keeps recovery
+metadata; it never signs again to hide an error.
+
+The ordinary Skill automation recognizes only the two fixed transport files
+as mutable data, and only after verifying every effective first-parent pair
+transition under the anchor's official key. Partial, unsigned, oversized,
+executable, disappeared, rolled-back or changed same-generation states are
+refused even if a later endpoint is valid. All other transport paths and any
+code/schema/key/workflow change still require explicit reviewed anchor
+updates. A generic `transport/` allowlist is never used.
+
+New hosts, role changes and order changes remain on the reviewed manual
+publication path. Maintenance health cannot make such a change. Deployment,
+real no-op Actions and a real due-renewal/public read-back are recorded
+separately; source/tests alone are not a claim of active unattended renewal.
 
 ## Qualification boundary
 
