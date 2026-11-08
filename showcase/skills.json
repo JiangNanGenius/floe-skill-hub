@@ -1586,6 +1586,79 @@
         }
       ]
     },
+    "floe-native-mail": {
+      "cover": {
+        "alt": {
+          "en": "Illustration for organizing email",
+          "zh-Hans": "邮件整理主题插图"
+        },
+        "caption": {
+          "en": "Concept illustration for email drafting.",
+          "zh-Hans": "邮件起草用途示意。"
+        },
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/floe-email-drafting.jpg"
+      },
+      "examples": [
+        {
+          "output": {
+            "en": "A conversation summary, open questions and a reply draft.",
+            "zh-Hans": "相关邮件摘要、待确认问题和回复草稿。"
+          },
+          "prompt": {
+            "en": "Find the recent messages about this quotation, summarize the unresolved questions and draft a reply for me to review.",
+            "zh-Hans": "找到最近有关这份报价的邮件，整理还没解决的问题，并起草一封回复让我检查。"
+          }
+        },
+        {
+          "output": {
+            "en": "The requested attachments in task files, with a list linked to the source message.",
+            "zh-Hans": "保存到任务文件中的指定附件，以及对应来源邮件的文件清单。"
+          },
+          "prompt": {
+            "en": "Save the attachments from the selected customer message into this task and list what was saved.",
+            "zh-Hans": "把选定客户邮件里的附件保存到当前任务，列出保存了哪些文件。"
+          }
+        },
+        {
+          "output": {
+            "en": "A checked outgoing message and the confirmed or pending send outcome.",
+            "zh-Hans": "核对后的待发内容，以及已确认或仍待核对的发送结果。"
+          },
+          "prompt": {
+            "en": "Check these recipients, subject, reply and attachments, then send the message with my authorization and report the result.",
+            "zh-Hans": "核对这些收件人、主题、回复和附件，按我的授权发送，并告诉我结果。"
+          }
+        }
+      ],
+      "gallery": [],
+      "overview": {
+        "en": "Bring a configured mailbox into your current task. Find and read the messages you need, turn conversations into summaries, action lists or reply drafts, and save selected attachments into task files. It is useful for enquiries, document checks, follow-ups and communication records.\n\nAfter connecting your mailbox, describe the messages to work on and the result you want. Marking, moving and sending follow your instructions and authorization. Confirm recipients, content and attachments before sending, then check the returned outcome. Available mailbox organization features depend on the connection you use.",
+        "zh-Hans": "把已连接的邮箱带到当前任务中。检索和阅读所需邮件，将往来内容整理成摘要、待办或回复草稿，也可把指定附件保存到任务文件中。适合处理询盘、核对资料、跟进事项和整理沟通记录。\n\n连接邮箱后，说明要处理哪些邮件以及希望得到什么结果。标记、移动和发送按你的要求及授权执行；发送前明确收件人、正文和附件，完成后核对返回结果。可用的邮箱整理功能取决于连接方式。"
+      },
+      "useCases": [
+        {
+          "en": "Summarize a conversation and extract follow-up actions",
+          "zh-Hans": "梳理邮件往来，提取待办和后续跟进事项"
+        },
+        {
+          "en": "Find the messages and attachments needed for a project",
+          "zh-Hans": "查找项目所需邮件与附件并保存到任务文件"
+        },
+        {
+          "en": "Prepare a reply using the selected conversation and documents",
+          "zh-Hans": "结合指定邮件和资料起草回复"
+        },
+        {
+          "en": "Organize a supported mailbox and send an authorized message",
+          "zh-Hans": "整理支持的邮箱，并按授权发送邮件"
+        }
+      ]
+    },
     "floe-network": {
       "cover": {
         "alt": {
@@ -1980,16 +2053,16 @@
     "impeccable": {
       "cover": {
         "alt": {
-          "en": "Impeccable browser extension official promo artwork",
-          "zh-Hans": "Impeccable 浏览器扩展官方宣传图"
+          "en": "High-resolution rendering of the official Impeccable promotion template",
+          "zh-Hans": "Impeccable 官方宣传模板的高清渲染"
         },
         "caption": {
-          "en": "Upstream official extension promo (440×280).",
-          "zh-Hans": "上游官方扩展宣传图（440×280）。"
+          "en": "High-resolution rendering of the upstream official template (1320×840).",
+          "zh-Hans": "上游官方模板的高清渲染（1320×840）。"
         },
         "credit": {
-          "en": "Official Impeccable browser-extension promo artwork from the upstream pbakaus/impeccable repository (pinned commit 4fc2f83e1c8710dba772bfd4523d0efab57737b6), used under the upstream Apache-2.0 license. It depicts the upstream extension, not Floe’s app UI or skill execution output.",
-          "zh-Hans": "上游 pbakaus/impeccable 仓库（锁定提交 4fc2f83e1c8710dba772bfd4523d0efab57737b6）的官方浏览器扩展宣传图，按上游 Apache-2.0 许可使用。画面是上游扩展本身，不是 Floe 应用界面，也不是技能执行结果。"
+          "en": "Rendered from the unchanged official SVG template in pbakaus/impeccable scripts/generate-promo-tile.js at commit 4fc2f83e1c8710dba772bfd4523d0efab57737b6, Apache-2.0. This depicts the upstream browser extension, not Floe’s app UI or skill execution output.",
+          "zh-Hans": "依据 pbakaus/impeccable 固定提交 4fc2f83e1c8710dba772bfd4523d0efab57737b6 中 scripts/generate-promo-tile.js 的原版官方 SVG 模板重渲染，Apache-2.0。画面是上游浏览器扩展，不是 Floe 应用界面或技能执行结果。"
         },
         "kind": "illustration",
         "path": "showcase/media/covers/impeccable-promo-small.png"

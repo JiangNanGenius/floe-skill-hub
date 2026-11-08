@@ -1,0 +1,1518 @@
+{
+  "entries": [
+    {
+      "source_git_blob": "67fba4baa43a236c941363ff0b5ca5fb8535d8ee",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/a11y-audit.jpg",
+      "source_sha256": "db9bbd0a3a491234d01cdc777f859a99b5afa924944968a3f19b56402affee5b",
+      "source_size": 222675,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/e3536e7c2e9b54bec69a78f3f2abe8c5ad43f89c9b89d211ed735f3c7710c60b.webp",
+          "sha256": "e3536e7c2e9b54bec69a78f3f2abe8c5ad43f89c9b89d211ed735f3c7710c60b",
+          "size": 39636,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "da95d7c6d3d7138b509b99522a9245ee63d98008",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/account-plan.jpg",
+      "source_sha256": "11e60d6de8d38e30933699a818d0f9a5eb935b97783763714c25598753164b69",
+      "source_size": 400196,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/188ede33ef9d81f6b3b915d5f301b83bb9f20343c1d27cc0feb3a8b31e364b1c.webp",
+          "sha256": "188ede33ef9d81f6b3b915d5f301b83bb9f20343c1d27cc0feb3a8b31e364b1c",
+          "size": 54090,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "c8a8b7ceb23318aef034a8128e0e819aaff5dc28",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/algorithmic-art.jpg",
+      "source_sha256": "c05feebb2da1f9aa18efd925f4a92c63d8fbd3bd317be4a00d97b1775a7572cf",
+      "source_size": 239266,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/9db96fd2ef74bf9e1fe40066e23b3d3113bc3a494fb368f25f989d0a1acf4e37.webp",
+          "sha256": "9db96fd2ef74bf9e1fe40066e23b3d3113bc3a494fb368f25f989d0a1acf4e37",
+          "size": 46016,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "f1a0befcd5bc5fb0a87eb603f3da795b6ad8d0b9",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/audit-support.jpg",
+      "source_sha256": "d0ad1f90da57994cce82d3356c5300e1328fd6e88f591d591e704359c2daae0f",
+      "source_size": 442186,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/b6d0f0463fe07f4f4a6a5717a873336dfc11db45c1e0f6f8ca5148e1b328a273.webp",
+          "sha256": "b6d0f0463fe07f4f4a6a5717a873336dfc11db45c1e0f6f8ca5148e1b328a273",
+          "size": 73108,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "8b91eb38e12d1aa67ff9698281cac87cfb61a763",
+      "source_height": 1024,
+      "source_path": "showcase/media/covers/business-pulse.jpg",
+      "source_sha256": "bc1b4564db5b09123562abc9606f3c2941eca8a7a15b7abc67a7e2d6c251bcc5",
+      "source_size": 487170,
+      "source_width": 1536,
+      "variants": {
+        "cover": {
+          "height": 533,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/27606621634be17d8efa1bb044d2ae7793c5f0b59498b7439eac878b1043c86f.webp",
+          "sha256": "27606621634be17d8efa1bb044d2ae7793c5f0b59498b7439eac878b1043c86f",
+          "size": 57242,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "63734d713958f168e6d917fbb43d9dbf6b38a872",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/canvas-design.jpg",
+      "source_sha256": "3adf045145c641ea9a4f226c72b0c839d6a216010e95c142b6884a1329250ad7",
+      "source_size": 212339,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/5e90089221bb1a043a8e9361c122715953343efa2cbc9a2516bbda4156437106.webp",
+          "sha256": "5e90089221bb1a043a8e9361c122715953343efa2cbc9a2516bbda4156437106",
+          "size": 29630,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "db5f753c3949ebcfc35b8a780d500e8afb7d56be",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/cash-flow-snapshot.jpg",
+      "source_sha256": "84aa0041db53ce62db50a456fcd1e0323b5d67a5ca277feb89116ff6298af1af",
+      "source_size": 414783,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/8fcb87e2f70cd7fceb9360056ecc174a6088b545dc43f8fc1ac53609f9449f71.webp",
+          "sha256": "8fcb87e2f70cd7fceb9360056ecc174a6088b545dc43f8fc1ac53609f9449f71",
+          "size": 53004,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "7dbc6f9954233166871a5ea437f5adea7e5c8808",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/citation-management.jpg",
+      "source_sha256": "06421ec4d313ccd5713ebf405c67eeea1392ad1ccc4ba4d03ec6d1cf9c6bfa71",
+      "source_size": 212881,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/be84bcfcc99760a507c68cc33948d0d2cc1168ecab82a41f6021c9dce1dd4ac9.webp",
+          "sha256": "be84bcfcc99760a507c68cc33948d0d2cc1168ecab82a41f6021c9dce1dd4ac9",
+          "size": 33716,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "b7a849ffe1ce5a71c6d19e585291fae080d12d32",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/close-management.jpg",
+      "source_sha256": "668abff2feb1ab02ea768c401717995dc195d44533a5ce244c33b2951b1704e1",
+      "source_size": 323200,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/af3255d9f8000d3b833142cf81f2da41cdb09a9ffe75d3e48b9a72727c6a89fc.webp",
+          "sha256": "af3255d9f8000d3b833142cf81f2da41cdb09a9ffe75d3e48b9a72727c6a89fc",
+          "size": 49290,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "4def6aab79129899ba6e5a252054bcbcffb20fd5",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/code-to-prd.jpg",
+      "source_sha256": "ff41159ea494929647c07637a65db5ce4f5cce39117ace01b520eab670cc376e",
+      "source_size": 179239,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/60a6832681a53e46bb5189c0f250cdc7c4bbcc271e5e3f6c25309cdb147f6671.webp",
+          "sha256": "60a6832681a53e46bb5189c0f250cdc7c4bbcc271e5e3f6c25309cdb147f6671",
+          "size": 27546,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "d65d6020daad833b8505603ca8bec0979905dd76",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/composition-patterns.jpg",
+      "source_sha256": "6876322060f00dab505a095875261ffc76dd5d462b3b2a47addd4bc18e1b4ea2",
+      "source_size": 201383,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/0b29f5fc7cf0e6b4173053de4f740d3167b3af200a91f384628ffbe908a0ee76.webp",
+          "sha256": "0b29f5fc7cf0e6b4173053de4f740d3167b3af200a91f384628ffbe908a0ee76",
+          "size": 28290,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "961df5187f5613f086a3ed312bc56bce411ed924",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/construction-bid-compass.jpg",
+      "source_sha256": "1deb336e4f8f985bc98e92f3733b205f489f957dff24c74ce1849e9ace268642",
+      "source_size": 402806,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/a5ce5bcedcb7792eff0e64f68b2865585e2dc771e1a6c8f0a0f78589fe71abb4.webp",
+          "sha256": "a5ce5bcedcb7792eff0e64f68b2865585e2dc771e1a6c8f0a0f78589fe71abb4",
+          "size": 61628,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "e6c4821bd65e2aec91a6113a373d572105c5f732",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/construction-change-order-processor.jpg",
+      "source_sha256": "a805e85b6c7f65b35a998ab6d7e09a5cff3d4d92af10d629d3bd4d34ab2c0154",
+      "source_size": 423058,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/a60fe704edef4cc25d53046c482ca04ac93f93e60bd8b307beb67339f8777706.webp",
+          "sha256": "a60fe704edef4cc25d53046c482ca04ac93f93e60bd8b307beb67339f8777706",
+          "size": 73528,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "6f5be5621a4693b290d478593568bd92f0ecfb6d",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/construction-estimate-builder.jpg",
+      "source_sha256": "ae8f7dc12fc934f1c65195596090feeb8a94883fe93426ea58dee650ede2cbb8",
+      "source_size": 409253,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/fa83c3f9823a906f951f9eaae074efba2aa0cc41db95f0263b0ec63a1ac58cd4.webp",
+          "sha256": "fa83c3f9823a906f951f9eaae074efba2aa0cc41db95f0263b0ec63a1ac58cd4",
+          "size": 70342,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "405bd3171e518b9c1a494ce66ec97341066ff333",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/content-production.jpg",
+      "source_sha256": "21fd990093e93eba9e7f3822facd8a27c83f12dbb738018057b99d766f005238",
+      "source_size": 183471,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/349d842bd21adf8bbe8f39827ba72ff4d4a4cca1837e20a78314640c98631c2c.webp",
+          "sha256": "349d842bd21adf8bbe8f39827ba72ff4d4a4cca1837e20a78314640c98631c2c",
+          "size": 27000,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "9b1c1e89218d379fae76807829dbbff03e13df46",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/copy-editing.jpg",
+      "source_sha256": "4bff3bc1bf2bad625c3acb1505e454211687462048116f54e53b9a25f6b4506b",
+      "source_size": 193849,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/288b9757da94b4ffb193c8ef43460fa9d27d4b7ffd22ef55173af0886be84128.webp",
+          "sha256": "288b9757da94b4ffb193c8ef43460fa9d27d4b7ffd22ef55173af0886be84128",
+          "size": 30166,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "f9debfd1f1bea28a0e0d68ef98ae991a78f67f23",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/copywriting.jpg",
+      "source_sha256": "9c6c39edac30aa1d6b7b70b89934af5bc59282ed78ea4a42ff3737cde073c000",
+      "source_size": 296918,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/71d0bc10ba27979f90b2f090fbd63ab007489203a99f496c55e9a36511ba5bfa.webp",
+          "sha256": "71d0bc10ba27979f90b2f090fbd63ab007489203a99f496c55e9a36511ba5bfa",
+          "size": 59960,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "2df550c9c54d1c7ae10f03b76221851d97fdd556",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/customer-health.jpg",
+      "source_sha256": "ee8577d6ff2cef1ada6b2ad2d416ce49def38ec2ed36f6de962e1abd9d653098",
+      "source_size": 420038,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/da66bf0c6d8b6a70e90f3d11bbb0163514b4573bc057604b966dc16d75ff43a3.webp",
+          "sha256": "da66bf0c6d8b6a70e90f3d11bbb0163514b4573bc057604b966dc16d75ff43a3",
+          "size": 74110,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "baa0926688185bb3c1e161beb3a42883c233ae41",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/deal-review.jpg",
+      "source_sha256": "3009537da0c8fc2188d67008ea8b9f0089c5dcd1262d5722d402c06cc39db049",
+      "source_size": 432067,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/57ba1eb8b861a58fa0b6b62568765ac099a4ef3233052a3d157ab32ae305e806.webp",
+          "sha256": "57ba1eb8b861a58fa0b6b62568765ac099a4ef3233052a3d157ab32ae305e806",
+          "size": 73576,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "afc86c26326d69149aac31682730f33d4188d1ca",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/deep-research.jpg",
+      "source_sha256": "22c0b54972d3355d0dd7e1158450ac54bf6b5264941b9106278bac42378f7fcb",
+      "source_size": 214905,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/3eccda632244df96b1eb43e4d15a3e0480c4555388ccd55541f900e96d8c3732.webp",
+          "sha256": "3eccda632244df96b1eb43e4d15a3e0480c4555388ccd55541f900e96d8c3732",
+          "size": 41224,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "bff2e6012124d74ff5dbe3c3fcf4c2252782c063",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/deepread.jpg",
+      "source_sha256": "b855bf04e37f4f699860978ff2381c1d2333dbbc23398f1a9d3d935cc46a23fe",
+      "source_size": 207550,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/d94103661de60477c29531a9e38bdab950589da6d328aa07cbbccca14fc8723d.webp",
+          "sha256": "d94103661de60477c29531a9e38bdab950589da6d328aa07cbbccca14fc8723d",
+          "size": 36282,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "79b3be54d24347c4623943b134d540943c36b672",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/doc-coauthoring.jpg",
+      "source_sha256": "222de4af4f0271ed6125c7704125ff330e31800b6abccca766ffc6259d2b2187",
+      "source_size": 212992,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/6db8185b8082b819a52a9267573120fc23766d90c43d27a826676711c07c2009.webp",
+          "sha256": "6db8185b8082b819a52a9267573120fc23766d90c43d27a826676711c07c2009",
+          "size": 35250,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "fe797c542d4bfe5d3c3064913a4864ed3f9fa975",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/draft-response.jpg",
+      "source_sha256": "a1450ba2b0f893d3ab90b49f6bb0aa6a6982160979684628d81abcea7d68fcff",
+      "source_size": 370951,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/2147c2687547c255ed562fb325c566fe52b153774d5b7c3f8eeadd460e996289.webp",
+          "sha256": "2147c2687547c255ed562fb325c566fe52b153774d5b7c3f8eeadd460e996289",
+          "size": 47964,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "36f3ac0622838831bab01b85ee78f5de65d2154a",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/exploratory-data-analysis.png",
+      "source_sha256": "79937c042f75d406010760fe402e26e9f8e60e16c58dc40eca3dab25ce90ec1e",
+      "source_size": 1927366,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/1b3872b4678ef0b0ab7e85525d2e66e17d23c0d06a0e2cc56903ee0587c3591f.webp",
+          "sha256": "1b3872b4678ef0b0ab7e85525d2e66e17d23c0d06a0e2cc56903ee0587c3591f",
+          "size": 49316,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "2781ca710125900ccceceedca23a4b2a2401b4ac",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/financial-statements.jpg",
+      "source_sha256": "723fe9d534e1a4c4be2e46d0241f4367465f5fe40ff8cbcd003db073c4c6066a",
+      "source_size": 334526,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/3274fc2e874f53dab4504bdf4735f55c73b8ca5465fd0d1a42cb548024a0d151.webp",
+          "sha256": "3274fc2e874f53dab4504bdf4735f55c73b8ca5465fd0d1a42cb548024a0d151",
+          "size": 48812,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "9856dd47000c21834f2d43cc717c12480841036e",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/floe-email-drafting.jpg",
+      "source_sha256": "5ce7d248f1fd46e33c2aa42530f720634a3dd18b42a97d186995867461ac229d",
+      "source_size": 178357,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/758b1c3c64d5a8527bd60985f459059ce7f7b3d80cac3d6c3a21374e8fbca0cb.webp",
+          "sha256": "758b1c3c64d5a8527bd60985f459059ce7f7b3d80cac3d6c3a21374e8fbca0cb",
+          "size": 22966,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "b3f085323d98be70827c2a595ff9c3c217f354f7",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/floe-file-organizer.jpg",
+      "source_sha256": "a5e0f254f013a22c1cbb611fc7f47f4bc267e65e4f321e8aec8f19ff02eeaa8e",
+      "source_size": 216415,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/e6c1b010a385f37d5ab68f36138a673abd2ba70fa77c4486a9f8b54a06368bbd.webp",
+          "sha256": "e6c1b010a385f37d5ab68f36138a673abd2ba70fa77c4486a9f8b54a06368bbd",
+          "size": 35464,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "b8f397120c034ea8ddf25505130a1baf5d81166e",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/floe-invoice-organizer.png",
+      "source_sha256": "f0a44507947abc7aa3254871dd228b15e55c2157a4d999236a44939d8421a117",
+      "source_size": 2005153,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/f3cc7bfc1aa64c935796af4ea1a5b26e4a1c01a34658b3f4559f195fadf88e02.webp",
+          "sha256": "f3cc7bfc1aa64c935796af4ea1a5b26e4a1c01a34658b3f4559f195fadf88e02",
+          "size": 31910,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "17d8f2d9b08d0c843569fb4eb25eea843a77f79f",
+      "source_height": 1024,
+      "source_path": "showcase/media/covers/floe-ios-automation.png",
+      "source_sha256": "19547864334816dbcf0b423bd755d18daeace86cd93ed897b8806a25509d25e2",
+      "source_size": 1086971,
+      "source_width": 1024,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/f7a59293e8600cda41270a01b31ac19dce69c8b7ab0240d59c26fba5545bd6fc.webp",
+          "sha256": "f7a59293e8600cda41270a01b31ac19dce69c8b7ab0240d59c26fba5545bd6fc",
+          "size": 19286,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "97020f01c58707f71f4fb2c606aa339f97552c98",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/floe-network.png",
+      "source_sha256": "9ba92cacc9a8fd02d6a1f6d30facf8344a2d1090a13baf0d359d8885832c4a38",
+      "source_size": 1482688,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/9e0f357803ed43d9ae06e302e235bccefc0cd93b10b700c2618899a21707b27e.webp",
+          "sha256": "9e0f357803ed43d9ae06e302e235bccefc0cd93b10b700c2618899a21707b27e",
+          "size": 28314,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "5c59b814456e35d2a09a41f6bffaa35d93aac27c",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/floe-pdf.png",
+      "source_sha256": "2d5503fe8af7a166244759d5ed3a6b08721bb2dc13aa9c47afe07e7cc9af642b",
+      "source_size": 1989169,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/72662009ab56ab5d74969ee91f219502547e4be524b893d0bf3332a6fa9e8471.webp",
+          "sha256": "72662009ab56ab5d74969ee91f219502547e4be524b893d0bf3332a6fa9e8471",
+          "size": 35382,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "4a8625d89c228e507db1573429092caedde29b62",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/floe-video.png",
+      "source_sha256": "0c1b214e1c5de96006974c213a736a67d3f20d8a3d96398ba8b95c2566271e39",
+      "source_size": 1805636,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/040aa0e69c02213507423e748e425aaeadbf5564b01df94fb29bc72321884114.webp",
+          "sha256": "040aa0e69c02213507423e748e425aaeadbf5564b01df94fb29bc72321884114",
+          "size": 27878,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "93cf9b57639c09f5e7bcda78e122a0eed89322f6",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/grant-rfp-writer.jpg",
+      "source_sha256": "459e46726a7a0bc3dcb090699fcb9f7a08d8ca6a1f7cd2c96636a47558586d45",
+      "source_size": 434995,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/7fc0c94cc652f24f03c83d6ac44e3a5bd7fe1983ca16718745af045afda1c29d.webp",
+          "sha256": "7fc0c94cc652f24f03c83d6ac44e3a5bd7fe1983ca16718745af045afda1c29d",
+          "size": 61568,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "5bce266ddbf6b16b31c6e796f0c27c53e0fc37a2",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/hiring-screener.jpg",
+      "source_sha256": "c55ebed130ce2ca73a989656673bb27d39f8e6829dc671019da0b3c237f1bc9e",
+      "source_size": 355151,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/273862d5223f83eb3650615bfb20116e77055d24d66a80fcac4098eef204bc8b.webp",
+          "sha256": "273862d5223f83eb3650615bfb20116e77055d24d66a80fcac4098eef204bc8b",
+          "size": 58620,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "0aa04238c7cd1dffba5f8dcc248bc863f1938ffc",
+      "source_height": 840,
+      "source_path": "showcase/media/covers/impeccable-promo-small.png",
+      "source_sha256": "81144bcea3f6b16be2c96ee3f5fbfd75b1b063f8224382619a5e142c05517506",
+      "source_size": 120909,
+      "source_width": 1320,
+      "variants": {
+        "cover": {
+          "height": 509,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/bf1f73c6e8d8a0ab02fc9d5985a9add0e3f0741ef445f3c91ed204faaae67c30.webp",
+          "sha256": "bf1f73c6e8d8a0ab02fc9d5985a9add0e3f0741ef445f3c91ed204faaae67c30",
+          "size": 18792,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "d5bb6f540fda92ef3b766c089db97aced6a2c671",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/internal-comms.jpg",
+      "source_sha256": "ef6d2a680385b5625d2ff3512a96cdbd00cc541177ccc183dbdd0aa718cdf5c4",
+      "source_size": 167527,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/746dc962c3a2bb5c070fbeedb2e0f7c07c7c23a3cf5d343aed5b868ef3d75401.webp",
+          "sha256": "746dc962c3a2bb5c070fbeedb2e0f7c07c7c23a3cf5d343aed5b868ef3d75401",
+          "size": 25708,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "e30d3358276ac699e43d3e838fd45017b7cd3fcf",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/interview-prep.jpg",
+      "source_sha256": "4c5373183e77b412b072c47abb06e50e393c1bbd0d4ad9f3ae40ff8afcf82631",
+      "source_size": 411383,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/b99b6a033954f92a2126527c33646c0e6e12f50d48c4aad4fbc79289c1d8df2b.webp",
+          "sha256": "b99b6a033954f92a2126527c33646c0e6e12f50d48c4aad4fbc79289c1d8df2b",
+          "size": 81826,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "0a626c8ddb6ea31ca28661aa98ac8cc24316c963",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/inventory-planner.jpg",
+      "source_sha256": "1e8361de864f1198dbe8de529e950f6eb5151de9d81eaeebc51f7b859ae04632",
+      "source_size": 434484,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/0ea8ec37eed619394a301367278821e27c7add0fcfa099762ac032b49bafe0ca.webp",
+          "sha256": "0ea8ec37eed619394a301367278821e27c7add0fcfa099762ac032b49bafe0ca",
+          "size": 58146,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "b07f3186558a8c5c0910d3f4709dbb8c8d970361",
+      "source_height": 1024,
+      "source_path": "showcase/media/covers/invoice-chase.jpg",
+      "source_sha256": "760487c19a71ba86860b81e1643fd9fc3f78c82aabc01e413a37f6a053ccae2e",
+      "source_size": 431840,
+      "source_width": 1536,
+      "variants": {
+        "cover": {
+          "height": 533,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/f4c938b0e836d843e369df0a0b42115647f7272f5614f20cc5f56e7a26a9b422.webp",
+          "sha256": "f4c938b0e836d843e369df0a0b42115647f7272f5614f20cc5f56e7a26a9b422",
+          "size": 46886,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "739c1b7d4fe6fb5898fc30fbd3ee233bed32bc81",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/job-post-builder.jpg",
+      "source_sha256": "cf5057fb4e782454c97b4518ccd4bfaaa7dd3421b9f1bdbdb91d1fe829d3fdb2",
+      "source_size": 369445,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/2099891899904868f31f574fe19eae70a936c6dd9a32b66b7d738ff99db245d0.webp",
+          "sha256": "2099891899904868f31f574fe19eae70a936c6dd9a32b66b7d738ff99db245d0",
+          "size": 47050,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "c1efddb388180a876b0525cc303bb99e4f320cae",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/k12-check-for-understanding.jpg",
+      "source_sha256": "f84435139640bbab7aaa4e6038420bb56d339358dc7562c2939cc28f9c68303c",
+      "source_size": 441304,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/2d39e5f9c3b417064e077bac3dda346ead61f0e42220d453fb8d68ce21ec12c7.webp",
+          "sha256": "2d39e5f9c3b417064e077bac3dda346ead61f0e42220d453fb8d68ce21ec12c7",
+          "size": 85620,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "cf5aa511d86be9573cc98af69c71ab57ce5aa619",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/kb-article.jpg",
+      "source_sha256": "f73c653f09a10dcad94a99a7a3bdbaa3917e22f830002472825782df20833090",
+      "source_size": 384081,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/fb33768a78fff3f0117107daaaa1a8fb0b8b887cbd07ea368ab1b9ddc8a40107.webp",
+          "sha256": "fb33768a78fff3f0117107daaaa1a8fb0b8b887cbd07ea368ab1b9ddc8a40107",
+          "size": 59772,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "2e3c7eb12d26a75f8807cd793242cf4d0488c863",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/lesson-plan-builder.jpg",
+      "source_sha256": "5771347024027f74809636b918964bf2a465e5347687a43015b0962e4a90aee6",
+      "source_size": 376639,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/c7601ebcbbdbced4d00aafac5a0a5c8a7a8a7513460b91abeddd49ef8739199f.webp",
+          "sha256": "c7601ebcbbdbced4d00aafac5a0a5c8a7a8a7513460b91abeddd49ef8739199f",
+          "size": 58992,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "69c431548ad7789a675fd7ce11086b29fda03d8f",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/literature-review.jpg",
+      "source_sha256": "d46d1889b9b6d6ef0ede5a6359024111249ecee3127414462109c904a6eca3d7",
+      "source_size": 220540,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/008a85a9f75bf9d5c8f30ed9877dd37c92ec0a71bd46c33492b5e955ce7f7e40.webp",
+          "sha256": "008a85a9f75bf9d5c8f30ed9877dd37c92ec0a71bd46c33492b5e955ce7f7e40",
+          "size": 35482,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "89fd92f34ab7987f24213d193fba09300ecaf9ba",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/markitdown.png",
+      "source_sha256": "0548eeabfb725380e1d9738a26281d7800bad22f1ddd50ee23a3d9d41b552391",
+      "source_size": 1519226,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/691c2188e45a5ee0bbfc9a65bfb528b8183dd96ee1a5e7b76a748e94cc67c67c.webp",
+          "sha256": "691c2188e45a5ee0bbfc9a65bfb528b8183dd96ee1a5e7b76a748e94cc67c67c",
+          "size": 23672,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "857366a15cb3481cc3ac26a2f2ff16ab7308b75d",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/meetings.jpg",
+      "source_sha256": "c451c8ba711eaaf596b1d8712785f3be0d0481aa12f7db34f008d5268597527d",
+      "source_size": 208939,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/2318d8c37af10cc9faaca19598ebb85fa9bd201774b654d70d9bc030643c886b.webp",
+          "sha256": "2318d8c37af10cc9faaca19598ebb85fa9bd201774b654d70d9bc030643c886b",
+          "size": 41024,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "8c860345bb2aaf32d99794aafe32e4c5561718f6",
+      "source_height": 960,
+      "source_path": "showcase/media/covers/office-doc-zh.jpg",
+      "source_sha256": "4e7b5643db20d7431b18065c27dba953c0617c632512f4a4a4ee609c8acb5a7e",
+      "source_size": 83823,
+      "source_width": 1280,
+      "variants": {
+        "cover": {
+          "height": 600,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/b35e7da1dc7bc45ef862435f3e3febf19397448d0482776a35ff6f76b3eb700d.webp",
+          "sha256": "b35e7da1dc7bc45ef862435f3e3febf19397448d0482776a35ff6f76b3eb700d",
+          "size": 22716,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "67e21f55ca14db11d46403fc74b5d80e9af0332c",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/onboarding.jpg",
+      "source_sha256": "7ae9e0250b42624bc93bac8364b3bfdea548f7accadb31562e9d1a544b5dcca8",
+      "source_size": 308571,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/6ef9f3a1e89e6ea8c0dcd5117348dd7ca36f1fee212dd47ad9367199604c6abd.webp",
+          "sha256": "6ef9f3a1e89e6ea8c0dcd5117348dd7ca36f1fee212dd47ad9367199604c6abd",
+          "size": 37282,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "62c381cb5a73353d1ed2ce34d292f777013b27ec",
+      "source_height": 1024,
+      "source_path": "showcase/media/covers/payroll-prep.jpg",
+      "source_sha256": "7a71641e9cbaca15e133725461f9121bebde8617fe21ed24356874546baabd92",
+      "source_size": 449829,
+      "source_width": 1536,
+      "variants": {
+        "cover": {
+          "height": 533,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/bf3d47fa56295eb44bf4d665215221f61adf733def439f615cb4055ab3a6df3b.webp",
+          "sha256": "bf3d47fa56295eb44bf4d665215221f61adf733def439f615cb4055ab3a6df3b",
+          "size": 59948,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "aa6de3ce1f0756733341846340f7cc3608468feb",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/performance-review.jpg",
+      "source_sha256": "087bfd489e4fc1d7c04449426b6bc30e46e0eb24be651311992769311e237a1f",
+      "source_size": 300803,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/af866af9842caf2233dd61eb7f2b34601d30c4aab32a2b4d412039d7042e4db0.webp",
+          "sha256": "af866af9842caf2233dd61eb7f2b34601d30c4aab32a2b4d412039d7042e4db0",
+          "size": 46696,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "b41b85e1f7c67930866d5b3fec58e24d741e709b",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/pricing-strategist.jpg",
+      "source_sha256": "aa02981943f7d312da9bfdb162fd7802a6411a6d0cc13a05c6302384fbf7ef99",
+      "source_size": 303168,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/82a51d7d691cf8c6dd4eedaf8f895912bd9f76d629978a71605230922532063e.webp",
+          "sha256": "82a51d7d691cf8c6dd4eedaf8f895912bd9f76d629978a71605230922532063e",
+          "size": 43852,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "43e229fa439169bbce87c770c2b7ec16fa806e72",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/process-mapper.jpg",
+      "source_sha256": "2462ca2f8d8c6c8a4e138b96008ead2c24824433767b1c7232eb23bc039d05a4",
+      "source_size": 347215,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/86510194247085df7665fa4482dec459c49dfae175f390b5abada94b4ab0dead.webp",
+          "sha256": "86510194247085df7665fa4482dec459c49dfae175f390b5abada94b4ab0dead",
+          "size": 41714,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "a50dd96e610b3bbda54776aed32e24d6d7b50806",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/product-discovery.jpg",
+      "source_sha256": "9f691bd6d3dc30304b310ff98ee8ade8d5a27139efb8a240820c1012cdd49d6d",
+      "source_size": 200578,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/71b96493f986999344dee1ec93935c4bf8da6f8a0c1b4008ad2d5e2357e1a52e.webp",
+          "sha256": "71b96493f986999344dee1ec93935c4bf8da6f8a0c1b4008ad2d5e2357e1a52e",
+          "size": 32188,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "0f5e16b5036ae2e0a4f619e01d32c4b42a4b87d0",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/product-manager-toolkit.jpg",
+      "source_sha256": "be62d02fda99b3860bc8c57967431a3fa6d5b4dc7719547e2e90e7b767f223b5",
+      "source_size": 194079,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/8623dba5c1808320beba74c51b493dd666c7d646ce1c4d9e12c9ac0368d905a4.webp",
+          "sha256": "8623dba5c1808320beba74c51b493dd666c7d646ce1c4d9e12c9ac0368d905a4",
+          "size": 29618,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "dcf446b8543b0dd5efc759a387177ad88908a21b",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/proposal-builder.jpg",
+      "source_sha256": "5c72965d85b0c9ced45e7dd6868aa97c262397eab31a8e9987d41b8b116f0d06",
+      "source_size": 380478,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/c5b7ce4cc50b3e77a9f41dc531d7f9383e7b4bcd066bebd85f932bb58821d9e6.webp",
+          "sha256": "c5b7ce4cc50b3e77a9f41dc531d7f9383e7b4bcd066bebd85f932bb58821d9e6",
+          "size": 46230,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "967c20cfdf47a894d90b09b634a59396ac3f0ec3",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/react-best-practices.jpg",
+      "source_sha256": "ffee785c85f226843d67923ebaaa301a3225e3c3a709b5873e6043f87ef44636",
+      "source_size": 229552,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/a37cb06807e81d177192b71a5dc3ce6ab6f2812bce1f0c15b6272558ec3595c9.webp",
+          "sha256": "a37cb06807e81d177192b71a5dc3ce6ab6f2812bce1f0c15b6272558ec3595c9",
+          "size": 39422,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "5390ba43267d9fe2ba6bff89a5f29b3047ed314b",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/reconciliation.jpg",
+      "source_sha256": "921746a50847941014c56d82baa7188f869581ebc7ad6a1bfc3d5efe78c0791e",
+      "source_size": 368094,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/08e373813f68636fe020cbe393281f0b196b01d599e3cb2b3b624e63eb381211.webp",
+          "sha256": "08e373813f68636fe020cbe393281f0b196b01d599e3cb2b3b624e63eb381211",
+          "size": 50748,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "57e0aaa5f127a5259850f5da3386360f71be2eb1",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/requesting-code-review.jpg",
+      "source_sha256": "a925c45cb7ab26808ef4f4a0978f47b4de1849a490d104ad8bca90cc96751a22",
+      "source_size": 176442,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/352eb9e1c9b7a1795f2f92eb69370c4e0768dda18453301f3f334b70a8fa2cbe.webp",
+          "sha256": "352eb9e1c9b7a1795f2f92eb69370c4e0768dda18453301f3f334b70a8fa2cbe",
+          "size": 24860,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "eb32bad029042a73363f29c93fa03de25eb35323",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/research-summarizer.jpg",
+      "source_sha256": "33121cfa08f9ccbed9a08c40f8741988a3aae2a45c33e246e77807a330c84616",
+      "source_size": 207911,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/dab9d53ea0cb7d369f517b26f96f75a8c64eddd20a04e03a563bf531f180f1e2.webp",
+          "sha256": "dab9d53ea0cb7d369f517b26f96f75a8c64eddd20a04e03a563bf531f180f1e2",
+          "size": 36564,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "c924a5e11e55dc7aae8e4fe255d1601ea5e6b686",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/review-contract.jpg",
+      "source_sha256": "ba2a0c7275c01f8c0bd2a9ac1b910a7c3b1a518d97840aec17522b6ded44cdd5",
+      "source_size": 361411,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/d913a53f2411afcc78817868b4b406fd1a1ca8b8731128573480f8add74f1632.webp",
+          "sha256": "d913a53f2411afcc78817868b4b406fd1a1ca8b8731128573480f8add74f1632",
+          "size": 55540,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "5e634bb7787e6ca922fc4333bbd8081526109baf",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/risk-assessment.jpg",
+      "source_sha256": "8f7a10598cc6aa7bf379cf7bc4b2c98c1b1fbea997a803279469bf6b24a18fd0",
+      "source_size": 330326,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/3d4ec668314eefeebb57630e21b84bbc9c4e732b7e62ba7840cbca505d51253c.webp",
+          "sha256": "3d4ec668314eefeebb57630e21b84bbc9c4e732b7e62ba7840cbca505d51253c",
+          "size": 47990,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "06831caa62f6d57a22515c342a64e1863e153dd4",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/scientific-critical-thinking.jpg",
+      "source_sha256": "ca739bde123a5fd61547242c4dde9082bb9435f562f74c314c71925e3b3a212c",
+      "source_size": 176258,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/b4a577bf788bf62c0672bde3cc9c0feb958b50374f62af3bedb6295075cf7ae2.webp",
+          "sha256": "b4a577bf788bf62c0672bde3cc9c0feb958b50374f62af3bedb6295075cf7ae2",
+          "size": 29644,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "890385add3673d1db0f67246f5b66ed3fa46a84d",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/scientific-visualization.jpg",
+      "source_sha256": "0ce436b83b135053cdeb2bf31ca2824a83d741da83e9a2f0a04ffad20dab715f",
+      "source_size": 216813,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/3559748609e1e4d40297ab54d88a79e4a5265048afcf6bb9c811361d8659d3d5.webp",
+          "sha256": "3559748609e1e4d40297ab54d88a79e4a5265048afcf6bb9c811361d8659d3d5",
+          "size": 34516,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "3e410b11eecfd6ff04c92c6143b32baa7b2e8a53",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/senior-pm.jpg",
+      "source_sha256": "7d1be5a1a9ed8643b8febf01c6cbefe2c30e04abcf9efd704541768fc4eb7116",
+      "source_size": 391632,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/3f70499daceb1d923a5a9ee1b649746cee10e70d0ae359478cfee8a034fd4bf7.webp",
+          "sha256": "3f70499daceb1d923a5a9ee1b649746cee10e70d0ae359478cfee8a034fd4bf7",
+          "size": 53254,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "c86dc80d7832400d1d3257ca9b7120f13ce31788",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/social-content.jpg",
+      "source_sha256": "42ff4fc40e8e683bd58df3a138d7fa2e6aa31b2230af41821b4d583212aa15bf",
+      "source_size": 209656,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/bd8e8c20c6cafa87e40e96823eb8c3248c7d811c732dc926ba8975a5cc9258af.webp",
+          "sha256": "bd8e8c20c6cafa87e40e96823eb8c3248c7d811c732dc926ba8975a5cc9258af",
+          "size": 32714,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "1155d3149becd620096c9fba8da22faf999975e7",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/statistical-analysis.jpg",
+      "source_sha256": "336561719a0a34d309881f3a97dbf8e59d74805af1b23dbf715b9eb22023a77d",
+      "source_size": 200257,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/385a76619c205351dcbd8976c93f405d20e70adc8fa85625597557573d5044c4.webp",
+          "sha256": "385a76619c205351dcbd8976c93f405d20e70adc8fa85625597557573d5044c4",
+          "size": 30444,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "535aac0ba90929c23834175bbdfa29f9709236c9",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/study-plan-scheduler.jpg",
+      "source_sha256": "56f1097a275ce8eac44e7e01c9c5da71df92fe69b8f33d93f418af12efc01299",
+      "source_size": 378146,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/099933e7f49b4d02c13c39d20a97a959b1a1ab1cf6fdd8b4e1c202cbff673f3c.webp",
+          "sha256": "099933e7f49b4d02c13c39d20a97a959b1a1ab1cf6fdd8b4e1c202cbff673f3c",
+          "size": 66856,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "7e6851e918371a5361ea27a92de8c659c68ed378",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/sympy.jpg",
+      "source_sha256": "7390e329aca59aa7d3e3db972d03eae3bbeb9da57af6597d0e5cf83cb14e0b2b",
+      "source_size": 182776,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/22519f430d4464558203e5dd8e5b57a5655e32899dd9668fe74efdb5a01dbdc7.webp",
+          "sha256": "22519f430d4464558203e5dd8e5b57a5655e32899dd9668fe74efdb5a01dbdc7",
+          "size": 29144,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "ddb2d9c7cc19c05f64185085e9f1c702944526e8",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/systematic-debugging.jpg",
+      "source_sha256": "65ca1ebb5acb4736ce1e8856253535d64d8029df6ebaf80c079ecfb7e4e4535f",
+      "source_size": 250243,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/22878b65070774fe4ff0aa150e7e574ce5d232d658fe5f838168cd84f603995e.webp",
+          "sha256": "22878b65070774fe4ff0aa150e7e574ce5d232d658fe5f838168cd84f603995e",
+          "size": 50742,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "59b913428950a79a40100d448913b04aa788e167",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/test-driven-development.jpg",
+      "source_sha256": "3462535c0fb316e8ec9baee4cab9d539051dd7cad8561edcc93676336d3d1ccb",
+      "source_size": 166925,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/1b4d8b74f4ecf47c743a23236ccb865dca1c968178848d25acd16a33111ee154.webp",
+          "sha256": "1b4d8b74f4ecf47c743a23236ccb865dca1c968178848d25acd16a33111ee154",
+          "size": 20334,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "9bf77dda54d65e0e98220451c8fc868492f8cb0c",
+      "source_height": 1280,
+      "source_path": "showcase/media/covers/theme-factory.png",
+      "source_sha256": "e96edd50eaaf562852a119009643b91fd0f1b1d148d6254952b41b7806af56e9",
+      "source_size": 79382,
+      "source_width": 990,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/6fcd9cff5a6f1313fc5094d8d50aaf14dd9bc3154c260900bd260f613b7c9c0f.webp",
+          "sha256": "6fcd9cff5a6f1313fc5094d8d50aaf14dd9bc3154c260900bd260f613b7c9c0f",
+          "size": 23700,
+          "width": 619
+        }
+      }
+    },
+    {
+      "source_git_blob": "66ef0bce1ba7f8551f63e2fd22ca0aa10164ffca",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/ticket-triage.jpg",
+      "source_sha256": "bb5c0de172a57bace1bf6d0a110ef014fba7a6fe52dd54a68e35192a32b8711a",
+      "source_size": 302332,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/869adef535bd582eeb60155ff3bffbf0c286ca3087de09e66fec4da84818cc25.webp",
+          "sha256": "869adef535bd582eeb60155ff3bffbf0c286ca3087de09e66fec4da84818cc25",
+          "size": 39994,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "3a8f4b0a413284a388433ce2761b900925014374",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/travel-points-calculator.jpg",
+      "source_sha256": "afb326159c43c4c27e68b3fa33f53d591cb8592441d81dd42385fbcf10f41af9",
+      "source_size": 544634,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/73dd013dcb05ae893abac398340c648d5dd08e099cd642693dd2052581742435.webp",
+          "sha256": "73dd013dcb05ae893abac398340c648d5dd08e099cd642693dd2052581742435",
+          "size": 113016,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "2b8eba9217f66a4889f9953dd06e0d1bac0b18ed",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/triage-nda.jpg",
+      "source_sha256": "d228b0a18660aac7a90c87cc2e9d7707822b08cd69d0b6251fcb1dec75ac228f",
+      "source_size": 337591,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/94eccb6bcab535800dfcc4c69dbe8832c09e9c9f4e3de34c4e28644cfa951920.webp",
+          "sha256": "94eccb6bcab535800dfcc4c69dbe8832c09e9c9f4e3de34c4e28644cfa951920",
+          "size": 49130,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "4a285c61ff711155c89603856472fe8ba35e442c",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/ui-design-system.jpg",
+      "source_sha256": "2610a517c38323e7a18e1250c2be3a2e1641eb889ba191440514712d04ae41c0",
+      "source_size": 202082,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/a6c4d129545b0a8399056fbd1053e004dfcbcc47361d7bb2963fbce546b60082.webp",
+          "sha256": "a6c4d129545b0a8399056fbd1053e004dfcbcc47361d7bb2963fbce546b60082",
+          "size": 28368,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "a636c2de3bd21fbf372c3734243c6b4af20b4e8b",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/ux-researcher-designer.jpg",
+      "source_sha256": "6e831bafd3549762f89d2f442fd78e51eb041dcba1bbff1edf17aec75026d5c6",
+      "source_size": 205572,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/6bcd42c903c08a0649382a23cde8220920e55eb0fc73dc3fee425449b817cab5.webp",
+          "sha256": "6bcd42c903c08a0649382a23cde8220920e55eb0fc73dc3fee425449b817cab5",
+          "size": 29224,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "030a2814cedc1824b1eac275009086809bda5deb",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/variance-analysis.jpg",
+      "source_sha256": "2b62ba68158acf61f0d356cb19d85394b583719109f6bf4afb7a3debaa403ea4",
+      "source_size": 319537,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/d1c51391e691fc6af060976d453ac332ae354616eb3f92faf396d6cae67d95fd.webp",
+          "sha256": "d1c51391e691fc6af060976d453ac332ae354616eb3f92faf396d6cae67d95fd",
+          "size": 45486,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "d5a9b39f11de649a57209a257be93291f64abd1d",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/vendor-review.jpg",
+      "source_sha256": "e9e08c49e82948f9929943279666bb996aa869f36eff1a94657551f21fb51efc",
+      "source_size": 346834,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/c4190089d3f66a9e4e5a0928fbd8fcc68fb0188f878209c57e47818ce2d9f4ad.webp",
+          "sha256": "c4190089d3f66a9e4e5a0928fbd8fcc68fb0188f878209c57e47818ce2d9f4ad",
+          "size": 49618,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "fbd522f708eef2d79c11216a0c48296bd9d52749",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/web-design-guidelines.jpg",
+      "source_sha256": "1cbc8a3cde52126ae35269be9d5bf56c64381a21248c5cf5dbda39b62dc7cc0f",
+      "source_size": 182484,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/02a2256c193b573cba9bde95d19df0ea3817be0ab9ebf548e99e9e76fa72bfa0.webp",
+          "sha256": "02a2256c193b573cba9bde95d19df0ea3817be0ab9ebf548e99e9e76fa72bfa0",
+          "size": 20510,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "548877fec64df3f3b463228d9bce2a647c143d6e",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/webapp-testing.jpg",
+      "source_sha256": "4089ac0c9f81756ca53e98fadd926ae1bb04f11b2802ed28a47ad80be7a9709e",
+      "source_size": 155073,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/31d670d8797be1a277670f72176b315e1330b67c90cd8080c6aeeceedd1c2b2f.webp",
+          "sha256": "31d670d8797be1a277670f72176b315e1330b67c90cd8080c6aeeceedd1c2b2f",
+          "size": 17798,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "97568b7fb49e75cb7be8e4a1f1ea2ae2a8c535f1",
+      "source_height": 1254,
+      "source_path": "showcase/media/covers/writing-guidelines.jpg",
+      "source_sha256": "2c037a14616f7dcc4f1461973e90cd18bd16499f8b244ec144286659a639a648",
+      "source_size": 206686,
+      "source_width": 1254,
+      "variants": {
+        "cover": {
+          "height": 800,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/3b633e48c9b2883280420dc83c94bbea1046363154c7df0a27c3022e4981153f.webp",
+          "sha256": "3b633e48c9b2883280420dc83c94bbea1046363154c7df0a27c3022e4981153f",
+          "size": 32970,
+          "width": 800
+        }
+      }
+    },
+    {
+      "source_git_blob": "3c4ae9d38d0b583a93290b32740572ee93ca4a44",
+      "source_height": 128,
+      "source_path": "showcase/media/gallery/impeccable-icon-128.png",
+      "source_sha256": "1939b3a61b016a0f49f90a7b91319cbe95b339be1a46a4a44404edb7b43a3d91",
+      "source_size": 1837,
+      "source_width": 128,
+      "variants": {
+        "gallery": {
+          "height": 128,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/gallery/905069a5f569d1580e239a36797fb2a62358c6bc72290d05b8ce120983f63398.webp",
+          "sha256": "905069a5f569d1580e239a36797fb2a62358c6bc72290d05b8ce120983f63398",
+          "size": 1014,
+          "width": 128
+        }
+      }
+    },
+    {
+      "source_git_blob": "535e315fb1c926fbc35b9fa8f05744507468c312",
+      "source_height": 960,
+      "source_path": "showcase/media/gallery/office-sheet-zh.jpg",
+      "source_sha256": "818b77a962dabe0507fb5ddfdf4d28829e6a5ada5105804fced6df108b96e654",
+      "source_size": 115084,
+      "source_width": 1280,
+      "variants": {
+        "gallery": {
+          "height": 960,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/gallery/2f60bab089fa80771e821ea768c4922fbc437d76cba73833a498d71c8ae18c7c.webp",
+          "sha256": "2f60bab089fa80771e821ea768c4922fbc437d76cba73833a498d71c8ae18c7c",
+          "size": 187220,
+          "width": 1280
+        }
+      }
+    },
+    {
+      "source_git_blob": "299486482155b40bc26293b2fbb0b9b06256ea29",
+      "source_height": 960,
+      "source_path": "showcase/media/gallery/office-slide-zh.jpg",
+      "source_sha256": "8b240c252e4fdc98b5fb52f7d59e33ce809dd6654dd72ab31af87cfb4fccfb8c",
+      "source_size": 76673,
+      "source_width": 1280,
+      "variants": {
+        "gallery": {
+          "height": 960,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/gallery/4c2c1480fa4aac6869a7c2e0864a08212c09271145d093dea2fce2d0b991b902.webp",
+          "sha256": "4c2c1480fa4aac6869a7c2e0864a08212c09271145d093dea2fce2d0b991b902",
+          "size": 153328,
+          "width": 1280
+        }
+      }
+    }
+  ],
+  "purpose": "floe-skill-web-thumbnails",
+  "schemaVersion": 1
+}

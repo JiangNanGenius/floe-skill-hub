@@ -914,6 +914,10 @@
       "auditStatus": "audited",
       "links": []
     },
+    "floe-native-mail": {
+      "auditStatus": "audited",
+      "links": []
+    },
     "floe-network": {
       "auditStatus": "audited",
       "links": []
