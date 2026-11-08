@@ -20,6 +20,12 @@ ignored or assume-unchanged/skip-worktree shadows) is rejected, and the
 index is never written or refreshed.
 
 Modes (fixed; there is no arbitrary script/command input):
+  transport  S = a clean fixed transport/mirrors.v1.json snapshot. The bridge
+           verifies the independently resolved current signed generation
+           and signs only the FLOE-GITHUB-TRANSPORT-MIRRORS-V1 context.
+           No catalog generation, candidate code or maintenance network
+           probes run in this secret-bearing mode.
+
   reviews  S = clean snapshot carrying UNSIGNED canonical approved review
            records at ``reviews/<id>/<version>.review.json``. For every
            actual record the bridge hashes the real frozen package archives
@@ -1047,15 +1053,93 @@ def run_catalog_mode(args, hubcore, build_catalog, runtime_dependency,
           f"file(s) to {out_root}")
 
 
+
+def run_transport_mode(args, hubcore, build_catalog, transport_manifest,
+                       publication_immutability, tooling_info, data_info, out_root):
+    """Sign only the fixed transport context, never candidate code or feeds."""
+    tm = transport_manifest
+    tooling_root = pathlib.Path(args.tooling) if args.tooling else pathlib.Path(__file__).resolve().parents[1]
+    trust = load_official_trust(build_catalog, hubcore, tooling_root)
+    pin = getattr(args, "published_y", None)
+    if not isinstance(pin, str) or not COMMIT_RE.fullmatch(pin):
+        raise SigningError("transport signing requires an independently resolved --published-y")
+    if _git(tooling_root, ["rev-parse", pin + "^{commit}"], "transport baseline commit") != pin:
+        raise SigningError("transport baseline must be an exact commit object")
+    paths = {tm.PAYLOAD_PATH, tm.SIGNATURE_PATH}
+    listing = _git(tooling_root, ["ls-tree", "--full-tree", pin, "--", *sorted(paths)],
+                   "transport baseline paths")
+    present = set()
+    for line in listing.splitlines():
+        header, rel = line.split("\t", 1)
+        mode, kind, _oid = header.split()
+        if rel not in paths or kind != "blob" or mode != "100644":
+            raise SigningError("transport baseline contains a non-regular fixed path")
+        present.add(rel)
+    if present and present != paths:
+        raise SigningError("transport baseline payload/signature pair is incomplete")
+    prior_bytes, prior, prior_signature = None, None, None
+    try:
+        if present:
+            for rel, cap in ((tm.PAYLOAD_PATH, tm.MAX_PAYLOAD), (tm.SIGNATURE_PATH, tm.MAX_SIGNATURE)):
+                size = int(_git(tooling_root, ["cat-file", "-s", pin + ":" + rel],
+                                "transport baseline size"))
+                if not 1 <= size <= cap:
+                    raise SigningError("transport baseline exceeds a fixed byte bound")
+            prior_bytes = publication_immutability._git_show(tooling_root, pin, tm.PAYLOAD_PATH,
+                                                            "transport baseline payload")
+            prior_signature = publication_immutability._git_show(tooling_root, pin, tm.SIGNATURE_PATH,
+                                                                 "transport baseline signature")
+            prior, prior_key = tm.verify_manifest(prior_bytes, prior_signature, trust, allow_expired=True)
+            if prior_key != hubcore.PRODUCTION_KEY_ID:
+                raise SigningError("transport baseline identity is not official")
+        elif _git(tooling_root, ["log", "-n", "1", "--format=%H", pin, "--", tm.SIGNATURE_PATH],
+                  "transport publication history"):
+            raise SigningError("transport publication history cannot be deleted to reset its generation")
+        source = pathlib.Path(args.data) / tm.PAYLOAD_PATH
+        if not source.is_file() or source.is_symlink() or not 1 <= source.stat().st_size <= tm.MAX_PAYLOAD:
+            raise SigningError("transport data snapshot lacks the bounded fixed payload")
+        payload = source.read_bytes()
+        candidate = tm.validate_payload(payload)
+        transition = tm.enforce_generation(payload, candidate, prior_bytes, prior)
+    except hubcore.HubError as error:
+        raise SigningError(f"transport candidate/baseline rejected: {error}") from None
+    key = load_signing_key(hubcore, trust)
+    signature = hubcore.sign_envelope(tm.DOMAIN + payload, key, hubcore.PRODUCTION_KEY_ID)
+    try:
+        _, key_id = tm.verify_manifest(payload, signature, trust)
+        if key_id != hubcore.PRODUCTION_KEY_ID:
+            raise hubcore.HubError("transport signature identity drifted")
+    except hubcore.HubError as error:
+        raise SigningError(f"transport output signature rejected: {error}") from None
+    files = {tm.PAYLOAD_PATH: payload, tm.SIGNATURE_PATH: signature}
+    receipt = {
+        "schemaVersion": 1, "mode": "transport", "hubRepository": OFFICIAL_HUB_OWNER_REPO,
+        "sourceCommit": data_info["head"], "dataTree": data_info["tree"],
+        "toolingCommit": tooling_info["head"], "toolingTree": tooling_info["tree"],
+        "keyID": hubcore.PRODUCTION_KEY_ID, "signatureDomain": tm.DOMAIN.decode("ascii"),
+        "generation": candidate["generation"], "generationTransition": transition,
+        "publicationBaseline": {"publicationCommit": pin,
+            "highestGeneration": prior["generation"] if prior else 0,
+            "payloadSHA256": hubcore.sha256_hex(prior_bytes) if prior_bytes else None,
+            "signatureSHA256": hubcore.sha256_hex(prior_signature) if prior_signature else None},
+        "outputs": [{"path": rel, "size": len(data), "sha256": hubcore.sha256_hex(data)}
+                    for rel, data in sorted(files.items())],
+    }
+    finalize_receipt(hubcore, files, receipt, key, trust)
+    written = write_outputs(out_root, files)
+    print(f"signing-bridge transport: generation {candidate['generation']}, "
+          f"{transition}; wrote {len(written)} files; no catalog or App publication")
+
+
 # ---------------------------------------------------------------------------
 # entry point
 # ---------------------------------------------------------------------------
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--mode", choices=("reviews", "catalog"), required=True)
+    parser.add_argument("--mode", choices=("reviews", "catalog", "transport"), required=True)
     parser.add_argument("--source-commit", dest="source_commit", required=True,
-                        help="claimed 40-hex commit S (reviews) or X (catalog) "
+                        help="claimed 40-hex data commit for reviews, catalog or transport "
                              "the data checkout must exactly equal")
     parser.add_argument("--data", required=True,
                         help="clean immutable data checkout at the claimed commit")
@@ -1084,8 +1168,11 @@ def main():
         _die("--tooling is not a real directory")
     tooling_scripts = pathlib.Path(
         os.path.realpath(str(tooling_root / "scripts")))
-    for required_module in ("hubcore.py", "build_catalog.py", "runtime_dependency.py",
-                            "dependency_declaration.py", "publication_immutability.py"):
+    required_modules = ("hubcore.py", "build_catalog.py", "runtime_dependency.py",
+                        "dependency_declaration.py", "publication_immutability.py")
+    if args.mode == "transport":
+        required_modules += ("transport_manifest.py",)
+    for required_module in required_modules:
         if not (tooling_scripts / required_module).is_file():
             _die(f"trusted tooling is incomplete: scripts/{required_module} is missing")
 
@@ -1115,6 +1202,13 @@ def main():
         if not _is_under(module_file, pathlib.Path(str(tooling_scripts))):
             _die(f"imported module resolves outside trusted tooling: {module.__name__}")
 
+    transport_manifest = None
+    if args.mode == "transport":
+        sys.modules.pop("transport_manifest", None)
+        import transport_manifest
+        if not _is_under(pathlib.Path(transport_manifest.__file__).resolve(), tooling_scripts):
+            _die("transport manifest code resolves outside trusted tooling")
+
     out_root = validate_out_root(args.out, args.data, tooling_root)
 
     tooling_info = verify_exact_snapshot("tooling", tooling_root)
@@ -1123,6 +1217,9 @@ def main():
     if args.mode == "reviews":
         run_reviews_mode(args, hubcore, build_catalog, runtime_dependency,
                          tooling_info, data_info, out_root)
+    elif args.mode == "transport":
+        run_transport_mode(args, hubcore, build_catalog, transport_manifest,
+                           publication_immutability, tooling_info, data_info, out_root)
     else:
         run_catalog_mode(args, hubcore, build_catalog, runtime_dependency,
                          tooling_info, data_info, out_root,
