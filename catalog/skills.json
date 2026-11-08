@@ -5827,6 +5827,74 @@
         "skillManifestPath": "small-business/skills/business-pulse/SKILL.md"
       },
       "versionTarget": "1.0.0"
+    },
+    {
+      "category": "writing-communication",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Read, search and organize generic mail, save attachments and send approved messages using the existing native connector.",
+        "zh-Hans": "通过已有原生连接器读取、检索与整理通用邮箱，保存附件并发送已批准的邮件。"
+      },
+      "firstParty": null,
+      "id": "floe-native-mail",
+      "kind": "optional",
+      "minimumAppVersion": "1.7.79",
+      "name": {
+        "en": "Floe Native Mail",
+        "zh-Hans": "Floe 原生邮件"
+      },
+      "notes": {
+        "en": "Instruction-only workflow for existing native IMAP/POP3 + SMTP tools; no Linux runtime or Google/Microsoft OAuth is installed. Static review does not claim a new live-account test.",
+        "zh-Hans": "已有原生 IMAP/POP3 + SMTP 工具的指引，不安装 Linux 运行时或 Google/Microsoft OAuth。静态审核不代表新增真实账号测试。"
+      },
+      "planNumber": 82,
+      "plannedRuntime": {
+        "capabilities": [
+          "credentials",
+          "network",
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": [
+          "mail.accounts",
+          "mail.read",
+          "mail.search",
+          "mail.setRead",
+          "mail.move",
+          "mail.download",
+          "mail.send"
+        ]
+      },
+      "source": "F",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "email",
+        "native",
+        "imap",
+        "pop3",
+        "smtp"
+      ],
+      "upstream": null,
+      "versionTarget": "1.0.0"
     }
   ]
 }

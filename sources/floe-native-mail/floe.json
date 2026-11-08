@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "id": "floe-native-mail",
+  "version": "1.0.0",
+  "capabilities": ["credentials", "network", "workspace.read", "workspace.write"],
+  "tools": ["mail.accounts", "mail.read", "mail.search", "mail.setRead", "mail.move", "mail.download", "mail.send"],
+  "platforms": ["ios"],
+  "scriptRuntime": "none",
+  "pythonPackages": []
+}
