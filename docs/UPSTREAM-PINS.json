@@ -13,5 +13,19 @@
     "genspark-ai/genoffice": "36a509e8fc16ace85ed7afa3c37acb7b9c441ad1",
     "anthropics/k12-teacher-skills": "31fd6dbb0c07cb50bb3ce7f62a4135a393bd0e8c",
     "borski/travel-hacking-toolkit": "b46172deee14b106fc815c1d57f2587a581f8a27"
+  },
+  "skillOverrides": {
+    "invoice-chase": {
+      "repository": "anthropics/knowledge-work-plugins",
+      "commit": "d900840716eb262e1feb17c6f4406c9ce0e06bcf"
+    },
+    "payroll-prep": {
+      "repository": "anthropics/knowledge-work-plugins",
+      "commit": "d900840716eb262e1feb17c6f4406c9ce0e06bcf"
+    },
+    "business-pulse": {
+      "repository": "anthropics/knowledge-work-plugins",
+      "commit": "d900840716eb262e1feb17c6f4406c9ce0e06bcf"
+    }
   }
 }

@@ -413,14 +413,15 @@ def parse_frontmatter(markdown_bytes):
 
 
 def _validate_native_ios_configuration(manifest):
-    """Curated admission for the already compiled local iOS Bridge contract.
+    """Curated declarations for known native configuration connections.
 
-    This does not declare new native authority. Other configuration shapes
-    stay outside this deliberately narrow authoring contract.
+    Parsing a declaration is not App capability or publication admission.
+    Runtime/source qualification and minimum-version gates remain separate.
     """
+    oauth_skill = manifest.get("id") in {"floe-google-auth", "floe-microsoft-auth"}
     device_caps = {"device.observe", "device.interact"}
     caps = set(manifest.get("capabilities", []))
-    if (manifest.get("id") != "floe-ios-automation"
+    if (not oauth_skill and manifest.get("id") != "floe-ios-automation"
             and "configuration" not in manifest and not caps & device_caps):
         return
     required_fields = {"schemaVersion", "id", "version", "capabilities", "tools",
@@ -429,12 +430,12 @@ def _validate_native_ios_configuration(manifest):
         raise HubError("native iOS manifest requires its exact declared fields")
     if (type(manifest.get("schemaVersion")) is not int
             or manifest.get("schemaVersion") != 1
-            or manifest.get("id") != "floe-ios-automation"
-            or caps != device_caps | {"credentials"}
+            or (not oauth_skill and manifest.get("id") != "floe-ios-automation")
+            or caps != ({"credentials", "network"} if oauth_skill else device_caps | {"credentials"})
             or manifest.get("platforms") != ["ios"]
             or manifest.get("scriptRuntime", "none") != "none"
             or manifest.get("tools", []) or manifest.get("pythonPackages", [])):
-        raise HubError("native iOS configuration requires the fixed device Skill, grants and script-free iOS shape")
+        raise HubError("native iOS configuration requires a known Skill, exact grants and script-free iOS shape")
     config = manifest.get("configuration")
     if not isinstance(config, dict) or set(config) != {"fields"}:
         raise HubError("native iOS configuration requires exactly fields")
@@ -445,11 +446,11 @@ def _validate_native_ios_configuration(manifest):
             or not isinstance(fields[0], dict) or set(fields[0]) != keys):
         raise HubError("native iOS configuration requires one exact bridge field")
     field = fields[0]
-    if (field["key"] != "bridge" or field["kind"] != "connection"
+    if (field["key"] != ("connection" if oauth_skill else "bridge") or field["kind"] != "connection"
             or field["valueType"] != "string" or field["required"] is not True
             or field["sensitive"] is not False
-            or field["connectionKind"] != "ios.bridge.local"):
-        raise HubError("native iOS bridge connection declaration is invalid")
+            or field["connectionKind"] != ("oauth.external" if oauth_skill else "ios.bridge.local")):
+        raise HubError("native iOS connection declaration is invalid")
     for name, limit in (("title", 120), ("description", 600)):
         text = field[name]
         if not isinstance(text, dict) or set(text) != {"en", "zh-Hans"}:

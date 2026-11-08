@@ -459,18 +459,22 @@ class AdvanceDenialTests(unittest.TestCase):
 
 
 class LiveBaselineTests(unittest.TestCase):
-    """The real repository bytes today: legacy document, zero overrides,
+    """The real repository bytes: three reviewed small-business overrides,
     integrated read-only gate, untouched live files."""
 
     PINS = REPO / "docs" / "UPSTREAM-PINS.json"
     REGISTRY = REPO / "catalog" / "skills.json"
+    EXPECTED_OVERRIDES = {
+        skill_id: {"repository": "anthropics/knowledge-work-plugins",
+                   "commit": "d900840716eb262e1feb17c6f4406c9ce0e06bcf"}
+        for skill_id in ("business-pulse", "invoice-chase", "payroll-prep")
+    }
 
     def test_live_documents_validate_with_zero_reasons_and_stay_untouched(self):
         pins_before = self.PINS.read_bytes()
         registry_before = self.REGISTRY.read_bytes()
         doc = up.parse_pins_bytes(pins_before)
-        self.assertNotIn("skillOverrides", doc,
-                         "the current reviewed baseline must not carry overrides yet")
+        self.assertEqual(doc.get("skillOverrides"), self.EXPECTED_OVERRIDES)
         registry = json.loads(registry_before)
         self.assertEqual(up.check_registry_pins(doc, registry), [])
         self.assertEqual(self.PINS.read_bytes(), pins_before)
@@ -481,7 +485,8 @@ class LiveBaselineTests(unittest.TestCase):
         registry = json.loads(self.REGISTRY.read_bytes())
         advanced = up.advance_pin_document(doc, registry, registry, [], "2026-10-28")
         self.assertEqual(advanced["repositories"], doc["repositories"])
-        self.assertNotIn("skillOverrides", advanced)
+        self.assertEqual(advanced.get("skillOverrides"), self.EXPECTED_OVERRIDES)
+        self.assertEqual(advanced["reviewBaselineDate"], "2026-10-28")
         self.assertEqual(up.check_registry_pins(advanced, registry), [])
 
     def test_deterministic_bytes_are_stable_across_insertion_order(self):

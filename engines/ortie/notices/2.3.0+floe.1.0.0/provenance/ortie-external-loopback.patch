@@ -1,0 +1,44 @@
+--- a/src/mcp.rs
++++ b/src/mcp.rs
+@@ -162,6 +162,11 @@
+     /// so it is never on by default.
+     #[arg(long)]
+     pub allow_revoke: bool,
++
++    /// The native parent owns the configured loopback listener and sends
++    /// its callback through private stdio using auth_resume.
++    #[arg(long)]
++    pub external_loopback: bool,
+ }
+ 
+ impl McpCommand {
+@@ -188,6 +193,7 @@
+         let mut server = McpServer {
+             account,
+             allow_revoke: self.allow_revoke,
++            external_loopback: self.external_loopback,
+             events,
+             flow: McpFlow::None,
+             flows: 0,
+@@ -287,6 +293,7 @@
+ struct McpServer {
+     account: Account,
+     allow_revoke: bool,
++    external_loopback: bool,
+     events: Sender<McpEvent>,
+     flow: McpFlow,
+     flows: u64,
+@@ -511,11 +518,12 @@
+     /// take its port.
+     fn auth_get_code(&mut self) -> Result<Value, McpRunError> {
+         let (redirect_uri, listener) = match self.account.redirection_endpoint.clone() {
+-            Some(uri) if is_loopback_redirect(&uri) => {
++            Some(uri) if is_loopback_redirect(&uri) && !self.external_loopback => {
+                 let listener = bind(&uri)?;
+                 (uri, Some(listener))
+             }
+             Some(uri) => (uri, None),
++            None if self.external_loopback => return Err(anyhow!("An external loopback flow requires an explicit redirect URI").into()),
+             None => {
+                 let listener = TcpListener::bind("127.0.0.1:0")
+                     .context("Bind the loopback redirection listener")?;

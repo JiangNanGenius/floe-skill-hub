@@ -429,18 +429,8 @@ def build(registry, mode, source_commit, packages_root, reviews_root, public_key
                 # recursive engine copy.
                 runtime_blob = files.get(runtime_dependency.EMBEDDED_DESCRIPTOR_REL)
                 if runtime_blob is not None:
-                    descriptor = runtime_dependency.parse_descriptor(
-                        runtime_blob, reg_entry["id"])
-                    artifact_rel = descriptor["artifact"]["path"]
-                    frozen_bytes = runtime_dependency.load_frozen_descriptor_bytes(
-                        packages_root, reg_entry["id"])
-                    if frozen_bytes != runtime_blob:
-                        raise hubcore.HubError(
-                            f"{reg_entry['id']}: frozen snapshot descriptor "
-                            f"disagrees with the authenticated embedded descriptor")
-                    out[runtime_dependency.FROZEN_DESCRIPTOR_REL] = frozen_bytes
-                    out[artifact_rel] = runtime_dependency.load_artifact(
-                        packages_root, descriptor, reg_entry["id"])
+                    out.update(runtime_dependency.publication_files(
+                        runtime_blob, packages_root, reg_entry["id"]))
             elif reg_entry["status"]["packaged"]:
                 package_bindings, manifest, _files = bind_package(reg_entry, packages_root)
                 if package_bindings is not None:
