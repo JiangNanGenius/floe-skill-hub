@@ -1,6 +1,6 @@
 # GitHub transport mirror list v1
 
-The one discovery pair is `transport/mirrors.v1.json` and `transport/mirrors.v1.json.sig` in this repository. A website may cache these exact small signed bytes for display; it does not become an App discovery root, package/image cache or download proxy.
+The one discovery pair is `transport/mirrors.v1.json` and `transport/mirrors.v1.json.sig` in this repository. A website may cache these exact small signed bytes for display and separately maintain its authorized bounded website-image cache. It does not become an App discovery root or an App SkillHub package/image acceleration proxy.
 
 The list orders or disables the two App-approved IDs `ghfast.top` and `gh-proxy.com`. URLs, templates, repositories, keys, content hashes, permissions and new hosts cannot be supplied by the list. GitHub primary is always first. Role defaults are `rawFiles=[ghfast.top,gh-proxy.com]`, `atom=[gh-proxy.com]`, `releaseAssets=[]`. GHFast did not support the probed Atom path; release downloads/VM images are not claimed to consume this list.
 
