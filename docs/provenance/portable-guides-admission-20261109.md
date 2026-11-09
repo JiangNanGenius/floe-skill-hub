@@ -11,3 +11,5 @@ The iOS admission floor is `1.8.6`, a conservative service scope for this conten
 The existing Actions-only tracker includes the three exact upstream paths, with per-skill pinned commits. Adapted body changes retain the existing merge and re-adaptation review gates. The pre-existing first-party native-mail entry is added to the no-external-upstream exclusion partition; its package, permissions, version and review are unchanged.
 
 The three existing editor picks are preserved. Detailed English/Chinese descriptions and examples reuse existing Floe-owned illustrations with their original credits; no new image bytes or alternate client data source is introduced. Scientific Writing and OAuth candidates are outside this batch.
+
+Prepared release version: `1.0.1`. The earlier unpublished `1.0.0` archive and review payloads remain byte-identical. Review wording is revised only in the new version; no `1.0.0` store offer was published.

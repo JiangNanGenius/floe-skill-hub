@@ -5965,7 +5965,7 @@
         "retrievedAt": "2026-11-09",
         "skillManifestPath": "small-business/skills/ap-processor/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "writing-communication",
@@ -6036,7 +6036,7 @@
         "retrievedAt": "2026-11-09",
         "skillManifestPath": "sales/skills/handle-objection/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     },
     {
       "category": "research-data",
@@ -6107,7 +6107,7 @@
         "retrievedAt": "2026-11-09",
         "skillManifestPath": "sales/skills/win-loss-review/SKILL.md"
       },
-      "versionTarget": "1.0.0"
+      "versionTarget": "1.0.1"
     }
   ]
 }
