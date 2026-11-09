@@ -1,0 +1,59 @@
+{
+  "repository": "anthropics/knowledge-work-plugins",
+  "commit": "e050c2ec856373787143d7057663a6ebd1277df3",
+  "skill": {
+    "path": "small-business/skills/ap-processor/SKILL.md",
+    "sourceURL": "https://github.com/anthropics/knowledge-work-plugins/blob/e050c2ec856373787143d7057663a6ebd1277df3/small-business/skills/ap-processor/SKILL.md",
+    "gitBlob": "b32ec63402d638f9d5b1daa495264ca9998c8e04",
+    "sha256": "a2dbac917c45a114d886a8e2d4348c04415888a2b0d51c7f2946fcd210e7736d",
+    "bytes": 14923,
+    "commits": [
+      {
+        "sha": "84d8efdb6e80e2b26898e5c3109d13eddde97761",
+        "date": "2026-09-15T15:58:57Z",
+        "subject": "Claude for Small Business launch (#1144)"
+      }
+    ]
+  },
+  "inspectedReferences": [
+    {
+      "path": "small-business/skills/ap-processor/reference/coding_rules.md",
+      "gitBlob": "01f1244b9648de18b863c4f6c22a2014b01d973f",
+      "sha256": "dc2181601d19f893b9e9537b77310e37c535038910a52933eb579bf137378642",
+      "bytes": 3793
+    },
+    {
+      "path": "small-business/skills/ap-processor/reference/gotchas.md",
+      "gitBlob": "73b8634eb6beaf40c96375f75f7401757e12daa2",
+      "sha256": "082612fda93b76595f68457ec67e0d4d988e3613d65be360e50b143a86d22957",
+      "bytes": 4090
+    },
+    {
+      "path": "small-business/skills/ap-processor/reference/intake_and_extraction.md",
+      "gitBlob": "4766dc83ec273ab24d349de9f9d858f7ad9ac967",
+      "sha256": "5273a66d53725d266008aca9fb03931d955137909848734c0e340c3a90d86f59",
+      "bytes": 4208
+    },
+    {
+      "path": "small-business/skills/ap-processor/reference/matching_and_exceptions.md",
+      "gitBlob": "e4b0a894a4172c1d29fdf06373fd9fdf404aa4c9",
+      "sha256": "8e975953f68c6f78aba5082dfe6fec34b181939b83468c6b23c7c1baf8356cda",
+      "bytes": 3367
+    },
+    {
+      "path": "small-business/skills/ap-processor/reference/payment_run.md",
+      "gitBlob": "4152bbc966ebd413c24a0749b119798e2b1d20a1",
+      "sha256": "09d6ad7f5918d5c7710e64b8ec5fe8a0ee5f0fa95f91d57b04b64fa7f96b83aa",
+      "bytes": 3240
+    }
+  ],
+  "licenses": [
+    {
+      "path": "LICENSE",
+      "spdx": "Apache-2.0",
+      "gitBlob": "f53c679acba79cbb292961fd9fb9e87ca20eab22",
+      "sha256": "a6946284993aeec75c7d75906064b66210c46051e562077efb30eb6dcfe72e26",
+      "bytes": 11607
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+opportunity_id,outcome,currency,amount,owner,created_date,close_date,loss_reason
+A,won,USD,10000,Lin,2026-08-11,2026-09-10,
+B,lost,USD,20000,Lin,2026-08-01,2026-09-15,budget
+C,won,USD,30000,Zhou,2026-08-01,2026-09-30,
+D,open,USD,9000,Lin,2026-09-01,,
+E,lost,AUD,7000,Zhou,2026-09-01,2026-09-20,no decision
+F,unknown,USD,4000,Zhou,2026-09-01,2026-09-25,
+A,won,USD,10000,Lin,2026-08-11,2026-09-10,
+G,won,USD,15000,Lin,2026-09-01,2026-10-02,
+H,lost,USD,5000,Lin,2026-10-01,2026-09-28,

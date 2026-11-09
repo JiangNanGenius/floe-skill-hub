@@ -151,6 +151,10 @@
       "auditStatus": "audited",
       "links": []
     },
+    "ap-processor": {
+      "auditStatus": "audited",
+      "links": []
+    },
     "audit-support": {
       "auditStatus": "audited",
       "links": []
@@ -935,6 +939,10 @@
       "links": []
     },
     "grant-rfp-writer": {
+      "auditStatus": "audited",
+      "links": []
+    },
+    "handle-objection": {
       "auditStatus": "audited",
       "links": []
     },
@@ -1908,6 +1916,10 @@
       ]
     },
     "webapp-testing": {
+      "auditStatus": "audited",
+      "links": []
+    },
+    "win-loss-review": {
       "auditStatus": "audited",
       "links": []
     },

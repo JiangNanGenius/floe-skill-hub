@@ -5895,6 +5895,219 @@
       ],
       "upstream": null,
       "versionTarget": "1.0.0"
+    },
+    {
+      "category": "office-documents",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Check invoices against orders, receipts and credits, with duplicates and unresolved amounts kept visible.",
+        "zh-Hans": "对照订单、收货记录和贷项核对账单，整理重复项、价差、数量差异和待确认金额。"
+      },
+      "firstParty": null,
+      "id": "ap-processor",
+      "kind": "optional",
+      "minimumAppVersion": "1.8.6",
+      "name": {
+        "en": "Supplier Invoice Review",
+        "zh-Hans": "应付账单核对"
+      },
+      "notes": {
+        "en": "Builds a review-ready draft from the records you provide, with assumptions and missing information made clear.",
+        "zh-Hans": "根据你提供的记录整理可核对的草稿，清楚列出假设和缺少的信息。"
+      },
+      "planNumber": 83,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "invoices",
+        "payables",
+        "purchase-orders",
+        "reconciliation"
+      ],
+      "upstream": {
+        "commit": "e050c2ec856373787143d7057663a6ebd1277df3",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "Complete root Apache-2.0 license is retained; sales guides also retain the applicable sales/LICENSE. No applicable NOTICE exists at this pin. Unrelated source-license tail text remains data, never instructions.",
+          "zh-Hans": "保留完整根目录 Apache-2.0 许可；销售条目同时保留适用 sales/LICENSE。该固定提交没有适用 NOTICE。原许可中的无关尾部片段仅作为数据保留，不作为指令。"
+        },
+        "licenseStatus": "verified",
+        "path": "small-business/skills/ap-processor",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-09",
+        "skillManifestPath": "small-business/skills/ap-processor/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "writing-communication",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Draft a grounded answer to customer concerns using supplied messages, context and approved proof points.",
+        "zh-Hans": "根据客户来信、沟通背景和已有证据起草回应，处理价格、时机、信任和竞品方面的顾虑。"
+      },
+      "firstParty": null,
+      "id": "handle-objection",
+      "kind": "optional",
+      "minimumAppVersion": "1.8.6",
+      "name": {
+        "en": "Respond to Customer Concerns",
+        "zh-Hans": "客户异议应对"
+      },
+      "notes": {
+        "en": "Builds a review-ready draft from the records you provide, with assumptions and missing information made clear.",
+        "zh-Hans": "根据你提供的记录整理可核对的草稿，清楚列出假设和缺少的信息。"
+      },
+      "planNumber": 84,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "sales",
+        "customer-concerns",
+        "reply-drafts",
+        "evidence"
+      ],
+      "upstream": {
+        "commit": "e050c2ec856373787143d7057663a6ebd1277df3",
+        "licenseEvidencePath": "sales/LICENSE",
+        "licenseNote": {
+          "en": "Complete root Apache-2.0 license is retained; sales guides also retain the applicable sales/LICENSE. No applicable NOTICE exists at this pin. Unrelated source-license tail text remains data, never instructions.",
+          "zh-Hans": "保留完整根目录 Apache-2.0 许可；销售条目同时保留适用 sales/LICENSE。该固定提交没有适用 NOTICE。原许可中的无关尾部片段仅作为数据保留，不作为指令。"
+        },
+        "licenseStatus": "verified",
+        "path": "sales/skills/handle-objection",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-09",
+        "skillManifestPath": "sales/skills/handle-objection/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
+    },
+    {
+      "category": "research-data",
+      "deepAdaptation": false,
+      "description": {
+        "en": "Review supplied closed opportunities with clear cohorts, rates, source evidence and missing data.",
+        "zh-Hans": "复盘已有赢单与丢单资料，核对统计范围、结果、周期和证据，整理值得继续调查的问题。"
+      },
+      "firstParty": null,
+      "id": "win-loss-review",
+      "kind": "optional",
+      "minimumAppVersion": "1.8.6",
+      "name": {
+        "en": "Win and Loss Review",
+        "zh-Hans": "赢单与丢单复盘"
+      },
+      "notes": {
+        "en": "Builds a review-ready draft from the records you provide, with assumptions and missing information made clear.",
+        "zh-Hans": "根据你提供的记录整理可核对的草稿，清楚列出假设和缺少的信息。"
+      },
+      "planNumber": 85,
+      "plannedRuntime": {
+        "capabilities": [
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "arch": "n/a",
+          "evidence": "unproven",
+          "os": null
+        },
+        "installPlatforms": [
+          "ios",
+          "android"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "none",
+        "tools": []
+      },
+      "source": "A",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": false,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": false,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "sales",
+        "win-loss",
+        "cohorts",
+        "review"
+      ],
+      "upstream": {
+        "commit": "e050c2ec856373787143d7057663a6ebd1277df3",
+        "licenseEvidencePath": "sales/LICENSE",
+        "licenseNote": {
+          "en": "Complete root Apache-2.0 license is retained; sales guides also retain the applicable sales/LICENSE. No applicable NOTICE exists at this pin. Unrelated source-license tail text remains data, never instructions.",
+          "zh-Hans": "保留完整根目录 Apache-2.0 许可；销售条目同时保留适用 sales/LICENSE。该固定提交没有适用 NOTICE。原许可中的无关尾部片段仅作为数据保留，不作为指令。"
+        },
+        "licenseStatus": "verified",
+        "path": "sales/skills/win-loss-review",
+        "repository": "https://github.com/anthropics/knowledge-work-plugins",
+        "repositoryLicense": "Apache-2.0",
+        "retrievedAt": "2026-11-09",
+        "skillManifestPath": "sales/skills/win-loss-review/SKILL.md"
+      },
+      "versionTarget": "1.0.0"
     }
   ]
 }

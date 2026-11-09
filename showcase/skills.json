@@ -176,6 +176,71 @@
         }
       ]
     },
+    "ap-processor": {
+      "cover": {
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/floe-invoice-organizer.png"
+      },
+      "examples": [
+        {
+          "output": {
+            "en": "A line-by-line comparison showing prices, quantities, source references and unresolved differences.",
+            "zh-Hans": "逐行列出价格和数量对照、资料出处及待确认差异。"
+          },
+          "prompt": {
+            "en": "Compare these invoices with the purchase order and delivery tickets.",
+            "zh-Hans": "帮我把这些发票与采购订单、送货单核对一下。"
+          }
+        },
+        {
+          "output": {
+            "en": "A vendor-by-vendor balance review that distinguishes applied credits, unapplied credits and missing settlement evidence.",
+            "zh-Hans": "按供应商整理余额，区分已应用贷项、未应用贷项和缺少凭据的付款匹配。"
+          },
+          "prompt": {
+            "en": "These bills include credit notes and paid entries. What still needs review?",
+            "zh-Hans": "这里混着贷项和已付款记录，帮我看看还有哪些需要核对。"
+          }
+        },
+        {
+          "output": {
+            "en": "A draft naming the invoice, both quantities and the evidence still needed, alongside the internal exception record.",
+            "zh-Hans": "草稿列明发票、双方数量和需要补充的凭据，并附内部差异记录。"
+          },
+          "prompt": {
+            "en": "Draft a clarification for the quantities this supplier billed.",
+            "zh-Hans": "这家供应商的开票数量不对，帮我整理一份澄清草稿。"
+          }
+        }
+      ],
+      "gallery": [],
+      "overview": {
+        "en": "Bring supplier invoices, purchase orders, receiving records and credits into one review. The guide checks duplicate copies, prices, quantities and outstanding balances, with the source beside each finding. It keeps unreadable amounts and unresolved credits visible so a tidy total does not hide a missing record. The result is a review pack you can check before changing your books or deciding what to pay.",
+        "zh-Hans": "把供应商发票、采购订单、收货记录和贷项放在一起核对，检查重复账单、价格、数量和未结余额，并为每项差异保留出处。看不清的金额和待确认贷项会单独列出，避免汇总数字掩盖缺失资料。最后得到一份可复核的账单明细、差异清单和供应商余额表，供后续记账或付款决策使用。"
+      },
+      "useCases": [
+        {
+          "en": "Match billed quantities and prices to orders and receipts.",
+          "zh-Hans": "核对开票数量、单价与订单和实际收货是否一致。"
+        },
+        {
+          "en": "Group duplicate invoices while retaining every source copy.",
+          "zh-Hans": "归组重复账单，并保留每份原始资料的出处。"
+        },
+        {
+          "en": "Separate open invoices, confirmed settlements and unapplied credits.",
+          "zh-Hans": "区分未结发票、已确认付款和未应用贷项，避免重复扣减。"
+        },
+        {
+          "en": "Prepare a focused list of questions for a supplier or bookkeeper.",
+          "zh-Hans": "整理需向供应商或记账人员确认的问题和澄清草稿。"
+        }
+      ]
+    },
     "audit-support": {
       "cover": {
         "alt": {
@@ -2006,6 +2071,71 @@
         {
           "en": "Draft from verified organization material",
           "zh-Hans": "根据机构现有材料组织草稿"
+        }
+      ]
+    },
+    "handle-objection": {
+      "cover": {
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe 原创，AI 辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/deal-review.jpg"
+      },
+      "examples": [
+        {
+          "output": {
+            "en": "A concise reply acknowledging the concern, supported by supplied facts and ending with one useful question.",
+            "zh-Hans": "一份简洁回应：先承接顾虑，再引用已有事实，最后提出一个有助推进沟通的问题。"
+          },
+          "prompt": {
+            "en": "The customer says we are over budget. Help me answer using these notes.",
+            "zh-Hans": "客户说超预算了，请根据这些沟通记录帮我回复。"
+          }
+        },
+        {
+          "output": {
+            "en": "A claim-by-claim evidence sheet separating supported facts, dated comparisons, confidential material and missing information.",
+            "zh-Hans": "逐项核对说法及出处，区分已有证据、过时对比、保密材料和缺失信息。"
+          },
+          "prompt": {
+            "en": "Check which claims in this reply we can actually support.",
+            "zh-Hans": "帮我检查这份回复里哪些说法有证据支持。"
+          }
+        },
+        {
+          "output": {
+            "en": "A grounded talk track, relevant proof points and questions based on the customer's priorities.",
+            "zh-Hans": "根据客户重视的需求整理话术、可用证据和待确认问题。"
+          },
+          "prompt": {
+            "en": "Prepare me for a call where the customer is considering a competitor.",
+            "zh-Hans": "客户也在考虑竞品，帮我准备一下这次通话。"
+          }
+        }
+      ],
+      "gallery": [],
+      "overview": {
+        "en": "Start with a customer's message or call excerpt and prepare a focused reply to their concern. Separate price, timing, trust and competitive questions, then use only the context and proof points you supply. The customer-facing draft stays distinct from internal hypotheses and confidential evidence. A short evidence sheet shows what supports the reply and which facts are still missing.",
+        "zh-Hans": "从客户来信或沟通片段出发，围绕对方真正提出的问题起草回应。先区分价格、时机、信任或竞品方面的顾虑，再结合你提供的背景和证据组织表达。发给客户的草稿与内部推断、保密资料分开呈现，并附一份简短的证据和信息缺口清单，便于你检查后继续沟通。"
+      },
+      "useCases": [
+        {
+          "en": "Respond to a price concern without inventing a discount or ROI.",
+          "zh-Hans": "回应价格顾虑，清楚区分预算差额、价值证据和可讨论的方案。"
+        },
+        {
+          "en": "Prepare a talk track for timing or approval concerns.",
+          "zh-Hans": "为时机不合适、需要内部审批等情况准备沟通话术。"
+        },
+        {
+          "en": "Compare a competitor against the customer's stated requirements.",
+          "zh-Hans": "围绕客户已说明的需求整理有依据的竞品对比。"
+        },
+        {
+          "en": "Keep confidential context out of a customer-facing draft.",
+          "zh-Hans": "核对引用、案例和承诺，把内部保密信息留在内部说明中。"
         }
       ]
     },
@@ -4449,6 +4579,71 @@
         {
           "en": "Debug button states and timing issues on dynamic pages",
           "zh-Hans": "排查动态页面的按钮状态与时序问题"
+        }
+      ]
+    },
+    "win-loss-review": {
+      "cover": {
+        "credit": {
+          "en": "Floe original, AI-assisted illustration.",
+          "zh-Hans": "Floe原创，AI辅助示意图。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/business-pulse.jpg"
+      },
+      "examples": [
+        {
+          "output": {
+            "en": "A reconciled cohort with won, lost and excluded records, followed by rates and their counts.",
+            "zh-Hans": "列出核对后的赢单、丢单和排除记录，再展示带数量口径的比率。"
+          },
+          "prompt": {
+            "en": "Review last quarter's closed opportunities and explain the win-rate denominator.",
+            "zh-Hans": "复盘上季度的已结束商机，把赢单率的分母交代清楚。"
+          }
+        },
+        {
+          "output": {
+            "en": "Outcome counts, cycle summaries with valid-sample coverage, and separate currency totals.",
+            "zh-Hans": "结果数量、附有效样本量的周期统计，以及按币种分开的金额汇总。"
+          },
+          "prompt": {
+            "en": "These deals use USD and AUD. Compare their outcomes and sales cycles.",
+            "zh-Hans": "这里有美元和澳元的商机，帮我比较结果和销售周期。"
+          }
+        },
+        {
+          "output": {
+            "en": "A short review supported by cited notes, with hypotheses and missing evidence clearly labeled.",
+            "zh-Hans": "引用具体记录支撑简短复盘，并标明推测和待补充证据。"
+          },
+          "prompt": {
+            "en": "Use these loss notes to prepare a review. Separate customer reasons from our guesses.",
+            "zh-Hans": "根据这些丢单记录准备复盘，区分客户说的原因和我们的猜测。"
+          }
+        }
+      ],
+      "gallery": [],
+      "overview": {
+        "en": "Review a set of closed sales opportunities to understand where wins and losses cluster. Start with the exports, notes or call excerpts you already have, then reconcile duplicate records, the review period and missing outcomes before calculating rates. Compare sales cycles with their sample coverage and keep amounts in separate currency groups. A concise review connects observed patterns to supplied evidence, distinguishes customer reasons from hypotheses and suggests useful follow-up questions.",
+        "zh-Hans": "把一组已结束商机的导出表、记录和沟通片段放在一起，复盘赢单与丢单的分布。先明确统计期间，处理重复记录和缺失结果，再计算有分母可查的赢单率。销售周期会同时说明有效样本量，不同币种的金额分别汇总。最后形成一份简洁复盘，把客户原话、数据现象与待验证推测区分清楚，并列出值得继续调查的问题。"
+      },
+      "useCases": [
+        {
+          "en": "Review a month or quarter of closed opportunities using a clearly defined cohort.",
+          "zh-Hans": "按明确期间和统计范围复盘月度或季度已结束商机。"
+        },
+        {
+          "en": "Compare outcome rates by team, segment or supplied reason, showing sample sizes.",
+          "zh-Hans": "按团队、客群或已有原因比较结果，并保留每组样本量。"
+        },
+        {
+          "en": "Find data gaps, duplicate snapshots and conflicting outcome records before drawing conclusions.",
+          "zh-Hans": "在下结论前找出资料缺口、重复快照和相互冲突的结果记录。"
+        },
+        {
+          "en": "Prepare a concise review and evidence table for a sales meeting.",
+          "zh-Hans": "整理适合销售复盘会议的简报、证据表和后续调查问题。"
         }
       ]
     },

@@ -1,0 +1,1 @@
+Derived from Anthropic's knowledge-work-plugins, Apache-2.0. Floe modifies the workflow for supplied records and task-owned workspace output. See references/PROVENANCE.md and the retained upstream license texts.

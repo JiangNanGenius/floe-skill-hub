@@ -187,9 +187,10 @@
         "floe-email-drafting",
         "floe-file-organizer",
         "floe-invoice-organizer",
-        "floe-ios-automation"
+        "floe-ios-automation",
+        "floe-native-mail"
       ],
-      "note": "Exact registry partition: tracked(67)+engineManaged(1)+watchOnly(5)+builtins(4)+firstParty(4)=81. Native first-party guides have no external upstream; external skills retain scheduled GitHub Actions tracking."
+      "note": "Exact registry partition: tracked(70)+engineManaged(1)+watchOnly(5)+builtins(4)+firstParty(5)=85. Native first-party guides have no external upstream; external skills retain scheduled GitHub Actions tracking."
     },
     "tracked": [
       "internal-comms",
@@ -258,7 +259,10 @@
       "job-post-builder",
       "invoice-chase",
       "payroll-prep",
-      "business-pulse"
+      "business-pulse",
+      "ap-processor",
+      "handle-objection",
+      "win-loss-review"
     ],
     "watchOnly": [
       {
@@ -324,6 +328,14 @@
         }
       ],
       "notes": "deep adaptation: local assets (floegart.js, shell-template.html, viewer-ui.js) and scripts are Floe-authored; upstream templates/ intentionally not carried",
+      "relocations": []
+    },
+    "ap-processor": {
+      "excludedUpstream": [
+        "reference/"
+      ],
+      "fileMappings": [],
+      "notes": "Portable supplied-record guide adaptation. Track the exact pinned upstream SKILL.md through the existing offline Actions updater; body changes require re-adaptation review and never overwrite the Floe guide with unreviewed instructions. Local manifest, provenance, retained licenses and synthetic examples remain Floe-owned. No scripts, external connector, runtime dependency, account setup or external action.",
       "relocations": []
     },
     "audit-support": {
@@ -566,6 +578,14 @@
       ],
       "fileMappings": [],
       "notes": "Reviewed portable guide adaptation. Track the exact upstream SKILL.md; upstream reference/ files and shared-plugin connector flows are intentionally not shipped. Body changes need re-adaptation review. Local manifest, provenance, license evidence and synthetic examples remain Floe-owned; no scripts, runtime dependencies, connectors or external actions.",
+      "relocations": []
+    },
+    "handle-objection": {
+      "excludedUpstream": [
+        "reference/"
+      ],
+      "fileMappings": [],
+      "notes": "Portable supplied-record guide adaptation. Track the exact pinned upstream SKILL.md through the existing offline Actions updater; body changes require re-adaptation review and never overwrite the Floe guide with unreviewed instructions. Local manifest, provenance, retained licenses and synthetic examples remain Floe-owned. No scripts, external connector, runtime dependency, account setup or external action.",
       "relocations": []
     },
     "hiring-screener": {
@@ -927,9 +947,17 @@
       ],
       "notes": "deep adaptation: Floe browser-tool scripts and fixtures replace the upstream Playwright examples; upstream scripts/with_server.py intentionally not carried",
       "relocations": []
+    },
+    "win-loss-review": {
+      "excludedUpstream": [
+        "reference/"
+      ],
+      "fileMappings": [],
+      "notes": "Portable supplied-record guide adaptation. Track the exact pinned upstream SKILL.md through the existing offline Actions updater; body changes require re-adaptation review and never overwrite the Floe guide with unreviewed instructions. Local manifest, provenance, retained licenses and synthetic examples remain Floe-owned. No scripts, external connector, runtime dependency, account setup or external action.",
+      "relocations": []
     }
   },
-  "updatedAt": "2026-11-05",
+  "updatedAt": "2026-11-09",
   "versioning": {
     "bump": "patch",
     "rule": "an accepted content change always proposes a NEW version (patch bump of the registry versionTarget, re-bumped while the version exists anywhere in packages/<id>/, the feeds or the publication ledger); identical candidate contentDigest means no-change and never a bump; same (id,version) digest replacement is refused by construction"

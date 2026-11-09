@@ -246,6 +246,10 @@ ANDROID_PORTABLE_GUIDE_IDS = frozenset({
     "invoice-chase",
     "payroll-prep",
     "business-pulse",
+    # Reviewed portable text-only admission candidates, 2026-11-09
+    "ap-processor",
+    "handle-objection",
+    "win-loss-review",
 })
 ANDROID_PORTABLE_GUIDE_CAPABILITY_CEILING = frozenset(
     {"workspace.read", "workspace.write"})

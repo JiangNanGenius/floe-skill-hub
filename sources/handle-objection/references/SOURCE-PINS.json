@@ -1,0 +1,40 @@
+{
+  "repository": "anthropics/knowledge-work-plugins",
+  "commit": "e050c2ec856373787143d7057663a6ebd1277df3",
+  "skill": {
+    "path": "sales/skills/handle-objection/SKILL.md",
+    "sourceURL": "https://github.com/anthropics/knowledge-work-plugins/blob/e050c2ec856373787143d7057663a6ebd1277df3/sales/skills/handle-objection/SKILL.md",
+    "gitBlob": "3c66962f9c87a8e9a2769556f49f04f3043a0098",
+    "sha256": "88d2da6cd89218459271ab6159ef981b88b6f763148b3955b56277d30acc4e19",
+    "bytes": 9501,
+    "commits": [
+      {
+        "sha": "2d97716bced3a843bcc3add4356ce0cecc5a0dab",
+        "date": "2026-10-21T22:32:20Z",
+        "subject": "feat(sales): show the source of every line with a link to check it (2.1.0) (#1351)"
+      },
+      {
+        "sha": "c66cd2d204d9db2a9a49401f34e0b95d7d05cd46",
+        "date": "2026-09-15T14:44:03Z",
+        "subject": "feat(sales): rebuild sales plugin as 2.0.0 with 36 skills (#1133)"
+      }
+    ]
+  },
+  "inspectedReferences": [],
+  "licenses": [
+    {
+      "path": "LICENSE",
+      "spdx": "Apache-2.0",
+      "gitBlob": "f53c679acba79cbb292961fd9fb9e87ca20eab22",
+      "sha256": "a6946284993aeec75c7d75906064b66210c46051e562077efb30eb6dcfe72e26",
+      "bytes": 11607
+    },
+    {
+      "path": "sales/LICENSE",
+      "gitBlob": "d645695673349e3947e8e5ae42332d0ac3164cd7",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "spdx": "Apache-2.0"
+    }
+  ]
+}
