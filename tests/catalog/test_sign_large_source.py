@@ -16,6 +16,7 @@ import build_catalog
 import catalog_views as cv
 import publication_immutability as pi
 import automatic_publication as ap
+import automatic_transport as at
 import runtime_dependency
 import sign_publication
 
@@ -106,6 +107,26 @@ class LargeSourceSigningTests(BridgeFixture):
         head = _commit_all(data, "fixture verified ledger append H")
         chain = ap.verify_publication_diffs(data, commit, commit, y, head)
         self.assertEqual(chain["status"], "publication-diffs-ok")
+        # The next unattended poll must accept the signed capability update
+        # as data while retaining the same cryptographic/ledger guards.
+        # Refresh starts from an already published nonempty history, unlike
+        # the first-publication fixture above. A subsequent metadata-only
+        # publication exercises all six real feed pairs and ledger growth.
+        next_outputs = self._outputs(registry, data, head)
+        for view in cv.ALL_VIEWS:
+            feed_path, sig_path = cv.FEED_PATHS[view]
+            (data / feed_path).write_bytes(next_outputs[feed_path])
+            (data / sig_path).write_bytes(hubcore.sign_envelope(
+                next_outputs[feed_path], self.key, KEY_ID))
+        y_next = _commit_all(data, "fixture next six-pair publication")
+        _, _, next_ledger = ap.expected_ledger_bytes(data, head, y_next)
+        (data / pi.LEDGER_REL).write_bytes(next_ledger)
+        next_head = _commit_all(data, "fixture next cumulative ledger")
+        refreshed = at.verify_history_refresh(data, head, next_head)
+        self.assertEqual(refreshed["liveCommit"], next_head)
+        for path in ["catalog-large-source-v2.json", "android/catalog-large-source-v1.exe",
+                     "scripts/catalog-large-source-v1.json", "public-key.json"]:
+            self.assertFalse(at.is_refresh_data_path(path), path)
         tree = ap.tree_at(data, y, "fixture published Y")
         for view in cv.CAPABILITY_VIEWS:
             for rel in cv.FEED_PATHS[view]:

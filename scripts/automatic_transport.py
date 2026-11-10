@@ -370,7 +370,8 @@ def is_descendant(root, ancestor, descendant):
 # 2. minimal publication-DATA allowlist (established from the actual tree)
 # ---------------------------------------------------------------------------
 
-DATA_EXACT_PATHS = frozenset({
+DATA_EXACT_PATHS = frozenset(path for view in cv.CAPABILITY_VIEWS
+                            for path in cv.FEED_PATHS[view]) | frozenset({
     "catalog/publication-ledger.json",   # ledger continuity rules below
     "catalog/skills.json",               # registry content rules below
     "catalog.json", "catalog.sig",       # official iOS feed pair
