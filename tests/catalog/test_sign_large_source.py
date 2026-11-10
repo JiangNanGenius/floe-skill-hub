@@ -18,9 +18,16 @@ import sign_publication
 
 
 class LargeSourceSigningTests(BridgeFixture):
-    def _candidate(self, name):
+    def _candidate(self, name, appended=False):
         registry, qualified = self._incremental_catalog_registry()
         entry = next(e for e in registry["skills"] if e["id"] == "algorithmic-art")
+        if appended:
+            entry = copy.deepcopy(entry)
+            entry["id"] = "large-source-fixture"
+            entry["name"] = {"en": "Large-source fixture", "zh-Hans": "Large-source fixture"}
+            entry["planNumber"] = max(e["planNumber"] for e in registry["skills"]) + 1
+            entry["source"] = "O"
+            registry["skills"].append(entry)
         entry["packageProfile"] = "large-source-v1"
         entry["minimumAppVersion"] = "1.9.0"
         entry["plannedRuntime"]["installPlatforms"] = ["ios"]
@@ -103,6 +110,19 @@ class LargeSourceSigningTests(BridgeFixture):
         self.assertEqual((out / rel).read_bytes(), (data / rel).read_bytes())
         self.assertEqual(hubcore.verify_envelope(
             (out / rel).read_bytes(), (out / (rel + ".sig")).read_bytes(), trust), KEY_ID)
+
+    def test_appended_deep_adaptation_keeps_legacy_mandatory_slots_pinned(self):
+        registry, entry, data, commit = self._candidate("large-source-appended", appended=True)
+        out = self.root / "out-large-source-appended"
+        proc = self._run_bridge("catalog", data, commit, out,
+                                env_value=_env_value(TEST_SEED))
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        receipt = self.verify_receipt(out, {KEY_ID: self.public_b64})
+        self.assertTrue(entry["deepAdaptation"])
+        self.assertNotIn(entry["id"], receipt["launchGate"]["mandatoryDeepIds"])
+        self.assertNotIn(entry["id"], receipt["launchGate"]["mandatoryDeepOffered"])
+        feed = json.loads((out / "catalog-large-source-v1.json").read_bytes())
+        self.assertIn(entry["id"], {e["id"] for e in feed["entries"]})
 
     def test_missing_or_partial_capability_pair_is_refused(self):
         registry, _, data, commit = self._candidate("large-source-missing")

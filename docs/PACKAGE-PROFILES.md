@@ -74,7 +74,9 @@ Rules that hold for every profile:
   capability feeds atomically when either channel has a large-source offer,
   and applies every execution, review and mandatory-runtime gate to the
   effective complete offers. A large row cannot bypass an admission gate by
-  being absent from the standard feeds.
+  being absent from the standard feeds. Appended deep adaptations retain
+  their own truthful label and per-item gates; they never replace any of
+  the original nine mandatory IDs or change a legacy label.
 * `automatic_publication` — candidate re-derivation verifies archives under
   the frozen row profile, stages scan-side package writes with the
   trusted-entry-derived capacity, and extends Y/H diffs, ledger rows and

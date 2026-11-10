@@ -999,8 +999,13 @@ def run_catalog_mode(args, hubcore, build_catalog, runtime_dependency,
             json.loads(registry_path.read_bytes()))
     except hubcore.HubError as error:
         raise SigningError(f"registry gate failed: {error}") from None
-    deep_ids = {e["id"] for e in registry["skills"] if e["deepAdaptation"]}
-    if deep_ids != set(MANDATORY_DEEP_IDS):
+    # The original mandatory cohort is immutable. Appended, independently
+    # reviewed skills may also need deep adaptation; they do not replace or
+    # satisfy any of the nine pinned mandatory slots. hubcore separately
+    # freezes every legacy plan identity and deep-adaptation label.
+    legacy_deep_ids = {e["id"] for e in registry["skills"]
+                       if e["deepAdaptation"] and e["id"] in hubcore.LEGACY_PLAN_IDS}
+    if legacy_deep_ids != set(MANDATORY_DEEP_IDS):
         raise SigningError("the registry deepAdaptation set drifted from the pinned "
                            "mandatory IDs; relabeling can never satisfy the launch gate")
 
