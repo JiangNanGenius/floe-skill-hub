@@ -1,0 +1,22 @@
+{
+  "image": "node:22-trixie-slim@sha256:46d668ccd1d1ab1d33c3681f16fa5b8708eac04f483a6c7c5afcefa14493ddd0",
+  "manifestDigest": "sha256:46d668ccd1d1ab1d33c3681f16fa5b8708eac04f483a6c7c5afcefa14493ddd0",
+  "multiarchIndexDigest": "sha256:be1e2a3dc2c4fd68cdfadad2a696a280e0d2749098bee509230174d72fb768c6",
+  "platform": {
+    "architecture": "arm64",
+    "os": "linux",
+    "variant": "v8"
+  },
+  "annotations": {
+    "com.docker.official-images.bashbrew.arch": "arm64v8",
+    "org.opencontainers.image.base.digest": "sha256:24a01011d10eba3a023bc8585b9650b8b29021240d4217c05b905e09ef4a5232",
+    "org.opencontainers.image.base.name": "debian:trixie-slim",
+    "org.opencontainers.image.created": "2026-11-05T07:45:36Z",
+    "org.opencontainers.image.revision": "80f02a542da739e6a662451d1db66456a0dea253",
+    "org.opencontainers.image.source": "https://github.com/nodejs/docker-node.git#80f02a542da739e6a662451d1db66456a0dea253:22/trixie-slim",
+    "org.opencontainers.image.url": "https://hub.docker.com/_/node",
+    "org.opencontainers.image.version": "22-trixie-slim"
+  },
+  "observedUTC": "2026-11-10T06:16:48.032163+00:00",
+  "purpose": "Pinned native ARM64 qualification container, not an App runtime install recipe"
+}

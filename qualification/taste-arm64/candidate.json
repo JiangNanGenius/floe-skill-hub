@@ -1,0 +1,145 @@
+{
+  "kind": "unsigned-complete-ARM64-Linux-qualification-input-not-a-store-offer",
+  "id": "design-taste-frontend",
+  "version": "2.5.1",
+  "upstreamCommit": "f6b76575f949707b4e3c37cd86cb44b0b98643e8",
+  "archive": "design-taste-frontend-2.5.1.zip",
+  "archiveBytes": 30332353,
+  "archiveSHA256": "4a45f79c99ff25de29b9e4a58da81b11d876b3162ca2a9748a06afcc6a11bcde",
+  "contentDigest": "8e16c570e89032cbb80c26d7d95e5ffea8173dd99e0da6c024a6a9e3cd0d1b33",
+  "files": 1636,
+  "uncompressedBytes": 36910940,
+  "proposedPackageProfile": "large-source-v1",
+  "packageProfileConsumerAgreed": false,
+  "manifest": {
+    "schemaVersion": 1,
+    "id": "design-taste-frontend",
+    "version": "2.5.1",
+    "capabilities": [
+      "browser.interact",
+      "browser.observe",
+      "execution.remote",
+      "network",
+      "workspace.read",
+      "workspace.write"
+    ],
+    "platforms": [
+      "ios",
+      "linux"
+    ],
+    "scriptRuntime": "remote",
+    "pythonPackages": [],
+    "tools": [
+      "exec.shell"
+    ]
+  },
+  "changes": [
+    {
+      "path": "references/LICENSE",
+      "operation": "retain exact upstream root license in the supported references folder",
+      "bytesChanged": false
+    },
+    {
+      "path": "assets/taste-library/palettes.json",
+      "operation": "move",
+      "from": "library/palettes.json",
+      "bytesChanged": false
+    },
+    {
+      "path": "assets/taste-library/type.json",
+      "operation": "move",
+      "from": "library/type.json",
+      "bytesChanged": false
+    },
+    {
+      "path": "scripts/start.mjs",
+      "operation": "read the relocated data library under assets/taste-library"
+    },
+    {
+      "path": "scripts/effects.mjs",
+      "operation": "read the relocated data library under assets/taste-library"
+    },
+    {
+      "path": "assets/backgrounds/check.mjs",
+      "operation": "read the relocated data library under assets/taste-library"
+    },
+    {
+      "path": "assets/taste-templates/fx-gallery.template.html",
+      "operation": "move",
+      "from": "scripts/fx-gallery.template.html",
+      "bytesChanged": false
+    },
+    {
+      "path": "assets/taste-templates/fx-lab.template.html",
+      "operation": "move",
+      "from": "scripts/fx-lab.template.html",
+      "bytesChanged": false
+    },
+    {
+      "path": "scripts/effects.mjs",
+      "operation": "update both moved-template references"
+    },
+    {
+      "path": "assets/backgrounds/check.mjs",
+      "operation": "Linux per-process Chromium flags; root-only no-sandbox and private temporary profiles"
+    },
+    {
+      "path": "assets/layout/check.mjs",
+      "operation": "Linux per-process Chromium flags; root-only no-sandbox and private temporary profiles"
+    },
+    {
+      "path": "assets/objects/product-render/make-posters.mjs",
+      "operation": "Linux per-process Chromium flags; root-only no-sandbox and private temporary profiles"
+    },
+    {
+      "path": "assets/scenes/_demo/shoot.mjs",
+      "operation": "Linux per-process Chromium flags; root-only no-sandbox and private temporary profiles"
+    },
+    {
+      "path": "scripts/consistency.mjs",
+      "operation": "Linux per-process Chromium flags; root-only no-sandbox and private temporary profiles"
+    },
+    {
+      "path": "scripts/effects.mjs",
+      "operation": "Linux per-process Chromium flags; root-only no-sandbox and private temporary profiles"
+    },
+    {
+      "path": "scripts/icons.mjs",
+      "operation": "Linux per-process Chromium flags; root-only no-sandbox and private temporary profiles"
+    },
+    {
+      "path": "scripts/moments.mjs",
+      "operation": "Linux per-process Chromium flags; root-only no-sandbox and private temporary profiles"
+    },
+    {
+      "path": "scripts/perf.mjs",
+      "operation": "Linux per-process Chromium flags; root-only no-sandbox and private temporary profiles"
+    },
+    {
+      "path": "scripts/shoot.mjs",
+      "operation": "Linux per-process Chromium flags; root-only no-sandbox and private temporary profiles"
+    },
+    {
+      "path": "SKILL.md",
+      "operation": "Floe scalar header and resolved-Linux/job ownership instructions; original body retained"
+    }
+  ],
+  "linuxChromiumLaunchersAdapted": [
+    "assets/backgrounds/check.mjs",
+    "assets/layout/check.mjs",
+    "assets/objects/product-render/make-posters.mjs",
+    "assets/scenes/_demo/shoot.mjs",
+    "scripts/consistency.mjs",
+    "scripts/effects.mjs",
+    "scripts/icons.mjs",
+    "scripts/moments.mjs",
+    "scripts/perf.mjs",
+    "scripts/shoot.mjs"
+  ],
+  "fullUpstreamResourceSetRetained": true,
+  "minimumAppVersion": null,
+  "executionQualification": "pending-native-ARM64-Linux",
+  "signed": false,
+  "published": false,
+  "macOriginalVariant": false
+}

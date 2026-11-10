@@ -1,0 +1,46 @@
+name: Taste Skill native ARM64 Linux qualification
+on:
+  push:
+    branches: [codex/taste-arm64-qualification-20261110]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: taste-arm64-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    container:
+      image: node:22-trixie-slim@sha256:46d668ccd1d1ab1d33c3681f16fa5b8708eac04f483a6c7c5afcefa14493ddd0
+    steps:
+      - name: Prepare native Debian browser and the Node20 control
+        shell: bash
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          set -euo pipefail
+          apt-get update
+          chromium_version=$(apt-cache policy chromium | sed -n 's/^  Candidate: //p')
+          test -n "$chromium_version"
+          test "$chromium_version" != '(none)'
+          apt-get install -y --no-install-recommends git python3 ca-certificates procps "chromium=$chromium_version" nodejs
+          test "$(uname -m)" = aarch64
+          test "$(dpkg --print-architecture)" = arm64
+      - name: Check out this immutable qualification input
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Qualify the exact complete candidate
+        shell: bash
+        run: python3 -B qualification/taste-arm64/qualify.py
+      - name: Retain original success or failure evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: taste-skill-arm64-linux-${{ github.run_id }}
+          path: taste-qa-evidence/
+          if-no-files-found: warn
+          retention-days: 14
