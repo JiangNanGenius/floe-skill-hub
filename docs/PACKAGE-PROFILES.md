@@ -69,7 +69,12 @@ Rules that hold for every profile:
   offer retains its exact standard full rows; App readiness is independent.
 * `check_catalog` / `sign_publication` — published and staged referenced
   archive bytes are verified under the profile of the signed binding;
-  capability pairs verify standalone and as exact supersets.
+  capability pairs verify standalone and as exact supersets. The signing
+  launch gate checks the standard-profile set independently, requires both
+  capability feeds atomically when either channel has a large-source offer,
+  and applies every execution, review and mandatory-runtime gate to the
+  effective complete offers. A large row cannot bypass an admission gate by
+  being absent from the standard feeds.
 * `automatic_publication` — candidate re-derivation verifies archives under
   the frozen row profile, stages scan-side package writes with the
   trusted-entry-derived capacity, and extends Y/H diffs, ledger rows and
@@ -84,7 +89,9 @@ Rules that hold for every profile:
   `catalog.schema.json` stays the strict standard shape;
   `catalog-large-source-v1.schema.json` documents the capability feed.
 
-Tests: `tests/catalog/test_package_profiles.py`.
+Tests: `tests/catalog/test_package_profiles.py` and
+`tests/catalog/test_sign_large_source.py` (real isolated signing path with
+ephemeral test keys, including single-channel admission).
 
 ## Client version floors by channel
 

@@ -682,7 +682,11 @@ def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
     per-item trust invariant stays enforced here, with the iOS advertised set
     now checked EXPLICITLY instead of implicitly:
 
-      * both feeds exist, are nonempty, and carry unique ids;
+      * both standard feeds exist, are nonempty, and carry unique ids;
+      * standard full feeds contain exactly the standard-profile offers;
+        large-source offers require both same-source capability feeds as
+        exact standard-row supersets. Per-item gates below inspect the
+        effective complete offers, including every large-source row;
       * each feed is EXACTLY the qualified, download-eligible registry rows
         advertising that channel — no invented rows, no partial drop, no
         duplicates. The four App-provided builtin ids are native App features
@@ -717,10 +721,49 @@ def enforce_launch_gate(hubcore, runtime_dependency, args, registry, outputs):
     import catalog_views as cv
     entries_by_id = {e["id"]: e for e in registry["skills"]}
     try:
-        ios_feed = json.loads(outputs["catalog-full.json"])
-        android_feed = json.loads(outputs["android/catalog-full.json"])
+        standard_feeds = {
+            "ios": json.loads(outputs["catalog-full.json"]),
+            "android": json.loads(outputs["android/catalog-full.json"]),
+        }
     except KeyError:
         raise SigningError("builder did not emit both channel feeds") from None
+    capability_paths = {
+        channel: cv.FEED_PATHS[channel + "-large-source-v1"][0]
+        for channel in ("ios", "android")
+    }
+    capability_present = [path in outputs for path in capability_paths.values()]
+    if any(capability_present) and not all(capability_present):
+        raise SigningError("launch gate: both capability feeds must be emitted atomically")
+    effective_feeds = {}
+    for channel in ("ios", "android"):
+        expected = {
+            e["id"] for e in registry["skills"]
+            if e["status"]["qualified"]
+            and channel in e["plannedRuntime"]["installPlatforms"]
+            and not hubcore.is_download_offer_excluded(e["id"])
+        }
+        standard_expected = {
+            id_ for id_ in expected
+            if entries_by_id[id_].get("packageProfile") != hubcore.LARGE_SOURCE_PROFILE
+        }
+        standard_ids = [e["id"] for e in standard_feeds[channel]["entries"]]
+        if len(set(standard_ids)) != len(standard_ids):
+            raise SigningError(f"duplicate ids inside the {channel} standard feed")
+        if not standard_ids:
+            raise SigningError("launch gate: an empty feed is never publishable")
+        if set(standard_ids) != standard_expected:
+            raise SigningError(
+                f"launch gate: the {channel} standard feed must be exactly the qualified "
+                "standard-profile rows advertising that channel (App-provided builtin "
+                "offers excluded; no partial drop, no invented rows)")
+        if expected != standard_expected and not all(capability_present):
+            raise SigningError(f"launch gate: {channel} large-source offers require capability feeds")
+        effective_feeds[channel] = (
+            json.loads(outputs[capability_paths[channel]])
+            if all(capability_present) else standard_feeds[channel]
+        )
+    ios_feed = effective_feeds["ios"]
+    android_feed = effective_feeds["android"]
     ios_ids = [e["id"] for e in ios_feed["entries"]]
     android_ids = [e["id"] for e in android_feed["entries"]]
     if len(set(ios_ids)) != len(ios_ids):

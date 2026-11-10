@@ -95,6 +95,12 @@ every offered channel and every gate below stays fully enforced:
   the builtins are iOS-only by contract and the iOS exactness is checked
   explicitly, where the old gate had only implied it; an empty feed is
   always refused;
+- standard full feeds contain exactly the qualified standard-profile rows.
+  If either channel offers a `large-source-v1` package, both capability
+  feeds are required atomically. Each is an exact same-source superset of
+  its standard full feed; its complete set must equal that channel's whole
+  qualified advertised set. Every per-item and mandatory-runtime check
+  below inspects these complete offers, including large-source packages;
 - every offered scripted package still requires `status.executionVerified`
   true, frozen adaptation, and its actually bound review
   `guest-execution-qualified` with truthful guest-verified execution evidence: new ARM64 attestations use `linux/aarch64/guest-verified`, while unchanged portable-source historical proofs retain `linux/riscv64/guest-verified`;
