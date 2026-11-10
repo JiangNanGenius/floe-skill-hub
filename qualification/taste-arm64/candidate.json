@@ -4,11 +4,11 @@
   "version": "2.5.1",
   "upstreamCommit": "f6b76575f949707b4e3c37cd86cb44b0b98643e8",
   "archive": "design-taste-frontend-2.5.1.zip",
-  "archiveBytes": 30332353,
-  "archiveSHA256": "4a45f79c99ff25de29b9e4a58da81b11d876b3162ca2a9748a06afcc6a11bcde",
-  "contentDigest": "8e16c570e89032cbb80c26d7d95e5ffea8173dd99e0da6c024a6a9e3cd0d1b33",
-  "files": 1636,
-  "uncompressedBytes": 36910940,
+  "archiveBytes": 30335452,
+  "archiveSHA256": "2225caa803e68e465cced90b626c54705649a9134ea7844d911042fff7b7735b",
+  "contentDigest": "cfeb3041f3885afd85491c6ca240cb1fdf248e340d079d80433640c6d254f681",
+  "files": 1638,
+  "uncompressedBytes": 36917159,
   "proposedPackageProfile": "large-source-v1",
   "packageProfileConsumerAgreed": false,
   "manifest": {
@@ -120,6 +120,86 @@
       "operation": "Linux per-process Chromium flags; root-only no-sandbox and private temporary profiles"
     },
     {
+      "path": "assets/backgrounds/check.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "assets/backgrounds/pick.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "assets/components/fx-map/bake.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "assets/layout/check.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "assets/layout/deal.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "assets/objects/_print-core/lint-glsl.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "assets/objects/_scenes/lint-glsl.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "assets/objects/product-render/make-posters.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "assets/scenes/_demo/shoot.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "assets/ui/_lab/build-index.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "scripts/consistency.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "scripts/copy-lint.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "scripts/effects.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "scripts/gate.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "scripts/icons.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "scripts/moments.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "scripts/perf.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "scripts/photos.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "scripts/shoot.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
+      "path": "scripts/start.mjs",
+      "operation": "automatic tested Node20 WebSocket compatibility; original exit status and cancellation propagated"
+    },
+    {
       "path": "SKILL.md",
       "operation": "Floe scalar header and resolved-Linux/job ownership instructions; original body retained"
     }
@@ -139,6 +219,11 @@
   "fullUpstreamResourceSetRetained": true,
   "minimumAppVersion": null,
   "executionQualification": "pending-native-ARM64-Linux",
+  "runtimeNodeSupport": {
+    "preferredMajor": 22,
+    "debianCompatibilityMinimum": "20.19.2",
+    "automaticWebSocketBootstrap": true
+  },
   "signed": false,
   "published": false,
   "macOriginalVariant": false

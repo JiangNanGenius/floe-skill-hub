@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Narrow native ARM64 Linux qualification, with an explicit Node20 diagnostic."""
+"""Exact native ARM64 Linux qualification of automatic Node20 compatibility."""
 import hashlib
 import json
 import os
 import platform
 import signal
+import socket
 import stat
 import struct
 import subprocess
@@ -86,6 +87,12 @@ state['interpreters'] = {name: subprocess.check_output([exe, '-p', 'JSON.stringi
 check('official-node22-arm64', json.loads(state['interpreters']['node22'])['arch'] == 'arm64' and int(json.loads(state['interpreters']['node22'])['version'].split('.')[0]) == 22)
 check('debian-node20-control', int(json.loads(state['interpreters']['node20'])['version'].split('.')[0]) == 20)
 
+graphics = ROOT / 'taste-graphics-probe'
+graphics.mkdir()
+(graphics / 'index.html').write_text('''<!doctype html><html><body><canvas id="c" width="16" height="16"></canvas><script>const g=document.getElementById('c').getContext('webgl2',{preserveDrawingBuffer:true,antialias:false});if(g){g.clearColor(0.125,0.75,0.25,1);g.clear(g.COLOR_BUFFER_BIT);const p=new Uint8Array(4);g.readPixels(0,0,1,1,g.RGBA,g.UNSIGNED_BYTE,p);document.body.dataset.graphics=p[0]>=30&&p[0]<=34&&p[1]>=188&&p[1]<=194&&p[2]>=62&&p[2]<=66&&p[3]===255?'ready':'bad-pixels';document.body.dataset.rgba=Array.from(p).join(',');}else{document.body.dataset.graphics='missing';}</script></body></html>''')
+rendered = run('linux-software-webgl2', ['/usr/bin/chromium', '--headless=new', '--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--no-first-run', '--no-default-browser-check', '--user-data-dir=' + str(graphics / 'profile'), '--virtual-time-budget=1500', '--dump-dom', (graphics / 'index.html').as_uri()], graphics, base_env)
+check('real-software-webgl-framebuffer', 'data-graphics="ready"' in rendered)
+
 fixture = '''<!doctype html><html lang="en" data-type="software"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="page-type" content="software"><meta name="site-kind" content="software"><title>Taste Linux qualification</title><style>*{box-sizing:border-box}html,body{margin:0;overflow-x:visible;background:#f1eee7;color:#183735;font:18px system-ui}main{min-height:100svh;padding:44px 24px}h1{font-size:40px;line-height:1.05;letter-spacing:-1px}p{line-height:1.5}.overflow-control{display:block;width:1600px;height:80px;background:#183735;color:white;border:0;font:18px system-ui;text-align:left;padding:20px}</style><main><h1>ARM64 Linux<br>Taste Skill</h1><p>Known overflow control for the browser inspector.</p><button class="overflow-control">Deliberately wide control</button></main></html>'''
 
 for label, exe in [('node22', node22), ('node20', node20)]:
@@ -100,21 +107,21 @@ for label, exe in [('node22', node22), ('node20', node20)]:
     (work / 'tmp').mkdir()
     page = work / 'index.html'
     page.write_text(fixture)
-    if label == 'node22':
-        probe = json.loads(run('node22-preflight', [exe, str(skill / 'scripts/floe-preflight.mjs')], work, env))
-        check('node22-runtime-ready', probe['state'] == 'ready' and probe['target'] == {'os': 'linux', 'arch': 'aarch64'})
-        syntax = []
-        for module in sorted(skill.rglob('*.mjs')):
-            result = subprocess.run([exe, '--check', str(module)], cwd=work, env=env, capture_output=True, text=True)
-            syntax.append({'path': module.relative_to(skill).as_posix(), 'exitCode': result.returncode, 'output': result.stdout + result.stderr})
-        (OUT / 'node22-syntax.json').write_text(json.dumps(syntax, indent=2) + '\n')
-        check('all-adapted-es-modules-parse', all(row['exitCode'] == 0 for row in syntax), {'modules': len(syntax)})
-    else:
-        probe = json.loads(run('node20-minimum-version-refusal', [exe, str(skill / 'scripts/floe-preflight.mjs')], work, env, expected=(3,)))
-        check('upstream-minimum-not-silently-lowered', probe['state'] == 'requires-runtime' and any('22' in missing for missing in probe['missing']))
-        # This is a diagnostic for a later explicitly tested compatibility adaptation, not release qualification.
-        env['NODE_OPTIONS'] = '--experimental-websocket'
+    if label == 'node20':
         env['PATH'] = '/usr/bin:/bin:/usr/local/bin'
+    assert 'NODE_OPTIONS' not in env
+    probe = json.loads(run(label + '-preflight', [exe, str(skill / 'scripts/floe-preflight.mjs')], work, env))
+    check(label + '-runtime-ready', probe['state'] == 'ready' and probe['target'] == {'os': 'linux', 'arch': 'aarch64'})
+    if label == 'node20':
+        check('automatic-node20-bootstrap-selected', probe['node']['mode'] == 'node20-websocket-compat' and probe['node']['bootstrapRequired'])
+        refused = json.loads(run('node20-explicit-disable-refusal', [exe, str(skill / 'scripts/floe-preflight.mjs')], work, {**env, 'NODE_OPTIONS': '--no-experimental-websocket'}, expected=(3,)))
+        check('explicit-feature-disable-respected', refused['state'] == 'requires-runtime' and any('disabled' in missing for missing in refused['missing']))
+    syntax = []
+    for module in sorted(skill.rglob('*.mjs')):
+        result = subprocess.run([exe, '--check', str(module)], cwd=work, env=env, capture_output=True, text=True)
+        syntax.append({'path': module.relative_to(skill).as_posix(), 'exitCode': result.returncode, 'output': result.stdout + result.stderr})
+    (OUT / (label + '-syntax.json')).write_text(json.dumps(syntax, indent=2) + '\n')
+    check(label + '-all-adapted-es-modules-parse', all(row['exitCode'] == 0 for row in syntax), {'modules': len(syntax)})
     text = run(label + '-palette', [exe, str(skill / 'scripts/start.mjs'), 'deal', '--page', 'software', '--no-recent'], work, env)
     check(label + '-data-library-import', 'PALETTES' in text and 'TYPE for software' in text)
     run(label + '-templates', [exe, str(skill / 'scripts/effects.mjs'), 'gallery'], work, env)
@@ -131,12 +138,43 @@ for label, exe in [('node22', node22), ('node20', node20)]:
                        and 'overflow-control' in finding.get('sel', '')]
     check(label + '-known-overflow-detected', report['checks'].get('off-viewport') == 'FAIL' and bool(narrow_controls),
           {'rule': 'off-viewport', 'result': report['checks'].get('off-viewport'), 'controlFindings': narrow_controls, 'notChecked': report.get('notChecked', [])})
+    if label == 'node20':
+        with socket.socket() as sock:
+            sock.bind(('127.0.0.1', 0))
+            port = sock.getsockname()[1]
+        server = subprocess.Popen([exe, str(skill / 'scripts/effects.mjs'), 'serve', '--port', str(port)], cwd=work, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, start_new_session=True)
+        try:
+            ready = False
+            for _ in range(100):
+                try:
+                    with socket.create_connection(('127.0.0.1', port), timeout=0.1):
+                        ready = True
+                        break
+                except OSError:
+                    time.sleep(0.05)
+            check('compatibility-child-server-ready', ready)
+            children = subprocess.check_output(['ps', '-o', 'pid=', '--ppid', str(server.pid)], text=True).split()
+            check('compatibility-created-one-owned-child', len(children) == 1)
+            server.terminate()
+            output, _ = server.communicate(timeout=10)
+            (OUT / 'node20-parent-cancellation.log').write_text(output)
+            check('compatibility-parent-propagates-termination', server.returncode == -signal.SIGTERM, {'exitCode': server.returncode})
+            check('compatibility-child-reaped', not any(Path('/proc/' + pid).exists() for pid in children))
+        finally:
+            if server.poll() is None:
+                os.killpg(server.pid, signal.SIGTERM)
+                try:
+                    server.communicate(timeout=5)
+                except subprocess.TimeoutExpired:
+                    os.killpg(server.pid, signal.SIGKILL)
+                    server.communicate()
     remaining = [line for line in subprocess.check_output(['ps', '-eo', 'pid=,args='], text=True).splitlines() if str(work) in line and ('chromium' in line or 'consistency.mjs' in line or 'shoot.mjs' in line)]
     check(label + '-owned-workers-stopped', remaining == [], {'remaining': remaining})
 
 state['passed'] = True
-state['node20DiagnosticOnly'] = 'The current exact package still requires Node22; Node20 commands were separately tested with its experimental WebSocket flag. Any compatibility package needs its own frozen qualification.'
+state['node20CompatibilityAutomatic'] = True
+state['manuallyForcedWebSocketFlagForPositiveCases'] = False
 state['appOrInstallationAcceptanceClaimed'] = False
 state['signedOrPublished'] = False
 save()
-print(json.dumps({'passed': True, 'checks': len(state['checks']), 'scope': state['scope'], 'archiveSHA256': meta['archiveSHA256'], 'node20DiagnosticOnly': True}))
+print(json.dumps({'passed': True, 'checks': len(state['checks']), 'scope': state['scope'], 'archiveSHA256': meta['archiveSHA256'], 'node20CompatibilityAutomatic': True}))
