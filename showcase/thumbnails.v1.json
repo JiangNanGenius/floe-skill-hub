@@ -1511,6 +1511,24 @@
           "width": 1280
         }
       }
+    },
+    {
+      "source_git_blob": "a62a052968687e76d69868cb283dd175ff8285e1",
+      "source_height": 197,
+      "source_path": "showcase/media/covers/taste-skill-wordmark.png",
+      "source_sha256": "c3a3e8f94a2a751b90510b30e8f635590764225a4584ad5c1494523b5ec9a408",
+      "source_size": 51509,
+      "source_width": 816,
+      "variants": {
+        "cover": {
+          "height": 193,
+          "mime": "image/webp",
+          "path": "showcase/thumbnails/v1/cover/1850dbef7a36e210a8aad3e2a774802ddfa1639c63ecf026dfa360d4a8a488d6.webp",
+          "sha256": "1850dbef7a36e210a8aad3e2a774802ddfa1639c63ecf026dfa360d4a8a488d6",
+          "size": 27002,
+          "width": 800
+        }
+      }
     }
   ],
   "purpose": "floe-skill-web-thumbnails",
