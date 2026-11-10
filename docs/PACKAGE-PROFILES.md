@@ -106,8 +106,20 @@ unknown/unoffered channels, empty/null maps and non-`X.Y.Z` values are rejected.
 Explicit floors are retained instead of applying the portable-guide sentinel.
 The map never appears in a signed feed or changes an App wire field.
 
-Only the native owner can establish the first capable delivered consumer.
-These source fields do not prove compilation, App execution or availability,
-and the automatic updater cannot change version floors. Taste's Android
-consumer and release remain pending; this tooling does not publish an offer.
+The floor follows the first compatible App version confirmed by the native
+release owner and the user's current release direction. Read the App's
+[current release status](https://github.com/JiangNanGenius/floe-agent/blob/main/docs/CURRENT_STATUS.md)
+to distinguish the public version, the next delivery and unshipped candidates.
+Do not infer a floor from the highest Git tag, a candidate's marketing number
+or a source/build check. A compiled consumer is not a delivered App.
+
+Content may publish independently with a confirmed next-client requirement;
+this does not claim that the currently public client can install it. The
+website reads the requirement from the verified signed entry rather than
+copying a version literal into its UI or prose. If the App version plan
+changes, review the author metadata and regenerate/sign the catalog through
+the normal pipeline. Preserve historical tags, package bytes, review records
+and dated publication receipts. The automatic updater cannot change floors.
+Android's client compatibility domain remains independent of its APK display
+version; Taste has no Android offer until its own consumer is ready.
 Focused tests: `tests/catalog/test_channel_versions.py`.

@@ -6119,7 +6119,7 @@
       "firstParty": null,
       "id": "design-taste-frontend",
       "kind": "optional",
-      "minimumAppVersion": "1.9.0",
+      "minimumAppVersion": "1.8.7",
       "name": {
         "en": "Taste Skill",
         "zh-Hans": "Taste Skill 网页设计"

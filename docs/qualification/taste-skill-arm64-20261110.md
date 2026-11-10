@@ -17,8 +17,9 @@ This is native ARM64 Linux container execution, not App installation,
 model execution, Simulator acceptance or an App guest run. The actual iOS
 large-source consumer compiled and passed seven curated-consumer checks
 plus one resource-stager check at App source 4bf468fbdde292a7961a298ae9aae028e8911edb.
-The iOS offer requires client 1.9.0 or later; App distribution remains
-independent. Android is held until its own consumer and resource execution
+The current signed iOS entry records the client requirement; unshipped
+candidate version numbers attached to source/build evidence do not establish
+App availability. App distribution remains independent. Android is held until its own consumer and resource execution
 chain are ready. There is no Mac-original shop offer.
 
 The complete kit retains original assets and their individual credits.
