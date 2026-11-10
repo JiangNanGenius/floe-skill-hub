@@ -217,13 +217,20 @@ def _canonical_json(raw, field, limit=MAX_PAYLOAD_FILE_BYTES):
         _hold(f"{field} is not valid JSON")
 
 
-def write_payload_file(out_dir, rel, data, mode=None):
-    """Write one payload member under out_dir at the repo-relative path."""
+def write_payload_file(out_dir, rel, data, mode=None, max_bytes=None):
+    """Write one payload member under out_dir at the repo-relative path.
+
+    `max_bytes` bounds this one member (default MAX_PAYLOAD_FILE_BYTES: the
+    standard/control/relay/JSON ceiling). Callers staging profile-bound
+    package ZIPs pass an exact capacity derived from the trusted validated
+    registry entry (never from a URL or filename alone).
+    """
     if (not rel or rel.startswith("/") or "\\" in rel or "\0" in rel
             or any(part in ("", ".", "..") for part in rel.split("/"))):
         _hold(f"unsafe payload path: {rel!r}")
-    if len(data) > MAX_PAYLOAD_FILE_BYTES:
-        _hold(f"payload file exceeds {MAX_PAYLOAD_FILE_BYTES} bytes: {rel}")
+    limit = MAX_PAYLOAD_FILE_BYTES if max_bytes is None else max_bytes
+    if len(data) > limit:
+        _hold(f"payload file exceeds {limit} bytes: {rel}")
     target = pathlib.Path(out_dir) / rel
     walk = pathlib.Path(out_dir)
     parts = [part for part in rel.split("/")[:-1]]
@@ -286,10 +293,18 @@ def _manifest_without_version(manifest):
     return {key: value for key, value in manifest.items() if key != "version"}
 
 
-def _archive_files(archive_bytes, field):
-    if len(archive_bytes) > MAX_PAYLOAD_FILE_BYTES:
-        _hold(f"{field}: archive exceeds {MAX_PAYLOAD_FILE_BYTES} bytes")
-    return _as_publication(lambda: hubcore.check_archive_bytes(archive_bytes))
+def _archive_files(archive_bytes, field, profile=None):
+    """Unpack an archive under the capacity of its declared signed profile.
+
+    The profile is an author registry fact validated as frozen between base
+    and candidate rows; absent means the standard profile. Unknown profiles
+    fail closed in hubcore.
+    """
+    bounds = hubcore.package_profile_bounds(profile, f"{field}: package profile")
+    if len(archive_bytes) > bounds["maxTotalBytes"]:
+        _hold(f"{field}: archive exceeds {bounds['maxTotalBytes']} bytes")
+    return _as_publication(
+        lambda: hubcore.check_archive_bytes(archive_bytes, profile=profile))
 
 
 def execution_fingerprint(files):
@@ -683,6 +698,9 @@ def validate_registry_delta(base_registry_raw, candidate_registry_raw,
         for key in frozen_fields:
             if before[key] != after[key]:
                 _hold(f"{id_}: frozen registry field {key} drifted")
+        if before.get("packageProfile") != after.get("packageProfile"):
+            _hold(f"{id_}: packageProfile is frozen across an automatic update "
+                  "(a capacity change is a reviewed act, never automatic)")
         if after["status"]["published"] or before["status"]["published"]:
             _hold(f"{id_}: registry data can never claim published")
         if not (after["status"]["reviewed"] and after["status"]["packaged"]):
@@ -718,7 +736,7 @@ def baseline_via_blob(root, base_commit):
 def prior_published_proof(root, base_commit, trust, baseline, id_, prior_version):
     """Ledger-verified prior proof: signed feed binding + qualified record."""
     found = False
-    for channel in cv.VIEWS:
+    for channel in cv.ALL_VIEWS:
         feed_rel, sig_rel = FEED_PATHS[channel]
         feed_bytes = blob_at(root, base_commit, feed_rel, "base feed")
         sig_bytes = blob_at(root, base_commit, sig_rel, "base feed sig")
@@ -792,7 +810,7 @@ def _citation_present(note_text, value, prefix=10):
 
 def verify_review_record_bytes(record_bytes, *, id_, version, archive_bytes,
                                expected_stage, expected_execution, today,
-                               notes_must_cite=None):
+                               notes_must_cite=None, profile=None):
     """Field-level independent verification of one proposed approval record."""
     if hubcore.sha256_hex(b"") is None:  # unreachable; keeps helper pure
         pass
@@ -813,10 +831,11 @@ def verify_review_record_bytes(record_bytes, *, id_, version, archive_bytes,
         _hold(f"{id_}: reviewedAt is not the deterministic staging date")
     if record["reviewStage"] != expected_stage or record["execution"] != expected_execution:
         _hold(f"{id_}: review stage/execution contradict the recomputed tier")
-    files_of_archive = _archive_files(archive_bytes, id_)
+    files_of_archive = _archive_files(archive_bytes, id_, profile=profile)
     manifest, _ = _as_publication(
         lambda: hubcore.validate_package_files(files_of_archive,
-                                               require_notice=True))
+                                               require_notice=True,
+                                               profile=profile))
     if manifest["id"] != id_ or manifest["version"] != version:
         _hold(f"{id_}: review/package identity drift")
     if record["contentDigest"] != hubcore.content_digest(files_of_archive) or \
@@ -1177,6 +1196,8 @@ def derive_expected_apply_set(repo_root, base_commit, stage_root, *, today,
         _hold(f"fresh apply set contains an unclassified path: {rel}")
     if REGISTRY_REL not in writes:
         _hold("fresh apply set must carry the bumped registry")
+    candidate_rows = {e["id"]: e for e in _canonical_json(
+        writes[REGISTRY_REL], "candidate registry")["skills"]}
     if not changed_ids:
         _hold("fresh stage carries no candidates (held-state path only)")
     for rel in stage["applyDeletions"]:
@@ -1215,10 +1236,19 @@ def derive_expected_apply_set(repo_root, base_commit, stage_root, *, today,
         if entry["package"] is not None and entry["package"] != built:
             _hold(f"{id_}: staged package.zip is not the deterministic rebuild of "
                   "its staged tree")
-        files_of_archive = _archive_files(built, id_)
+        # The signed capacity profile is frozen across an automatic update:
+        # the candidate row must declare exactly the base row's profile
+        # (absent = standard on both sides). Capacity for every archive gate
+        # below derives from this reviewed row, never from a URL.
+        profile = candidate_rows[id_].get("packageProfile")
+        if profile != row.get("packageProfile"):
+            _hold(f"{id_}: packageProfile drifted between base and candidate "
+                  "(a capacity change is a reviewed act, never an automatic update)")
+        files_of_archive = _archive_files(built, id_, profile=profile)
         manifest, _ = _as_publication(
             lambda: hubcore.validate_package_files(files_of_archive,
-                                                   require_notice=True))
+                                                   require_notice=True,
+                                                   profile=profile))
         planned = row["plannedRuntime"]
         if manifest["id"] != id_ or manifest["version"] != version:
             _hold(f"{id_}: candidate manifest identity drift")
@@ -1236,10 +1266,11 @@ def derive_expected_apply_set(repo_root, base_commit, stage_root, *, today,
         prior_blob = blob_at(repo_root, base_commit, prior_rel, "prior archive")
         if prior_blob is None:
             _hold(f"{id_}: prior published archive {prior_rel} is absent")
-        prior_files = _archive_files(prior_blob, id_)
+        prior_files = _archive_files(prior_blob, id_, profile=profile)
         prior_manifest, _ = _as_publication(
             lambda: hubcore.validate_package_files(prior_files,
-                                                   require_notice=True))
+                                                   require_notice=True,
+                                                   profile=profile))
         _manifest_freeze_check(id_, manifest, prior_manifest)
 
         for channel in channels:
@@ -1330,7 +1361,8 @@ def derive_expected_apply_set(repo_root, base_commit, stage_root, *, today,
                                    version=version, archive_bytes=built,
                                    expected_stage=expected_stage,
                                    expected_execution=expected_execution,
-                                   today=today, notes_must_cite=notes_cite)
+                                   today=today, notes_must_cite=notes_cite,
+                                   profile=profile)
         writes[record_rel] = proposed_records[record_rel]
         stage_counts["static-content-reviewed" if guide else "prior-proof-reuse"] += 1
         pins_before[id_], pins_after[id_] = row["upstream"]["commit"], expected_commit
@@ -1393,6 +1425,29 @@ def derive_expected_apply_set(repo_root, base_commit, stage_root, *, today,
     }
 
 
+def _package_write_capacity(rel, profile_by_id):
+    """Exact byte capacity for one staged package write.
+
+    The capacity derives ONLY from the trusted validated registry entry
+    selected by the package path's skill id (its explicit packageProfile;
+    absent = standard). Non-package members and unknown ids keep the
+    standard payload ceiling — a URL or filename alone never grants
+    capacity, and an unknown profile fails closed.
+    """
+    match = _PACKAGE_ZIP_REL_RE.fullmatch(rel)
+    if match is None:
+        return MAX_PAYLOAD_FILE_BYTES
+    profile = profile_by_id.get(match.group("id"))
+    if profile is not None and not isinstance(profile, str):
+        _hold(f"{rel}: staged registry packageProfile must be a string")
+    return hubcore.package_profile_bounds(profile)["maxTotalBytes"]
+
+
+_PACKAGE_ZIP_REL_RE = re.compile(
+    r"^(?:android/)?packages/(?P<id>[a-z][a-z0-9]*(?:-[a-z0-9]+)*)/"
+    r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)/(?P=id)\.zip$")
+
+
 def build_candidate_payload(repo_root, base_commit, stage_root, out_dir, *, today,
                             expect_counts=LIVE_REGISTRY_EXPECT_COUNTS):
     """Scan-side: derive the expected set and write the minimal S payload."""
@@ -1400,8 +1455,18 @@ def build_candidate_payload(repo_root, base_commit, stage_root, out_dir, *, toda
                                         today=today, expect_counts=expect_counts)
     out_dir = pathlib.Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
+    # Trusted validated candidate rows: derive_expected_apply_set already
+    # ran the registry gates over this exact registry blob, so the declared
+    # profiles are trusted entry facts for the staged package writes.
+    profile_by_id = {}
+    registry_raw = payload["writes"].get(REGISTRY_REL)
+    if registry_raw is not None:
+        profile_by_id = {row["id"]: row.get("packageProfile")
+                         for row in _canonical_json(registry_raw,
+                                                    "candidate registry")["skills"]}
     for rel, data in sorted(payload["writes"].items()):
-        write_payload_file(out_dir / "snapshot", rel, data)
+        write_payload_file(out_dir / "snapshot", rel, data,
+                           max_bytes=_package_write_capacity(rel, profile_by_id))
     changes = {k: v for k, v in payload.items() if k != "writes"}
     (out_dir / "changes.json").write_bytes(
         hubcore.pretty({"schemaVersion": SCHEMA_VERSION, **changes}))
@@ -1771,7 +1836,9 @@ def rebuild_feeds(x_root, source_commit, trust=None):
         lambda: build_catalog.build(registry, "release", source_commit,
                                     pathlib.Path(x_root),
                                     pathlib.Path(x_root), trust))
-    return {rel: outputs[rel] for rel in sorted(cv.FEED_FILES)}
+    # Standard feeds are always emitted; the same-Y capability feeds only
+    # when the registry carries large-source entries (absence is valid).
+    return {rel: outputs[rel] for rel in sorted(cv.FEED_FILES) if rel in outputs}
 
 
 def assemble_relay_members(relay_dir, request_root_rel, repo_root,
@@ -1920,6 +1987,15 @@ def build_y_payload(request_doc, relay_dir, repo_root, feeds, out_dir, *,
             _hold(f"{channel} feed pair incomplete")
         writes[feed_rel] = feeds[feed_rel]
         writes[sig_rel] = files[sig_rel]
+    # Same-Y capability pairs are conditional: published atomically with the
+    # standard feeds, never fabricated when the build carried no large rows.
+    for view in cv.CAPABILITY_VIEWS:
+        feed_rel, sig_rel = FEED_PATHS[view]
+        if feed_rel in feeds or sig_rel in files:
+            if feed_rel not in feeds or sig_rel not in files:
+                _hold(f"{view} capability feed pair incomplete")
+            writes[feed_rel] = feeds[feed_rel]
+            writes[sig_rel] = files[sig_rel]
     payload = {"writes": writes, "deletions": [],
                "requestId": request_doc["requestId"],
                "sourceCommit": request_doc["sourceCommit"]}
@@ -1945,7 +2021,7 @@ def expected_ledger_bytes(repo_root, base_commit, y_commit):
     doc = _canonical_json(base_ledger, "base ledger")
     rows = doc["publications"]
     new_rows = []
-    for channel in cv.VIEWS:
+    for channel in cv.ALL_VIEWS:
         if blob_at(repo_root, y_commit, FEED_PATHS[channel][0], "y feed") is None:
             continue
         row = _as_publication(lambda: pi.build_ledger_row(pathlib.Path(repo_root),
@@ -1984,8 +2060,14 @@ def verify_publication_diffs(root, base_commit, x_commit, y_commit, h_commit):
     added, removed, modified = tree_diff(x_tree, y_tree)
     if removed:
         _hold("Y deleted paths from X")
-    if sorted(set(added) | set(modified)) != sorted(
-            cv.ARTIFACT_FILES):
+    # The standard signed feed pair set is mandatory; the same-Y capability
+    # pair set is optional and lawful exactly when present at Y (atomic
+    # capability publication, never fabricated).
+    capability_at_y = sorted(
+        rel for view in cv.CAPABILITY_VIEWS for rel in cv.FEED_PATHS[view]
+        if rel in y_tree)
+    if sorted(set(added) | set(modified)) != sorted(set(cv.ARTIFACT_FILES)
+                                                    | set(capability_at_y)):
         _hold("Y deviates from X beyond the signed feed pair")
     added, removed, modified = tree_diff(y_tree, h_tree)
     if removed or sorted(set(added) | set(modified)) != [LEDGER_REL]:
@@ -2020,7 +2102,7 @@ def verify_publication_diffs(root, base_commit, x_commit, y_commit, h_commit):
         _hold("H ledger bytes are not exactly base-rows + the rows derived "
               "from the original committed Y (no rebuilt-commit comparison, "
               "no reordering, no extra rows)")
-    published_channels = {channel for channel in cv.VIEWS
+    published_channels = {channel for channel in cv.ALL_VIEWS
                           if blob_at(root, y_commit, FEED_PATHS[channel][0],
                                      "y feed") is not None}
     if {row["channel"] for row in new_rows} != published_channels:
@@ -2072,10 +2154,13 @@ def verify_published_chain(root, base_commit, x_commit, y_commit, h_commit,
                                      h_commit)
     trust = trust or build_catalog.load_trust(root)
     feeds = rebuild_feeds(x_root, x_commit, trust=trust)
-    for channel in cv.VIEWS:
+    for channel in cv.ALL_VIEWS:
         rel = FEED_PATHS[channel][0]
         committed = blob_at(root, y_commit, rel, "Y feed")
-        if committed != feeds[rel]:
+        rebuilt = feeds.get(rel)
+        if channel in cv.CAPABILITY_VIEWS and committed is None and rebuilt is None:
+            continue  # publication without a capability pair
+        if committed != rebuilt:
             _hold(f"committed Y {channel} feed is not the deterministic local "
                   "rebuild over X")
     relay_verdict, _files = relay_validate(relay_dir, request_doc, root,
@@ -2425,8 +2510,11 @@ def verify_public_main(head_commit, x_commit, *, trust_root, base_commit=None,
         hubcore.require_commit(base_commit, "request base B")
     trust = build_catalog.load_trust(root)
     results = {}
-    for channel in cv.VIEWS:
+    for channel in cv.ALL_VIEWS:
         feed_rel, sig_rel = FEED_PATHS[channel]
+        if channel in cv.CAPABILITY_VIEWS and blob_at(root, head_commit, feed_rel,
+                                                      f"H {feed_rel}") is None:
+            continue  # publication without a capability pair
         _url, feed = fetch_public_raw(head_commit, feed_rel, transport=transport)
         _url, sig = fetch_public_raw(head_commit, sig_rel, transport=transport)
         for rel, data in ((feed_rel, feed), (sig_rel, sig)):
@@ -3134,7 +3222,8 @@ def main(argv=None):
         request_doc = _load_request(args.request_file)
         feeds_dir = pathlib.Path(args.feeds_dir)
         feeds = {rel: (feeds_dir / rel).read_bytes()
-                 for rel in sorted(cv.FEED_FILES)}
+                 for rel in sorted(cv.FEED_FILES)
+                 if (feeds_dir / rel).is_file()}
         verdict, payload = build_y_payload(request_doc, args.relay_dir, root,
                                            feeds, args.out)
         print(hubcore.pretty({"status": "y-payload-built",

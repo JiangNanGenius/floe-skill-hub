@@ -125,16 +125,53 @@ FIRSTPARTY = {
     "description": "First-party pin; released and staged versions are recorded separately "
                    "(e.g. floe-office released 1.3.0, staged 1.5.0 — never conflated).",
 }
+PACKAGE_PROFILE = {"enum": list(hubcore.PACKAGE_PROFILES),
+                   "description": "Signed capacity profile of the bound entry. Absent means "
+                                  "standard (128 files / 8 MiB archive / 2 MiB per file); "
+                                  "large-source-v1 admits complete large source kits "
+                                  "(2048 files / 64 MiB archive, 2 MiB per file unchanged). "
+                                  "Unknown profiles fail closed; capacity is always derived "
+                                  "from this verified bound entry, never from a URL. The key "
+                                  "exists ONLY in the separate signed capability feeds "
+                                  "(catalog-large-source-v1*.json) — the standard feeds "
+                                  "keep the original five-key binding shape."}
+_STANDARD_TOTAL = hubcore.PACKAGE_PROFILES["standard"]["maxTotalBytes"]
+_LARGE_TOTAL = hubcore.PACKAGE_PROFILES[hubcore.LARGE_SOURCE_PROFILE]["maxTotalBytes"]
 PACKAGE = {
     "type": "object", "additionalProperties": False,
     "required": ["path", "size", "sha256", "contentDigest", "containsScripts"],
     "properties": {
         "path": {"type": "string", "pattern": "^(?:android/)?packages/[a-z][a-z0-9-]*/(?:0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)/[a-z][a-z0-9-]*\\.zip$"},
-        "size": {"type": "integer", "minimum": 1, "maximum": 8388608},
+        "size": {"type": "integer", "minimum": 1, "maximum": _STANDARD_TOTAL},
         "sha256": HEX64, "contentDigest": HEX64, "containsScripts": {"type": "boolean"},
     },
     "description": "contentDigest = SHA256 over sorted big-endian u64-length-prefixed "
-                   "path+bytes of the unpacked files; sha256 = over the exact archive bytes.",
+                   "path+bytes of the unpacked files; sha256 = over the exact archive bytes. "
+                   "The standard feeds never carry a profile key (old strict readers "
+                   "reject unknown package keys before minimumAppVersion checks).",
+}
+PACKAGE_CAP = {
+    "type": "object", "additionalProperties": False,
+    "required": ["path", "size", "sha256", "contentDigest", "containsScripts"],
+    "properties": {
+        "path": {"type": "string", "pattern": "^(?:android/)?packages/[a-z][a-z0-9-]*/(?:0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)/[a-z][a-z0-9-]*\\.zip$"},
+        # Base ceiling is the largest profile capacity; the allOf branches
+        # tighten it to the declared profile (absent = standard).
+        "size": {"type": "integer", "minimum": 1, "maximum": _LARGE_TOTAL},
+        "sha256": HEX64, "contentDigest": HEX64, "containsScripts": {"type": "boolean"},
+        "profile": PACKAGE_PROFILE,
+    },
+    "allOf": [
+        {"if": {"properties": {"profile": {"const": hubcore.LARGE_SOURCE_PROFILE}},
+                "required": ["profile"]},
+         "then": {"properties": {"size": {"maximum": _LARGE_TOTAL}}}},
+        {"if": {"anyOf": [{"not": {"required": ["profile"]}},
+                           {"properties": {"profile": {"const": "standard"}},
+                            "required": ["profile"]}]},
+         "then": {"properties": {"size": {"maximum": _STANDARD_TOTAL}}}},
+    ],
+    "description": "Capability-feed binding: identical to the standard binding plus the "
+                   "optional signed profile; only large-source entries carry it.",
 }
 REVIEW_REF = {
     "type": "object", "additionalProperties": False,
@@ -204,51 +241,85 @@ REGISTRY_SCHEMA = {
                 "plannedRuntime": RUNTIME,
                 "versionTarget": {"oneOf": [VERSION, {"type": "null"}]},
                 "minimumAppVersion": {"oneOf": [VERSION, {"type": "null"}]},
-                "status": STATUS, "notes": LOCALE_TEXT}}},
+                "status": STATUS, "notes": LOCALE_TEXT,
+                "minimumAppVersions": {"type": "object", "minProperties": 1,
+                    "additionalProperties": False,
+                    "properties": {channel: VERSION for channel in hubcore.STORE_CHANNELS}},
+                "packageProfile": PACKAGE_PROFILE}}},
     },
 }
 
-CATALOG_SCHEMA = {
-    "$schema": DRAFT, "$id": "https://github.com/JiangNanGenius/floe-skill-hub/schema/catalog.schema.json",
-    "title": "Floe Skill Hub signed channel feed (catalog.json / android/catalog.json) — schemaVersion 3",
-    "description": "Canonical bytes (UTF-8 JSON, sorted keys, \",\"/\":\" separators, no "
-                   "trailing newline) signed Ed25519 over the exact bytes; envelope "
-                   "catalog.sig = {keyID, signature(base64)} identical to the legacy shape. "
-                   "schemaVersion 3 is deliberately outside the old clients' accepted [1,2] "
-                   "so they fail closed; they keep the separately produced legacy 4-item view.",
-    "type": "object", "additionalProperties": False,
-    "required": ["schemaVersion", "publisher", "channel", "feedStatus", "hubRepository",
-                 "sourceCommit", "permissionPolicy", "entries", "counts"],
-    "properties": {
-        "schemaVersion": {"const": hubcore.CATALOG_SCHEMA_VERSION},
-        "publisher": {"const": "JiangNanGenius"},
-        "channel": {"enum": list(hubcore.STORE_CHANNELS)},
-        "feedStatus": {"enum": ["production", "fixture"],
-                       "description": "fixture feeds never activate a production channel and "
-                                      "only bind the fixture-only keyID"},
-        "hubRepository": {"const": "JiangNanGenius/floe-skill-hub"},
-        "sourceCommit": {"oneOf": [COMMIT, {"type": "null"}],
-                         "description": "required for production: the audited source revision X "
-                                        "whose content this feed describes (signed provenance). It "
-                                        "is not the revision holding the published bytes: the "
-                                        "client resolves the immutable publicationCommit Y "
-                                        "externally and fetches feed, signature, reviews and "
-                                        "archives at Y. X != Y is normal; a feed never carries the "
-                                        "hash of the commit that contains it (no self-reference). "
-                                        "Null only in fixture feeds."},
-        "permissionPolicy": {"type": "object", "const": hubcore.PERMISSION_POLICY},
-        "entries": {"type": "array", "minItems": 1, "items": CATALOG_ENTRY},
-        "counts": {"type": "object", "additionalProperties": False,
-                   "required": ["total", "builtin", "optional", "deepAdaptation",
-                                "packaged", "reviewed", "qualified", "offerQualified"],
-                   "properties": {k: {"type": "integer", "minimum": 0} for k in
-                                  ("total", "builtin", "optional", "deepAdaptation", "packaged",
-                                   "reviewed", "qualified", "offerQualified")},
-                   "description": "actual per-feed values recomputed from entries; the store "
-                                  "must show qualified/visible counts, never the candidate total"},
-        "generatedNote": {"type": "string"},
-    },
-}
+def _catalog_schema(package_schema, doc_id, title, description):
+    catalog_entry = dict(CATALOG_ENTRY)
+    catalog_entry = dict(catalog_entry,
+                         properties=dict(catalog_entry["properties"],
+                                         package={"oneOf": [package_schema,
+                                                            {"type": "null"}]}))
+    return {
+        "$schema": DRAFT, "$id": doc_id, "title": title, "description": description,
+        "type": "object", "additionalProperties": False,
+        "required": ["schemaVersion", "publisher", "channel", "feedStatus", "hubRepository",
+                     "sourceCommit", "permissionPolicy", "entries", "counts"],
+        "properties": {
+            "schemaVersion": {"const": hubcore.CATALOG_SCHEMA_VERSION},
+            "publisher": {"const": "JiangNanGenius"},
+            "channel": {"enum": list(hubcore.STORE_CHANNELS)},
+            "feedStatus": {"enum": ["production", "fixture"],
+                           "description": "fixture feeds never activate a production channel and "
+                                          "only bind the fixture-only keyID"},
+            "hubRepository": {"const": "JiangNanGenius/floe-skill-hub"},
+            "sourceCommit": {"oneOf": [COMMIT, {"type": "null"}],
+                             "description": "required for production: the audited source revision X "
+                                            "whose content this feed describes (signed provenance). It "
+                                            "is not the revision holding the published bytes: the "
+                                            "client resolves the immutable publicationCommit Y "
+                                            "externally and fetches feed, signature, reviews and "
+                                            "archives at Y. X != Y is normal; a feed never carries the "
+                                            "hash of the commit that contains it (no self-reference). "
+                                            "Null only in fixture feeds."},
+            "permissionPolicy": {"type": "object", "const": hubcore.PERMISSION_POLICY},
+            "entries": {"type": "array", "minItems": 1, "items": catalog_entry},
+            "counts": {"type": "object", "additionalProperties": False,
+                       "required": ["total", "builtin", "optional", "deepAdaptation",
+                                    "packaged", "reviewed", "qualified", "offerQualified"],
+                       "properties": {k: {"type": "integer", "minimum": 0} for k in
+                                      ("total", "builtin", "optional", "deepAdaptation", "packaged",
+                                       "reviewed", "qualified", "offerQualified")},
+                       "description": "actual per-feed values recomputed from entries; the store "
+                                      "must show qualified/visible counts, never the candidate total"},
+            "generatedNote": {"type": "string"},
+        },
+    }
+
+
+CATALOG_SCHEMA = _catalog_schema(
+    PACKAGE,
+    "https://github.com/JiangNanGenius/floe-skill-hub/schema/catalog.schema.json",
+    "Floe Skill Hub signed channel feed (catalog.json / android/catalog.json) — schemaVersion 3",
+    "Canonical bytes (UTF-8 JSON, sorted keys, \",\"/\":\" separators, no "
+    "trailing newline) signed Ed25519 over the exact bytes; envelope "
+    "catalog.sig = {keyID, signature(base64)} identical to the legacy shape. "
+    "schemaVersion 3 is deliberately outside the old clients' accepted [1,2] "
+    "so they fail closed; they keep the separately produced legacy 4-item view. "
+    "Package bindings in these standard feeds keep the original five-key shape "
+    "— never a profile key (old strict readers reject unknown package keys "
+    "before minimumAppVersion checks).")
+
+CATALOG_CAPABILITY_SCHEMA = _catalog_schema(
+    PACKAGE_CAP,
+    "https://github.com/JiangNanGenius/floe-skill-hub/schema/catalog-large-source-v1.schema.json",
+    "Floe Skill Hub signed large-source capability feed "
+    "(catalog-large-source-v1.json / android/catalog-large-source-v1.json) — schemaVersion 3",
+    "Same-Y signed capability projection (App consumer contract, 2026-11-10): a "
+    "complete replacement/superset of the corresponding standard FULL feed at "
+    "the same immutable publication commit Y. Every standard entry id is "
+    "present and every standard row is preserved exactly; only additional "
+    "large-source entries appear, and only those carry the optional "
+    "package.profile ('large-source-v1', 2048 files / 64 MiB archive, 2 MiB "
+    "per file unchanged). Absent or invalid capability projections leave the "
+    "independently verified standard projection authoritative — a large entry "
+    "is never enabled from an unverified projection, and a URL alone never "
+    "raises a download budget.")
 
 REVIEW_SCHEMA = {
     "$schema": DRAFT, "$id": "https://github.com/JiangNanGenius/floe-skill-hub/schema/review.schema.json",
@@ -485,6 +556,7 @@ DEPENDENCIES_SCHEMA = {
 }
 
 DOCS = {"registry.schema.json": REGISTRY_SCHEMA, "catalog.schema.json": CATALOG_SCHEMA,
+        "catalog-large-source-v1.schema.json": CATALOG_CAPABILITY_SCHEMA,
         "review.schema.json": REVIEW_SCHEMA, "envelope.schema.json": ENVELOPE_DOC,
         "dependencies.schema.json": DEPENDENCIES_SCHEMA}
 

@@ -393,6 +393,11 @@ SHOWCASE_DATA_EXTENSIONS = frozenset({
 })
 MAX_CHANGED_LIST = 64
 MAX_DATA_FILE_BYTES = hubcore.MAX_TOTAL_BYTES
+# Absolute package ceiling for scanning not-yet-bound candidate archives: the
+# largest capacity any signed profile admits. Verified bound entries always
+# enforce their own profile capacity (derive_package_capacity); this is only
+# an anti-absurd parse guard, never a budget raise for arbitrary content.
+MAX_PACKAGE_ARCHIVE_BYTES = hubcore.MAX_PROFILE_TOTAL_BYTES
 
 
 def is_refresh_data_path(rel):
@@ -854,8 +859,8 @@ ENGINES_PREFIX = "engines/"
 
 def _zip_embedded_descriptor(blob, rel):
     """Return the exact embedded engine-dependency.json bytes or None."""
-    if len(blob) > MAX_DATA_FILE_BYTES:
-        _hold(f"candidate archive {rel!r} exceeds {MAX_DATA_FILE_BYTES} bytes")
+    if len(blob) > MAX_PACKAGE_ARCHIVE_BYTES:
+        _hold(f"candidate archive {rel!r} exceeds {MAX_PACKAGE_ARCHIVE_BYTES} bytes")
     try:
         with zipfile.ZipFile(io.BytesIO(blob)) as archive:
             for info in archive.infolist():
@@ -1147,9 +1152,15 @@ def _receipt_outputs(receipt):
         hubcore.require_hex64(entry["sha256"], f"relay output sha256 for {rel}")
         # outputs may reference archived package bytes that stay at the
         # candidate source; only the relay-class members are size-further
-        # bounded at extraction, here the absolute transport bound applies.
+        # bounded at extraction. Package paths get the absolute package
+        # ceiling here; their exact capacity is then derived from the
+        # verified, signed bound feed entry (validate_signed_relay
+        # cross-checks the receipt size against that entry), so the budget
+        # never comes from an arbitrary URL.
+        absolute = (MAX_PACKAGE_ARCHIVE_BYTES if PACKAGE_ARCHIVE_RE.fullmatch(rel)
+                    else hubcore.MAX_TOTAL_BYTES)
         if isinstance(entry["size"], bool) or not isinstance(entry["size"], int) \
-                or not 0 < entry["size"] <= hubcore.MAX_TOTAL_BYTES:
+                or not 0 < entry["size"] <= absolute:
             raise TransportError(f"relay output size invalid for {rel}")
         if rel in by_path:
             raise TransportError(f"relay receipt outputs duplicate path {rel}")
@@ -1284,14 +1295,38 @@ def validate_signed_relay(members, request, public_keys):
     complete_members = set(cv.ARTIFACT_FILES) - set(FEED_PATHS["ios"]) - set(FEED_PATHS["android"])
     complete_declared = bool((set(outputs) | set(checked)) & complete_members)
     views = cv.VIEWS if complete_declared else cv.LEGACY_VIEWS
+    capability_feeds = {cv.FEED_PATHS[view][0] for view in cv.CAPABILITY_VIEWS}
     if request["mode"] == "catalog":
-        if receipt.get("signedFeeds") != sorted(FEED_PATHS[view][0] for view in views):
+        declared_list = receipt.get("signedFeeds")
+        if not isinstance(declared_list, list) \
+                or any(not isinstance(d, str) for d in declared_list) \
+                or len(declared_list) != len(set(declared_list)):
+            raise TransportError("catalog relay receipt signedFeeds must be a "
+                                 "duplicate-free string list")
+        declared = set(declared_list)
+        # The standard views are mandatory (legacy or complete per the
+        # declared members); large-source capability feeds are optional but
+        # atomic — both channel pairs at the same publication, never one.
+        declared_capability = declared & capability_feeds
+        unknown = declared - {FEED_PATHS[view][0] for view in views} - capability_feeds
+        if unknown:
+            raise TransportError(f"receipt signedFeeds lists unknown feeds: {sorted(unknown)[:4]}")
+        if declared_capability and declared_capability != capability_feeds:
+            raise TransportError("capability feeds must be declared atomically for "
+                                 "BOTH channels at the same publication")
+        if declared != {FEED_PATHS[view][0] for view in views} | declared_capability:
             raise TransportError("receipt signedFeeds does not enumerate the exact catalog views")
         for view in views:
             for rel in FEED_PATHS[view]:
                 if rel not in outputs:
                     raise TransportError(f"catalog relay receipt does not bind {rel!r}")
                 expected.add(rel)
+        for view in cv.CAPABILITY_VIEWS:
+            if cv.FEED_PATHS[view][0] in declared_capability:
+                for rel in cv.FEED_PATHS[view]:
+                    if rel not in outputs:
+                        raise TransportError(f"catalog relay receipt does not bind {rel!r}")
+                    expected.add(rel)
     else:
         if (set(outputs) | set(checked)) & cv.ARTIFACT_FILES:
             raise TransportError("a reviews-mode relay must never carry feeds")
@@ -1379,6 +1414,63 @@ def validate_signed_relay(members, request, public_keys):
         for channel in views:
             feeds[channel] = _verify_feed_pair(checked, outputs, channel, request,
                                                public_keys, package_references)
+        declared_capability = {view for view in cv.CAPABILITY_VIEWS
+                               if cv.FEED_PATHS[view][0] in
+                               set(receipt.get("signedFeeds") or [])}
+        for view in sorted(declared_capability):
+            # A capability projection is verified AFTER its standard full
+            # view at the SAME publication: official identity over the exact
+            # bytes, capability shape, sourceCommit binding, and an exact
+            # superset projection of the verified standard full feed.
+            full_view = cv.full_view_for(view)
+            if full_view not in feeds:
+                raise TransportError(f"{view}: capability feed declared without its "
+                                     "standard full view at the same publication")
+            feed_rel, sig_rel = cv.FEED_PATHS[view]
+            for rel, data in ((feed_rel, checked[feed_rel]),
+                              (sig_rel, checked[sig_rel])):
+                bound = outputs.get(rel)
+                if bound is None:
+                    raise TransportError(f"relay capability member {rel!r} is not "
+                                         "bound by the signed receipt")
+                if hubcore.sha256_hex(data) != bound["sha256"] or len(data) != bound["size"]:
+                    raise TransportError(f"relay capability member {rel!r} does not "
+                                         "match the receipt-bound hash/size")
+            try:
+                key_id = hubcore.verify_envelope(checked[feed_rel], checked[sig_rel],
+                                                 public_keys)
+            except hubcore.HubError as error:
+                raise TransportError(f"{view} relay feed signature failed: {error}") from None
+            if key_id != hubcore.PRODUCTION_KEY_ID:
+                raise TransportError(f"{view} relay feed signed by unexpected identity "
+                                     f"{key_id!r}")
+            try:
+                feed = json.loads(checked[feed_rel])
+            except ValueError:
+                raise TransportError(f"{view} relay feed is not valid JSON") from None
+            if hubcore.encoded(feed) != checked[feed_rel]:
+                raise TransportError(f"{view} relay feed bytes are not canonical")
+            try:
+                cv.validate_view(feed, view)
+            except hubcore.HubError as error:
+                raise TransportError(f"{view} relay feed failed validation: {error}") from None
+            if feed["sourceCommit"] != request["sourceCommit"]:
+                raise TransportError(f"{view} relay feed sourceCommit does not equal "
+                                     "the request sourceCommit")
+            try:
+                hubcore.validate_capability_projection(feed, feeds[full_view])
+            except hubcore.HubError as error:
+                raise TransportError(f"{view} relay projection invalid: {error}") from None
+            for entry in feed["entries"]:
+                if entry["package"] is not None:
+                    package = entry["package"]
+                    package_references.append({
+                        "channel": cv.channel_for(view), "id": entry["id"],
+                        "version": entry["version"], "path": package["path"],
+                        "sha256": package["sha256"], "size": package["size"],
+                        "contentDigest": package["contentDigest"],
+                    })
+            feeds[view] = feed
     if request["mode"] == "catalog" and complete_declared:
         try:
             cv.assert_projection(checked)
@@ -1391,6 +1483,19 @@ def validate_signed_relay(members, request, public_keys):
             raise TransportError("catalog views disagree on an immutable package binding")
         unique_references[identity] = reference
     package_references = list(unique_references.values())
+    if request["mode"] == "catalog":
+        # Transport capacity derives ONLY from the verified bound entry: when
+        # the signed receipt also lists a feed-bound package path, its size
+        # must equal the feed-authenticated size exactly (the feed validator
+        # already enforced the profile capacity). A receipt claiming more
+        # than the verified bound entry is refused — never a URL-based raise.
+        for reference in package_references:
+            bound = outputs.get(reference["path"])
+            if bound is not None and bound["size"] != reference["size"]:
+                raise TransportError(
+                    f"receipt binds {reference['path']!r} at {bound['size']} bytes, "
+                    "which disagrees with the verified feed binding "
+                    f"{reference['size']} bytes")
     return {
         "status": "relay-ok",
         "requestId": request["requestId"],

@@ -64,7 +64,7 @@ LEDGER_DESCRIPTION = (
     "because released bytes stay immutable forever. Append a row per channel "
     "after each coordinator publication run; do not hand-edit existing rows.")
 
-FEED_PAIRS = tuple((view, *cv.FEED_PATHS[view]) for view in cv.VIEWS)
+FEED_PAIRS = tuple((view, *cv.FEED_PATHS[view]) for view in cv.ALL_VIEWS)
 
 
 class PublishedBaseline(dict):
@@ -187,16 +187,26 @@ def load_trustworthy_baseline(root=REPO, published_pin=None):
     baseline = {}
     feed_payloads = {}
     full_paths = {p for view in cv.FULL_VIEWS for p in cv.FEED_PATHS[view]}
+    capability_paths = {p for view in cv.CAPABILITY_VIEWS for p in cv.FEED_PATHS[view]}
     if published_pin is not None:
         present_full = set(_git_output(root, ["ls-tree", "--name-only", "-r", published_pin,
                                                "--", *sorted(full_paths)], "full-view presence").decode().splitlines())
+        present_capability = set(_git_output(root, ["ls-tree", "--name-only", "-r", published_pin,
+                                                    "--", *sorted(capability_paths)],
+                                             "capability-view presence").decode().splitlines())
     else:
         present_full = {p for p in full_paths if (root / p).exists()}
+        present_capability = {p for p in capability_paths if (root / p).exists()}
     if present_full and present_full != full_paths:
         raise hubcore.HubError("incomplete complete-view publication: all full feeds and signatures are required")
+    if present_capability and present_capability != capability_paths:
+        raise hubcore.HubError("incomplete capability publication: both channel "
+                               "large-source capability feed pairs are required atomically")
     for channel, rel_feed, rel_sig in FEED_PAIRS:
         if channel in cv.FULL_VIEWS and not present_full:
             continue  # Historical publication before complete views existed.
+        if channel in cv.CAPABILITY_VIEWS and not present_capability:
+            continue  # Publication without a large-source capability pair.
         field = f"{channel} published baseline"
         if published_pin is not None:
             field = f"{channel} published baseline at {published_pin[:10]}"
@@ -292,7 +302,7 @@ def verify_ledger(ledger_path, root):
                 or not hubcore.COMMIT_PATTERN.fullmatch(publication):
             raise hubcore.HubError(f"{field}: publication must be a 40-hex commit")
         channel = row["channel"]
-        if channel not in cv.VIEWS:
+        if channel not in cv.ALL_VIEWS:
             raise hubcore.HubError(f"{field}: unknown channel {channel!r}")
         identity = (publication, channel)
         if identity in seen_rows:
@@ -439,7 +449,7 @@ def build_ledger_row(root, publication, channel):
     """
     import build_catalog
 
-    if channel not in cv.VIEWS:
+    if channel not in cv.ALL_VIEWS:
         raise hubcore.HubError(f"unknown channel {channel!r}")
     if not isinstance(publication, str) \
             or not hubcore.COMMIT_PATTERN.fullmatch(publication):
@@ -493,7 +503,9 @@ def assert_immutable_publication(candidate_outputs, baseline):
     versions pass; reuse of any historically published version with different
     bytes is refused even when re-signable.
     """
-    full_present = set(candidate_outputs) & {cv.FEED_PATHS[v][0] for v in cv.FULL_VIEWS}
+    full_present = set(candidate_outputs) & ({cv.FEED_PATHS[v][0] for v in cv.FULL_VIEWS}
+                                             | {cv.FEED_PATHS[v][0]
+                                                for v in cv.CAPABILITY_VIEWS})
     if full_present or getattr(baseline, "complete_view_seen", False):
         cv.assert_projection(candidate_outputs)
     for name, data in candidate_outputs.items():

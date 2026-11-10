@@ -101,7 +101,7 @@ def load_registry(root=REPO):
     return json.loads((pathlib.Path(root) / "catalog" / "skills.json").read_bytes())
 
 
-def bind_package(entry, packages_root):
+def bind_package(entry, packages_root, emit_profile=False):
     """Compute the released package binding from immutable archive bytes.
 
     When the archive embeds references/engine-dependency.json (the managed raw
@@ -109,11 +109,19 @@ def bind_package(entry, packages_root):
     descriptor and the actual artifact bytes at packages_root — the same
     immutable root the archive itself came from (release: the frozen X
     snapshot; preview: the candidate tree).
+
+    The registry row's explicit packageProfile selects the signed capacity
+    profile for the package gates; absent means the standard profile. The
+    binding itself carries `profile` ONLY when `emit_profile` is set (the
+    separate signed capability feeds) AND the row declares the large-source
+    profile — standard feeds and standard rows never carry the key, so old
+    strict readers and old rows keep byte-identical objects.
     """
     if not entry["status"]["packaged"]:
         return None, None, None
     if entry["upstream"] and entry["upstream"]["licenseStatus"] == "blocked-no-upstream-license":
         raise hubcore.HubError(f"{entry['id']}: license-blocked entries can never be packaged")
+    profile = entry.get("packageProfile")
     version = entry["versionTarget"]
     bindings = {}
     for channel in entry["plannedRuntime"]["installPlatforms"]:
@@ -122,8 +130,8 @@ def bind_package(entry, packages_root):
         if not archive.is_file():
             raise hubcore.HubError(f"{entry['id']}: packaged entry has no archive at {rel}")
         data = archive.read_bytes()
-        files = hubcore.check_archive_bytes(data)
-        manifest, _ = hubcore.validate_package_files(files)
+        files = hubcore.check_archive_bytes(data, profile=profile)
+        manifest, _ = hubcore.validate_package_files(files, profile=profile)
         if manifest["id"] != entry["id"] or manifest["version"] != version:
             raise hubcore.HubError(f"{entry['id']}: archive identity drift")
         planned_caps = set(entry["plannedRuntime"]["capabilities"])
@@ -132,13 +140,16 @@ def bind_package(entry, packages_root):
         planned_tools = set(entry["plannedRuntime"]["tools"])
         if not set(manifest["tools"]) <= planned_tools:
             raise hubcore.HubError(f"{entry['id']}: archive declares tools outside the plan")
-        bindings[channel] = {
+        binding = {
             "path": rel,
             "size": len(data),
             "sha256": hubcore.sha256_hex(data),
             "contentDigest": hubcore.content_digest(files),
             "containsScripts": any(n.startswith("scripts/") for n in files),
         }
+        if emit_profile and profile == hubcore.LARGE_SOURCE_PROFILE:
+            binding["profile"] = profile
+        bindings[channel] = binding
     runtime_blob = files.get(runtime_dependency.EMBEDDED_DESCRIPTOR_REL)
     if runtime_blob is not None:
         runtime_dependency.bind_package_descriptor(runtime_blob, packages_root, entry["id"])
@@ -304,11 +315,11 @@ def _rebound_portable_guide_facts(entry, packages_root, reviews_root):
             f"{entry['id']}: projection cannot read the bound archive: {error}") from None
     if len(data) != package["size"] or hubcore.sha256_hex(data) != package["sha256"]:
         raise hubcore.HubError(f"{entry['id']}: bound archive bytes drifted during the feed build")
-    files = hubcore.check_archive_bytes(data)
+    files = hubcore.check_archive_bytes(data, profile=package.get("profile"))
     if hubcore.content_digest(files) != package["contentDigest"]:
         raise hubcore.HubError(
             f"{entry['id']}: bound archive contentDigest drifted during the feed build")
-    manifest, _ = hubcore.validate_package_files(files)
+    manifest, _ = hubcore.validate_package_files(files, profile=package.get("profile"))
     if manifest["id"] != entry["id"] or manifest["version"] != entry["version"]:
         raise hubcore.HubError(f"{entry['id']}: projection archive identity drift")
     review = entry["review"]
@@ -327,7 +338,8 @@ def _rebound_portable_guide_facts(entry, packages_root, reviews_root):
     return manifest, record
 
 
-def project_android_portable_guide_feed(feed, packages_root, reviews_root):
+def project_android_portable_guide_feed(feed, packages_root, reviews_root,
+                                      explicit_minimum_ids=frozenset()):
     """Return a projected copy of the validated Android feed, or None.
 
     Pure: `feed` and every nested structure stay untouched. None (keep the
@@ -344,7 +356,8 @@ def project_android_portable_guide_feed(feed, packages_root, reviews_root):
     entries = []
     changed = False
     for entry in feed["entries"]:
-        if (entry["id"] in ANDROID_PORTABLE_GUIDE_IDS and entry["package"] is not None
+        if (entry["id"] not in explicit_minimum_ids
+                and entry["id"] in ANDROID_PORTABLE_GUIDE_IDS and entry["package"] is not None
                 and entry["review"] is not None
                 and entry["minimumAppVersion"] not in
                 (None, ANDROID_PORTABLE_GUIDE_CONTENT_FLOOR)):
@@ -377,23 +390,28 @@ def project_legacy_catalog(registry, feed):
 def build(registry, mode, source_commit, packages_root, reviews_root, public_keys):
     out = {}
     for channel in ("ios", "android"):
-        entries = []
-        for reg_entry in sorted(registry["skills"], key=lambda e: e["planNumber"]):
-            planned = reg_entry["plannedRuntime"]
-            if channel not in planned["installPlatforms"]:
-                continue
+        standard_entries = []
+        large_entries = []
+
+        def render_row(reg_entry, emit_profile):
+            """Render one feed row; None means the row is not admitted.
+
+            Shared by the standard feeds and the large-source capability
+            feed so both carry identical rows for the same registry facts.
+            """
             package = None
             review = None
             offer = "none"
             if mode == "release":
                 if not reg_entry["status"]["qualified"]:
-                    continue  # a release catalog carries only qualified entries
+                    return None  # a release catalog carries only qualified entries
                 if hubcore.is_download_offer_excluded(reg_entry["id"]):
                     # App-provided builtins are native App features, never Hub
                     # download offers; their registry rows stay valid,
                     # reviewable data but are not admitted to the feed.
-                    continue
-                package_bindings, manifest, files = bind_package(reg_entry, packages_root)
+                    return None
+                package_bindings, manifest, files = bind_package(
+                    reg_entry, packages_root, emit_profile=emit_profile)
                 if package_bindings is None:
                     raise hubcore.HubError(
                         f"{reg_entry['id']}: qualified entry is missing its package binding")
@@ -436,18 +454,39 @@ def build(registry, mode, source_commit, packages_root, reviews_root, public_key
                     out.update(runtime_dependency.publication_files(
                         runtime_blob, packages_root, reg_entry["id"]))
             elif reg_entry["status"]["packaged"]:
-                package_bindings, manifest, _files = bind_package(reg_entry, packages_root)
+                package_bindings, manifest, _files = bind_package(
+                    reg_entry, packages_root, emit_profile=emit_profile)
                 if package_bindings is not None:
                     package = package_bindings[channel]
                     review = bind_review(reg_entry, reviews_root, public_keys,
                                          package_binding=package, manifest=manifest,
                                          channel=channel)
-            entries.append(hubcore.catalog_entry(
-                reg_entry, package=package, review=review, install_offer=offer))
-        if mode == "release" and not entries:
+            row = hubcore.catalog_entry(reg_entry, package=package, review=review,
+                                        install_offer=offer)
+            row["minimumAppVersion"] = hubcore.minimum_app_version_for_channel(reg_entry, channel)
+            return row
+
+        for reg_entry in sorted(registry["skills"], key=lambda e: e["planNumber"]):
+            planned = reg_entry["plannedRuntime"]
+            if channel not in planned["installPlatforms"]:
+                continue
+            large = reg_entry.get("packageProfile") == hubcore.LARGE_SOURCE_PROFILE
+            # Standard feeds NEVER carry large-source entries or profile
+            # keys: old strict readers reject unknown package keys before
+            # any version floor. Large rows are published only through the
+            # separate same-Y signed capability feed.
+            if not large:
+                row = render_row(reg_entry, emit_profile=False)
+                if row is not None:
+                    standard_entries.append(row)
+            else:
+                row = render_row(reg_entry, emit_profile=True)
+                if row is not None:
+                    large_entries.append(row)
+        if mode == "release" and not standard_entries:
             raise hubcore.HubError(
                 "release mode refuses to emit an empty catalog: no entry is qualified yet")
-        feed = hubcore.build_catalog(registry, channel, "production", entries,
+        feed = hubcore.build_catalog(registry, channel, "production", standard_entries,
                                      source_commit)
         catalog_bytes = hubcore.encoded(feed)
         hubcore.validate_catalog(json.loads(catalog_bytes), channel=channel)
@@ -461,7 +500,10 @@ def build(registry, mode, source_commit, packages_root, reviews_root, public_key
             # — nothing is published that the current validator or schema
             # would reject. The iOS feed never reaches this call.
             projected = project_android_portable_guide_feed(feed, packages_root,
-                                                            reviews_root)
+                reviews_root, explicit_minimum_ids={
+                    row["id"] for row in registry["skills"]
+                    if channel in hubcore.channel_minimum_versions(row)
+                })
             if projected is not None:
                 catalog_bytes = hubcore.encoded(projected)
                 hubcore.validate_catalog(json.loads(catalog_bytes), channel=channel)
@@ -473,6 +515,26 @@ def build(registry, mode, source_commit, packages_root, reviews_root, public_key
         prefix = "" if channel == "ios" else "android/"
         out[prefix + "catalog-full.json"] = catalog_bytes
         out[prefix + "catalog.json"] = hubcore.encoded(legacy_feed)
+        if large_entries:
+            # Same-Y signed capability feed: a complete replacement/superset
+            # of the standard full feed — every standard row exactly
+            # preserved, plus the large-source rows (the only rows carrying
+            # package.profile). Emitted only when the channel actually has
+            # large-source entries; absence is a valid state (clients keep
+            # the independently verified standard projection).
+            capability_rows = sorted(full_feed["entries"] + large_entries,
+                                     key=lambda e: e["planNumber"])
+            capability_view = ("ios" if channel == "ios" else "android") \
+                + "-large-source-v1"
+            capability_feed = hubcore.build_catalog(
+                registry, channel, full_feed["feedStatus"], capability_rows,
+                full_feed["sourceCommit"], full_feed.get("generatedNote"))
+            capability_bytes = hubcore.encoded(capability_feed)
+            hubcore.validate_catalog(json.loads(capability_bytes), channel=channel,
+                                     capability=True)
+            hubcore.validate_capability_projection(json.loads(capability_bytes),
+                                                   full_feed)
+            out[catalog_views.FEED_PATHS[capability_view][0]] = capability_bytes
     catalog_views.assert_projection(out)
     return out
 

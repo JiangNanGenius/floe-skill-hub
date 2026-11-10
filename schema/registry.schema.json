@@ -538,6 +538,28 @@
                 "type": "string"
               }
             }
+          },
+          "minimumAppVersions": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": false,
+            "properties": {
+              "ios": {
+                "type": "string",
+                "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+              },
+              "android": {
+                "type": "string",
+                "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$"
+              }
+            }
+          },
+          "packageProfile": {
+            "enum": [
+              "standard",
+              "large-source-v1"
+            ],
+            "description": "Signed capacity profile of the bound entry. Absent means standard (128 files / 8 MiB archive / 2 MiB per file); large-source-v1 admits complete large source kits (2048 files / 64 MiB archive, 2 MiB per file unchanged). Unknown profiles fail closed; capacity is always derived from this verified bound entry, never from a URL. The key exists ONLY in the separate signed capability feeds (catalog-large-source-v1*.json) — the standard feeds keep the original five-key binding shape."
           }
         }
       }

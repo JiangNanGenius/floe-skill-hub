@@ -646,7 +646,8 @@ def _gate_impeccable_runtime(hubcore, runtime_dependency, args, entry, outputs):
         raise SigningError(f"{IMPECCABLE_ID}: referenced archive vanished: "
                            f"{entry['package']['path']}")
     try:
-        files = hubcore.check_archive_bytes(archive.read_bytes())
+        files = hubcore.check_archive_bytes(archive.read_bytes(),
+                                            profile=entry["package"].get("profile"))
         rel = runtime_dependency.EMBEDDED_DESCRIPTOR_REL
         blob = files.get(rel)
         if blob is None:
@@ -890,12 +891,15 @@ def stage_referenced_inputs(hubcore, args, outputs, trust, files):
     """Stage EXACTLY the feed-referenced package and review bytes from X.
 
     The publication artifact must be standalone: every archive and every
-    signed review record (record + envelope) that either feed binds is
-    re-verified against the feed's own digests and copied into the output at
-    its feed path. Nothing else from X is copied; no Git metadata and no key
-    material ever enter the output.
+    signed review record (record + envelope) that any emitted feed binds —
+    standard views and, when present, the large-source capability feeds —
+    is re-verified against the feed's own digests and copied into the
+    output at its feed path. Nothing else from X is copied; no Git metadata
+    and no key material ever enter the output.
     """
-    for feed_name in ("catalog-full.json", "android/catalog-full.json"):
+    import catalog_views as cv
+    for feed_name in sorted(name for name in outputs
+                            if name in cv.FEED_FILES and name.endswith(".json")):
         feed = json.loads(outputs[feed_name])
         for entry in feed["entries"]:
             package = entry["package"]
@@ -909,7 +913,10 @@ def stage_referenced_inputs(hubcore, args, outputs, trust, files):
                 raise SigningError(f"{entry['id']}: referenced archive bytes drifted "
                                    "from the signed feed binding")
             try:
-                unpacked = hubcore.check_archive_bytes(blob)
+                # Capacity derives ONLY from the verified, signed bound entry
+                # (package.profile), never from a URL.
+                unpacked = hubcore.check_archive_bytes(blob,
+                                                       profile=package.get("profile"))
                 if hubcore.content_digest(unpacked) != package["contentDigest"]:
                     raise hubcore.HubError("contentDigest mismatch")
             except hubcore.HubError as error:
@@ -1010,7 +1017,13 @@ def run_catalog_mode(args, hubcore, build_catalog, runtime_dependency,
     stage_referenced_inputs(hubcore, args, outputs, trust, files)
     signatures = {}
     import catalog_views as cv
+    # Sign exactly the feeds this build emitted: the four standard views
+    # always, plus the same-Y large-source capability feeds only when the
+    # registry carries large-source entries. Absent capability feeds are a
+    # valid state and are never fabricated.
     for name in sorted(cv.FEED_FILES):
+        if name not in outputs:
+            continue
         payload = outputs[name]
         try:
             envelope = hubcore.sign_envelope(payload, key, hubcore.PRODUCTION_KEY_ID)

@@ -43,8 +43,12 @@ def build_one(skill_id, entry, check, root=None):
             continue  # release metadata lives in the registry, not the archive
         files[rel] = path.read_bytes()
     require_notice = entry["upstream"] is not None
-    hubcore.validate_package_files(files, require_notice=require_notice)
-    manifest, _ = hubcore.validate_package_files(files, require_notice=require_notice)
+    # The author registry row's explicit packageProfile selects the signed
+    # capacity profile; absent keeps the original standard gates.
+    profile = entry.get("packageProfile")
+    hubcore.validate_package_files(files, require_notice=require_notice, profile=profile)
+    manifest, _ = hubcore.validate_package_files(files, require_notice=require_notice,
+                                                 profile=profile)
     if manifest["id"] != skill_id:
         raise hubcore.HubError(f"{skill_id}: floe.json id mismatch")
     if entry["versionTarget"] != manifest["version"]:

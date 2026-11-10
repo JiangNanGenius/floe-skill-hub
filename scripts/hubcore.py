@@ -83,7 +83,8 @@ LEGACY_GUEST_PLANE_RISCV64 = {"os": "linux", "arch": "riscv64", "evidence": "gue
 GUEST_VERIFIED_PLANES = (CURRENT_GUEST_PLANE, LEGACY_GUEST_PLANE_RISCV64)
 
 # package gates: the strictest active value between the native validator and
-# the signed-archive staging limits.
+# the signed-archive staging limits. These module constants remain the
+# STANDARD profile bounds; profiled capacities below never change them.
 MAX_PACKAGE_FILES = 128
 MAX_FILE_BYTES = 2_097_152
 MAX_TOTAL_BYTES = 8_388_608
@@ -91,6 +92,43 @@ MAX_SKILL_MD_BYTES = 262_144
 MAX_FLOE_JSON_BYTES = 65_536
 MAX_PATH_BYTES = 512
 MAX_PY_PACKAGES = 16
+
+# Signed package capacity profiles (Root-approved contract, 2026-11-10, see
+# docs/PACKAGE-PROFILES.md and the App consumer contract): an explicit,
+# reviewed opt-in declared by the author registry row as `packageProfile`
+# and mirrored ONLY into the separate signed capability feed's package
+# binding as `profile`. Absent (or the explicit "standard") keeps the
+# original standard bounds byte-for-byte; "large-source-v1" admits complete
+# large source kits (2048 files / 64 MiB compressed archive, 2 MiB per file
+# unchanged). Unknown profiles fail closed — there is no fallback and no
+# global budget raise for arbitrary URLs: every consumer derives capacity
+# from the verified, signed bound entry.
+PACKAGE_PROFILES = {
+    "standard": {"maxFiles": 128, "maxTotalBytes": 8_388_608,
+                 "maxFileBytes": 2_097_152},
+    "large-source-v1": {"maxFiles": 2048, "maxTotalBytes": 67_108_864,
+                        "maxFileBytes": 2_097_152},
+}
+DEFAULT_PACKAGE_PROFILE = "standard"
+# The large-source capability: the only non-standard profile today.
+LARGE_SOURCE_PROFILE = "large-source-v1"
+# Absolute package ceiling: the largest capacity any profile admits. Used
+# only as the transport/scan anti-absurd bound for not-yet-bound archives;
+# verified bound entries always enforce their own profile capacity.
+MAX_PROFILE_TOTAL_BYTES = max(p["maxTotalBytes"] for p in PACKAGE_PROFILES.values())
+
+
+def package_profile_bounds(profile, field="package profile"):
+    """Resolve a declared package profile to its capacity bounds.
+
+    Absent means the standard profile. Unknown profiles fail closed — the
+    caller can never fall back to another capacity.
+    """
+    if profile is None:
+        return PACKAGE_PROFILES[DEFAULT_PACKAGE_PROFILE]
+    if not isinstance(profile, str) or profile not in PACKAGE_PROFILES:
+        raise HubError(f"{field} unknown: {profile!r}")
+    return PACKAGE_PROFILES[profile]
 
 ALLOWED_TOP_LEVEL = ("SKILL.md", "floe.json", "references", "assets", "scripts", "agents")
 FORBIDDEN_EXTENSIONS = ("dylib", "so", "wasm", "framework", "bundle", "a", "o")
@@ -540,15 +578,20 @@ _LOCAL_PYTHON_FORBIDDEN = (
 )
 
 
-def validate_package_files(files, require_notice=True):
+def validate_package_files(files, require_notice=True, profile=None):
     """Full package gate over {path: bytes}. Returns (manifest, skill_name).
 
     Mirrors the native validator plus the Hub distribution rules (upstream
     license/notice preservation). Raises HubError on any violation; code is
-    never executed here.
+    never executed here. `profile` selects the signed capacity profile
+    (absent = standard); unknown profiles fail closed.
     """
-    if not files or len(files) > MAX_PACKAGE_FILES:
-        raise HubError(f"package file count must be 1..{MAX_PACKAGE_FILES}")
+    bounds = package_profile_bounds(profile)
+    max_files = bounds["maxFiles"]
+    max_file_bytes = bounds["maxFileBytes"]
+    max_total_bytes = bounds["maxTotalBytes"]
+    if not files or len(files) > max_files:
+        raise HubError(f"package file count must be 1..{max_files}")
     total = 0
     folded_seen = set()
     for name, data in files.items():
@@ -560,11 +603,11 @@ def validate_package_files(files, require_notice=True):
         if folded in folded_seen:
             raise HubError(f"duplicate path after NFC/case folding: {name!r}")
         folded_seen.add(folded)
-        if len(data) > MAX_FILE_BYTES:
-            raise HubError(f"file exceeds {MAX_FILE_BYTES} bytes: {name!r}")
+        if len(data) > max_file_bytes:
+            raise HubError(f"file exceeds {max_file_bytes} bytes: {name!r}")
         total += len(data)
-        if total > MAX_TOTAL_BYTES:
-            raise HubError(f"package exceeds {MAX_TOTAL_BYTES} bytes")
+        if total > max_total_bytes:
+            raise HubError(f"package exceeds {max_total_bytes} bytes")
         if name == "SKILL.md" and len(data) > MAX_SKILL_MD_BYTES:
             raise HubError("SKILL.md exceeds 256 KiB")
         if name == "floe.json" and len(data) > MAX_FLOE_JSON_BYTES:
@@ -609,13 +652,33 @@ def validate_package_files(files, require_notice=True):
     return manifest, frontmatter
 
 
-def check_archive_bytes(data, require_notice=True):
+def check_archive_bytes(data, require_notice=True, profile=None):
     """Unpack with rejection gates: file-only entries, symlink rejection,
-    duplicates, path safety and sizes. Returns {path: bytes}."""
+    duplicates, path safety and sizes. Returns {path: bytes}.
+
+    `profile` selects the signed capacity profile (absent = standard);
+    unknown profiles fail closed. The selected profile's compressed-byte cap,
+    central-directory entry count and declared running total are enforced
+    BEFORE any payload is read, so an over-cap archive is refused without
+    allocating its contents; the existing per-file, native, path and
+    symlink rules then run per entry.
+    """
+    bounds = package_profile_bounds(profile)
+    max_files = bounds["maxFiles"]
+    max_file_bytes = bounds["maxFileBytes"]
+    max_total_bytes = bounds["maxTotalBytes"]
+    if len(data) > max_total_bytes:
+        raise HubError(f"archive exceeds {max_total_bytes} bytes")
     files = {}
     try:
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
-            for info in archive.infolist():
+            infos = archive.infolist()
+            if len(infos) > max_files:
+                raise HubError(f"archive file count violation: {len(infos)}")
+            declared_total = sum(info.file_size for info in infos)
+            if declared_total > max_total_bytes:
+                raise HubError(f"archive exceeds {max_total_bytes} bytes")
+            for info in infos:
                 if info.is_dir():
                     raise HubError("package must contain files only")
                 mode = (info.external_attr >> 16) & 0o170000
@@ -625,19 +688,15 @@ def check_archive_bytes(data, require_notice=True):
                 _safe_relative(name)
                 if name in files:
                     raise HubError(f"duplicate package entry: {name!r}")
-                if info.file_size > MAX_FILE_BYTES:
-                    raise HubError(f"entry exceeds {MAX_FILE_BYTES} bytes: {name!r}")
+                if info.file_size > max_file_bytes:
+                    raise HubError(f"entry exceeds {max_file_bytes} bytes: {name!r}")
                 payload = archive.read(info)
                 if len(payload) != info.file_size:
                     raise HubError(f"entry size mismatch: {name!r}")
                 files[name] = payload
     except zipfile.BadZipFile:
         raise HubError("corrupt package archive") from None
-    if not files or len(files) > MAX_PACKAGE_FILES:
-        raise HubError(f"archive file count violation: {len(files)}")
-    if len(data) > MAX_TOTAL_BYTES:
-        raise HubError("archive exceeds 8 MiB")
-    validate_package_files(files, require_notice=require_notice)
+    validate_package_files(files, require_notice=require_notice, profile=profile)
     return files
 
 
@@ -656,6 +715,37 @@ REQUIRED_ENTRY_FIELDS = (
     "tags", "deepAdaptation", "upstream", "firstParty", "plannedRuntime",
     "versionTarget", "minimumAppVersion", "status", "notes",
 )
+
+# Optional author fields appended to the fixed registry shape. Old rows
+# without them render old standard objects byte-identical.
+OPTIONAL_ENTRY_FIELDS = ("packageProfile", "minimumAppVersions")
+
+
+def channel_minimum_versions(entry, field="registry entry"):
+    """Reviewed author overrides; absent preserves the historical floor.
+
+    Android's client compatibility version is independent of the iOS/App
+    marketing version. This metadata only selects the existing signed
+    minimumAppVersion field; it never approves a consumer or a package.
+    """
+    if "minimumAppVersions" not in entry:
+        return {}
+    versions = entry["minimumAppVersions"]
+    if (not isinstance(versions, dict) or not versions
+            or set(versions) - set(STORE_CHANNELS)):
+        raise HubError(f"{field}.minimumAppVersions requires known channel versions")
+    installed = entry["plannedRuntime"]["installPlatforms"]
+    for channel, version in versions.items():
+        if channel not in installed:
+            raise HubError(f"{field}.minimumAppVersions channel is not offered: {channel}")
+        require_version(version, f"{field}.minimumAppVersions.{channel}")
+    return dict(versions)
+
+
+def minimum_app_version_for_channel(entry, channel):
+    if channel not in STORE_CHANNELS:
+        raise HubError(f"unknown store channel {channel!r}")
+    return channel_minimum_versions(entry).get(channel, entry["minimumAppVersion"])
 
 
 def _validate_pin_block(block, field, require_path):
@@ -748,14 +838,22 @@ def validate_registry(registry, expect_counts=None):
     seen_ids, seen_plan = set(), set()
     kind_count = {"builtin": 0, "optional": 0}
     deep_count = 0
+    allowed_entry_keys = set(REQUIRED_ENTRY_FIELDS) | set(OPTIONAL_ENTRY_FIELDS)
     for entry in skills:
         field = f"registry entry {entry.get('id', '?')}"
-        if set(entry) - set(REQUIRED_ENTRY_FIELDS) or set(entry) != set(REQUIRED_ENTRY_FIELDS):
+        if set(entry) - allowed_entry_keys or not set(REQUIRED_ENTRY_FIELDS) <= set(entry):
             raise HubError(f"{field} keys must be exactly the fixed registry shape")
         require_id(entry["id"])
         if entry["id"] in seen_ids:
             raise HubError(f"{field}: duplicate id")
         seen_ids.add(entry["id"])
+        # Signed package capacity profile: absent keeps the standard bounds.
+        # A PRESENT null (or any non-string) is rejected — the native strict
+        # decoder checks key presence and requires a string; only a missing
+        # key means standard. Unknown profiles fail closed.
+        if "packageProfile" in entry and not isinstance(entry["packageProfile"], str):
+            raise HubError(f"{field}.packageProfile must be a string when present")
+        package_profile_bounds(entry.get("packageProfile"), f"{field}.packageProfile")
         plan = entry["planNumber"]
         if isinstance(plan, bool) or not isinstance(plan, int) or not 1 <= plan <= total or plan in seen_plan:
             raise HubError(f"{field}: planNumber must be a unique 1..{total} row")
@@ -866,6 +964,7 @@ def validate_registry(registry, expect_counts=None):
         if entry["minimumAppVersion"] is not None:
             require_version(entry["minimumAppVersion"], "minimumAppVersion")
         _validate_status(entry, field)
+        channel_minimum_versions(entry, field)
     if kind_count["builtin"] != builtins or kind_count["optional"] != optionals:
         raise HubError(f"registry kind counts wrong: {kind_count}")
     if deep is not None and deep_count != deep:
@@ -966,7 +1065,18 @@ def build_catalog(registry, channel, feed_status, entries, source_commit,
     return catalog
 
 
-def validate_catalog(catalog, channel=None, allow_fixture=False):
+def validate_catalog(catalog, channel=None, allow_fixture=False, capability=False):
+    """Validate one signed channel feed.
+
+    `capability=False` (the default) is the original strict feed shape:
+    package bindings carry EXACTLY the five historical keys — an optional
+    `profile` key is refused because pre-capability strict readers reject
+    unknown package keys before any version floor, and sizes stay inside the
+    standard bounds. `capability=True` validates a signed capability feed
+    (e.g. catalog-large-source-v1.json): bindings may carry an optional
+    `profile` selecting the signed capacity; unknown profiles fail closed
+    and a declared size must fit the declared profile's capacity.
+    """
     if not isinstance(catalog, dict):
         raise HubError("catalog must be an object")
     required = {"schemaVersion", "publisher", "channel", "feedStatus",
@@ -1038,13 +1148,34 @@ def validate_catalog(catalog, channel=None, allow_fixture=False):
                 raise HubError(f"{field}: qualified offer without qualified status")
         package = entry["package"]
         if package is not None:
-            if set(package) != {"path", "size", "sha256", "contentDigest", "containsScripts"}:
-                raise HubError(f"{field}: package binding keys mismatch")
+            if not capability:
+                # Original strict shape: the optional profile key exists
+                # ONLY in the separate capability feeds — old readers reject
+                # unknown package keys before minimumAppVersion checks.
+                if set(package) != {"path", "size", "sha256", "contentDigest",
+                                    "containsScripts"}:
+                    raise HubError(f"{field}: package binding keys mismatch")
+            else:
+                package_keys = {"path", "size", "sha256", "contentDigest",
+                                "containsScripts", "profile"}
+                if set(package) - package_keys \
+                        or not package_keys - {"profile"} <= set(package):
+                    raise HubError(f"{field}: package binding keys mismatch")
             expected = package_path_for(entry["id"], entry["version"], catalog["channel"])
             if package["path"] != expected:
                 raise HubError(f"{field}: package path must be {expected}")
+            # Transport/download capacity derives ONLY from this verified,
+            # signed bound entry: the declared profile selects the capacity,
+            # the declared size must fit it, and unknown profiles fail closed.
+            # A PRESENT null is rejected (strict key-presence string decode);
+            # only a missing profile means standard.
+            if capability and "profile" in package \
+                    and not isinstance(package["profile"], str):
+                raise HubError(f"{field}: package profile must be a string when present")
+            bounds = package_profile_bounds(package.get("profile"),
+                                            f"{field}: package profile")
             if not isinstance(package["size"], int) or isinstance(package["size"], bool) \
-                    or not 0 < package["size"] <= MAX_TOTAL_BYTES:
+                    or not 0 < package["size"] <= bounds["maxTotalBytes"]:
                 raise HubError(f"{field}: package size invalid")
             require_hex64(package["sha256"], f"{field} sha256")
             require_hex64(package["contentDigest"], f"{field} contentDigest")
@@ -1090,6 +1221,49 @@ def validate_catalog(catalog, channel=None, allow_fixture=False):
     if counts != recomputed:
         raise HubError(f"catalog counts drifted: {counts} != {recomputed}")
     return catalog
+
+
+def validate_capability_projection(capability_catalog, standard_full_catalog):
+    """A signed capability feed is a complete same-Y replacement/superset.
+
+    Every entry of the corresponding standard FULL feed must be present in
+    the capability feed under the same id, and every shared row must be
+    byte-identical (canonical encoding equality — standard rows are exactly
+    preserved; only additional large-source entries may appear, and only
+    those carry package.profile). Feed-level identity facts (channel,
+    feedStatus, sourceCommit, schemaVersion, publisher, permissionPolicy)
+    must match exactly. Counts may differ (recomputed per feed).
+    """
+    for field, feed in (("capability feed", capability_catalog),
+                        ("standard full feed", standard_full_catalog)):
+        if not isinstance(feed, dict):
+            raise HubError(f"{field} must be an object")
+    for key in ("schemaVersion", "publisher", "channel", "feedStatus",
+                "sourceCommit", "permissionPolicy"):
+        if capability_catalog.get(key) != standard_full_catalog.get(key):
+            raise HubError(f"capability projection: {key} differs from the "
+                           "standard full feed at the same publication")
+    if capability_catalog["channel"] not in ("ios", "android"):
+        raise HubError("capability projection: unknown channel")
+    standard_rows = {entry["id"]: entry for entry in standard_full_catalog["entries"]}
+    capability_rows = {}
+    for entry in capability_catalog["entries"]:
+        entry_id = entry.get("id")
+        if not isinstance(entry_id, str) or entry_id in capability_rows:
+            raise HubError("capability projection: duplicate or invalid entry id")
+        capability_rows[entry_id] = entry
+    missing = sorted(set(standard_rows) - set(capability_rows))
+    if missing:
+        raise HubError(f"capability projection: standard entries missing from "
+                       f"the capability feed: {missing[:8]}")
+    drifted = []
+    for entry_id, standard_row in standard_rows.items():
+        if encoded(standard_row) != encoded(capability_rows[entry_id]):
+            drifted.append(entry_id)
+    if drifted:
+        raise HubError(f"capability projection: standard rows not exactly "
+                       f"preserved: {sorted(drifted)[:8]}")
+    return True
 
 
 # --------------------------------------------------------------------------

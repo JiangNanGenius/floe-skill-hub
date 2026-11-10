@@ -1644,7 +1644,8 @@ class TestPublicReadback(HubFixture):
                              hubcore.PRODUCTION_KEY_ID)
         self.assertTrue(verdict["ledgerCryptoVerified"])
         self.assertEqual(verdict["newestRowCoverage"],
-                         {view: f["y"] for view in ap.FEED_PATHS})
+                         {view: f["y"] for view in ap.FEED_PATHS
+                          if view not in ap.cv.CAPABILITY_VIEWS})
         self.assertIn("append-only prefix", verdict["ledgerPrefix"])
         self.assertEqual(verdict["ledgerRows"], 6)  # 2 historical base + 4 views published now
 

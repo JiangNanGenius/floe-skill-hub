@@ -2230,9 +2230,14 @@ def plan_skill(skill_id, entry, skill_cfg, old_snapshot, new_snapshot, local_tre
                         "target": problem["target"]})
 
     # --- package gates over the merged candidate -----------------------------
+    # Capacity derives from the trusted validated registry entry's explicit
+    # packageProfile (absent = standard); unknown profiles were already
+    # refused by registry validation, and hubcore fails closed regardless.
+    entry_profile = entry.get("packageProfile")
     gate_error = None
     try:
-        manifest, _front = hubcore.validate_package_files(dict(candidate), require_notice=True)
+        manifest, _front = hubcore.validate_package_files(dict(candidate), require_notice=True,
+                                                          profile=entry_profile)
         gates.append({"gate": "hubcore.validate_package_files", "passed": True})
     except hubcore.HubError as error:
         gate_error = str(error)
@@ -2338,7 +2343,8 @@ def plan_skill(skill_id, entry, skill_cfg, old_snapshot, new_snapshot, local_tre
 
     # Re-run the package gates on the FINAL candidate (mechanical bytes included).
     try:
-        final_manifest, _ = hubcore.validate_package_files(dict(candidate), require_notice=True)
+        final_manifest, _ = hubcore.validate_package_files(dict(candidate), require_notice=True,
+                                                           profile=entry_profile)
         gates.append({"gate": "final-candidate-package-gates", "passed": True})
     except hubcore.HubError as error:
         gates.append({"gate": "final-candidate-package-gates", "passed": False,
@@ -2350,7 +2356,7 @@ def plan_skill(skill_id, entry, skill_cfg, old_snapshot, new_snapshot, local_tre
         return plan
 
     final_digest = hubcore.content_digest(candidate)
-    if final_digest in _published_digests(root, skill_id):
+    if final_digest in _published_digests(root, skill_id, entry_profile):
         hold("held-digest-collision",
              f"the candidate digest equals a published digest of another {skill_id} version",
              "investigate before proposing a new immutable version")
@@ -2474,8 +2480,13 @@ def _status(reasons, eligible_status):
     return eligible_status or ST_NO_CHANGE
 
 
-def _published_digests(root, skill_id):
-    """contentDigests of every materialized package version of one skill."""
+def _published_digests(root, skill_id, profile=None):
+    """contentDigests of every materialized package version of one skill.
+
+    Archives are read under the capacity of the entry's declared signed
+    profile (absent = standard); digests that do not decode under that
+    profile are skipped exactly as before.
+    """
     digests = set()
     root = pathlib.Path(root)
     for prefix in ("", "android/"):
@@ -2486,7 +2497,8 @@ def _published_digests(root, skill_id):
             archive = version_dir / f"{skill_id}.zip"
             if archive.is_file():
                 try:
-                    files = hubcore.check_archive_bytes(archive.read_bytes())
+                    files = hubcore.check_archive_bytes(archive.read_bytes(),
+                                                        profile=profile)
                     digests.add(hubcore.content_digest(files))
                 except hubcore.HubError:
                     continue

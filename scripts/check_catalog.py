@@ -94,7 +94,9 @@ def check_production(reasons):
                            for path in cv.FEED_PATHS[view]) else cv.LEGACY_VIEWS
     pairs = [(view, REPO / cv.FEED_PATHS[view][0], REPO / cv.FEED_PATHS[view][1])
              for view in views]
-    if not any(path.exists() or sig.exists() for _, path, sig in pairs):
+    capability_pairs = [(view, REPO / cv.FEED_PATHS[view][0], REPO / cv.FEED_PATHS[view][1])
+                        for view in cv.CAPABILITY_VIEWS]
+    if not any(path.exists() or sig.exists() for _, path, sig in pairs + capability_pairs):
         return
     import build_catalog
     try:
@@ -106,6 +108,114 @@ def check_production(reasons):
         fail(reasons, "production artifacts exist but no public-key.json trust is configured; "
                       "a published feed without trust material must fail the gate")
         return
+    verified_full = {}
+
+    def verify_feed_bytes(view, path, sig_path):
+        """One signed feed pair verified standalone; returns the feed dict."""
+        body = path.read_bytes()
+        try:
+            key_id = hubcore.verify_envelope(body, sig_path.read_bytes(), public_keys)
+        except hubcore.HubError as error:
+            fail(reasons, f"{view} catalog signature invalid over the exact bytes: {error}")
+            return None
+        if key_id == hubcore.FIXTURE_KEY_ID:
+            fail(reasons, f"{view} catalog signed with the fixture identity: forbidden")
+            return None
+        if key_id not in public_keys or (hubcore.PRODUCTION_KEY_ID in public_keys
+                                         and key_id != hubcore.PRODUCTION_KEY_ID):
+            fail(reasons, f"{view} catalog signed by unexpected identity {key_id!r}; "
+                          f"the configured production trust is {sorted(public_keys)}")
+            return None
+        try:
+            feed = json.loads(body)
+        except ValueError as error:
+            fail(reasons, f"{view} feed is not valid JSON: {error}")
+            return None
+        if hubcore.encoded(feed) != body:
+            fail(reasons, f"{view} feed bytes are not canonical encoding "
+                          "(sorted keys, tight separators, UTF-8)")
+            return None
+        try:
+            cv.validate_view(feed, view)
+        except hubcore.HubError as error:
+            fail(reasons, f"{view} production feed shape invalid: {error}")
+            return None
+        return feed
+
+    def verify_published_entry(entry, channel):
+        """Archive/review/runtime re-join for one published feed entry.
+
+        Capacity derives ONLY from this verified, signed bound entry
+        (package.profile, present only in capability feeds), never from a
+        URL or the mutable candidate registry.
+        """
+        field = f"{channel}/{entry['id']}"
+        files, manifest, package = None, None, entry["package"]
+        if package is not None:
+            archive = REPO / package["path"]
+            if not archive.is_file():
+                fail(reasons, f"{field}: bound archive missing at {package['path']}")
+                return
+            data = archive.read_bytes()
+            if hubcore.sha256_hex(data) != package["sha256"]:
+                fail(reasons, f"{field}: archive sha256 does not match the signed feed bytes")
+                return
+            if len(data) != package["size"]:
+                fail(reasons, f"{field}: archive size does not match the signed feed bytes")
+                return
+            try:
+                profile = package.get("profile")
+                files = hubcore.check_archive_bytes(data, profile=profile)
+                if hubcore.content_digest(files) != package["contentDigest"]:
+                    fail(reasons, f"{field}: unpacked contentDigest mismatch")
+                    return
+                manifest, _ = hubcore.validate_package_files(files, profile=profile)
+                if manifest["id"] != entry["id"] or manifest["version"] != entry["version"]:
+                    fail(reasons, f"{field}: published archive identity does not match the feed")
+                    return
+            except hubcore.HubError as error:
+                fail(reasons, f"{field}: package gate failed on published bytes: {error}")
+                return
+        review = entry["review"]
+        if review is not None:
+            body_record = REPO / review["path"]
+            envelope = REPO / (review["path"] + ".sig")
+            if not body_record.is_file() or not envelope.is_file():
+                fail(reasons, f"{field}: review binding published without record+signature bytes")
+                return
+            record_bytes = body_record.read_bytes()
+            if hubcore.sha256_hex(record_bytes) != review["sha256"]:
+                fail(reasons, f"{field}: review record bytes do not match the signed digest")
+                return
+            try:
+                review_key_id = hubcore.verify_envelope(record_bytes,
+                                                        envelope.read_bytes(),
+                                                        public_keys)
+                record = json.loads(record_bytes)
+                hubcore.validate_review(record, entry=entry)
+                if package is not None and files is not None:
+                    hubcore.join_review(record, manifest, package, field)
+                if review_key_id != review["keyID"]:
+                    fail(reasons, f"{field}: review envelope identity does not match the "
+                                  f"feed-declared keyID {review['keyID']!r}")
+                    return
+            except (ValueError, hubcore.HubError) as error:
+                fail(reasons, f"{field}: signed review chain failed: {error}")
+        # Managed raw runtime artifact binding: when the authenticated
+        # package embeds references/engine-dependency.json, the published
+        # frozen descriptor at Y must match it byte-identically and the
+        # referenced raw artifact must exist at Y with the exact size,
+        # SHA-256 and safe static-ELF shape. Reads only the published
+        # bytes — never a mutable candidate HEAD.
+        if files is not None:
+            runtime_blob = files.get(runtime_dependency.EMBEDDED_DESCRIPTOR_REL)
+            if runtime_blob is not None:
+                try:
+                    runtime_dependency.bind_package_descriptor(
+                        runtime_blob, REPO, field)
+                except hubcore.HubError as error:
+                    fail(reasons, f"{field}: runtime artifact binding failed: {error}")
+
     for channel, path, sig_path in pairs:
         if not path.is_file():
             fail(reasons, f"{channel} channel published but feed missing: {path.relative_to(REPO)}")
@@ -114,105 +224,51 @@ def check_production(reasons):
             fail(reasons, f"{channel} feed published without its signature: "
                           f"{sig_path.relative_to(REPO)} is missing (an absent signature never passes)")
             continue
-        body = path.read_bytes()
+        feed = verify_feed_bytes(channel, path, sig_path)
+        if feed is None:
+            continue
+        if channel in cv.FULL_VIEWS:
+            verified_full[channel] = feed
+        for entry in feed["entries"]:
+            verify_published_entry(entry, channel)
+
+    # Same-Y signed capability feeds are conditional: any present pair is
+    # verified standalone (official identity, canonical, capability shape)
+    # and MUST be an exact superset of the corresponding verified standard
+    # full feed. Partial pairs and capability-without-full fail closed;
+    # absence keeps every historical publication valid.
+    for view, path, sig_path in capability_pairs:
+        if not path.exists() and not sig_path.exists():
+            continue
+        if not path.is_file() or not sig_path.is_file():
+            fail(reasons, f"{view}: incomplete capability publication (feed or "
+                          "signature missing); an absent signature never passes")
+            continue
+        feed = verify_feed_bytes(view, path, sig_path)
+        if feed is None:
+            continue
+        full_view = cv.full_view_for(view)
+        full_feed = verified_full.get(full_view)
+        if full_feed is None:
+            fail(reasons, f"{view}: capability feed published without a verified "
+                          f"standard full feed ({full_view})")
+            continue
         try:
-            key_id = hubcore.verify_envelope(body, sig_path.read_bytes(), public_keys)
+            hubcore.validate_capability_projection(feed, full_feed)
         except hubcore.HubError as error:
-            fail(reasons, f"{channel} catalog signature invalid over the exact bytes: {error}")
-            continue
-        if key_id == hubcore.FIXTURE_KEY_ID:
-            fail(reasons, f"{channel} catalog signed with the fixture identity: forbidden")
-            continue
-        if key_id not in public_keys or (hubcore.PRODUCTION_KEY_ID in public_keys
-                                         and key_id != hubcore.PRODUCTION_KEY_ID):
-            fail(reasons, f"{channel} catalog signed by unexpected identity {key_id!r}; "
-                          f"the configured production trust is {sorted(public_keys)}")
-            continue
-        try:
-            feed = json.loads(body)
-        except ValueError as error:
-            fail(reasons, f"{channel} feed is not valid JSON: {error}")
-            continue
-        if hubcore.encoded(feed) != body:
-            fail(reasons, f"{channel} feed bytes are not canonical encoding "
-                          "(sorted keys, tight separators, UTF-8)")
-            continue
-        try:
-            cv.validate_view(feed, channel)
-        except hubcore.HubError as error:
-            fail(reasons, f"{channel} production feed shape invalid: {error}")
+            fail(reasons, f"{view}: capability projection invalid: {error}")
             continue
         for entry in feed["entries"]:
-            field = f"{channel}/{entry['id']}"
-            files, manifest, package = None, None, entry["package"]
-            if package is not None:
-                archive = REPO / package["path"]
-                if not archive.is_file():
-                    fail(reasons, f"{field}: bound archive missing at {package['path']}")
-                    continue
-                data = archive.read_bytes()
-                if hubcore.sha256_hex(data) != package["sha256"]:
-                    fail(reasons, f"{field}: archive sha256 does not match the signed feed bytes")
-                    continue
-                if len(data) != package["size"]:
-                    fail(reasons, f"{field}: archive size does not match the signed feed bytes")
-                    continue
-                try:
-                    files = hubcore.check_archive_bytes(data)
-                    if hubcore.content_digest(files) != package["contentDigest"]:
-                        fail(reasons, f"{field}: unpacked contentDigest mismatch")
-                        continue
-                    manifest, _ = hubcore.validate_package_files(files)
-                    if manifest["id"] != entry["id"] or manifest["version"] != entry["version"]:
-                        fail(reasons, f"{field}: published archive identity does not match the feed")
-                        continue
-                except hubcore.HubError as error:
-                    fail(reasons, f"{field}: package gate failed on published bytes: {error}")
-                    continue
-            review = entry["review"]
-            if review is not None:
-                body_record = REPO / review["path"]
-                envelope = REPO / (review["path"] + ".sig")
-                if not body_record.is_file() or not envelope.is_file():
-                    fail(reasons, f"{field}: review binding published without record+signature bytes")
-                    continue
-                record_bytes = body_record.read_bytes()
-                if hubcore.sha256_hex(record_bytes) != review["sha256"]:
-                    fail(reasons, f"{field}: review record bytes do not match the signed digest")
-                    continue
-                try:
-                    review_key_id = hubcore.verify_envelope(record_bytes,
-                                                            envelope.read_bytes(),
-                                                            public_keys)
-                    record = json.loads(record_bytes)
-                    hubcore.validate_review(record, entry=entry)
-                    if package is not None and files is not None:
-                        hubcore.join_review(record, manifest, package, field)
-                    if review_key_id != review["keyID"]:
-                        fail(reasons, f"{field}: review envelope identity does not match the "
-                                      f"feed-declared keyID {review['keyID']!r}")
-                        continue
-                except (ValueError, hubcore.HubError) as error:
-                    fail(reasons, f"{field}: signed review chain failed: {error}")
-            # Managed raw runtime artifact binding: when the authenticated
-            # package embeds references/engine-dependency.json, the published
-            # frozen descriptor at Y must match it byte-identically and the
-            # referenced raw artifact must exist at Y with the exact size,
-            # SHA-256 and safe static-ELF shape. Reads only the published
-            # bytes — never a mutable candidate HEAD.
-            if files is not None:
-                runtime_blob = files.get(runtime_dependency.EMBEDDED_DESCRIPTOR_REL)
-                if runtime_blob is not None:
-                    try:
-                        runtime_dependency.bind_package_descriptor(
-                            runtime_blob, REPO, field)
-                    except hubcore.HubError as error:
-                        fail(reasons, f"{field}: runtime artifact binding failed: {error}")
+            verify_published_entry(entry, view)
 
     if views == cv.VIEWS and all(path.is_file() for _, path, _ in pairs):
         try:
-            cv.assert_projection({str(path.relative_to(REPO)): path.read_bytes()
-                                  for _, path, _ in pairs})
+            projection_map = {str(path.relative_to(REPO)): path.read_bytes()
+                              for _, path, _ in pairs}
+            projection_map.update({str(path.relative_to(REPO)): path.read_bytes()
+                                   for _, path, _ in capability_pairs
+                                   if path.is_file()})
+            cv.assert_projection(projection_map)
         except hubcore.HubError as error:
             fail(reasons, f"catalog projection invalid: {error}")
 
