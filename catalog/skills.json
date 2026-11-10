@@ -6108,6 +6108,84 @@
         "skillManifestPath": "sales/skills/win-loss-review/SKILL.md"
       },
       "versionTarget": "1.0.1"
+    },
+    {
+      "category": "web-development",
+      "deepAdaptation": true,
+      "description": {
+        "en": "Design company and product websites with a coherent visual direction, real images and browser checks.",
+        "zh-Hans": "为品牌官网和产品页面确定视觉方向，结合真实图片、字体、交互与浏览器检查完成网页。"
+      },
+      "firstParty": null,
+      "id": "design-taste-frontend",
+      "kind": "optional",
+      "minimumAppVersion": "1.9.0",
+      "name": {
+        "en": "Taste Skill",
+        "zh-Hans": "Taste Skill 网页设计"
+      },
+      "notes": {
+        "en": "",
+        "zh-Hans": ""
+      },
+      "packageProfile": "large-source-v1",
+      "planNumber": 86,
+      "plannedRuntime": {
+        "capabilities": [
+          "browser.interact",
+          "browser.observe",
+          "execution.remote",
+          "network",
+          "workspace.read",
+          "workspace.write"
+        ],
+        "execution": {
+          "os": "linux",
+          "arch": "aarch64",
+          "evidence": "guest-verified"
+        },
+        "installPlatforms": [
+          "ios"
+        ],
+        "pythonPackagesPlan": [],
+        "scriptRuntime": "remote",
+        "tools": [
+          "exec.shell"
+        ]
+      },
+      "source": "O",
+      "status": {
+        "adaptation": "frozen",
+        "executionVerified": true,
+        "licenseChecked": true,
+        "packaged": true,
+        "published": false,
+        "qualified": true,
+        "reviewed": true,
+        "sourcePinned": true
+      },
+      "tags": [
+        "web-design",
+        "frontend",
+        "typography",
+        "responsive",
+        "browser"
+      ],
+      "upstream": {
+        "commit": "f6b76575f949707b4e3c37cd86cb44b0b98643e8",
+        "licenseEvidencePath": "LICENSE",
+        "licenseNote": {
+          "en": "The complete root MIT license and all original image/icon credit metadata are retained byte-for-byte. Individual CC0, CC BY, CC BY-SA, Unsplash and icon-set terms remain applicable; the software license does not replace them or trademark rights.",
+          "zh-Hans": "逐字保留完整根目录 MIT 许可及原有图片、图标署名资料。素材各自的 CC0、CC BY、CC BY-SA、Unsplash 与图标集条款继续适用，软件许可不替代素材条款或商标权。"
+        },
+        "licenseStatus": "verified",
+        "path": "skills/taste-skill",
+        "repository": "https://github.com/Leonxlnx/taste-skill",
+        "repositoryLicense": "MIT",
+        "retrievedAt": "2026-11-10",
+        "skillManifestPath": "skills/taste-skill/SKILL.md"
+      },
+      "versionTarget": "2.5.1"
     }
   ]
 }

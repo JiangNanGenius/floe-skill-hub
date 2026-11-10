@@ -1,0 +1,1 @@
+{"capabilities":["browser.interact","browser.observe","execution.remote","network","workspace.read","workspace.write"],"id":"design-taste-frontend","platforms":["ios","linux"],"pythonPackages":[],"schemaVersion":1,"scriptRuntime":"remote","tools":["exec.shell"],"version":"2.5.1"}
