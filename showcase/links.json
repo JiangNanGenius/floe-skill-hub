@@ -866,6 +866,10 @@
         }
       ]
     },
+    "design-taste-frontend": {
+      "auditStatus": "audited",
+      "links": []
+    },
     "doc-coauthoring": {
       "auditStatus": "audited",
       "links": []

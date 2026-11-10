@@ -2,7 +2,8 @@
   "editorPicks": [
     "doc-coauthoring",
     "webapp-testing",
-    "sympy"
+    "sympy",
+    "design-taste-frontend"
   ],
   "entries": {
     "a11y-audit": {
@@ -1198,6 +1199,65 @@
         {
           "en": "Use feynman mode to find where your closed-book explanation breaks and fix it with an analogy",
           "zh-Hans": "闭卷讲不清的概念用 feynman 模式定位断点并补类比"
+        }
+      ]
+    },
+    "design-taste-frontend": {
+      "cover": {
+        "alt": {
+          "en": "Taste Skill official wordmark",
+          "zh-Hans": "Taste Skill 官方标识"
+        },
+        "credit": {
+          "en": "Official Taste Skill artwork by Leonxlnx · MIT.",
+          "zh-Hans": "Leonxlnx 提供的 Taste Skill 官方标识 · MIT。"
+        },
+        "kind": "illustration",
+        "path": "showcase/media/covers/taste-skill-wordmark.png"
+      },
+      "examples": [
+        {
+          "output": {
+            "en": "A page plan, visual direction and working website source with image credits.",
+            "zh-Hans": "页面方案、视觉方向及附素材署名的可用网页源码。"
+          },
+          "prompt": {
+            "en": "Create a distinctive product page from my brief, keeping its factual copy and using appropriate real images.",
+            "zh-Hans": "根据我的需求设计一个有辨识度的产品页，保留文案事实并选用合适的真实图片。"
+          }
+        },
+        {
+          "output": {
+            "en": "Browser screenshots, prioritized findings and changes, with unmeasured checks made clear.",
+            "zh-Hans": "浏览器截图、按优先级整理的问题与修改，并说明未覆盖的检查。"
+          },
+          "prompt": {
+            "en": "Review this page at desktop and phone widths and fix the most important layout problems.",
+            "zh-Hans": "检查这个页面在桌面和手机宽度下的效果，修复主要布局问题。"
+          }
+        }
+      ],
+      "gallery": [],
+      "overview": {
+        "en": "Turn a brief into a page plan, typography and colour choices, image treatments and interactive sections. The upstream kit includes reusable components and checks for layout, copy, performance and responsive screenshots. Preserve the project's content, brand and existing framework when revising a site.",
+        "zh-Hans": "从需求梳理、页面结构和配色字体开始，逐步完成图片、交互与响应式页面。上游提供可复用组件，以及布局、文案、性能和截图检查工具；改版时结合项目现有内容、品牌和技术框架选用。"
+      },
+      "useCases": [
+        {
+          "en": "Plan a company or product website",
+          "zh-Hans": "规划品牌官网与产品页"
+        },
+        {
+          "en": "Develop a coherent visual system",
+          "zh-Hans": "建立统一配色与字体层级"
+        },
+        {
+          "en": "Build interactive sections from reviewed assets",
+          "zh-Hans": "选用组件完成交互页面"
+        },
+        {
+          "en": "Review desktop and phone layouts",
+          "zh-Hans": "检查桌面和手机布局"
         }
       ]
     },

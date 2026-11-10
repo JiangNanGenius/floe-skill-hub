@@ -916,6 +916,27 @@
       "rationale": "Existing OCR and spreadsheet services preserve source and correction traceability.",
       "sourceRevision": "4e1b3ff79c249107341ed73612a50618d83daabf",
       "releaseQualified": false
+    },
+    {
+      "id": "design-taste-frontend",
+      "name": {
+        "en": "Taste Skill",
+        "zh-Hans": "Taste Skill 网页设计"
+      },
+      "source": "O",
+      "decision": "first-release-candidate",
+      "scores": {
+        "usefulness": 24,
+        "floeFit": 19,
+        "contentAndExamples": 19,
+        "maintenance": 14,
+        "perSkillAdoption": null,
+        "complementarity": 4
+      },
+      "provisionalTotalOutOf90": 80,
+      "rationale": "Actively maintained full design kit with substantial reusable source, examples and browser checks. Native ARM64 Linux execution is qualified; App guest acceptance remains separate. Repository stars are contextual, not per-skill adoption.",
+      "sourceRevision": "f6b76575f949707b4e3c37cd86cb44b0b98643e8",
+      "releaseQualified": false
     }
   ]
 }

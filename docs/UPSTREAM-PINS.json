@@ -1,6 +1,7 @@
 {
   "repositories": {
     "K-Dense-AI/scientific-agent-skills": "593377bb048752abb0152deab9fbb1083a6087df",
+    "Leonxlnx/taste-skill": "f6b76575f949707b4e3c37cd86cb44b0b98643e8",
     "Maxbase91/procurement-skills": "d0dda5b201df30bc714520b2cee6f39038f1a1b6",
     "alirezarezvani/claude-skills": "6d2f02ea077eead1bee5411a31bcc6db5a11a70c",
     "anthropics/k12-teacher-skills": "31fd6dbb0c07cb50bb3ce7f62a4135a393bd0e8c",
