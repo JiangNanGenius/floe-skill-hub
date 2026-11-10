@@ -126,7 +126,11 @@ for label, exe in [('node22', node22), ('node20', node20)]:
     report_dir = OUT / (label + '-inspector')
     run(label + '-inspector', [exe, str(skill / 'scripts/consistency.mjs'), str(page), '--profile', str(work / '.taste-skill/chrome-inspector'), '--widths', '390', '--rhythm-widths', '390', '--out', str(report_dir), '--quick', '--no-slow', '--no-reduced', '--no-hidden', '--no-motion-hooks', '--no-gl-fallback', '--no-sweep', '--no-tiles'], work, env, expected=(1,))
     report = json.loads((report_dir / 'report.json').read_bytes())
-    check(label + '-known-overflow-detected', report['checks'].get('overflow') == 'FAIL', {'overflow': report['checks'].get('overflow'), 'notChecked': report.get('notChecked', [])})
+    narrow_controls = [finding for finding in report.get('narrow', {}).get('findings', [])
+                       if finding.get('check') == 'off-viewport' and finding.get('sev') == 'FAIL'
+                       and 'overflow-control' in finding.get('sel', '')]
+    check(label + '-known-overflow-detected', report['checks'].get('off-viewport') == 'FAIL' and bool(narrow_controls),
+          {'rule': 'off-viewport', 'result': report['checks'].get('off-viewport'), 'controlFindings': narrow_controls, 'notChecked': report.get('notChecked', [])})
     remaining = [line for line in subprocess.check_output(['ps', '-eo', 'pid=,args='], text=True).splitlines() if str(work) in line and ('chromium' in line or 'consistency.mjs' in line or 'shoot.mjs' in line)]
     check(label + '-owned-workers-stopped', remaining == [], {'remaining': remaining})
 

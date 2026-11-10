@@ -1,0 +1,9 @@
+{
+  "originalRunID": 42770360072,
+  "originalSourceCommit": "a496973d3d02cdca406a91502aca2f2b1a89aefe",
+  "originalRunConclusion": "failure",
+  "originalEvidenceArtifactSHA256": "3c0e5678fe69924f8a6a0a6694cdfda320acc9549e451f1ad26df7fe343e56f6",
+  "cause": "Harness used the old name overflow; upstream2.5.1 names this rule off-viewport. The original report actually detected the 1624px page on390px and the intentional button at320px.",
+  "change": "Check the real off-viewport FAIL result plus the exact intentional overflow-control selector. No source checker rule, severity, package byte or threshold changed.",
+  "archiveSHA256Unchanged": "4a45f79c99ff25de29b9e4a58da81b11d876b3162ca2a9748a06afcc6a11bcde"
+}
