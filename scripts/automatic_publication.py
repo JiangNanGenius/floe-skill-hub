@@ -97,6 +97,7 @@ LEDGER_REL = pi.LEDGER_REL
 IOS_FEED_REL = "catalog.json"
 ANDROID_FEED_REL = "android/catalog.json"
 FEED_PATHS = at.FEED_PATHS
+SIGNED_FEED_FILES = frozenset(path for pair in FEED_PATHS.values() for path in pair)
 PACKAGE_PREFIXES = ("packages/", "android/packages/")
 
 CONTROL_REQUEST_FILE = "request.json"
@@ -143,7 +144,7 @@ CANDIDATE_ALLOW_EXACT = frozenset({REGISTRY_REL, PINS_REL, LINKS_REL})
 # The final B..H main diff must stay inside the publication allowlist.
 PUBLISH_ALLOW_DIRS = ("packages/", "android/packages/", "reviews/", "sources/",
                       "showcase/", "docs/provenance/", "docs/qualification/")
-PUBLISH_ALLOW_EXACT = frozenset({
+PUBLISH_ALLOW_EXACT = SIGNED_FEED_FILES | frozenset({
     REGISTRY_REL, LEDGER_REL, IOS_FEED_REL, "catalog.sig", ANDROID_FEED_REL,
     "android/catalog.sig", "catalog-full.json", "catalog-full.sig",
     "android/catalog-full.json", "android/catalog-full.sig", PINS_REL, "catalog/curation.json",
@@ -618,7 +619,7 @@ def assert_frozen_history(base_tree, candidate_tree, mode, label):
             if kept is not None and kept != entry:
                 _hold(f"{label}: candidate mutated a retained historical review "
                       f"path: {rel}")
-        elif rel in cv.ARTIFACT_FILES or rel == LEDGER_REL:
+        elif rel in SIGNED_FEED_FILES or rel == LEDGER_REL:
             if candidate_tree.get(rel) != entry:
                 _hold(f"{label}: candidate cannot pre-write feeds/ledger path {rel!r}")
 

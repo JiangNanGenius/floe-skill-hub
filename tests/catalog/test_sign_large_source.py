@@ -13,6 +13,9 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from test_sign_publication import (BridgeFixture, TEST_SEED, KEY_ID, _env_value,
                                    _commit_all, review_record, hubcore)
 import build_catalog
+import catalog_views as cv
+import publication_immutability as pi
+import automatic_publication as ap
 import runtime_dependency
 import sign_publication
 
@@ -47,6 +50,9 @@ class LargeSourceSigningTests(BridgeFixture):
         pkg["contentDigest"] = hubcore.content_digest(pkg["files"])
         self._stage_packages(data, entry, pkg)
         self._stage_review(data, entry, review_record(entry, pkg, True), signed_with=self.key)
+        (data / "public-key.json").write_bytes(hubcore.encoded(
+            {"keyID": KEY_ID, "publicKey": self.public_b64}))
+        (data / "catalog/publication-ledger.json").write_bytes(pi.render_ledger([]))
         commit = _commit_all(data, "fixture large-source package and bound review")
         return registry, entry, data, commit
 
@@ -86,6 +92,27 @@ class LargeSourceSigningTests(BridgeFixture):
                     archive, profile=offer["package"]["profile"])), 128)
         self.assertEqual(receipt["launchGate"]["iosQualified"], 31)
         self.assertEqual(receipt["launchGate"]["androidQualified"], 30)
+        # Exercise the normal X -> Y -> H proof, not merely feed generation.
+        # Both capability pairs must be lawful final publication paths, while
+        # pre-writing them in a future candidate must remain forbidden.
+        for view in cv.ALL_VIEWS:
+            for rel in cv.FEED_PATHS[view]:
+                (data / rel).parent.mkdir(parents=True, exist_ok=True)
+                (data / rel).write_bytes((out / rel).read_bytes())
+        y = _commit_all(data, "fixture exact signed feed publication Y")
+        _, new_rows, ledger = ap.expected_ledger_bytes(data, commit, y)
+        self.assertEqual(len(new_rows), 6)
+        (data / pi.LEDGER_REL).write_bytes(ledger)
+        head = _commit_all(data, "fixture verified ledger append H")
+        chain = ap.verify_publication_diffs(data, commit, commit, y, head)
+        self.assertEqual(chain["status"], "publication-diffs-ok")
+        tree = ap.tree_at(data, y, "fixture published Y")
+        for view in cv.CAPABILITY_VIEWS:
+            for rel in cv.FEED_PATHS[view]:
+                changed = dict(tree)
+                changed.pop(rel)
+                with self.assertRaisesRegex(ap.PublicationError, "pre-write feeds/ledger"):
+                    ap.assert_frozen_history(tree, changed, "catalog", "X")
 
     def test_real_reviews_signer_binds_large_archive_before_qualification(self):
         registry, entry, data, _ = self._candidate("large-source-review-signing")
