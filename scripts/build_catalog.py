@@ -389,6 +389,13 @@ def project_legacy_catalog(registry, feed):
 
 def build(registry, mode, source_commit, packages_root, reviews_root, public_keys):
     out = {}
+    emit_capability = any(
+        row.get("packageProfile") == hubcore.LARGE_SOURCE_PROFILE
+        and row["kind"] == "optional"
+        and row["plannedRuntime"]["installPlatforms"]
+        and (mode != "release" or row["status"]["qualified"])
+        for row in registry["skills"]
+    )
     for channel in ("ios", "android"):
         standard_entries = []
         large_entries = []
@@ -515,13 +522,14 @@ def build(registry, mode, source_commit, packages_root, reviews_root, public_key
         prefix = "" if channel == "ios" else "android/"
         out[prefix + "catalog-full.json"] = catalog_bytes
         out[prefix + "catalog.json"] = hubcore.encoded(legacy_feed)
-        if large_entries:
+        if emit_capability:
             # Same-Y signed capability feed: a complete replacement/superset
             # of the standard full feed — every standard row exactly
             # preserved, plus the large-source rows (the only rows carrying
-            # package.profile). Emitted only when the channel actually has
-            # large-source entries; absence is a valid state (clients keep
-            # the independently verified standard projection).
+            # package.profile). Emitted when either channel has large-source
+            # entries. Both channel pairs publish atomically;
+            # a channel with no large offers carries its standard full view
+            # unchanged. One App can therefore become ready independently.
             capability_rows = sorted(full_feed["entries"] + large_entries,
                                      key=lambda e: e["planNumber"])
             capability_view = ("ios" if channel == "ios" else "android") \

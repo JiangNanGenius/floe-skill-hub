@@ -75,6 +75,15 @@ class TestChannelVersions(unittest.TestCase):
                 with self.assertRaises(hubcore.HubError):
                     self.validate(entry)
 
+    def test_one_channel_offer_still_emits_both_atomic_capability_views(self):
+        entry = self.entry()
+        entry["packageProfile"] = "large-source-v1"
+        entry["plannedRuntime"]["installPlatforms"] = ["ios"]
+        output = self.render(entry)
+        self.assertEqual(len(json.loads(output["catalog-large-source-v1.json"])["entries"]), 1)
+        self.assertEqual(output["android/catalog-large-source-v1.json"],
+                         output["android/catalog-full.json"])
+
     def test_override_cannot_name_an_unoffered_channel(self):
         entry = self.entry()
         entry["plannedRuntime"]["installPlatforms"] = ["ios"]

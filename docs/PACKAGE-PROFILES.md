@@ -64,8 +64,9 @@ Rules that hold for every profile:
   standard-vs-capability `validate_catalog`, `validate_capability_projection`.
 * `build_packages` / `build_catalog` — staged sources and release bindings
   use the registry row's profile; standard feeds exclude large rows and
-  stay profile-free; same-Y capability feeds are emitted only when a
-  channel actually has large-source entries.
+  stay profile-free; both same-Y capability pairs are emitted atomically
+  when either channel has large-source entries. A channel without a large
+  offer retains its exact standard full rows; App readiness is independent.
 * `check_catalog` / `sign_publication` — published and staged referenced
   archive bytes are verified under the profile of the signed binding;
   capability pairs verify standalone and as exact supersets.
